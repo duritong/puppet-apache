@@ -45,7 +45,7 @@ class apache {
         group => 0,
         mode => 644,
         require => Package[apache],
-        content => template('default/default_index.erb'),
+        content => template('apache/default/default_index.erb'),
     }
 
     case $operatingsystem {
