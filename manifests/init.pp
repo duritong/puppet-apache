@@ -3,6 +3,14 @@
 # License: GPLv3
 
 class apache {
+    case $operatingsystem {
+        centos: { include apache::centos }
+        gentoo: { include apache::gentoo }
+        default: { include apache::base }
+    }
+}
+
+class apache::base {
     package { 'apache':
         name => 'apache',
         ensure => present,
@@ -14,7 +22,6 @@ class apache {
         ensure => running,
         require => Package[apache],
     }
-
     file { 'default_apache_index':
         path => '/var/www/localhost/index.html',
         ensure => file,
@@ -24,17 +31,12 @@ class apache {
         require => Package[apache],
         content => template('apache/default/default_index.erb'),
     }
-
-    case $operatingsystem {
-        centos: { include apache::centos }
-        gentoo: { include apache::gentoo }
-    }
 }
 
 
 
 ### distro specific stuff
-class apache::centos {
+class apache::centos inherits apache::base{
     Package[apache]{
         name => 'httpd',
     } 
@@ -59,7 +61,7 @@ class apache::centos {
     }
 }
 
-class apache::gentoo {
+class apache::gentoo inherits apache::base {
     Package[apache]{
         category => 'www-servers',
     } 
