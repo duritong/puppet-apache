@@ -4,19 +4,19 @@
 
 class apache {
     package { 'apache':
-        name => 'apache'
+        name => 'apache',
         ensure => present,
     }
 
     service { apache:
-        name => 'apache2'
+        name => 'apache2',
         enable => true,
         ensure => running,
         require => Package[apache],
     }
 
     file { 'default_apache_index':
-        path => '/var/www/localhost/index.html'
+        path => '/var/www/localhost/index.html',
         ensure => file,
         owner => 'root',
         group => 0,
