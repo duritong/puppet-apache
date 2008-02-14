@@ -6,6 +6,8 @@ class apache {
     case $operatingsystem {
         centos: { include apache::centos }
         gentoo: { include apache::gentoo }
+        debian: { include apache::debian }
+        ubuntu: { include apache::ubuntu }
         default: { include apache::base }
     }
 }
@@ -52,17 +54,92 @@ class apache::centos inherits apache::base{
     File[default_apache_index]{
         path => '/var/www/html/index.html',
     }
-
-    file {'/etc/httpd/vhosts.d':
+    $config_dir = '/etc/apache2/vhosts.d/'
+    file {$config_dir:
         ensure => directory,
         owner => root,
         group => 0,
         mode => 750,
+        require => Package[apache]
     }
 }
 
 class apache::gentoo inherits apache::base {
+    $config_dir = '/etc/apache2/vhosts.d/'
     Package[apache]{
         category => 'www-servers',
     } 
+}
+
+class apache::debian inherits apache::base {
+    $config_dir = '/etc/apache2/'
+    file {"${config_dir}/vhosts.d/":
+        ensure => '/etc/apache2/sites-enabled/',
+    }
+}
+# ubuntu is similar to debian therefor inheritng from there
+class apache::debian inherits apache::debian {}
+class apache::openbsd inherits apache::base {
+    $config_dir = '/var/www/conf/'
+}
+
+
+### config things
+define apache::vhost::file(
+    $source = '',
+    $destination = ''
+){
+    $vhosts_dir = $operatingsystem ? {
+            centos => "$apache::centos::config_dir/vhosts.d/",
+            gentoo => "$apache::gentoo::config_dir/vhosts.d/",
+            debian => "$apache::debian::config_dir/vhosts.d/",
+            ubuntu => "$apache::ubuntu::config_dir/vhosts.d/",
+            openbsd => "$apache::openbsd::config_dir/vhosts.d/",
+            default => '/etc/apache2/vhosts.d/',
+    }
+
+    file{$vhosts_dir:
+        ensure => directory,
+        owner => root,
+        group => 0,
+        mode => 0755
+        require => Class[apache] 
+    }
+ 
+    $real_destination = $destination ? {
+        '' => "${vhosts_dir}/${name}.conf",
+        default => $destination,
+    } 
+
+    $real_source = $source ? {
+        ''  => "dist/apache2/vhosts.d/${fqdn}/${name}.conf"
+        default => $source,
+    }
+
+    file{"vhost_${name}.conf":
+        path => $real_destination,
+        source => "puppet://$server/$real_source",
+        owner => root,
+        group => 0,
+        mode => 0644, 
+        require => File[$vhosts_dir], 
+        notify => Service[apache],
+    }
+}
+
+define apache::config::file(
+    $source = '',
+    $destination = '',
+){
+    $real_source = $source ? {
+        '' => "dist/apache2/conf/${fqdn}/${name}",
+        default => $source,
+    }
+
+    $real_destination = $destination ? {
+        '' => $operatingsystem ? {
+            centos => 
+        },
+        default => $destination
+    }
 }
