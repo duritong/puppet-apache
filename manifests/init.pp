@@ -129,7 +129,7 @@ define apache::vhost::file(
 
 define apache::config::file(
     $source = '',
-    $destination = '',
+    $destination = ''
 ){
     $real_source = $source ? {
         '' => "dist/apache2/conf/${fqdn}/${name}",
