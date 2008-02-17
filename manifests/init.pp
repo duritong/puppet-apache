@@ -78,7 +78,7 @@ class apache::debian inherits apache::base {
     }
 }
 # ubuntu is similar to debian therefor inheritng from there
-class apache::debian inherits apache::debian {}
+class apache::ubuntu inherits apache::debian {}
 class apache::openbsd inherits apache::base {
     $config_dir = '/var/www/conf/'
 }
