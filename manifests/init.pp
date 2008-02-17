@@ -102,8 +102,8 @@ define apache::vhost::file(
         ensure => directory,
         owner => root,
         group => 0,
-        mode => 0755
-        require => Class[apache] 
+        mode => 0755,
+        require => Class[apache],
     }
  
     $real_destination = $destination ? {
