@@ -138,7 +138,9 @@ define apache::config::file(
 
     $real_destination = $destination ? {
         '' => $operatingsystem ? {
-            centos => 
+            centos => "/etc/httpd/vhosts.d/${name}.conf",
+            openbsd => "/var/www/conf/vhosts.d/${name}.conf",
+            default => "/etc/apache2/vhosts.d/${name}.conf",
         },
         default => $destination
     }
