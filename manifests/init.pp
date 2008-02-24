@@ -54,18 +54,11 @@ class apache::centos inherits apache::base{
     File[default_apache_index]{
         path => '/var/www/html/index.html',
     }
-    $config_dir = '/etc/apache2/vhosts.d/'
-    file {$config_dir:
-        ensure => directory,
-        owner => root,
-        group => 0,
-        mode => 750,
-        require => Package[apache]
-    }
+    $config_dir = '/etc/httpd/'
 }
 
 class apache::gentoo inherits apache::base {
-    $config_dir = '/etc/apache2/vhosts.d/'
+    $config_dir = '/etc/apache2/'
     Package[apache]{
         category => 'www-servers',
     } 
