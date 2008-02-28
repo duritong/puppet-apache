@@ -105,7 +105,10 @@ define apache::vhost::file(
     } 
 
     $real_source = $source ? {
-        ''  => "dist/apache2/vhosts.d/${fqdn}/${name}.conf",
+        ''  => [ 
+            "apache2/vhosts.d/${fqdn}/${name}.conf", 
+            "dist/apache2/vhosts.d/${fqdn}/${name}.conf" 
+        ],
         default => $source,
     }
 
@@ -125,16 +128,36 @@ define apache::config::file(
     $destination = ''
 ){
     $real_source = $source ? {
-        '' => "dist/apache2/conf/${fqdn}/${name}",
+        # get a whole bunch of possible sources if there is no specific source for that config-file
+        '' => [ 
+            "apache2/conf/${fqdn}/${name}", 
+            "dist/apache2/conf/${fqdn}/${name}" 
+            "apache2/conf/common/${name}.${operatingsystem}.${lsbdistcodename}",
+            "apache2/conf/common/${name}.${operatingsystem}",
+            "apache2/conf/common/${name}.Default"
+        ],
         default => $source,
     }
 
     $real_destination = $destination ? {
         '' => $operatingsystem ? {
-            centos => "/etc/httpd/vhosts.d/${name}.conf",
-            openbsd => "/var/www/conf/vhosts.d/${name}.conf",
-            default => "/etc/apache2/vhosts.d/${name}.conf",
+            centos => "$apache::centos::config_dir/${name}",
+            gentoo => "$apache::gentoo::config_dir/${name}",
+            debian => "$apache::debian::config_dir/${name}",
+            ubuntu => "$apache::ubuntu::config_dir/${name}",
+            openbsd => "$apache::openbsd::config_dir/${name}",
+            default => "/etc/apache2/${name}",
         },
         default => $destination
+    }
+
+    file{"apache_${name}":
+        path => $real_destination,
+        source => "puppet://$server/$real_source",
+        owner => root,
+        group => 0,
+        mode => 0644,
+        require => Class[apache],
+        notify => Service[apache],
     }
 }
