@@ -108,8 +108,8 @@ define apache::vhost::file(
 
     $real_source = $source ? {
         ''  => [ 
-            "apache2/vhosts.d/${fqdn}/${name}.conf", 
-            "dist/apache2/vhosts.d/${fqdn}/${name}.conf" 
+            "apache/vhosts.d/${fqdn}/${name}.conf", 
+            "dist/apache/vhosts.d/${fqdn}/${name}.conf" 
         ],
         default => $source,
     }
@@ -133,11 +133,11 @@ define apache::config::file(
     $real_source = $source ? {
         # get a whole bunch of possible sources if there is no specific source for that config-file
         '' => [ 
-            "apache2/conf/${fqdn}/${name}", 
-            "dist/apache2/conf/${fqdn}/${name}",
-            "apache2/conf/common/${name}.${operatingsystem}.${lsbdistcodename}",
-            "apache2/conf/common/${name}.${operatingsystem}",
-            "apache2/conf/common/${name}.Default"
+            "apache/conf/${fqdn}/${name}", 
+            "dist/apache/conf/${fqdn}/${name}",
+            "apache/conf/common/${name}.${operatingsystem}.${lsbdistcodename}",
+            "apache/conf/common/${name}.${operatingsystem}",
+            "apache/conf/common/${name}.Default"
         ],
         default => $source,
     }
