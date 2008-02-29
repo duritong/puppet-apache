@@ -133,7 +133,7 @@ define apache::config::file(
         # get a whole bunch of possible sources if there is no specific source for that config-file
         '' => [ 
             "apache2/conf/${fqdn}/${name}", 
-            "dist/apache2/conf/${fqdn}/${name}" 
+            "dist/apache2/conf/${fqdn}/${name}",
             "apache2/conf/common/${name}.${operatingsystem}.${lsbdistcodename}",
             "apache2/conf/common/${name}.${operatingsystem}",
             "apache2/conf/common/${name}.Default"
