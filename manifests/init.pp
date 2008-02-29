@@ -62,6 +62,8 @@ class apache::gentoo inherits apache::base {
     Package[apache]{
         category => 'www-servers',
     } 
+    # needs module gentoo
+    gentoo::etcconfd { apache2: } 
 }
 
 class apache::debian inherits apache::base {
