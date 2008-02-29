@@ -121,6 +121,7 @@ define apache::vhost::file(
         group => 0,
         mode => 0644, 
         require => File[$vhosts_dir], 
+        require => Package[apache],
         notify => Service[apache],
     }
 }
