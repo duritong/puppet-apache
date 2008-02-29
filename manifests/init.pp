@@ -135,9 +135,9 @@ define apache::config::file(
         '' => [ 
             "apache/conf/${fqdn}/${name}", 
             "dist/apache/conf/${fqdn}/${name}",
-            "apache/conf/common/${name}.${operatingsystem}.${lsbdistcodename}",
-            "apache/conf/common/${name}.${operatingsystem}",
-            "apache/conf/common/${name}.Default"
+            "apache/conf/${name}.${operatingsystem}.${lsbdistcodename}",
+            "apache/conf/${name}.${operatingsystem}",
+            "apache/conf/${name}.Default"
         ],
         default => $source,
     }
