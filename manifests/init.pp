@@ -10,33 +10,19 @@ class apache {
         ubuntu: { include apache::ubuntu }
         default: { include apache::base }
     }
+}
 
-    #include apache::gentoo
+class apache::base {
 
-#    $vhosts_dir = $operatingsystem ? {
-#            centos => "$apache::centos::config_dir/vhosts.d/",
-#            gentoo => "$apache::gentoo::config_dir/vhosts.d/",
-#            debian => "$apache::debian::config_dir/vhosts.d/",
-#            ubuntu => "$apache::ubuntu::config_dir/vhosts.d/",
-#            openbsd => "$apache::openbsd::config_dir/vhosts.d/",
-#            default => '/etc/apache2/vhosts.d/',
-#    }
-    
-    $vhosts_dir = "$config_dir/vhosts.d/"
-
-notice("vhosts_dir=${vhosts_dir}")
-
-    file{
-        $vhosts_dir:
+    file{'vhosts_dir':
+        path => '/etc/apache2/vhosts.d/',
         ensure => directory,
         owner => root,
         group => 0,
         mode => 0755,
         require => Package[apache],
     }
-}
 
-class apache::base {
     package { 'apache':
         name => 'apache',
         ensure => present,
@@ -63,6 +49,7 @@ class apache::base {
 
 ### distro specific stuff
 class apache::centos inherits apache::base{
+    $config_dir = '/etc/httpd/'
     Package[apache]{
         name => 'httpd',
     } 
@@ -74,25 +61,31 @@ class apache::centos inherits apache::base{
         ensure => present,
         require => Package[apache],
     }
-
     File[default_apache_index]{
         path => '/var/www/html/index.html',
     }
-    $config_dir = '/etc/httpd/'
+    File[vhosts_dir]{
+        path => "$config_dir/vhosts.d/",
+    }
 }
 
 class apache::gentoo inherits apache::base {
     # $config_dir = '/etc/apache2/'
+
+    # needs module gentoo
+    gentoo::etcconfd { apache2: } 
+
     Package[apache]{
         category => 'www-servers',
     } 
-    # needs module gentoo
-    gentoo::etcconfd { apache2: } 
+    File[vhosts_dir]{
+        path => "$config_dir/vhosts.d/",
+    }
 }
 
 class apache::debian inherits apache::base {
     $config_dir = '/etc/apache2/'
-    file {"${config_dir}/vhosts.d/":
+    file {"vhosts_dir":
         ensure => '/etc/apache2/sites-enabled/',
     }
 }
@@ -100,6 +93,9 @@ class apache::debian inherits apache::base {
 class apache::ubuntu inherits apache::debian {}
 class apache::openbsd inherits apache::base {
     $config_dir = '/var/www/conf/'
+    File[vhosts_dir]{
+        path => "$config_dir/vhosts.d/",
+    }
 }
 
 
@@ -108,26 +104,15 @@ define apache::vhost::file(
     $source = '',
     $destination = ''
 ){
-    $vhosts_dir = "$config_dir/vhosts.d/"
-notice("vhosts_dir_vhost::file=${vhosts_dir}")
-#    $vhosts_dir = $operatingsystem ? {
-#            centos => "$apache::centos::config_dir/vhosts.d/",
-#            gentoo => "$apache::gentoo::config_dir/vhosts.d/",
-#            debian => "$apache::debian::config_dir/vhosts.d/",
-#            ubuntu => "$apache::ubuntu::config_dir/vhosts.d/",
-#            openbsd => "$apache::openbsd::config_dir/vhosts.d/",
-#            default => '/etc/apache2/vhosts.d/',
-#    }
-#
-#    file{
-#        $vhosts_dir:
-#        ensure => directory,
-#        owner => root,
-#        group => 0,
-#        mode => 0755,
-#        require => Package[apache],
-#    }
- 
+    $vhosts_dir = $operatingsystem ? {
+            centos => "$apache::centos::config_dir/vhosts.d/",
+            gentoo => "$apache::gentoo::config_dir/vhosts.d/",
+            debian => "$apache::debian::config_dir/vhosts.d/",
+            ubuntu => "$apache::ubuntu::config_dir/vhosts.d/",
+            openbsd => "$apache::openbsd::config_dir/vhosts.d/",
+            default => '/etc/apache2/vhosts.d/',
+    }
+
     $real_destination = $destination ? {
         '' => "${vhosts_dir}/${name}.conf",
         default => $destination,
