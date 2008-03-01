@@ -24,6 +24,8 @@ class apache {
     
     $vhosts_dir = "$config_dir/vhosts.d/"
 
+notice("vhosts_dir=${vhosts_dir}")
+
     file{
         $vhosts_dir:
         ensure => directory,
@@ -107,6 +109,7 @@ define apache::vhost::file(
     $destination = ''
 ){
     $vhosts_dir = "$config_dir/vhosts.d/"
+notice("vhosts_dir_vhost::file=${vhosts_dir}")
 #    $vhosts_dir = $operatingsystem ? {
 #            centos => "$apache::centos::config_dir/vhosts.d/",
 #            gentoo => "$apache::gentoo::config_dir/vhosts.d/",
