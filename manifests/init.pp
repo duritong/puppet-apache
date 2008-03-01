@@ -11,7 +11,7 @@ class apache {
         default: { include apache::base }
     }
 
-    include apache::gentoo
+    #include apache::gentoo
 
     $vhosts_dir = $operatingsystem ? {
             centos => "$apache::centos::config_dir/vhosts.d/",
