@@ -10,6 +10,24 @@ class apache {
         ubuntu: { include apache::ubuntu }
         default: { include apache::base }
     }
+
+    $vhosts_dir = $operatingsystem ? {
+            centos => "$apache::centos::config_dir/vhosts.d/",
+            gentoo => "$apache::gentoo::config_dir/vhosts.d/",
+            debian => "$apache::debian::config_dir/vhosts.d/",
+            ubuntu => "$apache::ubuntu::config_dir/vhosts.d/",
+            openbsd => "$apache::openbsd::config_dir/vhosts.d/",
+            default => '/etc/apache2/vhosts.d/',
+    }
+
+    file{
+        $vhosts_dir:
+        ensure => directory,
+        owner => root,
+        group => 0,
+        mode => 0755,
+        require => Package[apache],
+    }
 }
 
 class apache::base {
@@ -84,22 +102,23 @@ define apache::vhost::file(
     $source = '',
     $destination = ''
 ){
-    $vhosts_dir = $operatingsystem ? {
-            centos => "$apache::centos::config_dir/vhosts.d/",
-            gentoo => "$apache::gentoo::config_dir/vhosts.d/",
-            debian => "$apache::debian::config_dir/vhosts.d/",
-            ubuntu => "$apache::ubuntu::config_dir/vhosts.d/",
-            openbsd => "$apache::openbsd::config_dir/vhosts.d/",
-            default => '/etc/apache2/vhosts.d/',
-    }
-
-    file{$vhosts_dir:
-        ensure => directory,
-        owner => root,
-        group => 0,
-        mode => 0755,
-        require => Package[apache],
-    }
+#    $vhosts_dir = $operatingsystem ? {
+#            centos => "$apache::centos::config_dir/vhosts.d/",
+#            gentoo => "$apache::gentoo::config_dir/vhosts.d/",
+#            debian => "$apache::debian::config_dir/vhosts.d/",
+#            ubuntu => "$apache::ubuntu::config_dir/vhosts.d/",
+#            openbsd => "$apache::openbsd::config_dir/vhosts.d/",
+#            default => '/etc/apache2/vhosts.d/',
+#    }
+#
+#    file{
+#        $vhosts_dir:
+#        ensure => directory,
+#        owner => root,
+#        group => 0,
+#        mode => 0755,
+#        require => Package[apache],
+#    }
  
     $real_destination = $destination ? {
         '' => "${vhosts_dir}/${name}.conf",
