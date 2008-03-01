@@ -13,14 +13,16 @@ class apache {
 
     #include apache::gentoo
 
-    $vhosts_dir = $operatingsystem ? {
-            centos => "$apache::centos::config_dir/vhosts.d/",
-            gentoo => "$apache::gentoo::config_dir/vhosts.d/",
-            debian => "$apache::debian::config_dir/vhosts.d/",
-            ubuntu => "$apache::ubuntu::config_dir/vhosts.d/",
-            openbsd => "$apache::openbsd::config_dir/vhosts.d/",
-            default => '/etc/apache2/vhosts.d/',
-    }
+#    $vhosts_dir = $operatingsystem ? {
+#            centos => "$apache::centos::config_dir/vhosts.d/",
+#            gentoo => "$apache::gentoo::config_dir/vhosts.d/",
+#            debian => "$apache::debian::config_dir/vhosts.d/",
+#            ubuntu => "$apache::ubuntu::config_dir/vhosts.d/",
+#            openbsd => "$apache::openbsd::config_dir/vhosts.d/",
+#            default => '/etc/apache2/vhosts.d/',
+#    }
+    
+    $vhosts_dir = "$config_dir/vhosts.d/"
 
     file{
         $vhosts_dir:
@@ -78,7 +80,7 @@ class apache::centos inherits apache::base{
 }
 
 class apache::gentoo inherits apache::base {
-    $config_dir = '/etc/apache2/'
+    # $config_dir = '/etc/apache2/'
     Package[apache]{
         category => 'www-servers',
     } 
@@ -104,6 +106,7 @@ define apache::vhost::file(
     $source = '',
     $destination = ''
 ){
+    $vhosts_dir = "$config_dir/vhosts.d/"
 #    $vhosts_dir = $operatingsystem ? {
 #            centos => "$apache::centos::config_dir/vhosts.d/",
 #            gentoo => "$apache::gentoo::config_dir/vhosts.d/",
