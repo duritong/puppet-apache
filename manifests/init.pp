@@ -70,7 +70,7 @@ class apache::centos inherits apache::base{
 }
 
 class apache::gentoo inherits apache::base {
-    # $config_dir = '/etc/apache2/'
+    $config_dir = '/etc/apache2/'
 
     # needs module gentoo
     gentoo::etcconfd { apache2: } 
@@ -81,6 +81,9 @@ class apache::gentoo inherits apache::base {
     File[vhosts_dir]{
         path => "$config_dir/vhosts.d/",
     }
+    apache::vhost::file { '00_default_ssl_vhost': }
+    apache::vhost::file { '00_default_vhost': }
+    apache::config::file { 'default_vhost.include': destination => '$config_dir/vhosts.d/default_vhost.include' }
 }
 
 class apache::debian inherits apache::base {
@@ -120,32 +123,22 @@ define apache::vhost::file(
 
     $real_source = $source ? {
         ''  => [ 
-            "apache/vhosts.d/${fqdn}/${name}.conf", 
-            "dist/apache/vhosts.d/${fqdn}/${name}.conf",
-            "dist/apache/vhosts.d/${name}.conf" 
+            "puppet://$server/dist/apache/vhosts.d/${fqdn}/${name}.conf",
+            "puppet://$server/dist/apache/vhosts.d/${name}.conf", 
+            "puppet://$server/apache/vhosts.d/${fqdn}/${name}.conf" 
         ],
         default => $source,
     }
 
     file{"vhost_${name}.conf":
         path => $real_destination,
-        source => "puppet://$server/$real_source",
+        source => "$real_source",
         owner => root,
         group => 0,
         mode => 0644, 
         require => File[$vhosts_dir], 
         require => Package[apache],
         notify => Service[apache],
-    }
-}
-
-class apache::vhost::file::defaults {
-    case $operatingsystem {
-        gentoo: {
-            apache::vhost::file { '00_default_ssl_vhost': }
-            apache::vhost::file { '00_default_vhost': }
-            apache::vhost::file { 'default_vhost.include': }
-        }
     }
 }
 
@@ -156,11 +149,11 @@ define apache::config::file(
     $real_source = $source ? {
         # get a whole bunch of possible sources if there is no specific source for that config-file
         '' => [ 
-            "apache/conf/${fqdn}/${name}", 
-            "dist/apache/conf/${fqdn}/${name}",
-            "apache/conf/${name}.${operatingsystem}.${lsbdistcodename}",
-            "apache/conf/${name}.${operatingsystem}",
-            "apache/conf/${name}.Default"
+            "puppet://$server/apache/conf/${fqdn}/${name}", 
+            "puppet://$server/dist/apache/conf/${fqdn}/${name}",
+            "puppet://$server/apache/conf/${name}.${operatingsystem}.${lsbdistcodename}",
+            "puppet://$server/apache/conf/${name}.${operatingsystem}",
+            "puppet://$server/apache/conf/${name}.Default"
         ],
         default => $source,
     }
@@ -179,7 +172,7 @@ define apache::config::file(
 
     file{"apache_${name}":
         path => $real_destination,
-        source => "puppet://$server/$real_source",
+        source => $real_source,
         owner => root,
         group => 0,
         mode => 0644,
