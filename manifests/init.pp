@@ -135,7 +135,7 @@ define apache::vhost::file(
 
     file{"vhost_${name}.conf":
         path => $real_destination,
-        source => "$real_source",
+        source => $real_source,
         owner => root,
         group => 0,
         mode => 0644, 
