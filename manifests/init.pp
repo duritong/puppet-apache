@@ -179,7 +179,7 @@ define apache::config::file(
         owner => root,
         group => 0,
         mode => 0644,
-        require => Class[apache],
+        require => Package[apache],
         notify => Service[apache],
     }
 }
