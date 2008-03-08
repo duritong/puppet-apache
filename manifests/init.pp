@@ -84,8 +84,8 @@ class apache::gentoo inherits apache::base {
     apache::vhost::file { '00_default_ssl_vhost': }
     apache::vhost::file { '00_default_vhost': }
     apache::config::file { 'default_vhost.include': 
-        source => 'apache/vhosts.d/default_vhost.include',
-        destination => '$config_dir/vhosts.d/default_vhost.include',
+        source => "apache/vhosts.d/default_vhost.include",
+        destination => "$config_dir/vhosts.d/default_vhost.include",
     }
 }
 
