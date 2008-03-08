@@ -122,6 +122,7 @@ define apache::vhost::file(
         ''  => [ 
             "apache/vhosts.d/${fqdn}/${name}.conf", 
             "dist/apache/vhosts.d/${fqdn}/${name}.conf" 
+            "dist/apache/vhosts.d/${name}.conf" 
         ],
         default => $source,
     }
@@ -135,6 +136,16 @@ define apache::vhost::file(
         require => File[$vhosts_dir], 
         require => Package[apache],
         notify => Service[apache],
+    }
+}
+
+class apache::vhost::file::defaults {
+    case $operatingsystem {
+        gentoo: {
+            apache::vhost::file { '00_default_ssl_vhost': }
+            apache::vhost::file { '00_default_vhost': }
+            apache::vhost::file { 'default_vhost.include': }
+        }
     }
 }
 
