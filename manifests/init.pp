@@ -121,7 +121,7 @@ define apache::vhost::file(
     $real_source = $source ? {
         ''  => [ 
             "apache/vhosts.d/${fqdn}/${name}.conf", 
-            "dist/apache/vhosts.d/${fqdn}/${name}.conf" 
+            "dist/apache/vhosts.d/${fqdn}/${name}.conf",
             "dist/apache/vhosts.d/${name}.conf" 
         ],
         default => $source,
