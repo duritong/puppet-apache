@@ -128,7 +128,7 @@ define apache::vhost::file(
         ''  => [ 
             "puppet://$server/dist/apache/vhosts.d/${fqdn}/${name}.conf",
             "puppet://$server/dist/apache/vhosts.d/${name}.conf", 
-            "puppet://$server/apache/vhosts.d/${fqdn}/${name}.conf" 
+            "puppet://$server/apache/vhosts.d/${name}.conf" 
         ],
         default => "puppet://$server/$source",
     }
@@ -152,11 +152,12 @@ define apache::config::file(
     $real_source = $source ? {
         # get a whole bunch of possible sources if there is no specific source for that config-file
         '' => [ 
-            "puppet://$server/apache/conf/${fqdn}/${name}", 
             "puppet://$server/dist/apache/conf/${fqdn}/${name}",
+            "puppet://$server/dist/apache/conf/${name}",
             "puppet://$server/apache/conf/${name}.${operatingsystem}.${lsbdistcodename}",
             "puppet://$server/apache/conf/${name}.${operatingsystem}",
-            "puppet://$server/apache/conf/${name}.Default"
+            "puppet://$server/apache/conf/${name}.Default",
+            "puppet://$server/apache/conf/${name}"
         ],
         default => "puppet://$server/$source",
     }
