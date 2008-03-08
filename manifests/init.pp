@@ -35,7 +35,7 @@ class apache::base {
         require => Package[apache],
     }
     file { 'default_apache_index':
-        path => '/var/www/localhost/index.html',
+        path => '/var/www/localhost/htdocs/index.html',
         ensure => file,
         owner => 'root',
         group => 0,
