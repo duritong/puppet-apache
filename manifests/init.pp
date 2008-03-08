@@ -83,7 +83,10 @@ class apache::gentoo inherits apache::base {
     }
     apache::vhost::file { '00_default_ssl_vhost': }
     apache::vhost::file { '00_default_vhost': }
-    apache::config::file { 'default_vhost.include': destination => '$config_dir/vhosts.d/default_vhost.include' }
+    apache::config::file { 'default_vhost.include': 
+        source => 'apache/vhosts.d/default_vhost.include',
+        destination => '$config_dir/vhosts.d/default_vhost.include',
+    }
 }
 
 class apache::debian inherits apache::base {
@@ -127,7 +130,7 @@ define apache::vhost::file(
             "puppet://$server/dist/apache/vhosts.d/${name}.conf", 
             "puppet://$server/apache/vhosts.d/${fqdn}/${name}.conf" 
         ],
-        default => $source,
+        default => "puppet://$server/$source",
     }
 
     file{"vhost_${name}.conf":
@@ -155,7 +158,7 @@ define apache::config::file(
             "puppet://$server/apache/conf/${name}.${operatingsystem}",
             "puppet://$server/apache/conf/${name}.Default"
         ],
-        default => $source,
+        default => "puppet://$server/$source",
     }
 
     $real_destination = $destination ? {
