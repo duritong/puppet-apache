@@ -94,6 +94,9 @@ class apache::debian inherits apache::base {
     file {"vhosts_dir":
         ensure => '/etc/apache2/sites-enabled/',
     }
+    File[default_apache_index] {
+        path => '/var/www/index.html',
+    }
 }
 # ubuntu is similar to debian therefor inheritng from there
 class apache::ubuntu inherits apache::debian {}
@@ -101,6 +104,9 @@ class apache::openbsd inherits apache::base {
     $config_dir = '/var/www/conf/'
     File[vhosts_dir]{
         path => "$config_dir/vhosts.d/",
+    }
+    File[default_apache_index] {
+        path => '/var/www/htdocs/index.html',
     }
 }
 
