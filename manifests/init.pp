@@ -75,7 +75,7 @@ class apache::gentoo inherits apache::base {
     $config_dir = '/etc/apache2/'
 
     # needs module gentoo
-    gentoo::etcconfd { apache2: } 
+    gentoo::etcconfd { apache2: require => "Package[apache]", notify => "Service[apache]"} 
 
     Package[apache]{
         category => 'www-servers',
