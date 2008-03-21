@@ -8,7 +8,7 @@ class apache::mod_unique_id {
     }
 }
 
-class apache::mod_security::base {
+class apache::mod_unique_id::base {
     #noting todo yet
 }
 
