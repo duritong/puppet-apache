@@ -39,17 +39,17 @@ class apache::mod_security::base {
         notify => Service[apache],
     }
 
-    file{custom_host_rules:
-        path => "/etc/apache2/modules.d/mod_security/Zcustom_rules/",
-        source => [ "puppet://$server/dist/apache/mod_security/custom_rules/${fqdn}",
-                    "puppet://$server/apache/mod_security/custom_rules.Default_keep_it_empty/" ],
-        recurse => true,
-        owner => root,
-        group => 0,
-        mode => 644,
-        require => File[custom_rule_dir],
-        notify => Service[apache],
-    }
+#    file{custom_host_rules:
+#        path => "/etc/apache2/modules.d/mod_security/Zcustom_rules/",
+#        source => [ "puppet://$server/dist/apache/mod_security/custom_rules/${fqdn}",
+#                    "puppet://$server/apache/mod_security/custom_rules.Default_keep_it_empty/" ],
+#        recurse => true,
+#        owner => root,
+#        group => 0,
+#        mode => 644,
+#        require => File[custom_rule_dir],
+#        notify => Service[apache],
+#    }
 }
 
 class apache::mod_security::gentoo inherits apache::mod_security::base {
