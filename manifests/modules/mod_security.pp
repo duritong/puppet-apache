@@ -16,7 +16,6 @@ class apache::mod_security::base {
     package{mod_security:
         ensure => installed,
         notify => Service[apache],
-        require => Class[apache],
     }
     file{custom_rule_dir:
         path => "/etc/apache2/modules.d/mod_security/Zcustom_rules",
