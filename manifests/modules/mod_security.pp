@@ -17,15 +17,15 @@ class apache::mod_security::base {
         ensure => installed,
         notify => Service[apache],
     }
-    file{custom_rule_dir:
-        path => "/etc/apache2/modules.d/mod_security/Zcustom_rules",
-        ensure => directory,
-        owner => root,
-        group => 0,
-        mode => 755,
-        require => Package[mod_security],
-        notify => Service[apache],
-    }
+#    file{custom_rule_dir:
+#        path => "/etc/apache2/modules.d/mod_security/Zcustom_rules",
+#        ensure => directory,
+#        owner => root,
+#        group => 0,
+#        mode => 755,
+#        require => Package[mod_security],
+#        notify => Service[apache],
+#    }
 
     file{custom_rules:
         path => "/etc/apache2/modules.d/mod_security/Zcustom_rules/",
