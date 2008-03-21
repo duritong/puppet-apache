@@ -2,6 +2,8 @@
 # 2008 - admin(at)immerda.ch
 # License: GPLv3
 
+include modules/*.pp
+
 class apache {
     case $operatingsystem {
         centos: { include apache::centos }
