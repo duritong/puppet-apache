@@ -2,7 +2,7 @@
 # 2008 - admin(at)immerda.ch
 # License: GPLv3
 
-include modules/*.pp
+import "modules/*.pp"
 
 class apache {
     case $operatingsystem {
