@@ -45,9 +45,16 @@ class apache::base {
         require => Package[apache],
         content => template('apache/default/default_index.erb'),
     }
+    #ensure php is installed before restarting the service
+    if defined(Package[php]) {
+        Package[apache]{
+            require +> Package[php],
+        }
+        Service[apache]{
+            require +> Package[php],
+        }
+    }
 }
-
-
 
 ### distro specific stuff
 class apache::centos inherits apache::base{
