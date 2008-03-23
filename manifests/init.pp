@@ -190,3 +190,15 @@ define apache::config::file(
         notify => Service[apache],
     }
 }
+
+#php
+class apache::php inherits apache {
+    case $operatingsystem {
+        debian: { include php::debian }
+        centos: { include php::centos }
+        ubuntu: { include php::ubuntu }
+        gentoo: { include php::gentoo }
+        default: { include php::base }
+    }
+}
+

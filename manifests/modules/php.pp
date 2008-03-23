@@ -3,16 +3,6 @@
 # changed and improved by immerda prohect group admin(at)immerda.ch
 # See LICENSE for the full license granted to you.
 
-class apache::php inherits apache {
-    case $operatingsystem {
-        debian: { include php::debian }
-        centos: { include php::centos }
-        ubuntu: { include php::ubuntu }
-        gentoo: { include php::gentoo }
-        default: { include php::base }
-    }
-}
-
 class php::base {
     package{php:
         ensure => installed,
