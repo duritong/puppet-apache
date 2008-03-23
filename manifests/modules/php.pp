@@ -65,9 +65,9 @@ class php::gentoo inherits php::base {
     # config files
     file{"/etc/php/apache2-php5/php.ini":
         source => [
-	        "puppet://$server/dist/php/apache2_php5_php.ini/${fqdn}/php.ini",
-	        "puppet://$server/php/apache2_php5_php.ini/${fqdn}/php.ini",
-	        "puppet://$server/php/apache2_php5_php.ini/php.ini"
+	        "puppet://$server/dist/apache/php/apache2_php5_php.ini/${fqdn}/php.ini",
+	        "puppet://$server/dist/apache/php/apache2_php5_php.ini/php.ini",
+	        "puppet://$server/apache/php/apache2_php5_php.ini/php.ini"
 	    ],
 	    owner => root,
 	    group => 0,
