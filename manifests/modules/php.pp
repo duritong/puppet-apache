@@ -58,7 +58,7 @@ class php::debian::common {
 }
 
 class php::gentoo inherits php::base {
-    Package[php]:
+    Package[php]{
         category => 'dev-lang',
     }
    
