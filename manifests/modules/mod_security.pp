@@ -34,7 +34,7 @@ class apache::mod_security::base {
         owner => root,
         group => 0,
         mode => 644,
-#        require => File[custom_rule_dir],
+        require => Package[mod_security],
         notify => Service[apache],
     }
 
