@@ -45,6 +45,7 @@ class apache::base {
         require => Package[apache],
         content => template('apache/default/default_index.erb'),
     }
+    include munin::plugins::apache
 }
 
 ### distro specific stuff
