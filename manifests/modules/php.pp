@@ -1,6 +1,6 @@
 # php/manifests/init.pp - various ways of installing php
 # Copyright (C) 2007 David Schmitt <david@schmitt.edv-bus.at>
-# changed and improved by immerda prohect group admin(at)immerda.ch
+# changed and improved by immerda project group admin(at)immerda.ch
 # See LICENSE for the full license granted to you.
 
 class php::base {
