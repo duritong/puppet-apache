@@ -9,6 +9,19 @@ class php::base {
         before => Service[apache],
         notify => Service[apache],
     }
+    file{php_ini_config:
+        path => "/etc/php/apache2-php5/php.ini",
+        source => [
+	        "puppet://$server/files/apache/php/apache2_php5_php.ini/${fqdn}/php.ini",
+	        "puppet://$server/files/apache/php/apache2_php5_php.ini/php.ini",
+	        "puppet://$server/apache/php/apache2_php5_php.ini/php.ini"
+	    ],
+	    owner => root,
+	    group => 0,
+	    mode => 0644,
+	    require => [ Package[php], Package[apache] ],
+	    notify => Service[apache],
+    }
 }
 
 class php::centos inherits php::base {}
@@ -24,6 +37,10 @@ class php::debian::pear::common {
 }
 
 class php::debian inherits php::base {
+    #dunno yet about this config file under debian
+    File[php_ini_config]{
+        ensure => absent,
+    }
     Package[php]{
         name => 'php5',
     }
@@ -60,20 +77,6 @@ class php::debian::common {
 class php::gentoo inherits php::base {
     Package[php]{
         category => 'dev-lang',
-    }
-   
-    # config files
-    file{"/etc/php/apache2-php5/php.ini":
-        source => [
-	        "puppet://$server/dist/apache/php/apache2_php5_php.ini/${fqdn}/php.ini",
-	        "puppet://$server/dist/apache/php/apache2_php5_php.ini/php.ini",
-	        "puppet://$server/apache/php/apache2_php5_php.ini/php.ini"
-	    ],
-	    owner => root,
-	    group => 0,
-	    mode => 0644,
-	    require => [ Package[php], Package[apache] ],
-	    notify => Service[apache],
     }
 }
 

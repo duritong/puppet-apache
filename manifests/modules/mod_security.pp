@@ -40,7 +40,7 @@ class apache::mod_security::base {
 
 #    file{custom_host_rules:
 #        path => "/etc/apache2/modules.d/mod_security/Zcustom_rules/",
-#        source => [ "puppet://$server/dist/apache/mod_security/custom_rules/${fqdn}",
+#        source => [ "puppet://$server/files/apache/mod_security/custom_rules/${fqdn}",
 #                    "puppet://$server/apache/mod_security/custom_rules.Default_keep_it_empty/" ],
 #        recurse => true,
 #        owner => root,
