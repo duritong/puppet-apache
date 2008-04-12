@@ -220,7 +220,7 @@ class apache::status {
 
 class apache::status::centos {
     file{"/etc/httpd/conf.d/status.conf":
-        source => "puppet://$servername/centos/status.conf",
+        source => "puppet://$servername/apache/centos/status.conf",
         owner => root, group => 0, mode => 644;
     }
 }
