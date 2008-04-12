@@ -68,6 +68,15 @@ class apache::centos inherits apache::base{
     File[vhosts_dir]{
         path => "$config_dir/vhosts.d/",
     }
+
+    file{"${config_dir}/conf.d/vhosts.conf":
+        source => "puppet://$servername/apache/centos/vhosts.conf",
+        owner => root, group => 0, mode => 0755;
+    }
+    file{"${config_dir}/conf.d/ssl.conf":
+        source => "puppet://$servername/apache/centos/ssl.conf",
+        owner => root, group => 0, mode => 0755;
+    }
 }
 
 class apache::gentoo inherits apache::base {
@@ -203,3 +212,15 @@ class apache::php inherits apache {
     }
 }
 
+class apache::status {
+    case $operatingsystem {
+        centos: { include apache::status::centos }
+    }
+}
+
+class apache::status::centos {
+    file{"/etc/httpd/conf.d/status.conf":
+        source => "puppet://$servername/centos/status.conf",
+        owner => root, group => 0, mode => 644;
+    }
+}
