@@ -156,7 +156,7 @@ define apache::vhost::file(
         owner => root,
         group => 0,
         mode => 0644, 
-        require => [ File[$vhosts_dir], Package[apache] ],
+        require => [ File[vhosts_dir], Package[apache] ],
         notify => Service[apache],
     }
 }
