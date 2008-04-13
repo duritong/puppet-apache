@@ -69,7 +69,7 @@ class apache::centos inherits apache::base{
         path => "$config_dir/vhosts.d/",
     }
 
-    file{"${config_dir}/conf.d/vhosts.conf":
+    file{"${config_dir}/conf.d/ZZZ_vhosts.conf":
         source => "puppet://$servername/apache/centos/vhosts.conf",
         owner => root, group => 0, mode => 0755;
     }
