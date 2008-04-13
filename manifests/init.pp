@@ -77,6 +77,7 @@ class apache::centos inherits apache::base{
         source => "puppet://$servername/apache/centos/ssl.conf",
         owner => root, group => 0, mode => 0755;
     }
+    apache::vhost::file { '00_default_centos_vhost': }
 }
 
 class apache::gentoo inherits apache::base {
@@ -155,8 +156,7 @@ define apache::vhost::file(
         owner => root,
         group => 0,
         mode => 0644, 
-        require => File[$vhosts_dir], 
-        require => Package[apache],
+        require => [ File[$vhosts_dir], Package[apache] ],
         notify => Service[apache],
     }
 }
