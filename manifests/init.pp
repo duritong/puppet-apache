@@ -1,5 +1,6 @@
 # modules/apache/manifests/init.pp
 # 2008 - admin(at)immerda.ch
+# adapted by Puzzle ITC - haerry+puppet(at)puzzle.ch
 # License: GPLv3
 
 import "modules/*.pp"
@@ -119,6 +120,11 @@ class apache::openbsd inherits apache::base {
     File[default_apache_index] {
         path => '/var/www/htdocs/index.html',
     }
+}
+
+# extended apache configs
+class apache::security inherits apache {
+    include apache::mod_security
 }
 
 
