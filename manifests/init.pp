@@ -45,7 +45,7 @@ class apache::base {
         require => Package[apache],
         content => template('apache/default/default_index.erb'),
     }
-    include munin::plugins::apache
+    include apache::status
 }
 
 ### distro specific stuff
@@ -216,6 +216,7 @@ class apache::status {
     case $operatingsystem {
         centos: { include apache::status::centos }
     }
+    include munin::plugins::apache
 }
 
 class apache::status::centos {
