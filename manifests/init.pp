@@ -70,11 +70,11 @@ class apache::centos inherits apache::base{
     }
 
     file{"${config_dir}/conf.d/ZZZ_vhosts.conf":
-        source => "puppet://$servername/apache/centos/vhosts.conf",
+        source => "puppet://$server/apache/centos/vhosts.conf",
         owner => root, group => 0, mode => 0755;
     }
     file{"${config_dir}/conf.d/ssl.conf":
-        source => "puppet://$servername/apache/centos/ssl.conf",
+        source => "puppet://$server/apache/centos/ssl.conf",
         owner => root, group => 0, mode => 0755;
     }
     apache::vhost::file { '00_default_centos_vhost': }
@@ -221,7 +221,7 @@ class apache::status {
 
 class apache::status::centos {
     file{"/etc/httpd/conf.d/status.conf":
-        source => "puppet://$servername/apache/centos/status.conf",
+        source => "puppet://$server/apache/centos/status.conf",
         owner => root, group => 0, mode => 644;
     }
 }
