@@ -117,7 +117,20 @@ class apache::gentoo inherits apache::base {
         source => "apache/vhosts.d/default_vhost.include",
         destination => "$config_dir/vhosts.d/default_vhost.include",
     }
+
     apache::module::file { '00_default_settings': }
+    apache::module::file { '00_error_documents': }
+    
+    # to set the default for the ServerName
+    file { '00_default_settings_ServerName.conf':
+        path => '$modules_dir/00_default_settings_ServerName.conf',
+        ensure => file,
+        owner => 'root',
+        group => 0,
+        mode => 644,
+        require => Package[apache],
+        content => template('apache/modules_dir_00_default_settings_ServerName.conf.erb'),
+    }
 }
 
 class apache::debian inherits apache::base {
