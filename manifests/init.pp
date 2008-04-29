@@ -123,7 +123,7 @@ class apache::gentoo inherits apache::base {
     
     # to set the default for the ServerName
     file { '00_default_settings_ServerName.conf':
-        path => '$modules_dir/00_default_settings_ServerName.conf',
+        path => "$modules_dir/00_default_settings_ServerName.conf",
         ensure => file,
         owner => 'root',
         group => 0,
