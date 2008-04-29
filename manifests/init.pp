@@ -26,6 +26,15 @@ class apache::base {
         require => Package[apache],
     }
 
+    file{'modules_dir':
+        path => '/etc/apache2/modules.d/',
+        ensure => directory,
+        owner => root,
+        group => 0,
+        mode => 0755,
+        require => Package[apache],
+    }
+
     package { 'apache':
         name => 'apache',
         ensure => present,
@@ -69,6 +78,9 @@ class apache::centos inherits apache::base{
     File[vhosts_dir]{
         path => "$config_dir/vhosts.d/",
     }
+    File[modules_dir]{
+        path => "$config_dir/modules.d/",
+    }
 
     file{"${config_dir}/conf.d/ZZZ_vhosts.conf":
         source => "puppet://$server/apache/centos/vhosts.conf",
@@ -96,12 +108,16 @@ class apache::gentoo inherits apache::base {
     File[vhosts_dir]{
         path => "$config_dir/vhosts.d/",
     }
+    File[modules_dir]{
+        path => "$config_dir/modules.d/",
+    }
     apache::vhost::file { '00_default_ssl_vhost': }
     apache::vhost::file { '00_default_vhost': }
     apache::config::file { 'default_vhost.include': 
         source => "apache/vhosts.d/default_vhost.include",
         destination => "$config_dir/vhosts.d/default_vhost.include",
     }
+    apache::module::file { '00_default_settings': }
 }
 
 class apache::debian inherits apache::base {
@@ -119,6 +135,9 @@ class apache::openbsd inherits apache::base {
     $config_dir = '/var/www/conf/'
     File[vhosts_dir]{
         path => "$config_dir/vhosts.d/",
+    }
+    File[modules_dir]{
+        path => "$config_dir/modules.d/",
     }
     File[default_apache_index] {
         path => '/var/www/htdocs/index.html',
@@ -166,6 +185,44 @@ define apache::vhost::file(
         group => 0,
         mode => 0644, 
         require => [ File[vhosts_dir], Package[apache] ],
+        notify => Service[apache],
+    }
+}
+
+define apache::module::file(
+    $source = '',
+    $destination = ''
+){
+    $modules_dir = $operatingsystem ? {
+            centos => "$apache::centos::config_dir/modules.d/",
+            gentoo => "$apache::gentoo::config_dir/modules.d/",
+            debian => "$apache::debian::config_dir/modules.d/",
+            ubuntu => "$apache::ubuntu::config_dir/modules.d/",
+            openbsd => "$apache::openbsd::config_dir/modules.d/",
+            default => '/etc/apache2/modules.d/',
+    }
+
+    $real_destination = $destination ? {
+        '' => "${modules_dir}/${name}.conf",
+        default => $destination,
+    } 
+
+    $real_source = $source ? {
+        ''  => [ 
+            "puppet://$server/files/apache/modules.d/${fqdn}/${name}.conf",
+            "puppet://$server/files/apache/modules.d/${name}.conf", 
+            "puppet://$server/apache/modules.d/${name}.conf" 
+        ],
+        default => "puppet://$server/$source",
+    }
+
+    file{"modules_${name}.conf":
+        path => $real_destination,
+        source => $real_source,
+        owner => root,
+        group => 0,
+        mode => 0644, 
+        require => [ File[modules_dir], Package[apache] ],
         notify => Service[apache],
     }
 }
