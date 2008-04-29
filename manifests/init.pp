@@ -224,7 +224,7 @@ define apache::module::file(
         ''  => [ 
             "puppet://$server/files/apache/modules.d/${fqdn}/${name}.conf",
             "puppet://$server/files/apache/modules.d/${name}.conf", 
-            "puppet://$server/apache/modules.d/${operatingsystem}/${name}.conf" 
+            "puppet://$server/apache/modules.d/${operatingsystem}/${name}.conf",
             "puppet://$server/apache/modules.d/${name}.conf" 
         ],
         default => "puppet://$server/$source",
