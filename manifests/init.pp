@@ -13,6 +13,10 @@ class apache {
         ubuntu: { include apache::ubuntu }
         default: { include apache::base }
     }
+
+    if $selinux {
+        include apache::selinux
+    }
 }
 
 class apache::base {
