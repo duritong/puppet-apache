@@ -15,5 +15,5 @@ class apache::selinux::gentoo inherits apache::selinux::base {
         ensure => present,
         category => 'sec-policy',
     }
-    selinux::loadmodule {"apache": location => "/usr/share/selinux/${selinux_mode}/apache.pp" }
+    selinux::loadmodule {"apache": }
 }
