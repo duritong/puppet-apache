@@ -17,6 +17,9 @@ class apache {
     if $selinux {
         include apache::selinux
     }
+    if $use_munin {
+        include apache::status
+    }
 }
 
 class apache::base {
@@ -59,7 +62,6 @@ class apache::base {
         require => Package[apache],
         content => template('apache/default/default_index.erb'),
     }
-    include apache::status
 }
 
 ### distro specific stuff

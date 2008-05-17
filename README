@@ -1,0 +1,22 @@
+puppet module apache
+====================
+
+written by immerda project group
+admin+puppet(at)immerda.ch
+
+adapted by Puzzle ITC 
+haerry+puppet(at)puzzle.ch
+
+original idea by David Schmitt
+<david(at)schmitt.edv-bus.at>
+
+License: GPLv3
+
+###################################
+
+This module tries to manage apache on different distros in a
+similar manner. a few additional directories have to be
+created as well some configuration files have to be deployed
+to fit this schema.
+
+Vhosts can be added 
