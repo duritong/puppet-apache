@@ -19,4 +19,7 @@ similar manner. a few additional directories have to be
 created as well some configuration files have to be deployed
 to fit this schema.
 
-Vhosts can be added 
+vhosts can be added with the vhosts define:
+(currently only plain vhosts file are supported)
+
+apache::vhosts::file { '$domain' }

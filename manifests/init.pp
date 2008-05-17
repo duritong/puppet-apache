@@ -90,14 +90,14 @@ class apache::centos inherits apache::base{
 
     file{"${config_dir}/conf.d/ZZZ_vhosts.conf":
         source => "puppet://$server/apache/centos/vhosts.conf",
-        owner => root, group => 0, mode => 0755;
+        owner => root, group => 0, mode => 0644;
     }
     file{"${config_dir}/conf.d/ssl.conf":
         source => [ "puppet://$server/files/apache/centos/${fqdn}/ssl.conf", 
                     "puppet://$server/files/apache/centos/ssl.conf",
                    "puppet://$server/apache/centos/ssl.conf" 
             ],
-        owner => root, group => 0, mode => 0755;
+        owner => root, group => 0, mode => 0644;
     }
     apache::vhost::file { '00_default_centos_vhost': }
 }
