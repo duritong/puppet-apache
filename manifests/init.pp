@@ -3,8 +3,6 @@
 # adapted by Puzzle ITC - haerry+puppet(at)puzzle.ch
 # License: GPLv3
 
-import "modules/*.pp"
-
 class apache {
     case $operatingsystem {
         centos: { include apache::centos }
@@ -159,12 +157,6 @@ class apache::openbsd inherits apache::base {
     }
 }
 
-# extended apache configs
-class apache::security inherits apache {
-    include apache::mod_security
-}
-
-
 ### config things
 define apache::vhost::file(
     $source = '',
@@ -283,15 +275,8 @@ define apache::config::file(
     }
 }
 
-#php
 class apache::php inherits apache {
-    case $operatingsystem {
-        debian: { include php::debian }
-        centos: { include php::centos }
-        ubuntu: { include php::ubuntu }
-        gentoo: { include php::gentoo }
-        default: { include php::base }
-    }
+    include php
 }
 
 class apache::status {
