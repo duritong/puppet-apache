@@ -1,7 +1,16 @@
-# modules/apache/manifests/init.pp
-# 2008 - admin(at)immerda.ch
-# adapted by Puzzle ITC - haerry+puppet(at)puzzle.ch
-# License: GPLv3
+#
+# apache module
+#
+# Copyright 2008, admin(at)immerda.ch
+# Copyright 2008, Puzzle ITC GmbH
+# Marcel Härry haerry+puppet(at)puzzle.ch
+# Simon Josi josi+puppet(at)puzzle.ch
+#
+# This program is free software; you can redistribute 
+# it and/or modify it under the terms of the GNU 
+# General Public License version 3 as published by 
+# the Free Software Foundation.
+#
 
 class apache {
     case $operatingsystem {
@@ -21,14 +30,18 @@ class apache {
 }
 
 class apache::base {
-
     file{'vhosts_dir':
         path => '/etc/apache2/vhosts.d/',
         ensure => directory,
-        owner => root,
-        group => 0,
-        mode => 0755,
         require => Package[apache],
+        owner => root, group => 0, mode => 0755;
+    }
+
+    file{'modules_dir':
+        path => '/etc/apache2/modules.d/',
+        ensure => directory,
+        require => Package[apache],
+        owner => root, group => 0, mode => 0755;
     }
 
     file{'modules_dir':
@@ -54,11 +67,9 @@ class apache::base {
     file { 'default_apache_index':
         path => '/var/www/localhost/htdocs/index.html',
         ensure => file,
-        owner => 'root',
-        group => 0,
-        mode => 644,
         require => Package[apache],
         content => template('apache/default/default_index.erb'),
+        owner => root, group => 0, mode => 0644;
     }
 }
 
@@ -88,16 +99,28 @@ class apache::centos inherits apache::base{
 
     file{"${config_dir}/conf.d/ZZZ_vhosts.conf":
         source => "puppet://$server/apache/centos/vhosts.conf",
+        require => Package['apache'],
+        owner => root, group => 0, mode => 0644;
+    }
+    file{"${config_dir}/conf/httpd.conf":
+        source => [ "puppet://$server/files/apache/centos/${fqdn}/httpd.conf", 
+                    "puppet://$server/files/apache/centos/httpd.conf",
+                    "puppet://$server/apache/centos/${operatingsystemrelease}/httpd.conf",
+                    "puppet://$server/apache/centos/httpd.conf" ],
+        require => Package['apache'],
         owner => root, group => 0, mode => 0644;
     }
     file{"${config_dir}/conf.d/ssl.conf":
         source => [ "puppet://$server/files/apache/centos/${fqdn}/ssl.conf", 
                     "puppet://$server/files/apache/centos/ssl.conf",
-                   "puppet://$server/apache/centos/ssl.conf" 
-            ],
+                    "puppet://$server/apache/centos/${operatingsystemrelease}/ssl.conf",
+                    "puppet://$server/apache/centos/ssl.conf" ],
+        require => Package['apache'],
         owner => root, group => 0, mode => 0644;
     }
     apache::vhost::file { '00_default_centos_vhost': }
+    apache::config::file{ 'ssl_defaults.inc': }
+    apache::config::file{ 'welcome.conf': }
 }
 
 class apache::gentoo inherits apache::base {
@@ -135,7 +158,7 @@ class apache::gentoo inherits apache::base {
 
 class apache::debian inherits apache::base {
     $config_dir = '/etc/apache2/'
-    file {"vhosts_dir":
+    file {"$vhosts_dir":
         ensure => '/etc/apache2/sites-enabled/',
     }
     File[default_apache_index] {
@@ -159,8 +182,9 @@ class apache::openbsd inherits apache::base {
 
 ### config things
 define apache::vhost::file(
-    $source = '',
-    $destination = ''
+    $source = 'absent',
+    $destination = 'absent',
+    $content = 'absent'
 ){
     $vhosts_dir = $operatingsystem ? {
             centos => "$apache::centos::config_dir/vhosts.d/",
@@ -172,27 +196,34 @@ define apache::vhost::file(
     }
 
     $real_destination = $destination ? {
-        '' => "${vhosts_dir}/${name}.conf",
+        'absent' => "${vhosts_dir}/${name}.conf",
         default => $destination,
     } 
-
-    $real_source = $source ? {
-        ''  => [ 
-            "puppet://$server/files/apache/vhosts.d/${fqdn}/${name}.conf",
-            "puppet://$server/files/apache/vhosts.d/${name}.conf", 
-            "puppet://$server/apache/vhosts.d/${name}.conf" 
-        ],
-        default => "puppet://$server/$source",
-    }
-
     file{"vhost_${name}.conf":
         path => $real_destination,
-        source => $real_source,
-        owner => root,
-        group => 0,
-        mode => 0644, 
         require => [ File[vhosts_dir], Package[apache] ],
         notify => Service[apache],
+        owner => root, group => 0, mode => 0644;
+    }
+    case $content {
+        'absent': {
+            $real_source = $source ? {
+                'absent'  => [ 
+                    "puppet://$server/files/apache/vhosts.d/${fqdn}/${name}.conf",
+                    "puppet://$server/files/apache/vhosts.d/${name}.conf", 
+                    "puppet://$server/apache/vhosts.d/${name}.conf" 
+                ],
+                default => "puppet://$server/$source",
+            }
+            File["vhost_${name}.conf"]{
+                source => $real_source,
+            }
+        }
+        default: {
+            File["vhost_${name}.conf"]{
+                content => $content,
+            }
+        }
     }
 }
 
@@ -227,11 +258,9 @@ define apache::module::file(
     file{"modules_${name}.conf":
         path => $real_destination,
         source => $real_source,
-        owner => root,
-        group => 0,
-        mode => 0644, 
         require => [ File[modules_dir], Package[apache] ],
         notify => Service[apache],
+        owner => root, group => 0, mode => 0644;
     }
 }
 
@@ -254,11 +283,11 @@ define apache::config::file(
 
     $real_destination = $destination ? {
         '' => $operatingsystem ? {
-            centos => "$apache::centos::config_dir/${name}",
+            centos => "$apache::centos::config_dir/conf.d/${name}",
             gentoo => "$apache::gentoo::config_dir/${name}",
-            debian => "$apache::debian::config_dir/${name}",
-            ubuntu => "$apache::ubuntu::config_dir/${name}",
-            openbsd => "$apache::openbsd::config_dir/${name}",
+            debian => "$apache::debian::config_dir/conf.d/${name}",
+            ubuntu => "$apache::ubuntu::config_dir/conf.d/${name}",
+            openbsd => "$apache::openbsd::config_dir/conf.d/${name}",
             default => "/etc/apache2/${name}",
         },
         default => $destination
@@ -267,11 +296,9 @@ define apache::config::file(
     file{"apache_${name}":
         path => $real_destination,
         source => $real_source,
-        owner => root,
-        group => 0,
-        mode => 0644,
         require => Package[apache],
         notify => Service[apache],
+        owner => root, group => 0, mode => 0644;
     }
 }
 
@@ -283,12 +310,15 @@ class apache::status {
     case $operatingsystem {
         centos: { include apache::status::centos }
     }
-    include munin::plugins::apache
+    if $use_munin {
+        include munin::plugins::apache
+    }
 }
 
 class apache::status::centos {
     file{"/etc/httpd/conf.d/status.conf":
         source => "puppet://$server/apache/centos/status.conf",
-        owner => root, group => 0, mode => 644;
+        require => Package['apache'],
+        owner => root, group => 0, mode => 0644;
     }
 }
