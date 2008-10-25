@@ -44,15 +44,6 @@ class apache::base {
         owner => root, group => 0, mode => 0755;
     }
 
-    file{'modules_dir':
-        path => '/etc/apache2/modules.d/',
-        ensure => directory,
-        owner => root,
-        group => 0,
-        mode => 0755,
-        require => Package[apache],
-    }
-
     package { 'apache':
         name => 'apache',
         ensure => present,
