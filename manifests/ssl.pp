@@ -34,7 +34,7 @@ class apache::ssl::gentoo inherits apache::ssl::base {
 
 class apach::ssl::itk inherits apache::ssl {
     case $operatingsystem {
-        centos: { include apache::ssl::centos }
+        centos: { include apache::ssl::itk::centos }
     }
 }
 
