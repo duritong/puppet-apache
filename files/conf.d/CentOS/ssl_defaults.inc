@@ -16,7 +16,8 @@ SSLProtocol all -SSLv2
 #   SSL Cipher Suite:
 # List the ciphers that the client is permitted to negotiate.
 # See the mod_ssl documentation for a complete list.
-SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM:+LOW
+SSLCipherSuite HIGH:MEDIUM:!ADH:-SSLv2
+
 
 #   Server Certificate:
 # Point SSLCertificateFile at a PEM encoded certificate.  If
