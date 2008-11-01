@@ -32,7 +32,7 @@ class apache::ssl::gentoo inherits apache::ssl::base {
     apache::vhost::file { '00_default_ssl_vhost': }
 }
 
-class apach::ssl::itk inherits apache {
+class apach::ssl::itk inherits apache::ssl {
     case $operatingsystem {
         centos: { include apache::ssl::centos }
     }
