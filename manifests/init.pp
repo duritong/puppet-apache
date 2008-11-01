@@ -165,4 +165,19 @@ class apache::openbsd inherits apache::base {
     File[default_apache_index] {
         path => '/var/www/htdocs/index.html',
     }
+
+    file{'/opt/bin/restart_apache.sh':
+        source => "puppet://$server/apache/openbsd/bin/restart_apache.sh",
+        require => File['/opt/bin'],
+        owner => root, group => 0, mode => 0700;
+    }
+
+    Service['apache']{
+        hasstatus => true,
+        hasrestart => true,
+        restart => '/opt/bin/restart_apache.sh',
+        status => 'apachectl status',
+        start => 'apachectl start',
+        stop => 'apachectl stop',
+    }
 }
