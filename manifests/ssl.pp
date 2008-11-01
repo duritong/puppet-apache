@@ -31,3 +31,15 @@ class apache::ssl::gentoo inherits apache::ssl::base {
     apache::module::file { '00_error_documents': }
     apache::vhost::file { '00_default_ssl_vhost': }
 }
+
+class apach::ssl::itk inherits apache {
+    case $operatingsystem {
+        centos: { include apache::ssl::centos }
+    }
+}
+
+class apache::ssl::itk::centos inherits apache::ssl::centos {
+    Package['mod_ssl']{
+        name => 'mod_ssl-itk',
+    }
+}

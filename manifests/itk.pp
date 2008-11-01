@@ -19,7 +19,4 @@ class apache::centos::itk inherits apache::centos {
     Package['apache']{
         name => 'httpd-itk',
     }
-    Package['mod_ssl']{
-        name => 'mod_ssl-itk',
-    }
 }
