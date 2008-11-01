@@ -1,7 +1,7 @@
 # Use separate log files for the SSL virtual host; note that LogLevel
 # is not inherited from httpd.conf.
 ErrorLog logs/ssl_error_log
-#TransferLog logs/ssl_access_log
+TransferLog logs/ssl_access_log
 LogLevel warn
 
 #   SSL Engine Switch:

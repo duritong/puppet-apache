@@ -8,7 +8,6 @@ class apache::itk inherits apache {
         default: { include apache::base::itk }
     }
 }
-
 class apache::base::itk inherits apache::base {
     Package['apache'] {
         name => 'apache2-itk',
@@ -20,7 +19,6 @@ class apache::centos::itk inherits apache::centos {
     Package['apache']{
         name => 'httpd-itk',
     }
-
     Package['mod_ssl']{
         name => 'mod_ssl-itk',
     }
