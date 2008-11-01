@@ -62,7 +62,7 @@ class apache::package inherits apache::base {
     File['vhosts_dir']{
         require => Package[apache],
     }
-    Servicei['apache']{
+    Service['apache']{
         require => Package[apache],
     }
     File['default_apache_index']{
