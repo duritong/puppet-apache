@@ -34,31 +34,42 @@ class apache::base {
     file{'vhosts_dir':
         path => '/etc/apache2/vhosts.d/',
         ensure => directory,
-        require => Package[apache],
         owner => root, group => 0, mode => 0755;
     }
     file{'modules_dir':
         path => '/etc/apache2/modules.d/',
         ensure => directory,
-        require => Package[apache],
         owner => root, group => 0, mode => 0755;
-    }
-    package { 'apache':
-        name => 'apache',
-        ensure => present,
     }
     service { apache:
         name => 'apache2',
         enable => true,
         ensure => running,
-        require => Package[apache],
     }
     file { 'default_apache_index':
         path => '/var/www/localhost/htdocs/index.html',
         ensure => file,
-        require => Package[apache],
         content => template('apache/default/default_index.erb'),
         owner => root, group => 0, mode => 0644;
+    }
+}
+
+class apache::package inherits apache::base {
+    package { 'apache':
+        name => 'apache',
+        ensure => present,
+    }
+    File['vhosts_dir']{
+        require => Package[apache],
+    }
+    Servicei['apache']{
+        require => Package[apache],
+    }
+    File['default_apache_index']{
+        require => Package[apache],
+    }
+    File['modules_dir']{
+        require => Package[apache],
     }
 }
 
@@ -66,7 +77,7 @@ class apache::base {
 ### distribution specific classes
 
 ### centos
-class apache::centos inherits apache::base {
+class apache::centos inherits apache::package {
     $config_dir = '/etc/httpd/'
 
     Package[apache]{
@@ -91,7 +102,7 @@ class apache::centos inherits apache::base {
 }
 
 ### gentoo
-class apache::gentoo inherits apache::base {
+class apache::gentoo inherits apache::package {
     $config_dir = '/etc/apache2/'
 
     # needs module gentoo
@@ -126,7 +137,7 @@ class apache::gentoo inherits apache::base {
 }
 
 ### debian
-class apache::debian inherits apache::base {
+class apache::debian inherits apache::package {
     $config_dir = '/etc/apache2/'
 
     file {"$vhosts_dir":
