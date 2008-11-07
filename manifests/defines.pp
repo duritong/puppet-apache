@@ -27,6 +27,7 @@ define apache::vhost::static(
     $apache_mode = 0640,
     $allow_override = 'None',
     $additional_options = 'absent',
+    $ssl_mode = 'false',
     $vhost_mode = 'template',
     $vhost_source = 'absent',
     $vhost_destination = 'absent'
