@@ -167,7 +167,7 @@ class apache::ubuntu inherits apache::debian {}
 
 ### openbsd
 class apache::openbsd inherits apache::base {
-    $config_dir = '/var/www/conf/'
+    $config_dir = '/var/www/'
 
     File[vhosts_dir]{
         path => "$config_dir/vhosts.d/",
@@ -184,7 +184,7 @@ class apache::openbsd inherits apache::base {
         line => 'httpd flags=""',
     }
 
-    file{"/var/www/conf/httpd.conf":
+    file{"$config_dir/conf/httpd.conf":
         source => [ "puppet://$server/files/apache/conf/${fqdn}/httpd.conf",
                     "puppet://$server/files/apache/conf/${apache_cluster_node}/httpd.conf",   
                     "puppet://$server/files/apache/conf/httpd.conf",   
