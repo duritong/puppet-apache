@@ -23,8 +23,7 @@
         SecRuleEngine <%= if mod_security.to_s == 'true' then "On" else "Off" end %>
     </IfModule>
 
-
-    <%- unless additional_options == 'absent' then -%>
+    <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>
     <%- end -%>
 </VirtualHost>

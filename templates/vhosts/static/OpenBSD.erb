@@ -13,6 +13,10 @@
     <%- if ssl_mode.to_s=='force' then %>
     Redirect permanent / https://<%= servername %>/
     <%- end %>
+
+    <%- unless additional_options.to_s == 'absent' then -%>
+    <%= additional_options %>
+    <%- end -%>
 </VirtualHost>
 <%- unless ssl_mode.to_s == 'false'  then %>
 <VirtualHost *:443>
@@ -26,5 +30,9 @@
 
     ErrorLog <%= logdir %>/error_log
     CustomLog <%= logdir %>/access_log combined
+
+    <%- unless additional_options.to_s == 'absent' then -%>
+    <%= additional_options %>
+    <%- end -%>
 </VirtualHost>
 <%- end %>
