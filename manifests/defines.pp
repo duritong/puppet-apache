@@ -413,7 +413,7 @@ define apache::vhost::webhostdir(
             case $apache_default_user {
                 '': { 
                     $real_apache_user = $operatingsystem ? {
-                        openbsd => 'nobody',
+                        openbsd => 'www',
                         default => $apache_user 
                     }
                 }
@@ -428,7 +428,7 @@ define apache::vhost::webhostdir(
             case $apache_default_group {
                 '': {
                     $real_apache_group = $operatingsystem ? {
-                        openbsd => 'nobody',
+                        openbsd => 'www',
                         default => $apache_group
                     }
                 }
