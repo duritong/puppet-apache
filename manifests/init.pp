@@ -173,7 +173,7 @@ class apache::openbsd inherits apache::base {
         path => "$config_dir/vhosts.d/",
     }
     File[modules_dir]{
-        path => "$config_dir/modules/",
+        path => "$config_dir/conf/modules/",
     }
     File[config_dir]{
         path => "$config_dir/conf.d/",
