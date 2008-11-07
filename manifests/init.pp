@@ -14,12 +14,19 @@
 
 import "defines.pp"
 
+# Global variables:
+#
+# $apache_default_user: Set this to the user with which the
+#                       apache is running.
+# $apache_default_group: Set this to the group with which the
+#                        apache is running.
 class apache {
     case $operatingsystem {
         centos: { include apache::centos }
         gentoo: { include apache::gentoo }
         debian: { include apache::debian }
         ubuntu: { include apache::ubuntu }
+        openbsd: { include apache::openbsd }
         default: { include apache::base }
     }
     if $selinux {
@@ -33,6 +40,11 @@ class apache {
 class apache::base {
     file{'vhosts_dir':
         path => '/etc/apache2/vhosts.d/',
+        ensure => directory,
+        owner => root, group => 0, mode => 0755;
+    }
+    file{'config_dir':
+        path => '/etc/apache2/conf.d/',
         ensure => directory,
         owner => root, group => 0, mode => 0755;
     }
@@ -52,6 +64,8 @@ class apache::base {
         content => template('apache/default/default_index.erb'),
         owner => root, group => 0, mode => 0644;
     }
+    apache::config::file{ 'defaults.inc': }
+    apache::vhost::file { '0-default': }
 }
 
 class apache::package inherits apache::base {
@@ -89,6 +103,9 @@ class apache::centos inherits apache::package {
     File[vhosts_dir]{
         path => "$config_dir/vhosts.d/",
     }
+    File[config_dir]{
+        path => "$config_dir/conf.d/",
+    }
     File[modules_dir]{
         path => "$config_dir/modules.d/",
     }
@@ -96,9 +113,7 @@ class apache::centos inherits apache::package {
         path => '/var/www/html/index.html',
     }
     apache::config::file{ 'welcome.conf': }
-    apache::config::file{ 'defaults.inc': }
     apache::config::file{ 'vhosts.conf': }
-    apache::vhost::file { '0-default': }
 }
 
 ### gentoo
@@ -121,13 +136,11 @@ class apache::gentoo inherits apache::package {
     }
     apache::gentoo::module { '00_default_settings': }
     apache::gentoo::module { '00_error_documents': }
-
-    apache::vhost::file { '00_default_vhost': }
     apache::config::file { 'default_vhost.include': 
         source => "apache/vhosts.d/default_vhost.include",
         destination => "$config_dir/vhosts.d/default_vhost.include",
     }
-    
+
     # set the default for the ServerName
     file{"${config_dir}/modules.d/00_default_settings_ServerName.conf":
         content => template('apache/modules_dir_00_default_settings_ServerName.conf.erb'),
@@ -160,11 +173,32 @@ class apache::openbsd inherits apache::base {
         path => "$config_dir/vhosts.d/",
     }
     File[modules_dir]{
-        path => "$config_dir/modules.d/",
+        path => "$config_dir/modules/",
     }
+    File[config_dir]{
+        path => "$config_dir/conf.d/",
+    }
+
+    line{'enable_apache_on_boot':
+        file => '/etc/rc.conf.local',
+        line => 'httpd flags=""',
+    }
+
+    file{"/var/www/conf/httpd.conf":
+        source => [ "puppet://$server/files/apache/conf/${fqdn}/httpd.conf",
+                    "puppet://$server/files/apache/conf/${apache_cluster_node}/httpd.conf",   
+                    "puppet://$server/files/apache/conf/httpd.conf",   
+                    "puppet://$server/apache/conf/${operatingsystem}/httpd.conf",   
+                    "puppet://$server/apache/conf/httpd.conf" ],   
+        notify => Service['apache'],
+        owner => root, group => 0, mode => 0644;
+    }
+
+    apache::vhost::webhostdir{'default': }
     File[default_apache_index] {
-        path => '/var/www/htdocs/index.html',
+        path => '/var/www/htdocs/default/www/index.html',
     }
+    
 
     file{'/opt/bin/restart_apache.sh':
         source => "puppet://$server/apache/openbsd/bin/restart_apache.sh",
