@@ -31,6 +31,8 @@ class apache::ssl::centos inherits apache::ssl::base {
 class apache::ssl::gentoo inherits apache::ssl::base {}
 
 class apache::ssl::openbsd inherits apache::openbsd {
+    include apache::ssl::base
+
     Line['enable_apache_on_boot']{
         ensure => 'absent',
     }
