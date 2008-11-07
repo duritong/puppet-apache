@@ -123,7 +123,7 @@ class apache::gentoo inherits apache::package {
     # needs module gentoo
     gentoo::etcconfd {
         apache2: require => "Package[apache]", 
-        notify => "Service[apache]"
+        notify => Service[apache],
     } 
     Package[apache]{
         category => 'www-servers',
@@ -207,8 +207,6 @@ class apache::openbsd inherits apache::base {
     }
 
     Service['apache']{
-        hasstatus => true,
-        hasrestart => true,
         restart => '/opt/bin/restart_apache.sh',
         status => 'apachectl status',
         start => 'apachectl start',
