@@ -125,7 +125,6 @@ define apache::vhost::php::standard(
         domainalias => $domainalias,
         allow_override => $allow_override,
         additional_options => $additional_options,
-        template_mode => 'php',
         php_upload_tmp_dir => $real_upload_tmp_dir,
         php_session_save_path => $real_session_save_path,
         ssl_mode => $ssl_mode,
@@ -275,7 +274,7 @@ define apache::vhost::template(
     }
 
     apache::vhost::file{"$name":
-        content => template("apache/vhosts/${templapte_mode}/${operatingsystem}.erb"),
+        content => template("apache/vhosts/${template_mode}/${operatingsystem}.erb"),
     }
 }
 
