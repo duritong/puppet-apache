@@ -30,16 +30,6 @@ define apache::vhost::static(
     $vhost_source = 'absent',
     $vhost_destination = 'absent'
 ){
-    $real_path = $path ? {
-        'absent' => $operatingsystem ? {
-            openbsd => "/var/www/htdocs/${name}",
-            default => "/var/www/${name}"
-        },
-        default => "${path}"
-    }
-    $documentroot = "${real_path}/www"
-    $logdir = "${real_path}/logs"
-
     apache::vhost::webhostdir{$name:
         path => $path,
         owner => $owner,
@@ -50,6 +40,7 @@ define apache::vhost::static(
     }
 
     apache::vhost{"${name}":
+        path => $path,
         vhost_mode => $vhost_mode,
         source => $vhost_source,
         destination => $vhost_destination,
@@ -82,16 +73,6 @@ define apache::vhost::php::standard(
     $vhost_source = 'absent',
     $vhost_destination = 'absent'
 ){
-    $real_path = $path ? {
-        'absent' => $operatingsystem ? {
-            openbsd => "/var/www/htdocs/${name}",
-            default => "/var/www/${name}"
-        },
-        default => "${path}"
-    }
-    $documentroot = "${real_path}/www"
-    $logdir = "${real_path}/logs"
-
     apache::vhost::webhostdir{$name:
         path => $path,
         owner => $owner,
@@ -130,6 +111,7 @@ define apache::vhost::php::standard(
     }
 
     apache::vhost{"${name}":
+        path => $path,
         template_mode => 'php',
         vhost_mode => $vhost_mode,
         source => $vhost_source,
@@ -157,6 +139,7 @@ define apache::vhost::php::standard(
 #   - file: deploy a vhost file (apache::vhost::file will be called directly)
 #   
 define apache::vhost(
+    $path = 'absent',
     $template_mode = 'static',
     $vhost_mode = 'template',
     $source = 'absent',
@@ -181,6 +164,7 @@ define apache::vhost(
         }
         'template': {
             apache::vhost::template{"${name}":
+                path => $path,
                 domain => $domain,
                 domainalias => $domainalias,
                 php_upload_tmp_dir => $php_upload_tmp_dir,
@@ -255,6 +239,7 @@ define apache::vhost::file(
 #   - true: enable ssl for this vhost
 #   - force: enable ssl and redirect non-ssl to ssl
 define apache::vhost::template(
+    $path = 'absent',
     $domain = 'absent',
     $domainalias = 'absent',
     $allow_override = 'None',
@@ -265,6 +250,16 @@ define apache::vhost::template(
     $ssl_mode = 'false',
     $mod_security = 'true'
 ){
+    $real_path = $path ? {
+        'absent' => $operatingsystem ? {
+            openbsd => "/var/www/htdocs/${name}",
+            default => "/var/www/${name}"
+        },
+        default => "${path}"
+    }
+    $documentroot = "${real_path}/www"
+    $logdir = "${real_path}/logs"
+
     $servername = $domain ? {
         'absent' => $name,
         default => $domain
