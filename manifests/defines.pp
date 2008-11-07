@@ -19,6 +19,7 @@ define apache::vhost::static(
     $domainalias = 'absent',
     $path = 'absent',
     $owner = root,
+    $user_owner = root,
     $group = 0,
     $mode = 0640,
     $apache_user = apache,
@@ -33,6 +34,7 @@ define apache::vhost::static(
     apache::vhost::webhostdir{$name:
         path => $path,
         owner => $owner,
+        user_owner => $user_owner,
         group => $group,
         mode => $mode,
         apache_user => $apache_user,
@@ -59,6 +61,7 @@ define apache::vhost::php::standard(
     $domainalias = 'absent',
     $path = 'absent',
     $owner = root,
+    $user_owner = root,
     $group = 0,
     $mode = 0640,
     $apache_user = apache,
@@ -76,6 +79,7 @@ define apache::vhost::php::standard(
     apache::vhost::webhostdir{$name:
         path => $path,
         owner => $owner,
+        user_owner => $user_owner,
         group => $group,
         mode => $mode,
         apache_user => $apache_user,
