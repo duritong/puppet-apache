@@ -388,6 +388,7 @@ define apache::gentoo::module(
 define apache::vhost::webhostdir(
     $path = 'absent',
     $owner = root,
+    $user_owner = root,
     $group = 0,
     $mode = 0640,
     $apache_user = apache,
@@ -433,9 +434,13 @@ define apache::vhost::webhostdir(
         default: { $real_apache_group = $apache_default_group }
     }
 
-    file{ [ "$real_path", "$documentroot" ] :
+    file{"$real_path":
         ensure => directory,
-        owner => $owner, group => $real_apache_group, mode => $mode;
+        owner => $owner, group => $real_apache_group, mode => '0750';
+    }
+    file{"$documentroot":
+        ensure => directory,
+        owner => $user_owner, group => $real_apache_group, mode => $mode;
     }
 
     # the logdir must be writeable by the apache and the user
