@@ -26,14 +26,12 @@ SSLCipherSuite HIGH:MEDIUM:!ADH:-SSLv2
 # certificate can be generated using the genkey(1) command.
 #SSLCertificateFile /etc/pki/tls/certs/localhost.crt
 
-
 #   Server Private Key:
 #   If the key is not combined with the certificate, use this
 #   directive to point at the key file.  Keep in mind that if
 #   you've both a RSA and a DSA private key you can configure
 #   both in parallel (to also allow the use of DSA ciphers, etc.)
 #SSLCertificateKeyFile /etc/pki/tls/private/localhost.key
-
 
 #   Server Certificate Chain:
 #   Point SSLCertificateChainFile at a file containing the
