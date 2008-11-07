@@ -31,7 +31,7 @@ define apache::vhost::static(
     $vhost_destination = 'absent'
 ){
     $real_path = $path ? {
-        'absent' => $operatingsytem ? {
+        'absent' => $operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}",
             default => "/var/www/${name}"
         },
@@ -83,7 +83,7 @@ define apache::vhost::php::standard(
     $vhost_destination = 'absent'
 ){
     $real_path = $path ? {
-        'absent' => $operatingsytem ? {
+        'absent' => $operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}",
             default => "/var/www/${name}"
         },
@@ -399,7 +399,7 @@ define apache::vhost::webhostdir(
     $apache_group = 0
 ){
     $real_path = $path ? {
-        'absent' => $operatingsytem ? {
+        'absent' => $operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}",
             default => "/var/www/${name}"
         },
