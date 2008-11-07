@@ -1,0 +1,30 @@
+# <%= servername %>
+<VirtualHost *:80>
+    Include conf.d/defaults.inc
+    ServerName <%= servername %>
+    <%- unless serveralias.to_s.empty? then -%>
+    ServerAlias <%= serveralias %>
+    <%- end -%>
+    DocumentRoot <%= documentroot %>
+
+    ErrorLog <%= logdir %>/error_log
+    CustomLog <%= logdir %>/access_log combined
+
+    <%- if ssl_mode.to_s=='force' then %>
+    Redirect permanent / https://<%= servername %>/
+    <%- end %>
+</VirtualHost>
+<%- unless ssl_mode.to_s == 'false'  then %>
+<VirtualHost *:443>
+    Include conf.d/defaults.inc
+    Include conf.d/ssl_defaults.inc
+    ServerName <%= servername %>
+    <%- unless serveralias.to_s.empty? then -%>
+    ServerAlias <%= serveralias %>
+    <%- end -%>
+    DocumentRoot <%= documentroot %>
+
+    ErrorLog <%= logdir %>/error_log
+    CustomLog <%= logdir %>/access_log combined
+</VirtualHost>
+<%- end %>
