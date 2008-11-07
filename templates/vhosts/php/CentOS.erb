@@ -14,9 +14,9 @@
         AllowOverride <%= allow_override %>
 
         php_admin_flag engine on
-        php_admin_value open_basedir <%= documentroot %>:<%= upload_tmp_dir %>:<%=session_save_path %>
-        php_admin_value upload_tmp_dir <%= upload_tmp_dir %>
-        php_admin_value session.save_path <%=session_save_path %>
+        php_admin_value open_basedir <%= documentroot %>:<%= php_upload_tmp_dir %>:<%= php_session_save_path %>
+        php_admin_value upload_tmp_dir <%= php_upload_tmp_dir %>
+        php_admin_value session.save_path <%= php_session_save_path %>
     </Directory>
 
     <IfModule mod_security2.c>
