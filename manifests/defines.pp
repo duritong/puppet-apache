@@ -20,7 +20,7 @@ define apache::vhost::static(
     $path = 'absent',
     $owner = root,
     $group = 0,
-    $mode = 0644,
+    $mode = 0640,
     $apache_user = apache,
     $apache_group = 0,
     $apache_mode = 0640,
@@ -69,7 +69,7 @@ define apache::vhost::php::standard(
     $path = 'absent',
     $owner = root,
     $group = 0,
-    $mode = 0644,
+    $mode = 0640,
     $apache_user = apache,
     $apache_group = 0,
     $apache_mode = 0640,
@@ -394,7 +394,7 @@ define apache::vhost::webhostdir(
     $path = 'absent',
     $owner = root,
     $group = 0,
-    $mode = 0644,
+    $mode = 0640,
     $apache_user = apache,
     $apache_group = 0
 ){
