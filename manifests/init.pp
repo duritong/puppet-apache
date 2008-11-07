@@ -201,7 +201,7 @@ class apache::openbsd inherits apache::base {
     
 
     file{'/opt/bin/restart_apache.sh':
-        source => "puppet://$server/apache/openbsd/bin/restart_apache.sh",
+        source => "puppet://$server/apache/OpenBSD/bin/restart_apache.sh",
         require => File['/opt/bin'],
         owner => root, group => 0, mode => 0700;
     }
@@ -214,4 +214,21 @@ class apache::openbsd inherits apache::base {
         start => 'apachectl start',
         stop => 'apachectl stop',
     }
+
+    file{'/opt/bin/apache_logrotate.sh':
+        source => "puppet://$server/apache/OpenBSD/bin/apache_logrotate.sh",
+        require => File['/opt/bin'],
+        owner => root, group => 0, mode => 0700;
+    }
+
+    cron { 'update_apache_logrotation':
+        command => '/bin/sh /opt/bin/apache_logrotate.sh  > /etc/newsyslog_apache.conf',
+        minute => '1',
+        hour => '1',
+    }
+    cron { 'run_apache_logrotation':
+        command => '/usr/bin/newsyslog -f /etc/newsyslog_apache.conf > /dev/null',
+        minute => '10',
+    }
+
 }
