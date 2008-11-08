@@ -12,7 +12,9 @@
 
     <Directory "<%= documentroot %>">
         AllowOverride <%= allow_override %>
-
+    <%- unless options.to_s == 'absent' then -%>
+        Options <%= options %>
+    <%- end %>
         php_admin_flag engine on
         php_admin_value open_basedir <%= documentroot %>:<%= php_upload_tmp_dir %>:<%= php_session_save_path %>
         php_admin_value upload_tmp_dir <%= php_upload_tmp_dir %>

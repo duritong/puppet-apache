@@ -14,6 +14,12 @@
     Redirect permanent / https://<%= servername %>/
     <%- end %>
 
+    <%- unless options.to_s == 'absent' then -%>
+    <Directory "<%= documentroot %>">
+        Options <%= options %>
+    </Directory>
+
+    <%- end %>
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>
     <%- end -%>
@@ -31,6 +37,12 @@
     ErrorLog <%= logdir %>/error_log
     CustomLog <%= logdir %>/access_log combined
 
+    <%- unless options.to_s == 'absent' then -%>
+    <Directory "<%= documentroot %>">
+        Options <%= options %>
+    </Directory>
+
+    <%- end %>
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>
     <%- end -%>
