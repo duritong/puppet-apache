@@ -31,7 +31,9 @@ define apache::vhost::static(
     $ssl_mode = 'false',
     $vhost_mode = 'template',
     $vhost_source = 'absent',
-    $vhost_destination = 'absent'
+    $vhost_destination = 'absent',
+    $htpasswd_file = 'absent',
+    $htpasswd_path = 'absent'
 ){
     apache::vhost::webhostdir{$name:
         path => $path,
@@ -55,6 +57,8 @@ define apache::vhost::static(
         additional_options => $additional_options,
         template_mode => 'static',
         ssl_mode => $ssl_mode,
+        htpasswd_file => $htpasswd_file,
+        htpasswd_path => $htpasswd_path,
         mod_security => 'false',
     }
 }
@@ -78,7 +82,9 @@ define apache::vhost::php::standard(
     $mod_security = 'true',
     $vhost_mode = 'template',
     $vhost_source = 'absent',
-    $vhost_destination = 'absent'
+    $vhost_destination = 'absent',
+    $htpasswd_file = 'absent',
+    $htpasswd_path = 'absent'
 ){
     apache::vhost::webhostdir{$name:
         path => $path,
@@ -132,6 +138,8 @@ define apache::vhost::php::standard(
         php_upload_tmp_dir => $real_upload_tmp_dir,
         php_session_save_path => $real_session_save_path,
         ssl_mode => $ssl_mode,
+        htpasswd_file => $htpasswd_file,
+        htpasswd_path => $htpasswd_path,
         mod_security => $mod_security,
     }
 
@@ -162,6 +170,8 @@ define apache::vhost(
     $additional_options = 'absent',
     $template_mode = 'static',
     $ssl_mode = 'false',
+    $htpasswd_file = 'absent',
+    $htpasswd_path = 'absent',
     $mod_security = 'true'
 ) {
     case $vhost_mode {
@@ -169,6 +179,8 @@ define apache::vhost(
             apache::vhost::file{"${name}":
                 source => $vhost_source,
                 destination => $vhost_destination,
+                htpasswd_file => $htpasswd_file,
+                htpasswd_path => $htpasswd_path,
             }
         }
         'template': {
@@ -183,6 +195,8 @@ define apache::vhost(
                 additional_options => $additional_options,
                 template_mode => $template_mode,
                 ssl_mode => $ssl_mode,
+                htpasswd_file => $htpasswd_file,
+                htpasswd_path => $htpasswd_path,
                 mod_security => 'false',
             }
         }
@@ -191,10 +205,19 @@ define apache::vhost(
     
 }
 
+# htpasswd_file: wether to deploy a passwd for this vhost or not
+#   - absent: ignore (default)
+#   - nodeploy: htpasswd file isn't deployed by this mechanism
+#   - else: try to deploy the file
+# htpasswd_path: where to deploy the passwd file
+#   - absent: standardpath (default)
+#   - else: path to deploy
 define apache::vhost::file(
     $source = 'absent',
     $destination = 'absent',
-    $content = 'absent'
+    $content = 'absent',
+    $htpasswd_file = 'absent',
+    $htpasswd_path = 'absent'
 ){
     $vhosts_dir = $operatingsystem ? {
         centos => "$apache::centos::config_dir/vhosts.d/",
@@ -238,6 +261,29 @@ define apache::vhost::file(
             }
         }
     }
+    case $htpasswd_file {
+        'absent','nodeploy': { info("don't deploy a htpasswd file for ${name}") }
+        default: { 
+            case $htpasswd_path {
+                'absent': {
+                    $real_htpasswd_path = $operatingsystem ? {
+                        gentoo => "$apache::gentoo::config_dir/htpasswds/${name}",
+                        debian => "$apache::debian::config_dir/htpasswds/${name}",
+                        ubuntu => "$apache::ubuntu::config_dir/htpasswds/${name}",
+                        openbsd => "$apache::openbsd::config_dir/htpasswds/${name}",
+                        default => "/etc/apache2/htpasswds/${name}"
+                    }
+                }
+                default: { $real_htpasswd_path = $htpasswd_path }
+            }
+            file{"${real_htpasswd_path}":
+                source => [ "puppet://$server/files/apache/htpasswds/${fqdn}/${name}",
+                            "puppet://$server/files/apache/htpasswds/${apache_cluster_node}/${name}",
+                            "puppet://$server/files/apache/htpasswds/${name}" ],
+                owner => root, group => 0, mode => 0644;
+            }
+        }
+    }
 }
 
 
@@ -259,7 +305,9 @@ define apache::vhost::template(
     $additional_options = 'absent',
     $template_mode = 'static', 
     $ssl_mode = 'false',
-    $mod_security = 'true'
+    $mod_security = 'true',
+    $htpasswd_file = 'absent',
+    $htpasswd_path = 'absent'
 ){
     $real_path = $path ? {
         'absent' => $operatingsystem ? {
@@ -280,8 +328,22 @@ define apache::vhost::template(
         default => $domainalias
     }
 
+    case $htpasswd_path {
+        'absent': {
+            $real_htpasswd_path = $operatingsystem ? {
+                gentoo => "$apache::gentoo::config_dir/htpasswds/${name}",
+                debian => "$apache::debian::config_dir/htpasswds/${name}",
+                ubuntu => "$apache::ubuntu::config_dir/htpasswds/${name}",
+                openbsd => "$apache::openbsd::config_dir/htpasswds/${name}",
+                default => "/etc/apache2/htpasswds/${name}"
+            }
+        }
+        default: { $real_htpasswd_path = $htpasswd_path }
+    }
     apache::vhost::file{"$name":
         content => template("apache/vhosts/${template_mode}/${operatingsystem}.erb"),
+        htpasswd_file => $htpasswd_file,
+        htpasswd_path => $htpasswd_path,
     }
 }
 

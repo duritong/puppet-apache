@@ -14,9 +14,19 @@
     Redirect permanent / https://<%= servername %>/
     <%- end %>
 
-    <%- unless options.to_s == 'absent' then -%>
+    <%- if options.to_s != 'absent' or htpasswd_file.to_s != 'absent' then -%>
     <Directory "<%= documentroot %>">
-        Options <%= options %>
+        <%- unless options.to_s == 'absent' then %>
+        Options <%= options %> 
+
+        <%- end %>
+        <%- unless htpasswd_file.to_s == 'absent' then -%>
+        AuthType Basic
+        AuthName "Access fuer <%= servername %>"
+        AuthUserFile <%= htpasswd_path %>
+        require valid-user
+
+        <%- end %>
     </Directory>
 
     <%- end %>
@@ -37,9 +47,19 @@
     ErrorLog <%= logdir %>/error_log
     CustomLog <%= logdir %>/access_log combined
 
-    <%- unless options.to_s == 'absent' then -%>
+    <%- if options.to_s != 'absent' or htpasswd_file.to_s != 'absent' then -%>
     <Directory "<%= documentroot %>">
-        Options <%= options %>
+        <%- unless options.to_s == 'absent' then %>
+        Options <%= options %> 
+
+        <%- end %>
+        <%- unless htpasswd_file.to_s == 'absent' then -%>
+        AuthType Basic
+        AuthName "Access fuer <%= servername %>"
+        AuthUserFile <%= htpasswd_path %>
+        require valid-user
+
+        <%- end %>
     </Directory>
 
     <%- end %>
