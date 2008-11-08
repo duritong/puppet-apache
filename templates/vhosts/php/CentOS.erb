@@ -30,7 +30,7 @@
     </Directory>
 
     <IfModule mod_security2.c>
-        SecRuleEngine <%= if mod_security.to_s == 'true' then "On" else "Off" end -%>
+        SecRuleEngine <%= if mod_security.to_s == 'true' then "On" else "Off" end %>
     </IfModule>
 
     <%- unless additional_options.to_s == 'absent' then -%>
