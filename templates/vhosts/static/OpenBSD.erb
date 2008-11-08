@@ -5,36 +5,36 @@
     <%- unless serveralias.to_s.empty? then -%>
     ServerAlias <%= serveralias %>
     <%- end -%>
-    DocumentRoot <%= documentroot %>
+    DocumentRoot <%= documentroot %>/
 
     ErrorLog <%= logdir %>/error_log
     CustomLog <%= logdir %>/access_log combined
 
-    <%- if ssl_mode.to_s=='force' then %>
+    <%- if ssl_mode.to_s=='force' then -%>
     Redirect permanent / https://<%= servername %>/
-    <%- end %>
+    <%- end -%>
 
     <%- if options.to_s != 'absent' or htpasswd_file.to_s != 'absent' then -%>
-    <Directory "<%= documentroot %>">
-        <%- unless options.to_s == 'absent' then %>
+    <Directory "<%= documentroot %>/">
+        <%- unless options.to_s == 'absent' then -%>
         Options <%= options %> 
 
-        <%- end %>
+        <%- end -%>
         <%- unless htpasswd_file.to_s == 'absent' then -%>
         AuthType Basic
         AuthName "Access fuer <%= servername %>"
         AuthUserFile <%= htpasswd_path %>
         require valid-user
-
-        <%- end %>
+        <%- end -%>
     </Directory>
 
-    <%- end %>
+    <%- end _%>
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>
     <%- end -%>
 </VirtualHost>
-<%- unless ssl_mode.to_s == 'false'  then %>
+
+<%- unless ssl_mode.to_s == 'false'  then -%>
 <VirtualHost *:443>
     Include conf.d/defaults.inc
     Include conf.d/ssl_defaults.inc
@@ -42,24 +42,22 @@
     <%- unless serveralias.to_s.empty? then -%>
     ServerAlias <%= serveralias %>
     <%- end -%>
-    DocumentRoot <%= documentroot %>
+    DocumentRoot <%= documentroot %>/
 
     ErrorLog <%= logdir %>/error_log
     CustomLog <%= logdir %>/access_log combined
-
     <%- if options.to_s != 'absent' or htpasswd_file.to_s != 'absent' then -%>
-    <Directory "<%= documentroot %>">
-        <%- unless options.to_s == 'absent' then %>
+    <Directory "<%= documentroot %>/">
+        <%- unless options.to_s == 'absent' then -%>
         Options <%= options %> 
 
-        <%- end %>
+        <%- end -%>
         <%- unless htpasswd_file.to_s == 'absent' then -%>
         AuthType Basic
         AuthName "Access fuer <%= servername %>"
         AuthUserFile <%= htpasswd_path %>
         require valid-user
-
-        <%- end %>
+        <%- end -%>
     </Directory>
 
     <%- end %>
@@ -67,4 +65,4 @@
     <%= additional_options %>
     <%- end -%>
 </VirtualHost>
-<%- end %>
+<%- end -%>

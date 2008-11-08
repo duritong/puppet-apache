@@ -5,16 +5,16 @@
     <%- unless serveralias.to_s.empty? then -%>
     ServerAlias <%= serveralias %>
     <%- end -%> 
-    DocumentRoot <%= documentroot %>
+    DocumentRoot <%= documentroot %>/
 
     ErrorLog <%= logdir %>/error_log
     CustomLog <%= logdir %>/access_log combined
 
-    <Directory "<%= documentroot %>">
+    <Directory "<%= documentroot %>/">
         AllowOverride <%= allow_override %>
         <%- unless options.to_s == 'absent' then -%>
         Options <%= options %>
-        <%- end %>
+        <%- end -%>
         <%- unless htpasswd_file.to_s == 'absent' then -%>
 
         AuthType Basic
@@ -22,7 +22,7 @@
         AuthUserFile <%= htpasswd_path %>
         require valid-user
 
-        <%- end %>
+        <%- end -%>
         php_admin_flag engine on
         php_admin_value open_basedir <%= documentroot %>:<%= php_upload_tmp_dir %>:<%= php_session_save_path %>
         php_admin_value upload_tmp_dir <%= php_upload_tmp_dir %>
@@ -30,7 +30,7 @@
     </Directory>
 
     <IfModule mod_security2.c>
-        SecRuleEngine <%= if mod_security.to_s == 'true' then "On" else "Off" end %>
+        SecRuleEngine <%= if mod_security.to_s == 'true' then "On" else "Off" end -%>
     </IfModule>
 
     <%- unless additional_options.to_s == 'absent' then -%>
