@@ -12,7 +12,7 @@
 # the Free Software Foundation.
 #
 
-import "defines.pp"
+import "defines/*.pp"
 
 # Global variables:
 #
@@ -53,6 +53,16 @@ class apache::base {
         ensure => directory,
         owner => root, group => 0, mode => 0755;
     }
+    file{'htpasswd_dir':
+        path => '/var/www/htpasswds/',
+        ensure => directory,
+        owner => apache, group => 0, mode => 0700;
+    }
+    file{'web_dir':
+        path => '/var/www/',
+        ensure => directory,
+        owner => root, group => 0, mode => 0755;
+    }
     service { apache:
         name => 'apache2',
         enable => true,
@@ -64,6 +74,7 @@ class apache::base {
         content => template('apache/default/default_index.erb'),
         owner => root, group => 0, mode => 0644;
     }
+
     apache::config::file{ 'defaults.inc': }
     apache::vhost::file { '0-default': }
 }
@@ -85,6 +96,12 @@ class apache::package inherits apache::base {
     File['modules_dir']{
         require => Package[apache],
     }
+    File['web_dir']{
+        require => Package[apache],
+    }
+    File['htpasswd_dir']{
+        require => Package[apache],
+    }
 }
 
 
@@ -96,9 +113,10 @@ class apache::centos inherits apache::package {
 
     Package[apache]{
         name => 'httpd',
-    } 
+    }
     Service[apache]{
         name => 'httpd',
+        restart => '/etc/init.d/httpd graceful',
     }
     File[vhosts_dir]{
         path => "$config_dir/vhosts.d/",
@@ -109,9 +127,13 @@ class apache::centos inherits apache::package {
     File[modules_dir]{
         path => "$config_dir/modules.d/",
     }
+    File[web_dir]{
+        path => "/var/www/vhosts",
+    }
     File[default_apache_index]{
         path => '/var/www/html/index.html',
     }
+
     apache::config::file{ 'welcome.conf': }
     apache::config::file{ 'vhosts.conf': }
 }
@@ -124,16 +146,17 @@ class apache::gentoo inherits apache::package {
     gentoo::etcconfd {
         apache2: require => "Package[apache]", 
         notify => Service[apache],
-    } 
+    }
     Package[apache]{
         category => 'www-servers',
-    } 
+    }
     File[vhosts_dir]{
         path => "$config_dir/vhosts.d/",
     }
     File[modules_dir]{
         path => "$config_dir/modules.d/",
     }
+
     apache::gentoo::module { '00_default_settings': }
     apache::gentoo::module { '00_error_documents': }
     apache::config::file { 'default_vhost.include': 
@@ -159,7 +182,6 @@ class apache::debian inherits apache::package {
     File[default_apache_index] {
         path => '/var/www/index.html',
     }
-
 }
 
 ### ubuntu: similar to debian therefor inheritng from there
@@ -178,33 +200,32 @@ class apache::openbsd inherits apache::base {
     File[config_dir]{
         path => "$config_dir/conf.d/",
     }
-
+    File['htpasswd_dir']{
+        owner => www,
+    }
     line{'enable_apache_on_boot':
         file => '/etc/rc.conf.local',
         line => 'httpd flags=""',
     }
-
     file{"$config_dir/conf/httpd.conf":
         source => [ "puppet://$server/files/apache/conf/${fqdn}/httpd.conf",
-                    "puppet://$server/files/apache/conf/${apache_cluster_node}/httpd.conf",   
-                    "puppet://$server/files/apache/conf/httpd.conf",   
-                    "puppet://$server/apache/conf/${operatingsystem}/httpd.conf",   
-                    "puppet://$server/apache/conf/httpd.conf" ],   
+                    "puppet://$server/files/apache/conf/${apache_cluster_node}/httpd.conf",
+                    "puppet://$server/files/apache/conf/httpd.conf",
+                    "puppet://$server/apache/conf/${operatingsystem}/httpd.conf",
+                    "puppet://$server/apache/conf/httpd.conf" ],
         notify => Service['apache'],
         owner => root, group => 0, mode => 0644;
     }
-
-    apache::vhost::webhostdir{'default': }
     File[default_apache_index] {
         path => '/var/www/htdocs/default/www/index.html',
     }
-    
-
     file{'/opt/bin/restart_apache.sh':
         source => "puppet://$server/apache/OpenBSD/bin/restart_apache.sh",
         require => File['/opt/bin'],
         owner => root, group => 0, mode => 0700;
     }
+
+    apache::vhost::webdir{'default': }
 
     Service['apache']{
         restart => '/opt/bin/restart_apache.sh',
@@ -212,13 +233,11 @@ class apache::openbsd inherits apache::base {
         start => 'apachectl start',
         stop => 'apachectl stop',
     }
-
     file{'/opt/bin/apache_logrotate.sh':
         source => "puppet://$server/apache/OpenBSD/bin/apache_logrotate.sh",
         require => File['/opt/bin'],
         owner => root, group => 0, mode => 0700;
     }
-
     cron { 'update_apache_logrotation':
         command => '/bin/sh /opt/bin/apache_logrotate.sh  > /etc/newsyslog_apache.conf',
         minute => '1',
@@ -228,5 +247,4 @@ class apache::openbsd inherits apache::base {
         command => '/usr/bin/newsyslog -f /etc/newsyslog_apache.conf > /dev/null',
         minute => '10',
     }
-
 }

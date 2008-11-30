@@ -1,0 +1,24 @@
+<VirtualHost *:80>
+    Include conf.d/defaults.inc
+
+    ServerName <%= servername %>
+    <%- unless serveralias.to_s.empty? -%>
+    ServerAlias <%= serveralias %>
+    <%- end -%>
+    DocumentRoot <%= documentroot %>
+
+    ErrorLog <%= logdir %>/error_log
+    CustomLog <%= logdir %>/access_log combined
+
+    <Directory "<%= documentroot %>">
+        AllowOverride <%= allow_override %>
+    </Directory>
+
+    <IfModule mod_security2.c>
+        SecRuleEngine <%= if mod_security.to_s == 'true' then "On" else "Off" end %>
+    </IfModule>
+
+    <%- unless additional_options == 'absent' then -%>
+    <%= additional_options %>
+    <%- end -%>
+</VirtualHost>
