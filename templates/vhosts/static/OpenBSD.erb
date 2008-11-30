@@ -32,6 +32,9 @@
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>
     <%- end -%>
+    RewriteEngine on
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+    RewriteRule .* - [F
 </VirtualHost>
 
 <%- unless ssl_mode.to_s == 'false'  then -%>
@@ -64,5 +67,8 @@
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>
     <%- end -%>
+    RewriteEngine on
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+    RewriteRule .* - [F
 </VirtualHost>
 <%- end -%>
