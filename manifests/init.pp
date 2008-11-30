@@ -203,6 +203,9 @@ class apache::openbsd inherits apache::base {
     File['htpasswd_dir']{
         owner => www,
     }
+    File[web_dir]{
+        group => daemon,
+    }
     line{'enable_apache_on_boot':
         file => '/etc/rc.conf.local',
         line => 'httpd flags=""',
