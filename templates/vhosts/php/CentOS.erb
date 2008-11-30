@@ -18,7 +18,7 @@
         <%- unless htpasswd_file.to_s == 'absent' then -%>
         AuthType Basic
         AuthName "Access fuer <%= servername %>"
-        AuthUserFile <%= htpasswd_path %>
+        AuthUserFile <%= real_htpasswd_path %>
         require valid-user
         <%- end -%>
         php_admin_flag engine on
