@@ -149,7 +149,7 @@ define apache::vhost::php::standard(
 #          and run_uid and run_gid are used as vhost users
 # run_uid: the uid the vhost should run as with the itk module
 # run_gid: the gid the vhost should run as with the itk module
-define apache::vhost::perl(
+define apache::vhost::modperl(
     $domain = 'absent',
     $domainalias = 'absent',
     $path = 'absent',
