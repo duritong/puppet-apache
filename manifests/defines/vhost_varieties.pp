@@ -176,7 +176,16 @@ define apache::vhost::modperl(
 ){
     # cgi_bin path
     case $cgi_binpath {
-        'absent': { $real_cgi_binpath = "${path}/cgi-bin" }
+        'absent': { 
+            $real_path = $path ? {
+                'absent' => $operatingsystem ? {
+                    openbsd => "/var/www/htdocs/${name}",
+                    default => "/var/www/vhosts/${name}"
+                },
+                default => "${path}"
+            }
+            $real_cgi_binpath = "${real_path}/cgi-bin" 
+        }
         default: { $real_cgi_binpath = $cgi_binpath }
     }
     file{$real_cgi_binpath:
