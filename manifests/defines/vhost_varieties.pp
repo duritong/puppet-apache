@@ -142,3 +142,68 @@ define apache::vhost::php::standard(
         mod_security => $mod_security,
     }
 }
+
+define apache::vhost::perl(
+    $domain = 'absent',
+    $domainalias = 'absent',
+    $path = 'absent',
+    $owner = root,
+    $group = 0,
+    $documentroot_owner = apache,
+    $documentroot_group = 0,
+    $documentroot_mode = 0750,
+    $allow_override = 'None',
+    $cgi_binpath = 'absent',
+    $options = 'absent',
+    $additional_options = 'absent',
+    $mod_security = 'true',
+    $vhost_mode = 'template',
+    $vhost_source = 'absent',
+    $vhost_destination = 'absent',
+    $htpasswd_file = 'absent',
+    $htpasswd_path = 'absent'
+){
+    # cgi_bin path
+    case $cgi_binpath {
+        'absent': {
+            $real_cgi_binpath = "${path}/cgi-bin" }
+        }
+        default: { $real_cgi_binpath = $cgi_binpath
+    }
+    file{$real_cgi_binpath:
+        ensure => directory,
+        owner => $documentroot_owner,
+        group => $documentroot_group,
+        mode => $documentroot_mode;
+    }
+
+    # create webdir
+    apache::vhost::webdir{$name:
+        path => $path,
+        owner => $owner,
+        group => $group,
+        documentroot_owner => $documentroot_owner,
+        documentroot_group => $documentroot_group,
+        documentroot_mode => $documentroot_mode,
+    }
+
+    # create vhost configuration file
+    apache::vhost{$name:
+        path => $path,
+        template_mode => 'perl',
+        vhost_mode => $vhost_mode,
+        vhost_source => $vhost_source,
+        vhost_destination => $vhost_destination,
+        domain => $domain,
+        domainalias => $domainalias,
+        allow_override => $allow_override,
+        options => $options,
+        additional_options => $additional_options,
+        cgi_binpath => $real_cgi_binpath,
+        ssl_mode => $ssl_mode,
+        htpasswd_file => $htpasswd_file,
+        htpasswd_path => $htpasswd_path,
+        mod_security => $mod_security,
+    }
+
+}
