@@ -143,6 +143,12 @@ define apache::vhost::php::standard(
     }
 }
 
+# run_mode: 
+#   - normal: nothing special (*default*)
+#   - itk: apache is running with the itk module 
+#          and run_uid and run_gid are used as vhost users
+# run_uid: the uid the vhost should run as with the itk module
+# run_gid: the gid the vhost should run as with the itk module
 define apache::vhost::perl(
     $domain = 'absent',
     $domainalias = 'absent',
@@ -152,6 +158,9 @@ define apache::vhost::perl(
     $documentroot_owner = apache,
     $documentroot_group = 0,
     $documentroot_mode = 0750,
+    $run_mode = 'normal',
+    $run_uid = 'absent',
+    $run_gid = 'absent',
     $allow_override = 'None',
     $cgi_binpath = 'absent',
     $options = 'absent',
@@ -194,6 +203,9 @@ define apache::vhost::perl(
         vhost_destination => $vhost_destination,
         domain => $domain,
         domainalias => $domainalias,
+        run_mode => $run_mode,
+        run_uid => $run_uid,
+        run_gid => $run_gid,
         allow_override => $allow_override,
         options => $options,
         additional_options => $additional_options,

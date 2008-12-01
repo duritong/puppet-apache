@@ -10,6 +10,11 @@
     ErrorLog <%= logdir %>/error_log
     CustomLog <%= logdir %>/access_log combined
 
+    <%- if run_mode.to_s == 'itk' -%>
+    <IfModule mpm_itk_module>
+        AssignUserId <%= run_uid+" "+run_gid %>
+    </IfModule>
+    <%- end -%>
     <Directory "<%= documentroot %>/">
         AllowOverride <%= allow_override %>
         <%- unless options.to_s == 'absent' then -%>

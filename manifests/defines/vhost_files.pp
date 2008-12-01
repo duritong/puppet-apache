@@ -26,6 +26,9 @@ define apache::vhost(
     $cgi_binpath = 'absent',
     $options = 'absent',
     $additional_options = 'absent',
+    $run_mode = 'normal',
+    $run_uid = 'absent',
+    $run_gid = 'absent',
     $template_mode = 'static',
     $ssl_mode = 'false',
     $htpasswd_file = 'absent',
@@ -53,6 +56,9 @@ define apache::vhost(
                 allow_override => $allow_override,
                 options => $options,
                 additional_options => $additional_options,
+                run_mode => $run_mode,
+                run_uid => $run_uid,
+                run_gid => $run_gid,
                 template_mode => $template_mode,
                 ssl_mode => $ssl_mode,
                 htpasswd_file => $htpasswd_file,
@@ -167,6 +173,9 @@ define apache::vhost::template(
     $cgi_binpath = 'absent',
     $options = 'absent',
     $additional_options = 'absent',
+    $run_mode = 'normal',
+    $run_uid = 'absent',
+    $run_gid = 'absent',
     $template_mode = 'static', 
     $ssl_mode = 'false',
     $mod_security = 'true',
@@ -203,6 +212,16 @@ define apache::vhost::template(
             }
         }
         default: { $real_htpasswd_path = $htpasswd_path }
+    }
+    case $run_mode {
+        'itk': {
+            case $run_uid {
+                'absent': { fail("you have to define run_uid for $name on $fqdn") }
+            }
+            case $run_gid {
+                'absent': { fail("you have to define run_gid for $name on $fqdn") }
+            }
+        }
     }
     apache::vhost::file{$name:
         content => template("apache/vhosts/$template_mode/$operatingsystem.erb"),
