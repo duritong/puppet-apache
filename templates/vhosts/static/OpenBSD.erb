@@ -34,7 +34,7 @@
     <%- end -%>
     RewriteEngine on
     RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
-    RewriteRule .* - [F
+    RewriteRule .* - [F]
 </VirtualHost>
 
 <%- unless ssl_mode.to_s == 'false'  then -%>
@@ -69,6 +69,6 @@
     <%- end -%>
     RewriteEngine on
     RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
-    RewriteRule .* - [F
+    RewriteRule .* - [F]
 </VirtualHost>
 <%- end -%>
