@@ -95,15 +95,14 @@ define apache::vhost::webdir(
     }
     file{"$real_path":
         ensure => directory,
-        owner => $owner, group => $group, mode => '0750';
+        owner => $owner, group => $group, mode => '0755';
     }
     file{"$documentroot":
         ensure => directory,
-        owner => $real_documentroot_owner, group => $group, mode => $documentroot_mode;
+        owner => $real_documentroot_owner, group => $real_documentroot_group, mode => $documentroot_mode;
     }
-    # the logdir must be writeable by the apache and the user
     file{$logdir:
         ensure => directory,
-        owner => $real_documentroot_owner, group => $group, mode => 775;
+        owner => $real_documentroot_owner, group => $group, mode => 750;
     }
 }
