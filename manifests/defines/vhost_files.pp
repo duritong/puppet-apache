@@ -185,7 +185,7 @@ define apache::vhost::template(
     $real_path = $path ? {
         'absent' => $operatingsystem ? {
             openbsd => "/var/www/htdocs/$name",
-            default => "/var/www/$name"
+            default => "/var/www/vhosts/$name"
         },
         default => $path
     }
