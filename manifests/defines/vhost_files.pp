@@ -42,7 +42,7 @@ define apache::vhost(
             apache::vhost::file{$name:
                 vhost_source => $vhost_source,
                 vhost_destination => $vhost_destination,
-                do_inlcudes => $do_includes,
+                do_includes => $do_includes,
                 htpasswd_file => $htpasswd_file,
                 htpasswd_path => $htpasswd_path,
             }
@@ -233,7 +233,7 @@ define apache::vhost::template(
     }
     apache::vhost::file{$name:
         content => template("apache/vhosts/$template_mode/$operatingsystem.erb"),
-        do_inlcudes => $do_includes,
+        do_includes => $do_includes,
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
     }
