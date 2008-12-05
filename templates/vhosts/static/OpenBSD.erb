@@ -17,7 +17,7 @@
     <%- if (options.to_s != 'absent' or htpasswd_file.to_s != 'absent') and not ssl_mode.to_s == 'force' then -%>
     <Directory "<%= documentroot %>/">
         <%- unless options.to_s == 'absent' then -%>
-        Options <%= options %> 
+        Options <%= options %> <%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%>+Includes<%- end -%>
 
         <%- end -%>
         <%- unless htpasswd_file.to_s == 'absent' then -%>
@@ -32,9 +32,6 @@
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>
     <%- end -%>
-    RewriteEngine on
-    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
-    RewriteRule .* - [F]
 </VirtualHost>
 
 <%- unless ssl_mode.to_s == 'false'  then -%>
@@ -52,7 +49,7 @@
     <%- if options.to_s != 'absent' or htpasswd_file.to_s != 'absent' then -%>
     <Directory "<%= documentroot %>/">
         <%- unless options.to_s == 'absent' then -%>
-        Options <%= options %> 
+        Options <%= options %> <%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%>+Includes<%- end -%>
 
         <%- end -%>
         <%- unless htpasswd_file.to_s == 'absent' then -%>
@@ -67,8 +64,5 @@
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>
     <%- end -%>
-    RewriteEngine on
-    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
-    RewriteRule .* - [F]
 </VirtualHost>
 <%- end -%>

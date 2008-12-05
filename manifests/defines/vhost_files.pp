@@ -24,16 +24,17 @@ define apache::vhost(
     $php_upload_tmp_dir = 'absent',
     $php_session_save_path = 'absent',
     $cgi_binpath = 'absent',
+    $do_includes = false,
     $options = 'absent',
     $additional_options = 'absent',
     $run_mode = 'normal',
     $run_uid = 'absent',
     $run_gid = 'absent',
     $template_mode = 'static',
-    $ssl_mode = 'false',
+    $ssl_mode = false
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
-    $mod_security = 'true'
+    $mod_security = true,
 ) {
     # file or template mode?
     case $vhost_mode {
@@ -41,6 +42,7 @@ define apache::vhost(
             apache::vhost::file{$name:
                 vhost_source => $vhost_source,
                 vhost_destination => $vhost_destination,
+                do_inlcudes => $do_includes,
                 htpasswd_file => $htpasswd_file,
                 htpasswd_path => $htpasswd_path,
             }
@@ -54,6 +56,7 @@ define apache::vhost(
                 php_session_save_path => $php_session_save_path,
                 cgi_binpath => $cgi_binpath,
                 allow_override => $allow_override,
+                do_inlcudes => $do_includes,
                 options => $options,
                 additional_options => $additional_options,
                 run_mode => $run_mode,
@@ -63,7 +66,7 @@ define apache::vhost(
                 ssl_mode => $ssl_mode,
                 htpasswd_file => $htpasswd_file,
                 htpasswd_path => $htpasswd_path,
-                mod_security => 'false',
+                mod_security => $mod_security,
             }
         }
         default: { fail("no such vhost_mode: $vhost_mode defined for $name.") }
@@ -84,6 +87,7 @@ define apache::vhost::file(
     $vhost_source = 'absent',
     $vhost_destination = 'absent',
     $content = 'absent',
+    $do_includes = false,
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent'
 ){
@@ -104,6 +108,9 @@ define apache::vhost::file(
         require => File[vhosts_dir],
         notify => Service[apache],
         owner => root, group => 0, mode => 0644;
+    }
+    if $do_includes {
+        include apache::includes 
     }
     case $content {
         'absent': {
@@ -171,14 +178,15 @@ define apache::vhost::template(
     $php_upload_tmp_dir = 'absent',
     $php_session_save_path = 'absent',
     $cgi_binpath = 'absent',
+    $do_includes = false,
     $options = 'absent',
     $additional_options = 'absent',
     $run_mode = 'normal',
     $run_uid = 'absent',
     $run_gid = 'absent',
     $template_mode = 'static', 
-    $ssl_mode = 'false',
-    $mod_security = 'true',
+    $ssl_mode = false,
+    $mod_security = true,
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent'
 ){
@@ -225,6 +233,7 @@ define apache::vhost::template(
     }
     apache::vhost::file{$name:
         content => template("apache/vhosts/$template_mode/$operatingsystem.erb"),
+        do_inlcudes => $do_includes,
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
     }

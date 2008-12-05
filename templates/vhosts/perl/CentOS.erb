@@ -18,7 +18,7 @@
     <Directory "<%= documentroot %>/">
         AllowOverride <%= allow_override %>
         <%- unless options.to_s == 'absent' then -%>
-        Options <%= options %>
+        Options <%= options %> <%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%>+Includes<%- end -%>
         <%- end -%>
         <%- unless htpasswd_file.to_s == 'absent' then -%>
         AuthType Basic
@@ -45,7 +45,4 @@
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>
     <%- end -%>
-    RewriteEngine on
-    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
-    RewriteRule .* - [F]
 </VirtualHost>

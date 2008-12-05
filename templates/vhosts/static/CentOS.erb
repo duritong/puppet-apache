@@ -12,6 +12,7 @@
 
     <Directory "<%= documentroot %>">
         AllowOverride <%= allow_override %>
+        Options <%= options %> <%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%>+Includes<%- end -%>
     </Directory>
 
     <IfModule mod_security2.c>
@@ -21,7 +22,4 @@
     <%- unless additional_options == 'absent' then -%>
     <%= additional_options %>
     <%- end -%>
-    RewriteEngine on
-    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
-    RewriteRule .* - [F
 </VirtualHost>
