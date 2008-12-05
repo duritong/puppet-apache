@@ -12,7 +12,7 @@
 
     <Directory "<%= documentroot %>/">
         AllowOverride <%= allow_override %>
-        <%- unless options.to_s == 'absent' or do_includes.to_s == 'true' then -%>
+        <%- unless options.to_s == 'absent' or not do_includes.to_s == 'true' then -%>
         Options <%= options %> <%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%>+Includes<%- end -%>
         <%- end -%>
         <%- unless htpasswd_file.to_s == 'absent' then -%>

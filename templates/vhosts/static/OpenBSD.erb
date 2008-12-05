@@ -16,7 +16,7 @@
 
     <%- if (options.to_s != 'absent' or htpasswd_file.to_s != 'absent') and not ssl_mode.to_s == 'force' then -%>
     <Directory "<%= documentroot %>/">
-        <%- unless options.to_s == 'absent' then -%>
+        <%- unless options.to_s == 'absent' or not do_includes.to_s == 'true' then -%>
         Options <%= options %> <%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%>+Includes<%- end -%>
 
         <%- end -%>
@@ -48,7 +48,7 @@
     CustomLog <%= logdir %>/access_log combined
     <%- if options.to_s != 'absent' or htpasswd_file.to_s != 'absent' then -%>
     <Directory "<%= documentroot %>/">
-        <%- unless options.to_s == 'absent' then -%>
+        <%- unless options.to_s == 'absent' or not do_includes.to_s == 'true' then -%>
         Options <%= options %> <%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%>+Includes<%- end -%>
 
         <%- end -%>
