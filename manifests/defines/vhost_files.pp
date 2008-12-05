@@ -56,7 +56,7 @@ define apache::vhost(
                 php_session_save_path => $php_session_save_path,
                 cgi_binpath => $cgi_binpath,
                 allow_override => $allow_override,
-                do_inlcudes => $do_includes,
+                do_includes => $do_includes,
                 options => $options,
                 additional_options => $additional_options,
                 run_mode => $run_mode,
