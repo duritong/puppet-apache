@@ -31,10 +31,10 @@ define apache::vhost(
     $run_uid = 'absent',
     $run_gid = 'absent',
     $template_mode = 'static',
-    $ssl_mode = false
+    $ssl_mode = false,
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
-    $mod_security = true,
+    $mod_security = true
 ) {
     # file or template mode?
     case $vhost_mode {
