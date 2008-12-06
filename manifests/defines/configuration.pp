@@ -11,6 +11,8 @@ define apache::config::file(
         '' => [ 
             "puppet://$server/files/apache/conf.d/${fqdn}/${name}",
             "puppet://$server/files/apache/conf.d/${apache_cluster_node}/${name}",
+            "puppet://$server/files/apache/conf.d/${operatingsystem}.${lsbdistcodename}/${name}",
+            "puppet://$server/files/apache/conf.d/${operatingsystem}/${name}",
             "puppet://$server/files/apache/conf.d/${name}",
             "puppet://$server/apache/conf.d/${operatingsystem}.${lsbdistcodename}/${name}",
             "puppet://$server/apache/conf.d/${operatingsystem}/${name}",
