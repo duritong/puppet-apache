@@ -120,6 +120,8 @@ define apache::vhost::file(
                 'absent'  => [ 
                     "puppet://$server/files/apache/vhosts.d/$fqdn/$name.conf",
                     "puppet://$server/files/apache/vhosts.d/$apache_cluster_node/$name.conf",
+                    "puppet://$server/files/apache/vhosts.d/$operatingsystem.$lsbdistcodename/$name.conf",
+                    "puppet://$server/files/apache/vhosts.d/$operatingsystem/$name.conf",
                     "puppet://$server/files/apache/vhosts.d/$name.conf", 
                     "puppet://$server/apache/vhosts.d/$name.conf",
                     "puppet://$server/apache/vhosts.d/$operatingsystem.$lsbdistcodename/$name.conf",
