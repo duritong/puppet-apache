@@ -21,6 +21,7 @@
         AssignUserId <%= run_uid+" "+run_gid %>
     </IfModule>
     <%- end -%>
+    <%- if (options.to_s != 'absent' or htpasswd_file.to_s != 'absent') and not ssl_mode.to_s == 'force' then -%>
     <Directory "<%= documentroot %>/">
         AllowOverride <%= allow_override %>
         <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
@@ -45,6 +46,7 @@
     </Directory>
     <%- end -%>
 
+    <%- end -%>
     <IfModule mod_security2.c>
         SecRuleEngine <%= if mod_security.to_s == 'true' then "On" else "Off" end %>
     </IfModule>
