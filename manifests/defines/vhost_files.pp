@@ -218,7 +218,7 @@ define apache::vhost::template(
     }
     $serveralias = $domainalias ? {
         'absent' => '',
-        'www' => "www.${domain}",
+        'www' => "www.${servername}",
         default => $domainalias
     }
     case $htpasswd_path {
