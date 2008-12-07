@@ -166,8 +166,14 @@ define apache::vhost::file(
 }
 
 # template_mode:
-#   - php -> for a default php application
-#   - static -> for a static application (default)
+#   - php: for a default php application
+#   - static: for a static application (default)
+#   - perl: for a mod_perl application
+#
+# domainalias:
+#   - absent: no domainalias is set (*default*)
+#   - www: domainalias is set to www.$domain
+#   - else: domainalias is set to that
 #
 # ssl_mode: wether this vhost supports ssl or not
 #   - false: don't enable ssl for this vhost (default)
@@ -212,6 +218,7 @@ define apache::vhost::template(
     }
     $serveralias = $domainalias ? {
         'absent' => '',
+        'www' => "www.${domain}",
         default => $domainalias
     }
     case $htpasswd_path {
