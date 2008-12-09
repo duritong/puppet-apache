@@ -5,7 +5,7 @@ define apache::htpasswd_user(
     $site = 'absent',
     $username = 'absent',
     $password,
-    $password_iscrypted = 'false',
+    $password_iscrypted = false,
     $ensure = 'present',
     $path = 'absent'
 ){
@@ -21,9 +21,10 @@ define apache::htpasswd_user(
         'absent': { $real_path = "/var/www/htpasswds/${real_site}" }
         default: { $real_path = $path }
     }
-    case $password_iscrypted {
-        'false': { $real_password = htpasswd_sha1($password) }
-        default: { $real_password = $password }
+    if $password_iscrypted {
+        $real_password = $password 
+    } else
+        $real_password = htpasswd_sha1($password) 
     }
 
     line{"htpasswd_for_${real_site}":
