@@ -23,7 +23,7 @@ define apache::htpasswd_user(
     }
     if $password_iscrypted {
         $real_password = $password 
-    } else
+    } else {
         $real_password = htpasswd_sha1($password) 
     }
 
