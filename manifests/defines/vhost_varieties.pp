@@ -65,6 +65,12 @@ define apache::vhost::static(
     }
 }
 
+# run_mode: 
+#   - normal: nothing special (*default*)
+#   - itk: apache is running with the itk module 
+#          and run_uid and run_gid are used as vhost users
+# run_uid: the uid the vhost should run as with the itk module
+# run_gid: the gid the vhost should run as with the itk module
 define apache::vhost::php::standard(
     $domain = 'absent',
     $domainalias = 'absent',
@@ -74,6 +80,9 @@ define apache::vhost::php::standard(
     $documentroot_owner = apache,
     $documentroot_group = 0,
     $documentroot_mode = 0750,
+    $run_mode = 'normal',
+    $run_uid = 'absent',
+    $run_gid = 'absent',
     $allow_override = 'None',
     $upload_tmp_dir = 'absent',
     $session_save_path = 'absent',
@@ -138,6 +147,9 @@ define apache::vhost::php::standard(
         vhost_destination => $vhost_destination,
         domain => $domain,
         domainalias => $domainalias,
+        run_mode => $run_mode,
+        run_uid => $run_uid,
+        run_gid => $run_gid,
         allow_override => $allow_override,
         do_includes => $do_includes,
         options => $options,
