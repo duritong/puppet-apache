@@ -106,13 +106,6 @@ define apache::vhost::php::standard(
         }
         default: { $real_upload_tmp_dir = $upload_tmp_dir }
     }
-    file{$real_upload_tmp_dir:
-        ensure => directory,
-        owner => $documentroot_owner, 
-        group => $documentroot_group, 
-        mode => $documentroot_mode;
-    }
-
     # php session_save_path
     case $session_save_path {
         'absent': {
@@ -121,13 +114,15 @@ define apache::vhost::php::standard(
         }
         default: { $real_session_save_path = $session_save_path }
     }
-    file{"$real_session_save_path":
+    file{[$real_upload_tmp_dir, $real_session_save_path ]:
         ensure => directory,
-        owner => $documentroot_owner, 
+        owner => $run_mode ? {
+            'itk' => $run_uid,
+            default => $documentroot_owner
+        },
         group => $documentroot_group, 
         mode => $documentroot_mode;
     }
-
     # create webdir
     apache::vhost::webdir{$name:
         path => $path,
