@@ -169,6 +169,7 @@ define apache::vhost::file(
 #   - php: for a default php application
 #   - static: for a static application (default)
 #   - perl: for a mod_perl application
+#   - php_joomla: for a joomla application
 #
 # domainalias:
 #   - absent: no domainalias is set (*default*)
