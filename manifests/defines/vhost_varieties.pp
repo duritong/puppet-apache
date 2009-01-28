@@ -241,7 +241,7 @@ define apache::vhost::php::joomla(
         documentroot_owner => $documentroot_owner,
         documentroot_group => $documentroot_group,
         documentroot_mode => $documentroot_mode,
-	require => File["$documentroot/.git"],
+	require => Git::Clone["git_clone_$name"],
     }
 
     file{[
@@ -253,7 +253,7 @@ define apache::vhost::php::joomla(
         ensure => directory
         ,mode => 0770
         ,recurse => true
-	,require => File["$documentroot/.git"]
+	,require => Git::Clone["git_clone_$name"]
     }
      
     # create vhost configuration file
