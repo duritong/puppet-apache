@@ -228,6 +228,12 @@ define apache::vhost::php::joomla(
     $documentroot = "${real_path}/www"
 
     # create webdir
+    # for the cloning, $documentroot needs to be absent
+    git::clone{"git_clone_$name":
+        git_repo => "git://git.immerda.ch/ijoomla.git",
+        projectroot => $documentroot
+    }
+    # create and/or put correct permissions
     apache::vhost::webdir{$name:
         path => $real_path,
         owner => $owner,
@@ -235,12 +241,8 @@ define apache::vhost::php::joomla(
         documentroot_owner => $documentroot_owner,
         documentroot_group => $documentroot_group,
         documentroot_mode => $documentroot_mode,
+	require => File["$documentroot/.git"],
     }
-
-	git::clone{"git_clone_$name":
-		git_repo => "file:///e/gitrepos/joomla",
-    	projectroot => $documentroot
-	}
 
     file{[
         "$documentroot/components"
@@ -248,10 +250,11 @@ define apache::vhost::php::joomla(
         ,"$documentroot/images"
         ,"$documentroot/language"
     ]:
-        ensure => directory,
-        mode => 0770;
+        ensure => directory
+        ,mode => 0770
+        ,recurse => true
+	,require => File["$documentroot/.git"]
     }
-
      
     # create vhost configuration file
     apache::vhost{$name:
