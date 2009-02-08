@@ -54,7 +54,8 @@ define apache::vhost::webdir(
     $group = 0,
     $documentroot_owner = apache,
     $documentroot_group = 0,
-    $documentroot_mode = 0640
+    $documentroot_mode = 0640,
+    $documentroot_recurse = false
 ){
     $real_path = $path ? {
         'absent' => $operatingsystem ? {
@@ -99,9 +100,14 @@ define apache::vhost::webdir(
         ensure => directory,
         owner => $owner, group => $group, mode => '0755';
     }
+    case $documentroot_recurse {
+      '': { $real_documentroot_recurse = false }
+      default: { $real_documentroot_recurse = $documentroot_recurse }
+    }
     file{"$documentroot":
         ensure => directory,
-        owner => $real_documentroot_owner, group => $real_documentroot_group, mode => $documentroot_mode;
+        owner => $real_documentroot_owner, group => $real_documentroot_group, mode => $documentroot_mode,
+        recurse => $real_documentroot_recurse;
     }
     file{$logdir:
         ensure => directory,
