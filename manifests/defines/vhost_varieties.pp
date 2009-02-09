@@ -245,16 +245,21 @@ define apache::vhost::php::joomla(
 	require => Git::Clone["git_clone_$name"],
     }
 
-
-    file{[
+    $writable_files = [
         "$documentroot/components"
         ,"$documentroot/dmdocuments"
         ,"$documentroot/images"
-        ,"$documentroot/language"
-    ]:
+        ,"$documentroot/language"]
+
+    file{$writable_files:
         ensure => directory
         ,mode => 0770
 	,require => Git::Clone["git_clone_$name"]
+    }
+    file{$writable_files:
+        owner => $owner,
+        group => $group,
+	require => Git::Clone["git_clone_$name"]
     }
      
     # create vhost configuration file
