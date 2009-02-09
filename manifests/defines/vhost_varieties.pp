@@ -243,7 +243,7 @@ define apache::vhost::php::joomla(
         documentroot_owner => $documentroot_owner,
         documentroot_group => $documentroot_group,
         documentroot_mode => $documentroot_mode,
-        documentroot_recurse => true,
+        documentroot_recurse => false,
 	require => Git::Clone["git_clone_$name"],
     }
 
