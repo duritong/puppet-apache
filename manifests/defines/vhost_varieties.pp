@@ -232,8 +232,8 @@ define apache::vhost::php::joomla(
     git::clone{"git_clone_$name":
         git_repo => "git://git.immerda.ch/ijoomla.git",
         projectroot => $documentroot,
-        runas_user => $owner,
-        runas_group => $group
+        runas_user => $documentroot_owner,
+        runas_group => $documentroot_group
     }
     # create and/or put correct permissions
     apache::vhost::webdir{$name:
