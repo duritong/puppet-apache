@@ -247,11 +247,25 @@ define apache::vhost::php::joomla(
 	require => Git::Clone["git_clone_$name"],
     }
 
-    $writable_files = [
-        "$documentroot/components"
+    $writable_dirs = [
+        "$documentroot/administrator/backups"
+        ,"$documentroot/administrator/components"
+        ,"$documentroot/administrator/language"
+        ,"$documentroot/administrator/modules"
+        ,"$documentroot/administrator/templates"
+        ,"$documentroot/components"
         ,"$documentroot/dmdocuments"
         ,"$documentroot/images"
-        ,"$documentroot/language"]
+        ,"$documentroot/language"
+        ,"$documentroot/media"
+        ,"$documentroot/modules"
+        ,"$documentroot/plugins"
+        ,"$documentroot/templates"
+        ,"$documentroot/cache"
+        ,"$documentroot/administrator/cache"
+    ]
+    
+    apache::file::rw{$writable_dirs:}
 
 #    file{$writable_files:
 #        ensure => directory
