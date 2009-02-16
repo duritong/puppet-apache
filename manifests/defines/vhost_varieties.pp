@@ -248,36 +248,26 @@ define apache::vhost::php::joomla(
     }
 
     $writable_dirs = [
-        "$documentroot/administrator/backups"
-        ,"$documentroot/administrator/components"
-        ,"$documentroot/administrator/language"
-        ,"$documentroot/administrator/modules"
-        ,"$documentroot/administrator/templates"
-        ,"$documentroot/components"
-        ,"$documentroot/dmdocuments"
-        ,"$documentroot/images"
-        ,"$documentroot/language"
-        ,"$documentroot/media"
-        ,"$documentroot/modules"
-        ,"$documentroot/plugins"
-        ,"$documentroot/templates"
-        ,"$documentroot/cache"
-        ,"$documentroot/administrator/cache"
+        "$documentroot/administrator/backups",
+        "$documentroot/administrator/components",
+        "$documentroot/administrator/language",
+        "$documentroot/administrator/modules",
+        "$documentroot/administrator/templates",
+        "$documentroot/components",
+        "$documentroot/images",
+        "$documentroot/language",
+        "$documentroot/media",
+        "$documentroot/modules",
+        "$documentroot/plugins",
+        "$documentroot/templates",
+        "$documentroot/cache",
+        "$documentroot/administrator/cache"
     ]
     
-    apache::file::rw{$writable_dirs:}
+    apache::file::rw{$writable_dirs:
+      require => Git::Clone["git_clone_$name"]
+    }
 
-#    file{$writable_files:
-#        ensure => directory
-#        ,mode => 0770
-#	,require => Git::Clone["git_clone_$name"]
-#    }
-#    file{$writable_files:
-#        owner => $owner,
-#        group => $group,
-#	require => Git::Clone["git_clone_$name"]
-#    }
-     
     # create vhost configuration file
     apache::vhost{$name:
         path => $path,
