@@ -297,7 +297,7 @@ define apache::vhost::file::documentroot(
         path   => $real_path,
         source => $real_source,
         ensure => file,
-        require => File[real_path]
+        require => File[real_path],
         mode   => 440;
     }
 
