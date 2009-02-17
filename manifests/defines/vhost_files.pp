@@ -253,9 +253,15 @@ define apache::vhost::template(
 }
 
 
-define apache::vhost::file::documentrootfile($documentroot,$filename,$thedomain){
+define apache::vhost::file::documentrootfile(
+      $documentroot,
+      $filename,
+      $thedomain,
+      $owner='root',
+      $group='0'
+    ){
     file{"$documentroot/$filename":
-        source => [ "puppet://$server/files/apache/vhost_varieties/$fqdn/$thedomain/$filename",
+        source  => [ "puppet://$server/files/apache/vhost_varieties/$fqdn/$thedomain/$filename",
                     "puppet://$server/files/apache/vhost_varieties/$apache_cluster_node/$thedomain/$filename",
                     "puppet://$server/files/apache/vhost_varieties/$operatingsystem.$lsbdistcodename/$thedomain/$filename",
                     "puppet://$server/files/apache/vhost_varieties/$operatingsystem/$thedomain/$filename",
@@ -264,9 +270,11 @@ define apache::vhost::file::documentrootfile($documentroot,$filename,$thedomain)
                     "puppet://$server/apache/vhost_varieties/$operatingsystem.$lsbdistcodename/$thedomain/$filename",
                     "puppet://$server/apache/vhost_varieties/$operatingsystem/$thedomain/$filename",
                     "puppet://$server/apache/vhost_varieties/$thedomain/$filename"
-                ],
-        ensure => file,
-        mode   => 440,
+                   ],
+        ensure  => file,
+        mode    => 440,
+        owner   => $owner,
+        group   => $group,
         require => Apache::Vhost::Webdir["$thedomain"],
     }
 }
