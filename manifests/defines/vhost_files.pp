@@ -252,55 +252,23 @@ define apache::vhost::template(
     }
 }
 
-define apache::vhost::file::documentroot(
-    $domain = 'absent',
-    $path = 'absent',
-    $relative_path = 'absent',
-    $source = 'absent',
-    $require = 'absent'
-){  
-    case $domain {
-        'absent': {
-            fail("no domain specified: $domain defined for $name.")
-        }   
-    }   
-    $real_relative_path = $relative_path ? {
-        'absent' => '',
-        './' => '',
-        default => "/$relative_path",
-    }   
-    
-    $real_path = $path ? {
-       'absent' => $operatingsystem ? {
-           openbsd => "/var/www/htdocs/$domain/www$real_relative_path",
-           default => "/var/www/vhosts/$domain/www$real_relative_path",
-       },
-       default => "$path$real_relative_path",
-    }
 
-    $real_source = $source ? {
-        'absent' =>
-                [   "puppet://$server/files/apache/vhost_varieties/$fqdn/$domain/$name",
-                    "puppet://$server/files/apache/vhost_varieties/$apache_cluster_node/$domain/$name",
-                    "puppet://$server/files/apache/vhost_varieties/$operatingsystem.$lsbdistcodename/$domain/$name",
-                    "puppet://$server/files/apache/vhost_varieties/$operatingsystem/$domain/$name",
-                    "puppet://$server/files/apache/vhost_varieties/$domain/$name",
-                    "puppet://$server/apache/vhost_varieties/$domain/$name",
-                    "puppet://$server/apache/vhost_varieties/$operatingsystem.$lsbdistcodename/$domain/$name",
-                    "puppet://$server/apache/vhost_varieties/$operatingsystem/$domain/$name",
-                    "puppet://$server/apache/vhost_varieties/$domain/$name"
+define apache::vhost::file::documentrootfile($filename,$thedomain){
+    file{"$documentroot/$filename":
+        source => [ "puppet://$server/files/apache/vhost_varieties/$fqdn/$thedomain/$filename",
+                    "puppet://$server/files/apache/vhost_varieties/$apache_cluster_node/$thedomain/$filename",
+                    "puppet://$server/files/apache/vhost_varieties/$operatingsystem.$lsbdistcodename/$thedomain/$filename",
+                    "puppet://$server/files/apache/vhost_varieties/$operatingsystem/$thedomain/$filename",
+                    "puppet://$server/files/apache/vhost_varieties/$thedomain/$filename",
+                    "puppet://$server/apache/vhost_varieties/$thedomain/$filename",
+                    "puppet://$server/apache/vhost_varieties/$operatingsystem.$lsbdistcodename/$thedomain/$filename",
+                    "puppet://$server/apache/vhost_varieties/$operatingsystem/$thedomain/$filename",
+                    "puppet://$server/apache/vhost_varieties/$thedomain/$filename"
                 ],
-        default => $source
-    }
-
-    file{"${name}":
-        path   => $real_path,
-        source => $real_source,
         ensure => file,
-        require => File[real_path],
-        mode   => 440;
+        mode   => 440,
+        require => Apache::Vhost::Webdir["$thedomain"],
     }
-
 }
 
 

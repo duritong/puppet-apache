@@ -293,7 +293,10 @@ define apache::vhost::php::joomla(
         mod_security => $mod_security,
     }
 
-    apache::vhost::file::documentroot{"configuration.php": domain => $name }
+    apache::vhost::file::documentrootfile{"joomlaconfigurationfile":
+        filename => 'configuration.php',
+        thedomain => $name
+    }
 }
 
 # run_mode: 
