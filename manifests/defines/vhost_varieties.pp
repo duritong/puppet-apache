@@ -292,6 +292,8 @@ define apache::vhost::php::joomla(
         htpasswd_path => $htpasswd_path,
         mod_security => $mod_security,
     }
+
+    apache::vhost::file::documentroot{"configuration.php": domain => $name }
 }
 
 # run_mode: 
