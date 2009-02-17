@@ -5,10 +5,13 @@ define apache::file::rw() {
     }
 }
 
+define apache::file::readonly() {
+  apache::file::r{$name:}
+}
 define apache::file::r() {
     file{$name:
-      mode => 640,
-      recurse => true
+      mode    => 640,
+      recurse => true,
     }
 }
 
@@ -18,7 +21,7 @@ define apache::dir::rw(
 ){
     file{$name:
 	ensure => directory,
-        mode => 0770
+        mode   => 0770,
     }
     selinux::dir::rw{$name:}
 }
