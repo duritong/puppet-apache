@@ -299,6 +299,15 @@ define apache::vhost::php::joomla(
         thedomain => $name,
         owner => $documentroot_owner,
         group => $documentroot_group,
+        mode => 440,
+    }
+    apache::vhost::file::documentrootdir{"joomlagitdir":
+        documentroot => $documentroot,
+        filename => '.git',
+        thedomain => $name,
+        owner => $documentroot_owner,
+        group => 'root',
+        mode => 400,
     }
 }
 

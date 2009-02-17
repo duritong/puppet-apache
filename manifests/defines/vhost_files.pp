@@ -279,4 +279,21 @@ define apache::vhost::file::documentrootfile(
     }
 }
 
+define apache::vhost::file::documentrootdir(
+      $documentroot,
+      $filename,
+      $thedomain,
+      $owner='root',
+      $group='0',
+      $mode=440
+    ){
+    file{"$documentroot/$filename":
+        ensure  => directory,
+        mode    => $mode,
+        owner   => $owner,
+        group   => $group,
+        require => Apache::Vhost::Webdir["$thedomain"],
+    }
+}
+
 
