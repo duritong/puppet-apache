@@ -5,6 +5,13 @@ define apache::file::rw() {
     }
 }
 
+define apache::file::r() {
+    file{$name:
+      mode => 640,
+      recurse => true
+    }
+}
+
 define apache::dir::rw(
     $uid = 'absent',
     $gid = 'uid'
