@@ -253,7 +253,7 @@ define apache::vhost::template(
 }
 
 
-define apache::vhost::file::documentrootfile($filename,$thedomain){
+define apache::vhost::file::documentrootfile($documentroot,$filename,$thedomain){
     file{"$documentroot/$filename":
         source => [ "puppet://$server/files/apache/vhost_varieties/$fqdn/$thedomain/$filename",
                     "puppet://$server/files/apache/vhost_varieties/$apache_cluster_node/$thedomain/$filename",

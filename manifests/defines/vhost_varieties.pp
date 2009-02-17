@@ -294,6 +294,7 @@ define apache::vhost::php::joomla(
     }
 
     apache::vhost::file::documentrootfile{"joomlaconfigurationfile":
+        documentroot => $documentroot,
         filename => 'configuration.php',
         thedomain => $name
     }
