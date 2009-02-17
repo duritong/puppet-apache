@@ -255,24 +255,30 @@ define apache::vhost::template(
 define apache::vhost::file::documentroot(
     $domain = 'absent',
     $path = 'absent',
-    $relative_path = '.',
-    $content = 'absent'
+    $relative_path = 'absent',
+    $source = 'absent',
+    $require = 'absent'
 ){  
     case $domain {
         'absent': {
             fail("no domain specified: $domain defined for $name.")
         }   
     }   
+    $real_relative_path = $relative_path ? {
+        'absent' => '',
+        './' => '',
+        default => "/$relative_path",
+    }   
     
     $real_path = $path ? {
        'absent' => $operatingsystem ? {
-           openbsd => "/var/www/htdocs/$domain/www/$relative_path",
-           default => "/var/www/vhosts/$domain/www/$relative_path",
+           openbsd => "/var/www/htdocs/$domain/www$real_relative_path",
+           default => "/var/www/vhosts/$domain/www$real_relative_path",
        },
-       default => "$path/$relative_path",
+       default => "$path$real_relative_path",
     }
 
-    $real_content = $content ? {
+    $real_source = $source ? {
         'absent' =>
                 [   "puppet://$server/files/apache/vhost_varieties/$fqdn/$domain/$name",
                     "puppet://$server/files/apache/vhost_varieties/$apache_cluster_node/$domain/$name",
@@ -284,12 +290,14 @@ define apache::vhost::file::documentroot(
                     "puppet://$server/apache/vhost_varieties/$operatingsystem/$domain/$name",
                     "puppet://$server/apache/vhost_varieties/$domain/$name"
                 ],
-        default => $content
+        default => $source
     }
 
-    file{"$real_path/$name":
+    file{"${name}":
         path   => $real_path,
-        content => $real_content,
+        source => $real_source,
+        ensure => file,
+        require => File[real_path]
         mode   => 440;
     }
 
