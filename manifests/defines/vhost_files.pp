@@ -258,8 +258,9 @@ define apache::vhost::file::documentrootfile(
       $filename,
       $thedomain,
       $owner='root',
-      $group='0'
-    ){
+      $group='0',
+      $mode=440
+){
     file{"$documentroot/$filename":
         source  => [ "puppet://$server/files/apache/vhost_varieties/$fqdn/$thedomain/$filename",
                     "puppet://$server/files/apache/vhost_varieties/$apache_cluster_node/$thedomain/$filename",
@@ -272,10 +273,8 @@ define apache::vhost::file::documentrootfile(
                     "puppet://$server/apache/vhost_varieties/$thedomain/$filename"
                    ],
         ensure  => file,
-        mode    => 440,
-        owner   => $owner,
-        group   => $group,
         require => Apache::Vhost::Webdir["$thedomain"],
+        owner => $owner, group => $group, mode => $mode;
     }
 }
 
@@ -286,13 +285,11 @@ define apache::vhost::file::documentrootdir(
       $owner='root',
       $group='0',
       $mode=440
-    ){
+){
     file{"$documentroot/$filename":
         ensure  => directory,
-        mode    => $mode,
-        owner   => $owner,
-        group   => $group,
         require => Apache::Vhost::Webdir["$thedomain"],
+        owner => $owner, group => $group, mode => $mode;
     }
 }
 
