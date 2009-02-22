@@ -4,12 +4,12 @@
 
 # deploy apache (.conf) configuration file (non-vhost)
 define apache::config::file(
-    $source = '',
+    $source = 'absent',
     $content = 'absent',
-    $destination = ''
+    $destination = 'absent'
 ){
     $real_destination = $destination ? {
-        '' => $operatingsystem ? {
+        'absent' => $operatingsystem ? {
             centos => "$apache::centos::config_dir/conf.d/${name}",
             gentoo => "$apache::gentoo::config_dir/${name}",
             debian => "$apache::debian::config_dir/conf.d/${name}",
@@ -27,7 +27,7 @@ define apache::config::file(
     case $content {
         'absent': {
             $real_source = $source ? {
-                '' => [ 
+                'absent' => [ 
                     "puppet://$server/files/apache/conf.d/${fqdn}/${name}",
                     "puppet://$server/files/apache/conf.d/${apache_cluster_node}/${name}",
                     "puppet://$server/files/apache/conf.d/${operatingsystem}.${lsbdistcodename}/${name}",
