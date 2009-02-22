@@ -5,21 +5,9 @@
 # deploy apache (.conf) configuration file (non-vhost)
 define apache::config::file(
     $source = '',
+    $content = 'absent',
     $destination = ''
 ){
-    $real_source = $source ? {
-        '' => [ 
-            "puppet://$server/files/apache/conf.d/${fqdn}/${name}",
-            "puppet://$server/files/apache/conf.d/${apache_cluster_node}/${name}",
-            "puppet://$server/files/apache/conf.d/${operatingsystem}.${lsbdistcodename}/${name}",
-            "puppet://$server/files/apache/conf.d/${operatingsystem}/${name}",
-            "puppet://$server/files/apache/conf.d/${name}",
-            "puppet://$server/apache/conf.d/${operatingsystem}.${lsbdistcodename}/${name}",
-            "puppet://$server/apache/conf.d/${operatingsystem}/${name}",
-            "puppet://$server/apache/conf.d/${name}"
-        ],
-        default => "puppet://$server/$source",
-    }
     $real_destination = $destination ? {
         '' => $operatingsystem ? {
             centos => "$apache::centos::config_dir/conf.d/${name}",
@@ -33,9 +21,33 @@ define apache::config::file(
     }
     file{"apache_${name}":
         path => $real_destination,
-        source => $real_source,
         notify => Service[apache],
         owner => root, group => 0, mode => 0644;
+    }
+    case $content {
+        'absent': {
+            $real_source = $source ? {
+                '' => [ 
+                    "puppet://$server/files/apache/conf.d/${fqdn}/${name}",
+                    "puppet://$server/files/apache/conf.d/${apache_cluster_node}/${name}",
+                    "puppet://$server/files/apache/conf.d/${operatingsystem}.${lsbdistcodename}/${name}",
+                    "puppet://$server/files/apache/conf.d/${operatingsystem}/${name}",
+                    "puppet://$server/files/apache/conf.d/${name}",
+                    "puppet://$server/apache/conf.d/${operatingsystem}.${lsbdistcodename}/${name}",
+                    "puppet://$server/apache/conf.d/${operatingsystem}/${name}",
+                    "puppet://$server/apache/conf.d/${name}"
+                ],
+                default => "puppet://$server/$source",
+            }
+            File["apache_${name}"]{
+                source => $real_source,
+            }
+        }
+        default: {
+            File["apache_${name}"]{
+                content => $content,
+            }
+        }
     }
     case $operatingsystem {
         openbsd: { info("no package dependency on ${operatingsystem} for ${name}") }
