@@ -76,6 +76,7 @@ class apache::base {
     }
 
     apache::config::file{ 'defaults.inc': }
+    apache::config::file{ 'git.conf': }
     apache::vhost::file { '0-default': }
 }
 
