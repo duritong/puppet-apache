@@ -30,7 +30,7 @@ class apache {
         default: { include apache::base }
     }
     if $selinux {
-        include apache::selinux
+//        include apache::selinux
     }
     if $use_munin {
         include apache::status
