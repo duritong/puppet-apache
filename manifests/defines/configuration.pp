@@ -63,6 +63,7 @@ define apache::config::file(
 
 # create webdir
 define apache::vhost::webdir(
+    $ensure = present,
     $path = 'absent',
     $owner = root,
     $group = 0,
