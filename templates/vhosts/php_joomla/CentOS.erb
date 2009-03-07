@@ -40,9 +40,21 @@
         php_admin_value session.save_path <%= php_session_save_path %>
     </Directory>
     <%- end -%>
+	
+    <Directory "<%= documentroot %>/administrator/">
+        RewriteEngine on
+
+        # Rewrite URLs to https that go for the admin area
+        RewriteCond %{REMOTE_ADDR} !^127\.[0-9]+\.[0-9]+\.[0-9]+$
+        RewriteCond %{HTTPS} !=on
+        RewriteCond %{REQUEST_URI} (.*/administrator/.*)
+        RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R]
+    </Directory>
 
     <IfModule mod_security2.c>
         SecRuleEngine <%= if mod_security.to_s == 'true' then "On" else "Off" end %>
+	# http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
+	SecRuleRemoveById "960010"
     </IfModule>
 
     <%- unless additional_options.to_s == 'absent' then -%>
