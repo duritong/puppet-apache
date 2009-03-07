@@ -103,7 +103,7 @@ define apache::vhost::php::standard(
     $htpasswd_path = 'absent'
 ){
 
-    apache::vhost::phpdirs{"phpdirs_${name}":
+    apache::vhost::phpdirs{"${name}":
         ensure => $ensure,
         php_upload_tmp_dir => $php_upload_tmp_dir,
         php_session_save_path => $php_session_save_path,
@@ -187,7 +187,7 @@ define apache::vhost::php::joomla(
     $htpasswd_path = 'absent'
 ){
 
-    apache::vhost::phpdirs{"phpdirs_${name}":
+    apache::vhost::phpdirs{"${name}":
         ensure => $ensure,
         php_upload_tmp_dir => $php_upload_tmp_dir,
         php_session_save_path => $php_session_save_path,
