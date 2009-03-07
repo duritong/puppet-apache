@@ -251,6 +251,25 @@ define apache::vhost::template(
             }
         }
     }
+
+    # set default dirs for templates
+    # php upload_tmp_dir
+    case $upload_tmp_dir {
+        'absent': {
+            include apache::defaultphpdirs
+            $real_upload_tmp_dir = "/var/www/upload_tmp_dir/$name"
+        }
+        default: { $real_upload_tmp_dir = $upload_tmp_dir }
+    }
+    # php session_save_path
+    case $session_save_path {
+        'absent': {
+            include apache::defaultphpdirs
+            $real_session_save_path = "/var/www/session.save_path/$name"
+        }
+        default: { $real_session_save_path = $session_save_path }
+    }
+
     apache::vhost::file{$name:
         ensure => $ensure,
         content => template("apache/vhosts/$template_mode/$operatingsystem.erb"),
