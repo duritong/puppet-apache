@@ -254,20 +254,20 @@ define apache::vhost::template(
 
     # set default dirs for templates
     # php upload_tmp_dir
-    case $upload_tmp_dir {
+    case $php_upload_tmp_dir {
         'absent': {
             include apache::defaultphpdirs
-            $real_upload_tmp_dir = "/var/www/upload_tmp_dir/$name"
+            $real_php_upload_tmp_dir = "/var/www/upload_tmp_dir/$name"
         }
-        default: { $real_upload_tmp_dir = $upload_tmp_dir }
+        default: { $real_php_upload_tmp_dir = $php_upload_tmp_dir }
     }
     # php session_save_path
-    case $session_save_path {
+    case $php_session_save_path {
         'absent': {
             include apache::defaultphpdirs
-            $real_session_save_path = "/var/www/session.save_path/$name"
+            $real_php_session_save_path = "/var/www/session.save_path/$name"
         }
-        default: { $real_session_save_path = $session_save_path }
+        default: { $real_php_session_save_path = $php_session_save_path }
     }
 
     apache::vhost::file{$name:
@@ -324,8 +324,8 @@ define apache::vhost::file::documentrootdir(
 
 define apache::vhost::phpdirs(
     $ensure = present,
-    $upload_tmp_dir = 'absent',
-    $session_save_path = 'absent',
+    $php_upload_tmp_dir = 'absent',
+    $php_session_save_path = 'absent',
     $documentroot_owner = apache,
     $documentroot_group = 0,
     $documentroot_mode = 0750,
@@ -333,25 +333,25 @@ define apache::vhost::phpdirs(
     $run_uid = 'absent'
 ){
     # php upload_tmp_dir
-    case $upload_tmp_dir {
+    case $php_upload_tmp_dir {
         'absent': {
             include apache::defaultphpdirs
-            $real_upload_tmp_dir = "/var/www/upload_tmp_dir/$name"
+            $real_php_upload_tmp_dir = "/var/www/upload_tmp_dir/$name"
         }
-        default: { $real_upload_tmp_dir = $upload_tmp_dir }
+        default: { $real_php_upload_tmp_dir = $php_upload_tmp_dir }
     }
     # php session_save_path
-    case $session_save_path {
+    case $php_session_save_path {
         'absent': {
             include apache::defaultphpdirs
-            $real_session_save_path = "/var/www/session.save_path/$name"
+            $real_php_session_save_path = "/var/www/session.save_path/$name"
         }
-        default: { $real_session_save_path = $session_save_path }
+        default: { $real_php_session_save_path = $php_session_save_path }
     }
 
     case $ensure {
         absent: {
-            file{[$real_upload_tmp_dir, $real_session_save_path ]:
+            file{[$real_php_upload_tmp_dir, $real_php_session_save_path ]:
                 ensure => absent,
                 purge => true,
                 force => true,
@@ -359,7 +359,7 @@ define apache::vhost::phpdirs(
             }
         }
         default: {
-            file{[$real_upload_tmp_dir, $real_session_save_path ]:
+            file{[$real_php_upload_tmp_dir, $real_php_session_save_path ]:
                 ensure => directory,
                 owner => $run_mode ? {
                     'itk' => $run_uid,
