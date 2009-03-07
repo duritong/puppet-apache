@@ -12,6 +12,7 @@
 #   - file: deploy a vhost file (apache::vhost::file will be called directly)
 #   
 define apache::vhost(
+    $ensure = present,
     $path = 'absent',
     $template_mode = 'static',
     $vhost_mode = 'template',
@@ -41,6 +42,7 @@ define apache::vhost(
     case $vhost_mode {
         'file': {
             apache::vhost::file{$name:
+                ensure => $ensure,
                 vhost_source => $vhost_source,
                 vhost_destination => $vhost_destination,
                 do_includes => $do_includes,
@@ -50,6 +52,7 @@ define apache::vhost(
         }
         'template': {
             apache::vhost::template{$name:
+                ensure => $ensure,
                 path => $path,
                 domain => $domain,
                 domainalias => $domainalias,
@@ -86,6 +89,7 @@ define apache::vhost(
 #   - else: path to deploy
 #
 define apache::vhost::file(
+    $ensure = present,
     $vhost_source = 'absent',
     $vhost_destination = 'absent',
     $content = 'absent',
@@ -106,6 +110,7 @@ define apache::vhost::file(
         default => $vhost_destination,
     } 
     file{"$name.conf":
+        ensure => $ensure,
         path => $real_vhost_destination,
         require => File[vhosts_dir],
         notify => Service[apache],
@@ -156,6 +161,7 @@ define apache::vhost::file(
                 default: { $real_htpasswd_path = $htpasswd_path }
             }
             file{$real_htpasswd_path:
+                ensure => $ensure,
                 source => [ "puppet://$server/files/apache/htpasswds/$fqdn/$name",
                             "puppet://$server/files/apache/htpasswds/$apache_cluster_node/$name",
                             "puppet://$server/files/apache/htpasswds/$name" ],
@@ -182,6 +188,7 @@ define apache::vhost::file(
 #   - force: enable ssl and redirect non-ssl to ssl
 #
 define apache::vhost::template(
+    $ensure = present,
     $path = 'absent',
     $domain = 'absent',
     $domainalias = 'absent',
@@ -245,6 +252,7 @@ define apache::vhost::template(
         }
     }
     apache::vhost::file{$name:
+        ensure => $ensure,
         content => template("apache/vhosts/$template_mode/$operatingsystem.erb"),
         do_includes => $do_includes,
         htpasswd_file => $htpasswd_file,
@@ -294,3 +302,52 @@ define apache::vhost::file::documentrootdir(
 }
 
 
+
+define apache::vhost::phpdirs(
+    $ensure = present,
+    $upload_tmp_dir = 'absent',
+    $session_save_path = 'absent',
+    $documentroot_owner = apache,
+    $documentroot_group = 0,
+    $documentroot_mode = 0750,
+    $run_mode = 'normal',
+    $run_uid = 'absent'
+){
+    # php upload_tmp_dir
+    case $upload_tmp_dir {
+        'absent': {
+            include apache::defaultphpdirs
+            $real_upload_tmp_dir = "/var/www/upload_tmp_dir/$name"
+        }
+        default: { $real_upload_tmp_dir = $upload_tmp_dir }
+    }
+    # php session_save_path
+    case $session_save_path {
+        'absent': {
+            include apache::defaultphpdirs
+            $real_session_save_path = "/var/www/session.save_path/$name"
+        }
+        default: { $real_session_save_path = $session_save_path }
+    }
+
+    case $ensure {
+        absent: {
+            file{[$real_upload_tmp_dir, $real_session_save_path ]:
+                ensure => absent,
+                purge => true,
+                force => true,
+                recurse => true,
+            }
+        }
+        default: {
+            file{[$real_upload_tmp_dir, $real_session_save_path ]:
+                ensure => directory,
+                owner => $run_mode ? {
+                    'itk' => $run_uid,
+                    default => $documentroot_owner
+                },
+                group => $documentroot_group, mode => $documentroot_mode;
+            }
+        }
+    }
+}

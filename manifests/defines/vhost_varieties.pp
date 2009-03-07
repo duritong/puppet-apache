@@ -14,6 +14,7 @@
 #   - file: deploy a vhost file (apache::vhost::file will be called directly)
 #   
 define apache::vhost::static(
+    $ensure = present,
     $domain = 'absent',
     $domainalias = 'absent',
     $path = 'absent',
@@ -36,6 +37,7 @@ define apache::vhost::static(
 ){
     # create webdir
     apache::vhost::webdir{$name:
+        ensure => $ensure,
         path => $path,
         owner => $owner,
         group => $group,
@@ -46,6 +48,7 @@ define apache::vhost::static(
 
     # create vhost configuration file
     apache::vhost{$name:
+        ensure => $ensure,
         path => $path,
         template_mode => 'static',
         vhost_mode => $vhost_mode,
@@ -72,6 +75,7 @@ define apache::vhost::static(
 # run_uid: the uid the vhost should run as with the itk module
 # run_gid: the gid the vhost should run as with the itk module
 define apache::vhost::php::standard(
+    $ensure = present,
     $domain = 'absent',
     $domainalias = 'absent',
     $path = 'absent',
@@ -98,33 +102,21 @@ define apache::vhost::php::standard(
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent'
 ){
-    # php upload_tmp_dir
-    case $upload_tmp_dir {
-        'absent': {
-            include apache::defaultphpdirs
-            $real_upload_tmp_dir = "/var/www/upload_tmp_dir/$name"
-        }
-        default: { $real_upload_tmp_dir = $upload_tmp_dir }
+
+    apache::vhost::phpdirs{"phpdirs_${name}":
+        ensure => $ensure,
+        upload_tmp_dir => $upload_tmp_dir,
+        session_save_path => $session_save_path,
+        documentroot_owner => $documentroot_owner,
+        documentroot_group => $documentroot_group, 
+        documentroot_mode => $documentroot_mode,
+        run_mode => $run_mode,
+        run_uid => $run_uid,
     }
-    # php session_save_path
-    case $session_save_path {
-        'absent': {
-            include apache::defaultphpdirs
-            $real_session_save_path = "/var/www/session.save_path/$name"
-        }
-        default: { $real_session_save_path = $session_save_path }
-    }
-    file{[$real_upload_tmp_dir, $real_session_save_path ]:
-        ensure => directory,
-        owner => $run_mode ? {
-            'itk' => $run_uid,
-            default => $documentroot_owner
-        },
-        group => $documentroot_group, 
-        mode => $documentroot_mode;
-    }
+
     # create webdir
     apache::vhost::webdir{$name:
+        ensure => $ensure,
         path => $path,
         owner => $owner,
         group => $group,
@@ -135,6 +127,7 @@ define apache::vhost::php::standard(
 
     # create vhost configuration file
     apache::vhost{$name:
+        ensure => $ensure,
         path => $path,
         template_mode => 'php',
         vhost_mode => $vhost_mode,
@@ -166,6 +159,7 @@ define apache::vhost::php::standard(
 # run_uid: the uid the vhost should run as with the itk module
 # run_gid: the gid the vhost should run as with the itk module
 define apache::vhost::php::joomla(
+    $ensure = present,
     $domain = 'absent',
     $domainalias = 'absent',
     $path = 'absent',
@@ -192,30 +186,16 @@ define apache::vhost::php::joomla(
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent'
 ){
-    # php upload_tmp_diR
-    case $upload_tmp_dir {
-        'absent': {
-            include apache::defaultphpdirs
-            $real_upload_tmp_dir = "/var/www/upload_tmp_dir/$name"
-        }
-        default: { $real_upload_tmp_dir = $upload_tmp_dir }
-    }
-    # php session_save_path
-    case $session_save_path {
-        'absent': {
-            include apache::defaultphpdirs
-            $real_session_save_path = "/var/www/session.save_path/$name"
-        }
-        default: { $real_session_save_path = $session_save_path }
-    }
-    file{[$real_upload_tmp_dir, $real_session_save_path ]:
-        ensure => directory,
-        owner => $run_mode ? {
-            'itk' => $run_uid,
-            default => $documentroot_owner
-        },
-        group => $documentroot_group, 
-        mode => $documentroot_mode;
+
+    apache::vhost::phpdirs{"phpdirs_${name}":
+        ensure => $ensure,
+        upload_tmp_dir => $upload_tmp_dir,
+        session_save_path => $session_save_path,
+        documentroot_owner => $documentroot_owner,
+        documentroot_group => $documentroot_group,
+        documentroot_mode => $documentroot_mode,
+        run_mode => $run_mode,
+        run_uid => $run_uid,
     }
 
     $real_path = $path ? {
@@ -230,6 +210,7 @@ define apache::vhost::php::joomla(
     # create webdir
     # for the cloning, $documentroot needs to be absent
     git::clone{"git_clone_$name":
+        ensure => $ensure,
         git_repo => "git://git.immerda.ch/ijoomla.git",
         projectroot => $documentroot,
         cloneddir_user => $documentroot_owner,
@@ -237,39 +218,41 @@ define apache::vhost::php::joomla(
     }
     # create and/or put correct permissions
     apache::vhost::webdir{$name:
+        ensure => $ensure,
         path => $real_path,
         owner => $owner,
         group => $group,
         documentroot_owner => $documentroot_owner,
         documentroot_group => $documentroot_group,
         documentroot_mode => $documentroot_mode,
-        documentroot_recurse => false,
-	require => Git::Clone["git_clone_$name"],
+	      require => Git::Clone["git_clone_$name"],
     }
 
-    $writable_dirs = [
-        "$documentroot/administrator/backups",
-        "$documentroot/administrator/components",
-        "$documentroot/administrator/language",
-        "$documentroot/administrator/modules",
-        "$documentroot/administrator/templates",
-        "$documentroot/components",
-        "$documentroot/images",
-        "$documentroot/language",
-        "$documentroot/media",
-        "$documentroot/modules",
-        "$documentroot/plugins",
-        "$documentroot/templates",
-        "$documentroot/cache",
-        "$documentroot/administrator/cache"
-    ]
-    
-    apache::file::rw{$writable_dirs:
-      require => Git::Clone["git_clone_$name"]
+    case $ensure {
+        absent: { info("don't need to remove additional managed files for ${name} on ${fqdn}")}
+        default: {
+            apache::file::rw{ [ "$documentroot/administrator/backups",
+                                "$documentroot/administrator/components",
+                                "$documentroot/administrator/language",
+                                "$documentroot/administrator/modules",
+                                "$documentroot/administrator/templates",
+                                "$documentroot/components",
+                                "$documentroot/images",
+                                "$documentroot/language",
+                                "$documentroot/media",
+                                "$documentroot/modules",
+                                "$documentroot/plugins",
+                                "$documentroot/templates",
+                                "$documentroot/cache",
+                                "$documentroot/administrator/cache" ]:
+                require => Git::Clone["git_clone_$name"],
+            }
+        }
     }
 
     # create vhost configuration file
     apache::vhost{$name:
+        ensure => $ensure,
         path => $path,
         template_mode => 'php_joomla',
         vhost_mode => $vhost_mode,
@@ -293,7 +276,7 @@ define apache::vhost::php::joomla(
         mod_security => $mod_security,
     }
 
-    apache::vhost::file::documentrootfile{"joomlaconfigurationfile":
+    apache::vhost::file::documentrootfile{"joomlaconfigurationfile_${name}":
         documentroot => $documentroot,
         filename => 'configuration.php',
         thedomain => $name,
@@ -318,6 +301,7 @@ define apache::vhost::php::joomla(
 # run_uid: the uid the vhost should run as with the itk module
 # run_gid: the gid the vhost should run as with the itk module
 define apache::vhost::modperl(
+    $ensure = present,
     $domain = 'absent',
     $domainalias = 'absent',
     $path = 'absent',
@@ -366,6 +350,7 @@ define apache::vhost::modperl(
 
     # create webdir
     apache::vhost::webdir{$name:
+        ensure => $ensure,
         path => $path,
         owner => $owner,
         group => $group,
@@ -376,6 +361,7 @@ define apache::vhost::modperl(
 
     # create vhost configuration file
     apache::vhost{$name:
+        ensure => $ensure,
         path => $path,
         template_mode => 'perl',
         vhost_mode => $vhost_mode,

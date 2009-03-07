@@ -4,6 +4,7 @@
 
 # deploy apache (.conf) configuration file (non-vhost)
 define apache::config::file(
+    $ensure = present,
     $source = 'absent',
     $content = 'absent',
     $destination = 'absent'
@@ -20,6 +21,7 @@ define apache::config::file(
         default => $destination
     }
     file{"apache_${name}":
+        ensure => $ensure,
         path => $real_destination,
         notify => Service[apache],
         owner => root, group => 0, mode => 0644;
@@ -108,21 +110,29 @@ define apache::vhost::webdir(
         }
         default: { $real_documentroot_group = $documentroot_group }
     }
-    file{"$real_path":
-        ensure => directory,
-        owner => $owner, group => $group, mode => '0755';
-    }
-    case $documentroot_recurse {
-      '': { $real_documentroot_recurse = false }
-      default: { $real_documentroot_recurse = $documentroot_recurse }
-    }
-    file{"$documentroot":
-        ensure => directory,
-        owner => $real_documentroot_owner, group => $real_documentroot_group, mode => $documentroot_mode,
-        recurse => $real_documentroot_recurse;
-    }
-    file{$logdir:
-        ensure => directory,
-        owner => $real_documentroot_owner, group => $group, mode => 750;
+    case $ensure {
+        absent: {
+            file{[ "$real_path", "$documentroot", "$logdir" ]:
+                ensure => absent,
+                purge => true,
+                recurse => true,
+                force => true,
+            }
+        }
+        default: {
+            file{"$real_path":
+                ensure => directory,
+                owner => $owner, group => $group, mode => '0755';
+            }
+            file{"$documentroot":
+                ensure => directory,
+                recurse => $documentroot_recurse,
+                owner => $real_documentroot_owner, group => $real_documentroot_group, mode => $documentroot_mode;
+            }
+            file{"$logdir":
+                ensure => directory,
+                owner => $real_documentroot_owner, group => $group, mode => 750;
+            }
+        }
     }
 }

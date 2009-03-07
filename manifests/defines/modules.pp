@@ -3,6 +3,7 @@
 ### manage apache modules
 
 define apache::centos::module(
+    $ensure = present,
     $source = '',
     $destination = ''
 ){
@@ -22,6 +23,7 @@ define apache::centos::module(
         default => "puppet://$server/$source",
     }
     file{"modules_${name}.conf":
+        ensure => $ensure,
         path => $real_destination,
         source => $real_source,
         require => [ File[modules_dir], Package[apache] ],
@@ -31,6 +33,7 @@ define apache::centos::module(
 }
 
 define apache::gentoo::module(
+    $ensure = present,
     $source = '',
     $destination = ''
 ){
@@ -50,6 +53,7 @@ define apache::gentoo::module(
         default => "puppet://$server/$source",
     }
     file{"modules_${name}.conf":
+        ensure => $ensure,
         path => $real_destination,
         source => $real_source,
         require => [ File[modules_dir], Package[apache] ],

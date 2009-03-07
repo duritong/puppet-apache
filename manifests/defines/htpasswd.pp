@@ -2,6 +2,7 @@
 
 # ToDo: This should be rewritten as native type
 define apache::htpasswd_user(
+    $ensure = present,
     $site = 'absent',
     $username = 'absent',
     $password,
@@ -28,6 +29,7 @@ define apache::htpasswd_user(
     }
 
     line{"htpasswd_for_${real_site}":
+        ensure => $ensure,
         file => $real_path,
         line => "${username}:${real_password}",
     }
