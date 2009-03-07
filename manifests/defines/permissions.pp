@@ -1,28 +1,32 @@
-define apache::file::rw() {
-    file{$name:
-      mode => 660,
-      recurse => true
+define apache::file::rw(
+    $owner = root,
+    $group = 0,
+    $mode = 0660
+) {
+    apache::file{$name:
+        owner => $owner,
+        group => $group,
+        mode => $mode,
     }
 }
-
-define apache::file::readonly() {
-  apache::file::r{$name:}
-}
-define apache::file::r() {
-    file{$name:
-      mode    => 640,
-      recurse => true,
+define apache::file::readonly(
+    $owner = root,
+    $group = 0,
+    $mode = 0640
+) {
+    apache::file{$name:
+        owner => $owner,
+        group => $group,
+        mode => $mode,
     }
 }
-
-define apache::dir::rw(
-    $uid = 'absent',
-    $gid = 'uid'
-){
+define apache::file(
+    $owner = root,
+    $group = 0,
+    $mode = 0640
+) {
     file{$name:
-	ensure => directory,
-        mode   => 0770,
+        recurse => true,
+        owner => $owner, group => $group, mode => $mode;
     }
-    selinux::dir::rw{$name:}
 }
-

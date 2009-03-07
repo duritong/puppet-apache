@@ -245,6 +245,8 @@ define apache::vhost::php::joomla(
                                 "$documentroot/templates",
                                 "$documentroot/cache",
                                 "$documentroot/administrator/cache" ]:
+                owner => $documentroot_owner,
+                group => $documentroot_group,
                 require => Git::Clone["git_clone_$name"],
             }
         }
