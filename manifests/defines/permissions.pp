@@ -27,6 +27,8 @@ define apache::file(
 ) {
     file{$name:
         recurse => true,
+        backup => false,
+        checksum => nosum,
         owner => $owner, group => $group, mode => $mode;
     }
 }
