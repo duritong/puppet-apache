@@ -109,8 +109,9 @@ define apache::vhost::file(
         'absent' => "$vhosts_dir/$name.conf",
         default => $vhost_destination,
     } 
-    file{"$name.conf":
+    file{"${name}.conf":
         ensure => $ensure,
+        target => undef,
         path => $real_vhost_destination,
         require => File[vhosts_dir],
         notify => Service[apache],
@@ -135,12 +136,12 @@ define apache::vhost::file(
                 ],
                 default => "puppet://$server/$vhost_source",
             }
-            File["$name.conf"]{
+            File["${name}.conf"]{
                 source => $real_vhost_source,
             }
         }
         default: {
-            File["$name.conf"]{
+            File["${name}.conf"]{
                 content => $content,
             }
         }
