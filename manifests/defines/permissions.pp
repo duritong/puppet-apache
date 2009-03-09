@@ -25,10 +25,10 @@ define apache::file(
     $group = 0,
     $mode = 0640
 ) {
-    file{$name:
+/*    file{$name:
         recurse => true,
         backup => false,
         checksum => mtime,
         owner => $owner, group => $group, mode => $mode;
-    }
+    }*/
 }
