@@ -178,7 +178,7 @@ define apache::vhost::php::joomla(
     $options = 'absent',
     $additional_options = 'absent',
     $default_charset = 'absent',
-    $mod_security = false,
+    $mod_security = true,
     $ssl_mode = false,
     $vhost_mode = 'template',
     $vhost_source = 'absent',
