@@ -111,7 +111,6 @@ define apache::vhost::file(
     } 
     file{"${name}.conf":
         ensure => $ensure,
-        target => undef,
         path => $real_vhost_destination,
         require => File[vhosts_dir],
         notify => Service[apache],
