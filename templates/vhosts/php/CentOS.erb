@@ -42,7 +42,13 @@
     <%- end -%>
 
     <IfModule mod_security2.c>
-        SecRuleEngine <%= if mod_security.to_s == 'true' then "On" else "Off" end %>
+        <%- if mod_security.to_s == 'true' then -%>
+        SecRuleEngine On
+        SecAuditLog <%= logdir %>/mod_security_audit.log
+        SecFilterDebugLog <%= logdir %>/mod_security_debug.log
+        <%- else -%>
+        SecRuleEngine Off
+        <%- end -%>
     </IfModule>
 
     <%- unless additional_options.to_s == 'absent' then -%>
@@ -96,7 +102,13 @@
     </Directory>
 
     <IfModule mod_security2.c>
-        SecRuleEngine <%= if mod_security.to_s == 'true' then "On" else "Off" end %>
+        <%- if mod_security.to_s == 'true' then -%>
+        SecRuleEngine On
+        SecAuditLog <%= logdir %>/mod_security_audit.log
+        SecFilterDebugLog <%= logdir %>/mod_security_debug.log
+        <%- else -%>
+        SecRuleEngine Off
+        <%- end -%>
     </IfModule>
 
     <%- unless additional_options.to_s == 'absent' then -%>

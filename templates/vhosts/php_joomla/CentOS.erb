@@ -52,9 +52,15 @@
     </Directory>
 
     <IfModule mod_security2.c>
-        SecRuleEngine <%= if mod_security.to_s == 'true' then "On" else "Off" end %>
-	# http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
-	SecRuleRemoveById "960010"
+        <%- if mod_security.to_s == 'true' then -%>
+        SecRuleEngine On
+        SecAuditLog <%= logdir %>/mod_security_audit.log
+        SecFilterDebugLog <%= logdir %>/mod_security_debug.log
+        # http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
+        SecRuleRemoveById "960010"
+        <%- else -%>
+        SecRuleEngine Off
+        <%- end -%>
     </IfModule>
 
     <%- unless additional_options.to_s == 'absent' then -%>
@@ -109,6 +115,15 @@
 
     <IfModule mod_security2.c>
         SecRuleEngine <%= if mod_security.to_s == 'true' then "On" else "Off" end %>
+        <%- if mod_security.to_s == 'true' then -%>
+        SecRuleEngine On
+        SecAuditLog <%= logdir %>/mod_security_audit.log
+        SecFilterDebugLog <%= logdir %>/mod_security_debug.log
+        # http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
+        SecRuleRemoveById "960010"
+        <%- else -%>
+        SecRuleEngine Off
+        <%- end -%>
     </IfModule>
 
     <%- unless additional_options.to_s == 'absent' then -%>
