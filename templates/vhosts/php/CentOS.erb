@@ -45,7 +45,7 @@
         <%- if mod_security.to_s == 'true' then -%>
         SecRuleEngine On
         SecAuditLog <%= logdir %>/mod_security_audit.log
-        SecFilterDebugLog <%= logdir %>/mod_security_debug.log
+        SecDebugLog <%= logdir %>/mod_security_debug.log
         <%- else -%>
         SecRuleEngine Off
         <%- end -%>
@@ -105,7 +105,7 @@
         <%- if mod_security.to_s == 'true' then -%>
         SecRuleEngine On
         SecAuditLog <%= logdir %>/mod_security_audit.log
-        SecFilterDebugLog <%= logdir %>/mod_security_debug.log
+        SecDebugLog <%= logdir %>/mod_security_debug.log
         <%- else -%>
         SecRuleEngine Off
         <%- end -%>
