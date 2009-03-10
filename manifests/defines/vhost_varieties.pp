@@ -275,7 +275,7 @@ define apache::vhost::php::joomla(
         group => $documentroot_group,
         mode => 440,
     }
-    apache::vhost::file::documentrootdir{"joomlagitdir":
+    apache::vhost::file::documentrootdir{"joomlagitdir_${name}":
         documentroot => $documentroot,
         filename => '.git',
         thedomain => $name,
