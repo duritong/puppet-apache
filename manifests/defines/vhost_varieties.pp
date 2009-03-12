@@ -4,6 +4,7 @@
 #
 # - apache::vhost::static
 # - apache::vhost::php
+# - apache::vhost::joomla
 # - apache::vhost::cgi TODO
 # - apache::vhost::modperl TODO
 # - apache::vhost::modpython TODO
@@ -184,7 +185,10 @@ define apache::vhost::php::joomla(
     $vhost_source = 'absent',
     $vhost_destination = 'absent',
     $htpasswd_file = 'absent',
-    $htpasswd_path = 'absent'
+    $htpasswd_path = 'absent',
+    $manage_config = true,
+    $config_webwriteable = false,
+    $manage_directories = true
 ){
 
     apache::vhost::phpdirs{"${name}":
@@ -221,22 +225,24 @@ define apache::vhost::php::joomla(
     case $ensure {
         absent: { info("don't need to remove additional managed files for ${name} on ${fqdn}")}
         default: {
-            apache::file::rw{ [ "$documentroot/administrator/backups",
-                                "$documentroot/administrator/components",
-                                "$documentroot/administrator/language",
-                                "$documentroot/administrator/modules",
-                                "$documentroot/administrator/templates",
-                                "$documentroot/components",
-                                "$documentroot/images",
-                                "$documentroot/language",
-                                "$documentroot/media",
-                                "$documentroot/modules",
-                                "$documentroot/plugins",
-                                "$documentroot/templates",
-                                "$documentroot/cache",
-                                "$documentroot/administrator/cache" ]:
-                owner => $documentroot_owner,
-                group => $documentroot_group,
+            if $manage_directories {
+                apache::file::rw{ [ "$documentroot/administrator/backups",
+                                    "$documentroot/administrator/components",
+                                    "$documentroot/administrator/language",
+                                    "$documentroot/administrator/modules",
+                                    "$documentroot/administrator/templates",
+                                    "$documentroot/components",
+                                    "$documentroot/images",
+                                    "$documentroot/language",
+                                    "$documentroot/media",
+                                    "$documentroot/modules",
+                                    "$documentroot/plugins",
+                                    "$documentroot/templates",
+                                    "$documentroot/cache",
+                                    "$documentroot/administrator/cache" ]:
+                    owner => $documentroot_owner,
+                    group => $documentroot_group,
+                }
             }
         }
     }
@@ -267,13 +273,23 @@ define apache::vhost::php::joomla(
         mod_security => $mod_security,
     }
 
-    apache::vhost::file::documentrootfile{"joomlaconfigurationfile_${name}":
-        documentroot => $documentroot,
-        filename => 'configuration.php',
-        thedomain => $name,
-        owner => $documentroot_owner,
-        group => $documentroot_group,
-        mode => 440,
+    if $manage_config {
+        apache::vhost::file::documentrootfile{"joomlaconfigurationfile_${name}":
+            documentroot => $documentroot,
+            filename => 'configuration.php',
+            thedomain => $name,
+            owner => $documentroot_owner,
+            group => $documentroot_group,
+        }
+        if $config_webwriteable {
+            Apache::Vhost::File::Documentrootfile["joomlaconfigurationfile_${name}"]{
+                mode => 0660,
+            }
+        } else {
+            Apache::Vhost::File::Documentrootfile["joomlaconfigurationfile_${name}"]{
+                mode => 0440,
+            }
+        }
     }
     apache::vhost::file::documentrootdir{"joomlagitdir_${name}":
         documentroot => $documentroot,
