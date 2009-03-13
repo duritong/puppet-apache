@@ -25,10 +25,12 @@ define apache::file(
     $group = 0,
     $mode = 0640
 ) {
-/*    file{$name:
-        recurse => true,
+    file{$name:
+# as long as there are significant memory problems using
+# recurse we avoid it
+#        recurse => true,
         backup => false,
-        checksum => mtime,
+        checksum => undef,
         owner => $owner, group => $group, mode => $mode;
-    }*/
+    }
 }
