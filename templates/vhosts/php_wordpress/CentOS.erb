@@ -44,6 +44,7 @@
     <IfModule mod_security2.c>
         <%- if mod_security.to_s == 'true' then -%>
         SecRuleEngine On
+        SecAuditLogType serial
         SecAuditLog <%= logdir %>/mod_security_audit.log
         SecDebugLog <%= logdir %>/mod_security_debug.log
         # http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
@@ -107,6 +108,7 @@
         SecRuleEngine <%= if mod_security.to_s == 'true' then "On" else "Off" end %>
         <%- if mod_security.to_s == 'true' then -%>
         SecRuleEngine On
+        SecAuditLogType serial
         SecAuditLog <%= logdir %>/mod_security_audit.log
         SecDebugLog <%= logdir %>/mod_security_debug.log
         # http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
