@@ -23,6 +23,8 @@
     <%- end -%>
     <%- if not ssl_mode.to_s == 'force' then -%>
     <Directory "<%= documentroot %>/">
+        Include conf.d/joomla.inc
+
         AllowOverride <%= allow_override %>
         <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
         Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%> <%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%>+Includes<%- end -%>
@@ -96,6 +98,8 @@
     AddDefaultCharset <%= default_charset %>
     <%- end -%>
     <Directory "<%= documentroot %>/">
+        Include conf.d/joomla.inc
+
         AllowOverride <%= allow_override %>
         <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
         Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%> <%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%>+Includes<%- end -%>

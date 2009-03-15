@@ -191,6 +191,8 @@ define apache::vhost::php::joomla(
     $manage_directories = true
 ){
 
+    include apache::joomla
+
     apache::vhost::phpdirs{"${name}":
         ensure => $ensure,
         php_upload_tmp_dir => $php_upload_tmp_dir,
