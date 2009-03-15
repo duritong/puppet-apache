@@ -60,7 +60,19 @@
         SecAuditLog <%= logdir %>/mod_security_audit.log
         SecDebugLog <%= logdir %>/mod_security_debug.log
         # http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
-        SecRuleRemoveById "960010"
+        # Exceptions for Joomla Root Directory
+        <LocationMatch '^/'>
+            SecRuleRemoveById 950013
+        </LocationMatch>
+
+        # Exceptions for Joomla Administration Panel
+        SecRule REQUEST_FILENAME "/administrator/index2.php" \
+        "allow,phase:1,nolog,ctl:ruleEngine=Off"
+
+        # Exceptions for Joomla Component Expose
+        <LocationMatch '^/components/com_expose/expose/manager/amfphp/gateway.php'>
+            SecRuleRemoveById 960010
+        </LocationMatch>
         <%- else -%>
         SecRuleEngine Off
         <%- end -%>
@@ -126,7 +138,19 @@
         SecAuditLog <%= logdir %>/mod_security_audit.log
         SecDebugLog <%= logdir %>/mod_security_debug.log
         # http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
-        SecRuleRemoveById "960010"
+        # Exceptions for Joomla Root Directory
+        <LocationMatch '^/'>
+            SecRuleRemoveById 950013
+        </LocationMatch>
+
+        # Exceptions for Joomla Administration Panel
+        SecRule REQUEST_FILENAME "/administrator/index2.php" \
+        "allow,phase:1,nolog,ctl:ruleEngine=Off"
+
+        # Exceptions for Joomla Component Expose
+        <LocationMatch '^/components/com_expose/expose/manager/amfphp/gateway.php'>
+            SecRuleRemoveById 960010
+        </LocationMatch>
         <%- else -%>
         SecRuleEngine Off
         <%- end -%>
