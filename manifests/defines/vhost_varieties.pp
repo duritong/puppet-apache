@@ -309,7 +309,7 @@ define apache::vhost::php::wordpress(
     $run_mode = 'normal',
     $run_uid = 'absent',
     $run_gid = 'absent',
-    $allow_override = 'None',
+    $allow_override = 'FileInfo',
     $php_upload_tmp_dir = 'absent',
     $php_session_save_path = 'absent',
     $do_includes = false,
