@@ -291,14 +291,6 @@ define apache::vhost::php::joomla(
             }
         }
     }
-    apache::vhost::file::documentrootdir{"joomlagitdir_${name}":
-        documentroot => $documentroot,
-        filename => '.git',
-        thedomain => $name,
-        owner => $documentroot_owner,
-        group => 'root',
-        mode => 400,
-    }
 }
 
 # run_mode: 
