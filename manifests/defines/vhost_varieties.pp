@@ -580,7 +580,7 @@ define apache::vhost::php::webapp(
     }
 
     # create vhost configuration file
-    apache::vhost::php{$name:
+    apache::vhost::php::standard{$name:
         ensure => $ensure,
         path => $path,
         template_mode => $template_mode,
