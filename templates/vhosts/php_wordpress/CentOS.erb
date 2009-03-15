@@ -105,7 +105,6 @@
     </Directory>
 
     <IfModule mod_security2.c>
-        SecRuleEngine <%= if mod_security.to_s == 'true' then "On" else "Off" end %>
         <%- if mod_security.to_s == 'true' then -%>
         SecRuleEngine On
         SecAuditLogType serial
