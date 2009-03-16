@@ -76,9 +76,6 @@
 
     ErrorLog <%= logdir %>/error_log
     CustomLog <%= logdir %>/access_log combined
-    <%- if ssl_mode.to_s == 'force' then -%>
-    Redirect permanent / https://<%= servername %>/
-    <%- end -%>
     <%- if default_charset.to_s != 'absent' then -%>
     AddDefaultCharset <%= default_charset %>
     <%- end -%>

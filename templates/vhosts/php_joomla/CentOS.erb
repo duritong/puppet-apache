@@ -104,9 +104,6 @@
         AssignUserId <%= run_uid+" "+run_gid %>
     </IfModule>
     <%- end -%>
-    <%- if ssl_mode.to_s == 'force' then -%>
-    Redirect permanent / https://<%= servername %>/
-    <%- end -%>
     <%- if default_charset.to_s != 'absent' then -%>
     AddDefaultCharset <%= default_charset %>
     <%- end -%>
