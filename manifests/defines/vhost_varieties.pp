@@ -291,8 +291,6 @@ define apache::vhost::php::wordpress(
     $manage_directories = true
 ){
 
-    include apache::joomla
-
     $documentroot = $path ? {
         'absent' => $operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}/www",
