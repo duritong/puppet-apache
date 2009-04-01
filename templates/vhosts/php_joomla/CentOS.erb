@@ -56,9 +56,6 @@
     <IfModule mod_security2.c>
         <%- if mod_security.to_s == 'true' then -%>
         SecRuleEngine On
-        SecAuditLogType serial
-        SecAuditLog <%= logdir %>/mod_security_audit.log
-        SecDebugLog <%= logdir %>/mod_security_debug.log
         # http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
         # Exceptions for Joomla Root Directory
         <LocationMatch '^/'>
@@ -76,6 +73,9 @@
         <%- else -%>
         SecRuleEngine Off
         <%- end -%>
+        SecAuditLogType serial
+        SecAuditLog <%= logdir %>/mod_security_audit.log
+        SecDebugLog <%= logdir %>/mod_security_debug.log
     </IfModule>
 
     <%- unless additional_options.to_s == 'absent' then -%>
@@ -130,9 +130,6 @@
     <IfModule mod_security2.c>
         <%- if mod_security.to_s == 'true' then -%>
         SecRuleEngine On
-        SecAuditLogType serial
-        SecAuditLog <%= logdir %>/mod_security_audit.log
-        SecDebugLog <%= logdir %>/mod_security_debug.log
         # http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
         # Exceptions for Joomla Root Directory
         <LocationMatch '^/'>
@@ -150,6 +147,9 @@
         <%- else -%>
         SecRuleEngine Off
         <%- end -%>
+        SecAuditLogType serial
+        SecAuditLog <%= logdir %>/mod_security_audit.log
+        SecDebugLog <%= logdir %>/mod_security_debug.log
     </IfModule>
 
     <%- unless additional_options.to_s == 'absent' then -%>
