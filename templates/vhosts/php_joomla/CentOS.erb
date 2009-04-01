@@ -71,7 +71,7 @@
             SecRuleRemoveById 960010
         </LocationMatch>
         <%- else -%>
-        SecRuleEngine Off
+        SecRuleEngine DetectionOnly
         <%- end -%>
         SecAuditLogType serial
         SecAuditLog <%= logdir %>/mod_security_audit.log
@@ -145,7 +145,7 @@
             SecRuleRemoveById 960010
         </LocationMatch>
         <%- else -%>
-        SecRuleEngine Off
+        SecRuleEngine DetectionOnly
         <%- end -%>
         SecAuditLogType serial
         SecAuditLog <%= logdir %>/mod_security_audit.log
