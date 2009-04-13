@@ -44,7 +44,8 @@
     <IfModule mod_security2.c>
         <%- if mod_security.to_s == 'true' then -%>
         SecRuleEngine On
-        SecAuditLogType serial
+        SecAuditLogType Concurrent
+        SecAuditLogStorageDir <%= logdir %>/
         SecAuditLog <%= logdir %>/mod_security_audit.log
         SecDebugLog <%= logdir %>/mod_security_debug.log
         <%- else -%>
@@ -102,7 +103,8 @@
     <IfModule mod_security2.c>
         <%- if mod_security.to_s == 'true' then -%>
         SecRuleEngine On
-        SecAuditLogType serial
+        SecAuditLogType Concurrent
+        SecAuditLogStorageDir <%= logdir %>/
         SecAuditLog <%= logdir %>/mod_security_audit.log
         SecDebugLog <%= logdir %>/mod_security_debug.log
         <%- else -%>

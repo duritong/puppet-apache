@@ -47,7 +47,8 @@
         <%- else -%>
         SecRuleEngine Off
         <%- end -%>
-        SecAuditLogType serial
+        SecAuditLogType Concurrent
+        SecAuditLogStorageDir <%= logdir %>/
         SecAuditLog <%= logdir %>/mod_security_audit.log
         SecDebugLog <%= logdir %>/mod_security_debug.log
     </IfModule>
@@ -105,7 +106,8 @@
         <%- else -%>
         SecRuleEngine Off
         <%- end -%>
-        SecAuditLogType serial
+        SecAuditLogType Concurrent
+        SecAuditLogStorageDir <%= logdir %>/
         SecAuditLog <%= logdir %>/mod_security_audit.log
         SecDebugLog <%= logdir %>/mod_security_debug.log
     </IfModule>
