@@ -132,7 +132,7 @@ define apache::vhost::webdir(
             }
             file{"$logdir":
                 ensure => directory,
-                owner => $real_documentroot_owner, group => $group, mode => 750;
+                owner => $real_documentroot_owner, group => $real_documentroot_group, mode => 770;
             }
         }
     }
