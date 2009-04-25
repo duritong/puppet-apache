@@ -5,6 +5,9 @@
     <%- unless serveralias.to_s.empty? then -%>
     ServerAlias <%= serveralias %>
     <%- end -%>
+    <%- unless server_admin.to_s.empty? then -%>
+    ServerAdmin <%= server_admin %>
+    <%- end -%>
     DocumentRoot <%= documentroot %>/
 
     ErrorLog <%= logdir %>/error_log
