@@ -5,7 +5,7 @@
     <%- unless serveralias.to_s.empty? then -%>
     ServerAlias <%= serveralias %>
     <%- end -%>
-    <%- unless server_admin.to_s.empty? then -%>
+    <%- unless server_admin.to_s.empty? or server_admin.to_s == 'absent' then -%>
     ServerAdmin <%= server_admin %>
     <%- end -%>
     DocumentRoot <%= documentroot %>/
@@ -46,6 +46,9 @@
     ServerName <%= servername %>
     <%- unless serveralias.to_s.empty? then -%>
     ServerAlias <%= serveralias %>
+    <%- end -%>
+    <%- unless server_admin.to_s.empty? or server_admin.to_s == 'absent' then -%>
+    ServerAdmin <%= server_admin %>
     <%- end -%>
     DocumentRoot <%= documentroot %>/
 
