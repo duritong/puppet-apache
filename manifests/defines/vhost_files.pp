@@ -307,13 +307,13 @@ define apache::vhost::file::documentrootfile(
 }
 
 define apache::vhost::file::documentrootdir(
-      $ensure => directory,
+      $ensure = directory,
       $documentroot,
       $filename,
       $thedomain,
-      $owner='root',
-      $group='0',
-      $mode=440
+      $owner = 'root',
+      $group = '0',
+      $mode = 440
 ){
   file{"$documentroot/$filename":
     require => Apache::Vhost::Webdir["$thedomain"],
