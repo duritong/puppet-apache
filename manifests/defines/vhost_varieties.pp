@@ -568,7 +568,7 @@ define apache::vhost::webdav(
     apache::vhost{$name:
         ensure => $ensure,
         path => $path,
-        path_is_webdir = $path_is_webdir,
+        path_is_webdir => $path_is_webdir,
         template_mode => 'webdav',
         vhost_mode => $vhost_mode,
         vhost_source => $vhost_source,

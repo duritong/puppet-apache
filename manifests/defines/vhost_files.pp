@@ -58,7 +58,7 @@ define apache::vhost(
             apache::vhost::template{$name:
                 ensure => $ensure,
                 path => $path,
-                path_is_webdir = $path_is_webdir,
+                path_is_webdir => $path_is_webdir,
                 domain => $domain,
                 domainalias => $domainalias,
                 server_admin => $server_admin,
