@@ -22,7 +22,7 @@
     <%- if not ssl_mode.to_s == 'force' then -%>
     <Directory "<%= documentroot %>/">
         <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
-        Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%> <%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%>+Includes<%- end -%>
+        Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
 
         <%- end -%>
         <%- unless htpasswd_file.to_s == 'absent' then -%>
@@ -57,7 +57,7 @@
     <%- if options.to_s != 'absent' or htpasswd_file.to_s != 'absent' then -%>
     <Directory "<%= documentroot %>/">
         <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
-        Options <%= options %> <%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%>+Includes<%- end -%>
+        Options <%= options %><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
 
         <%- end -%>
         <%- unless htpasswd_file.to_s == 'absent' then -%>
