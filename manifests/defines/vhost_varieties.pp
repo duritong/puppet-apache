@@ -462,6 +462,7 @@ define apache::vhost::php::drupal(
     $vhost_destination = 'absent',
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
+    $manage_cron = true
 ){
     $documentroot = $path ? {
         'absent' => $operatingsystem ? {
@@ -469,6 +470,13 @@ define apache::vhost::php::drupal(
             default => "/var/www/vhosts/${name}/www"
         },
         default => "${path}/www"
+    }
+
+    if $manage_cron {
+        file{"/etc/cron.d/drupal_cron_${name}":
+            content => "0   *   *   *   *   apache wget -O - -q -t 1 http://${doamin}/cron.php\n",
+            owner => root, group => 0, mode => 0644;
+        }
     }
 
     # create vhost configuration file
