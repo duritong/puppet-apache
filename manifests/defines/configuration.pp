@@ -66,9 +66,10 @@ define apache::vhost::webdir(
     $ensure = present,
     $path = 'absent',
     $owner = root,
-    $group = 0,
-    $documentroot_owner = apache,
-    $documentroot_group = 0,
+    $group = apache,
+    $mode = 0640,
+    $documentroot_owner = root,
+    $documentroot_group = apache,
     $documentroot_mode = 0640,
     $documentroot_recurse = false
 ){
@@ -123,7 +124,7 @@ define apache::vhost::webdir(
         default: {
             file{"$real_path":
                 ensure => directory,
-                owner => $owner, group => $group, mode => '0755';
+                owner => $owner, group => $group, mode => $mode;
             }
             file{"$documentroot":
                 ensure => directory,

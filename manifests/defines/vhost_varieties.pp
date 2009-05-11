@@ -87,7 +87,7 @@ define apache::vhost::php::standard(
     $path = 'absent',
     $template_mode = 'php',
     $owner = root,
-    $group = 0,
+    $group = apache,
     $documentroot_owner = apache,
     $documentroot_group = 0,
     $documentroot_mode = 0750,

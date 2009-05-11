@@ -88,6 +88,9 @@ class apache::package inherits apache::base {
     File['vhosts_dir']{
         require => Package[apache],
     }
+    File['config_dir']{
+        require => Package[apache],
+    }
     Service['apache']{
         require => Package[apache],
     }
