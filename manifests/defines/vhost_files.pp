@@ -14,6 +14,7 @@
 define apache::vhost(
     $ensure = present,
     $path = 'absent',
+    $path_is_webdir = false,
     $template_mode = 'static',
     $vhost_mode = 'template',
     $vhost_source = 'absent',
@@ -37,7 +38,9 @@ define apache::vhost(
     $ssl_mode = false,
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
-    $mod_security = true
+    $mod_security = true,
+    $ldap_auth = false,
+    $ldap_user = 'any'
 ) {
     # file or template mode?
     case $vhost_mode {
@@ -55,6 +58,7 @@ define apache::vhost(
             apache::vhost::template{$name:
                 ensure => $ensure,
                 path => $path,
+                path_is_webdir = $path_is_webdir,
                 domain => $domain,
                 domainalias => $domainalias,
                 server_admin => $server_admin,
@@ -73,6 +77,8 @@ define apache::vhost(
                 ssl_mode => $ssl_mode,
                 htpasswd_file => $htpasswd_file,
                 htpasswd_path => $htpasswd_path,
+                ldap_auth => $ldap_auth,
+                ldap_user => $ldap_user,
                 mod_security => $mod_security,
             }
         }
@@ -192,6 +198,7 @@ define apache::vhost::file(
 define apache::vhost::template(
     $ensure = present,
     $path = 'absent',
+    $path_is_webdir = false,
     $domain = 'absent',
     $domainalias = 'absent',
     $server_admin = 'absent',
@@ -210,7 +217,9 @@ define apache::vhost::template(
     $ssl_mode = false,
     $mod_security = true,
     $htpasswd_file = 'absent',
-    $htpasswd_path = 'absent'
+    $htpasswd_path = 'absent',
+    $ldap_auth = false,
+    $ldap_user = 'any'
 ){
     $real_path = $path ? {
         'absent' => $operatingsystem ? {
@@ -220,7 +229,11 @@ define apache::vhost::template(
         default => $path
     }
 
-    $documentroot = "$real_path/www"
+    if $path_is_webdir {
+        $documentroot = "$real_path"
+    } else {
+        $documentroot = "$real_path/www"
+    }
     $logdir = "$real_path/logs"
 
     $servername = $domain ? {
