@@ -31,6 +31,9 @@
         <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
         Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- unless options.include?('Indexes') then -%> Indexes<%- end -%>
 
+        <%- else -%>
+        Options Indexes
+
         <%- end -%>
         <%- unless htpasswd_file.to_s == 'absent' then -%>
         AuthType Basic
@@ -98,6 +101,9 @@
         AllowOverride None
         <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
         Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- unless options.include?('Indexes') then -%> Indexes<%- end -%>
+
+        <%- else -%>
+        Options Indexes
 
         <%- end -%>
         <%- unless htpasswd_file.to_s == 'absent' then -%>
