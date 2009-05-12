@@ -582,7 +582,6 @@ define apache::vhost::webdav(
         options => $options,
         additional_options => $additional_options,
         default_charset => $default_charset,
-        cgi_binpath => $real_cgi_binpath,
         ssl_mode => $ssl_mode,
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
