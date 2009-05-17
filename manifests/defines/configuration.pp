@@ -91,6 +91,31 @@ define apache::vhost::webdir(
     $documentroot = "${real_path}/www"
     $logdir = "${real_path}/logs"
 
+    if $owner == 'apache' {
+      if $apache_default_user == '' {
+        $real_owner = $operatingsystem ? {
+          openbsd => 'www',
+          default => $owner
+        }
+      } else {
+        $real_owner = $apache_default_user
+      }
+    } else {
+        $real_owner = $owner
+    }
+    if $group == 'apache' {
+      if $apache_default_group == '' {
+        $real_group = $operatingsystem ? {
+          openbsd => 'www',
+          default => $group
+        }
+      } else {
+        $real_group = $apache_default_group
+      }
+    } else {
+      $real_group = $group
+    }
+
     if $documentroot_owner == 'apache' {
       if $apache_default_user == '' {
         $real_documentroot_owner = $operatingsystem ? {
@@ -127,7 +152,7 @@ define apache::vhost::webdir(
         default: {
             file{"$real_path":
                 ensure => directory,
-                owner => $owner, group => $group, mode => $real_mode;
+                owner => $real_owner, group => $real_group, mode => $real_mode;
             }
             file{"$documentroot":
                 ensure => directory,
