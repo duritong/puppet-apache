@@ -156,18 +156,10 @@ define apache::vhost::file(
     case $htpasswd_file {
         'absent','nodeploy': { info("don't deploy a htpasswd file for ${name") }
         default: { 
-            case $htpasswd_path {
-                'absent': {
-                    $real_htpasswd_path = $operatingsystem ? {
-                        centos => "$apache::centos::config_dir/htpasswds/$name",
-                        gentoo => "$apache::gentoo::config_dir/htpasswds/$name",
-                        debian => "$apache::debian::config_dir/htpasswds/$name",
-                        ubuntu => "$apache::ubuntu::config_dir/htpasswds/$name",
-                        openbsd => "$apache::openbsd::config_dir/htpasswds/$name",
-                        default => "/etc/apache2/htpasswds/$name"
-                    }
-                }
-                default: { $real_htpasswd_path = $htpasswd_path }
+            if $htpasswd_path == 'absent' {
+                $real_htpasswd_path = "/var/www/htpasswds/$name"
+            } else {
+                $real_htpasswd_path = $htpasswd_path
             }
             file{$real_htpasswd_path:
                 ensure => $ensure,
