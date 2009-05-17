@@ -19,4 +19,10 @@ class apache::centos::itk inherits apache::centos {
     Package['apache']{
         name => 'httpd-itk',
     }
+    File['/etc/sysconfig/httpd']{
+      source => [ "puppet://$server/files/apache/sysconfig/${fqdn}/httpd.itk",
+                  "puppet://$server/files/apache/sysconfig/httpd.itk",
+                  "puppet://$server/apache/sysconfig/${operatingsystem}/httpd.itk",
+                  "puppet://$server/apache/sysconfig/httpd.itk" ],
+    }
 }
