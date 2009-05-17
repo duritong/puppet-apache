@@ -91,33 +91,29 @@ define apache::vhost::webdir(
     $documentroot = "${real_path}/www"
     $logdir = "${real_path}/logs"
 
-    case $documentroot_owner {
-        apache: {
-            case $apache_default_user {
-                '': { 
-                    $real_documentroot_owner = $operatingsystem ? {
-                        openbsd => 'www',
-                        default => $documentroot_owner
-                    }
-                }
-                default: { $real_documentroot_owner = $apache_default_user }
-            }
+    if $documentroot_owner == 'apache' {
+      if $apache_default_user == '' {
+        $real_documentroot_owner = $operatingsystem ? {
+          openbsd => 'www',
+          default => $documentroot_owner
         }
-        default: { $real_documentroot_owner = $documentroot_owner }
+      } else {
+        $real_documentroot_owner = $apache_default_user
+      }
+    } else {
+        $real_documentroot_owner = $documentroot_owner
     }
-    case $apache_group {
-        apache: {
-            case $apache_default_group {
-                '': {
-                    $real_documentroot_group = $operatingsystem ? {
-                        openbsd => 'www',
-                        default => $documentroot_group
-                    }
-                }
-                default: { $real_documentroot_group = $apache_default_group }
-            }
+    if $documentroot_group == 'apache' {
+      if $apache_default_group == '' {
+        $real_documentroot_group = $operatingsystem ? {
+          openbsd => 'www',
+          default => $documentroot_group
         }
-        default: { $real_documentroot_group = $documentroot_group }
+      } else {
+        $real_documentroot_group = $apache_default_group
+      }
+    } else {
+      $real_documentroot_group = $documentroot_group
     }
     case $ensure {
         absent: {
