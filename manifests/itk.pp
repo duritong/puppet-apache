@@ -14,7 +14,7 @@ class apache::base::itk inherits apache::base {
     }
 
     File['htpasswd_dir']{
-        mode => 0644;
+        mode => 0644,
     }
 }
 
