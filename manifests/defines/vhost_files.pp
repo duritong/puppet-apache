@@ -238,17 +238,10 @@ define apache::vhost::template(
         'www' => "www.${servername}",
         default => $domainalias
     }
-    case $htpasswd_path {
-        'absent': {
-            $real_htpasswd_path = $operatingsystem ? {
-                gentoo => "$apache::gentoo::config_dir/htpasswds/$name",
-                debian => "$apache::debian::config_dir/htpasswds/$name",
-                ubuntu => "$apache::ubuntu::config_dir/htpasswds/$name",
-                openbsd => "$apache::openbsd::config_dir/htpasswds/$name",
-                default => "/etc/apache2/htpasswds/$name"
-            }
-        }
-        default: { $real_htpasswd_path = $htpasswd_path }
+    if $htpasswd_path == 'absent' {
+      $real_htpasswd_path = "/var/www/htpasswds/$name"
+    } else {
+      $real_htpasswd_path = $htpasswd_path
     }
     case $run_mode {
         'itk': {
