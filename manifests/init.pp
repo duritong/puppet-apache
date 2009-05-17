@@ -56,7 +56,7 @@ class apache::base {
     file{'htpasswd_dir':
         path => '/var/www/htpasswds/',
         ensure => directory,
-        owner => apache, group => 0, mode => 0700;
+        owner => root, group => apache, mode => 0640;
     }
     file{'web_dir':
         path => '/var/www/',
