@@ -429,6 +429,8 @@ define apache::vhost::php::simplemachine(
           "$documentroot/attachments",
           "$documentroot/Packages",
           "$documentroot/Themes",
+          "$documentroot/agreement.txt",
+          "$documentroot/Packages/installed.list",
           "$documentroot/avatars" ],
         manage_config => $manage_config,
         config_webwriteable => $config_webwriteable,
