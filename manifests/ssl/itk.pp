@@ -6,9 +6,3 @@ class apache::ssl::itk inherits apache::ssl {
     }
 }
 
-class apache::ssl::itk::centos inherits apache::ssl::centos {
-    Package['mod_ssl']{
-        name => 'mod_ssl-itk',
-    }
-}
-

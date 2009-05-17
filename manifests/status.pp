@@ -10,12 +10,3 @@ class apache::status inherits apache {
     }
 }
 
-class apache::status::base {}
-
-
-### distribution specific classes
-
-### centos
-class apache::status::centos {
-    apache::config::file{ 'status.conf': }
-}

@@ -1,7 +1,0 @@
-# This folder contains various defines to work with apache.
-# They are separated into various categories:
-# 
-# - modules: manage apache modules
-# - configuration: common configuration defines
-# - vhost files: deploy vhost configuration files
-# - vhost varieties: vhost varieties
