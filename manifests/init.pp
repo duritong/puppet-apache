@@ -138,6 +138,16 @@ class apache::centos inherits apache::package {
         path => '/var/www/html/index.html',
     }
 
+    file{'/etc/sysconfig/httpd':
+      source => [ "puppet://$server/files/apache/sysconfig/${fqdn}/httpd",
+                  "puppet://$server/files/apache/sysconfig/httpd",
+                  "puppet://$server/apache/sysconfig/${operatingsystem}/httpd",
+                  "puppet://$server/apache/sysconfig/httpd" ],
+      require => Package['apache'],
+      notify => Service['apache'],
+      owner => root, group => 0, mode => 0644;
+    }
+
     apache::config::file{ 'welcome.conf': }
     apache::config::file{ 'vhosts.conf': }
 }
