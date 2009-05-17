@@ -425,7 +425,11 @@ define apache::vhost::php::simplemachine(
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
         manage_directories => $manage_directories,
-        managed_directories => "$documentroot/attachments",
+        managed_directories => [
+          "$documentroot/attachments",
+          "$documentroot/Packages",
+          "$documentroot/Themes",
+          "$documentroot/avatars" ],
         manage_config => $manage_config,
         config_webwriteable => $config_webwriteable,
         config_file => 'Settings.php',
