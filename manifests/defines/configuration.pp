@@ -68,6 +68,7 @@ define apache::vhost::webdir(
     $owner = root,
     $group = apache,
     $mode = 0640,
+    $run_mode = 'normal',
     $documentroot_owner = root,
     $documentroot_group = apache,
     $documentroot_mode = 0640,
@@ -79,6 +80,12 @@ define apache::vhost::webdir(
             default => "/var/www/vhosts/${name}"
         },
         default => "${path}"
+    }
+
+    if ($run_mode == 'itk') and ($mode == '0640'){
+      $real_mode = 0644
+    } else {
+      $real_mode = $mode
     }
 
     $documentroot = "${real_path}/www"
@@ -124,7 +131,7 @@ define apache::vhost::webdir(
         default: {
             file{"$real_path":
                 ensure => directory,
-                owner => $owner, group => $group, mode => $mode;
+                owner => $owner, group => $group, mode => $real_mode;
             }
             file{"$documentroot":
                 ensure => directory,
