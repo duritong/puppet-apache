@@ -12,6 +12,10 @@ class apache::base::itk inherits apache::base {
     Package['apache'] {
         name => 'apache2-itk',
     }
+
+    File['htpasswd_dir']{
+        mode => 0644;
+    }
 }
 
 # http://hostby.net/home/2008/07/12/centos-5-and-mpm-itk/
