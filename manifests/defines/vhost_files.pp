@@ -159,6 +159,7 @@ define apache::vhost::file(
             case $htpasswd_path {
                 'absent': {
                     $real_htpasswd_path = $operatingsystem ? {
+                        centos => "$apache::centos::config_dir/htpasswds/$name",
                         gentoo => "$apache::gentoo::config_dir/htpasswds/$name",
                         debian => "$apache::debian::config_dir/htpasswds/$name",
                         ubuntu => "$apache::ubuntu::config_dir/htpasswds/$name",
