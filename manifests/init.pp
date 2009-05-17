@@ -215,7 +215,7 @@ class apache::openbsd inherits apache::base {
         path => "$config_dir/conf.d/",
     }
     File['htpasswd_dir']{
-        owner => www,
+        group => www,
     }
     File[web_dir]{
         group => daemon,
