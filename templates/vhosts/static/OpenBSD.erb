@@ -54,6 +54,10 @@
 
     ErrorLog <%= logdir %>/error_log
     CustomLog <%= logdir %>/access_log combined
+    <%- if default_charset.to_s != 'absent' then -%>
+    AddDefaultCharset <%= default_charset %>
+    <%- end -%>
+
     <%- if options.to_s != 'absent' or htpasswd_file.to_s != 'absent' then -%>
     <Directory "<%= documentroot %>/">
         <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
