@@ -102,9 +102,6 @@
 
     ErrorLog <%= logdir %>/error_log
     CustomLog <%= logdir %>/access_log combined
-    <%- if default_charset.to_s != 'absent' then -%>
-    AddDefaultCharset <%= default_charset %>
-    <%- end -%>
     <%- if run_mode.to_s == 'itk' -%>
     <IfModule mpm_itk_module>
         AssignUserId <%= run_uid+" "+run_gid %>
