@@ -4,7 +4,7 @@
 
 class apache::itk inherits apache {
     case $operatingsystem {
-        centos: { include apache::itk::centos }
+        centos: { include apache::centos::itk }
         default: { include apache::base::itk }
     }
 }
