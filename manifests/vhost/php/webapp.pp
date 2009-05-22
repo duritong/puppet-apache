@@ -39,10 +39,10 @@ define apache::vhost::php::webapp(
     $config_file = 'absent',
     $config_webwriteable = false,
     $manage_directories = true,
-    $managed_directories
+    $managed_directories = 'absent'
 ){
     if ($ensure != 'absent') {
-        if $manage_directories {
+        if $manage_directories and ($managed_directories != 'absent') {
             ::apache::file::rw{ $managed_directories :
                 owner => $documentroot_owner,
                 group => $documentroot_group,
