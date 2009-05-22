@@ -40,7 +40,7 @@ define apache::vhost::php::mediawiki(
         domainalias => $domainalias,
         server_admin => $server_admin,
         path => $path,
-        manage_docroot = $manage_docroot,
+        manage_docroot => $manage_docroot,
         template_mode => 'php_mediawiki',
         owner => $owner,
         group => $group,
