@@ -6,6 +6,7 @@ define apache::vhost::webdir(
     $group = apache,
     $mode = 0640,
     $run_mode = 'normal',
+    $manage_docroot = true,
     $documentroot_owner = root,
     $documentroot_group = apache,
     $documentroot_mode = 0640,
@@ -91,10 +92,12 @@ define apache::vhost::webdir(
                 ensure => directory,
                 owner => $real_owner, group => $real_group, mode => $real_mode;
             }
-            file{"$documentroot":
+            if $manage_docroot {
+              file{"$documentroot":
                 ensure => directory,
                 recurse => $documentroot_recurse,
                 owner => $real_documentroot_owner, group => $real_documentroot_group, mode => $documentroot_mode;
+              }
             }
             file{"$logdir":
                 ensure => directory,

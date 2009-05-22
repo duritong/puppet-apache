@@ -10,6 +10,8 @@ define apache::vhost::php::standard(
     $domainalias = 'absent',
     $server_admin = 'absent',
     $path = 'absent',
+    $manage_webdir = true,
+    $manage_docroot = true,
     $template_mode = 'php',
     $owner = root,
     $group = apache,
@@ -46,16 +48,19 @@ define apache::vhost::php::standard(
         run_uid => $run_uid,
     }
 
-    # create webdir
-    ::apache::vhost::webdir{$name:
+    if $manage_webdir {
+      # create webdir
+      ::apache::vhost::webdir{$name:
         ensure => $ensure,
         path => $path,
         owner => $owner,
         group => $group,
         run_mode => $run_mode,
+        manage_docroot => $manage_docroot,
         documentroot_owner => $documentroot_owner,
         documentroot_group => $documentroot_group,
         documentroot_mode => $documentroot_mode,
+      }
     }
 
     # create vhost configuration file
