@@ -1,7 +1,6 @@
 # http://hostby.net/home/2008/07/12/centos-5-and-mpm-itk/
 class apache::centos::itk inherits apache::centos {
     include ::apache::base::itk
-    include ::apache::package::itk
     Package['apache']{
         name => 'httpd-itk',
     }
