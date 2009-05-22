@@ -85,9 +85,6 @@
         AssignUserId <%= run_uid+" "+run_gid %>
     </IfModule>
     <%- end -%>
-    <%- if default_charset.to_s != 'absent' then -%>
-    AddDefaultCharset <%= default_charset %>
-    <%- end -%>
     <Directory "<%= documentroot %>/">
         AllowOverride <%= allow_override %>
         <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
