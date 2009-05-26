@@ -28,7 +28,7 @@
     <Directory "<%= documentroot %>/">
         AllowOverride <%= allow_override %>
         <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
-        Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
+        Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%><%- unless options.to_s.include?('+FollowSymLinks') -%> +FollowSymLinks<% end -%>
 
         <%- end -%>
         <%- unless htpasswd_file.to_s == 'absent' then -%>
@@ -38,7 +38,8 @@
         require valid-user
         <%- end -%>
         php_admin_flag engine on
-        php_admin_value open_basedir /usr/share/php/Smarty/:<%= documentroot %>:<%= real_php_upload_tmp_dir %>:<%= real_php_session_save_path %>
+        php_admin_value safe_mode off
+        php_admin_value open_basedir /var/www/mediawiki/:<%= documentroot %>:<%= real_php_upload_tmp_dir %>:<%= real_php_session_save_path %>
         php_admin_value upload_tmp_dir <%= real_php_upload_tmp_dir %>
         php_admin_value session.save_path <%= real_php_session_save_path %>
     </Directory>
@@ -77,13 +78,13 @@
 
     ErrorLog <%= logdir %>/error_log
     CustomLog <%= logdir %>/access_log combined
+    <%- if default_charset.to_s != 'absent' then -%>
+    AddDefaultCharset <%= default_charset %>
+    <%- end -%>
     <%- if run_mode.to_s == 'itk' -%>
     <IfModule mpm_itk_module>
         AssignUserId <%= run_uid+" "+run_gid %>
     </IfModule>
-    <%- end -%>
-    <%- if default_charset.to_s != 'absent' then -%>
-    AddDefaultCharset <%= default_charset %>
     <%- end -%>
     <Directory "<%= documentroot %>/">
         AllowOverride <%= allow_override %>
@@ -98,7 +99,8 @@
         require valid-user
         <%- end -%>
         php_admin_flag engine on
-        php_admin_value open_basedir /usr/share/php/Smarty/:<%= documentroot %>:<%= real_php_upload_tmp_dir %>:<%= real_php_session_save_path %>
+        php_admin_value safe_mode off
+        php_admin_value open_basedir /var/www/mediawiki/:<%= documentroot %>:<%= real_php_upload_tmp_dir %>:<%= real_php_session_save_path %>
         php_admin_value upload_tmp_dir <%= real_php_upload_tmp_dir %>
         php_admin_value session.save_path <%= real_php_session_save_path %>
     </Directory>

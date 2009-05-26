@@ -3,4 +3,3 @@ class apache::package::itk inherits apache::package {
         name => 'apache2-itk',
     }
 }
-
