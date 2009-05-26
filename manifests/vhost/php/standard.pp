@@ -24,6 +24,7 @@ define apache::vhost::php::standard(
     $allow_override = 'None',
     $php_upload_tmp_dir = 'absent',
     $php_session_save_path = 'absent',
+    $php_use_smarty = false,
     $do_includes = false,
     $options = 'absent',
     $additional_options = 'absent',
@@ -46,6 +47,10 @@ define apache::vhost::php::standard(
         documentroot_mode => $documentroot_mode,
         run_mode => $run_mode,
         run_uid => $run_uid,
+    }
+
+    if $php_use_smarty {
+        include php::extensions::smarty
     }
 
     if $manage_webdir {

@@ -29,6 +29,7 @@ define apache::vhost::template(
     $options = 'absent',
     $additional_options = 'absent',
     $default_charset = 'absent',
+    $php_use_smarty = false,
     $run_mode = 'normal',
     $run_uid = 'absent',
     $run_gid = 'absent',
