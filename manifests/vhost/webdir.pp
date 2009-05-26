@@ -80,7 +80,7 @@ define apache::vhost::webdir(
     }
     case $ensure {
         absent: {
-            file{[ "$real_path", "$documentroot", "$logdir" ]:
+            file{[ "$real_path", "${real_path}/private", "$documentroot", "$logdir" ]:
                 ensure => absent,
                 purge => true,
                 recurse => true,
@@ -101,7 +101,11 @@ define apache::vhost::webdir(
             }
             file{"$logdir":
                 ensure => directory,
-                owner => $real_documentroot_owner, group => $real_documentroot_group, mode => 770;
+                owner => $real_documentroot_owner, group => $real_documentroot_group, mode => 0660;
+            }
+            file{"${real_path}/private":
+                ensure => directory,
+                owner => $real_documentroot_owner, group => $real_documentroot_group, mode => 0600;
             }
         }
     }
