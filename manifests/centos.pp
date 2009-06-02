@@ -35,6 +35,15 @@ class apache::centos inherits apache::package {
       owner => root, group => 0, mode => 0644;
     }
 
+    # add vhost folders to logrotation
+    augeas { "logrotate_httpd_vhosts":
+      changes => [ 'rm /files/etc/logrotate.d/httpd/rule/file',
+        'ins file before /files/etc/logrotate.d/httpd/rule/*[1]',
+        'ins file before /files/etc/logrotate.d/httpd/rule/*[1]',
+        'set /files/etc/logrotate.d/httpd/rule/file[1] /var/log/httpd/*log',
+        'set /files/etc/logrotate.d/httpd/rule/file[2] /var/www/vhosts/*/logs/*log' ],
+    }
+
     apache::config::file{ 'welcome.conf': }
     apache::config::file{ 'vhosts.conf': }
 }
