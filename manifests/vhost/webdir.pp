@@ -103,6 +103,9 @@ define apache::vhost::webdir(
                 ensure => directory,
                 owner => $real_documentroot_owner, group => $real_documentroot_group, mode => 0660;
             }
+            case $operatingsystem {
+                centos: { include apache::logrotate::centos::vhosts }
+            }
             file{"${real_path}/private":
                 ensure => directory,
                 owner => $real_documentroot_owner, group => $real_documentroot_group, mode => 0600;
