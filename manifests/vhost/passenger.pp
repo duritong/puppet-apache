@@ -14,7 +14,10 @@ define apache::vhost::passenger(
     $documentroot_owner = apache,
     $documentroot_group = 0,
     $documentroot_mode = 0640,
-    $run_mode = 'normal', # TODO: add support for passenger way of handling things
+    # TODO: think of a more generic way to handle user separation 
+    # i.e. rename itk mode into something else
+    # e.g. default, moderate (use same user for access and run), strict (use different users for access and run)
+    $run_mode = 'normal',
     $run_uid = 'absent',
     $run_gid = 'absent',
     $allow_override = 'None',
@@ -37,7 +40,7 @@ define apache::vhost::passenger(
         path => $path,
         owner => $owner,
         group => $group,
-        run_mode => 'itk',
+        run_mode => $run_mode,
         manage_docroot => $manage_docroot,
         documentroot_owner => $documentroot_owner,
         documentroot_group => $documentroot_group,
