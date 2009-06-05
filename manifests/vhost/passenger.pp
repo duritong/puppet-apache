@@ -8,7 +8,7 @@ define apache::vhost::passenger(
     $path = 'absent',
     $manage_webdir = true,
     $manage_docroot = true,
-    $template_mode = 'php',
+    $template_mode = 'passenger',
     $owner = root,
     $group = apache,
     $documentroot_owner = apache,
