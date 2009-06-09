@@ -22,6 +22,13 @@ define apache::vhost::gitweb(
         ensure => $ensure,
         path => '/var/www/git',
         path_is_webdir => true,
+        logpath => $operatingsystem ? {
+            centos => '/var/log/httpd',
+            fedora => '/var/log/httpd',
+            redhat => '/var/log/httpd',
+            openbsd => '/var/www/logs',
+            default => '/var/log/apache2'
+        },
         template_mode => 'gitweb',
         domain => $domain,
         domainalias => $domainalias,

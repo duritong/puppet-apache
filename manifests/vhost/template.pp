@@ -18,6 +18,7 @@ define apache::vhost::template(
     $ensure = present,
     $path = 'absent',
     $path_is_webdir = false,
+    $logpath = 'absent',
     $domain = 'absent',
     $domainalias = 'absent',
     $server_admin = 'absent',
@@ -54,7 +55,10 @@ define apache::vhost::template(
     } else {
         $documentroot = "$real_path/www"
     }
-    $logdir = "$real_path/logs"
+    $logdir = $logpath ? {
+        'absent' => "$real_path/logs",
+        default => $logpath
+    }
 
     $servername = $domain ? {
         'absent' => $name,
