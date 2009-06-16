@@ -30,6 +30,7 @@ define apache::vhost::php::standard(
     $options = 'absent',
     $additional_options = 'absent',
     $default_charset = 'absent',
+    $use_mod_macro = false,
     $mod_security = true,
     $ssl_mode = false,
     $vhost_mode = 'template',
@@ -96,6 +97,7 @@ define apache::vhost::php::standard(
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
         mod_security => $mod_security,
+        use_mod_macro => $use_mod_macro,
     }
 }
 
