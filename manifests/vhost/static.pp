@@ -8,7 +8,7 @@ define apache::vhost::static(
     $server_admin = 'absent',
     $path = 'absent',
     $owner = root,
-    $group = 0,
+    $group = apache,
     $documentroot_owner = apache,
     $documentroot_group = 0,
     $documentroot_mode = 0640,

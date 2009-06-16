@@ -4,7 +4,7 @@ define apache::vhost::gitweb(
     $domainalias = 'absent',
     $server_admin = 'absent',
     $owner = root,
-    $group = 0,
+    $group = apache,
     $documentroot_owner = apache,
     $documentroot_group = 0,
     $documentroot_mode = 0640,

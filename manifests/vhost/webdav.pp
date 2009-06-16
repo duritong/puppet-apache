@@ -12,7 +12,7 @@ define apache::vhost::webdav(
     $server_admin = 'absent',
     $path = 'absent',
     $owner = root,
-    $group = 0,
+    $group = apache,
     $manage_webdir = true,
     $path_is_webdir = false,
     $logpath = 'absent',

@@ -14,7 +14,7 @@ define apache::vhost::php::webapp(
     $manage_docroot = true,
     $template_mode,
     $owner = root,
-    $group = 0,
+    $group = apache,
     $documentroot_owner = apache,
     $documentroot_group = 0,
     $documentroot_mode = 0640,

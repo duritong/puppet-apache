@@ -12,7 +12,7 @@ define apache::vhost::php::mediawiki(
     $path = 'absent',
     $manage_docroot = true,
     $owner = root,
-    $group = 0,
+    $group = apache,
     $documentroot_owner = apache,
     $documentroot_group = 0,
     $documentroot_mode = 0640,
