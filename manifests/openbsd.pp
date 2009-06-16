@@ -39,7 +39,7 @@ class apache::openbsd inherits apache::base {
         owner => root, group => 0, mode => 0700;
     }
 
-    apache::vhost::webdir{'default': }
+    ::apache::vhost::webdir{'default': }
 
     Service['apache']{
         restart => '/opt/bin/restart_apache.sh',
