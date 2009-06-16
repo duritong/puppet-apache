@@ -14,7 +14,8 @@ define apache::vhost::file(
     $content = 'absent',
     $do_includes = false,
     $htpasswd_file = 'absent',
-    $htpasswd_path = 'absent'
+    $htpasswd_path = 'absent',
+    $use_mod_macro = false
 ){
     $vhosts_dir = $operatingsystem ? {
         centos => "$apache::centos::config_dir/vhosts.d/",
@@ -36,7 +37,10 @@ define apache::vhost::file(
         owner => root, group => 0, mode => 0644;
     }
     if $do_includes {
-        include apache::includes
+        include ::apache::includes
+    }
+    if $use_mod_macro {
+        include ::apache::mod_macro
     }
     case $content {
         'absent': {

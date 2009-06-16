@@ -39,6 +39,7 @@ define apache::vhost::template(
     $template_mode = 'static',
     $ssl_mode = false,
     $mod_security = true,
+    $use_mod_macro = false,
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
     $ldap_auth = false,
@@ -109,6 +110,7 @@ define apache::vhost::template(
         do_includes => $do_includes,
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
+        use_mod_macro => $use_mod_macro,
     }
 }
 

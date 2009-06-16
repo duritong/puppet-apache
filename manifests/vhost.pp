@@ -35,6 +35,7 @@ define apache::vhost(
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
     $mod_security = true,
+    $use_mod_macro = false,
     $ldap_auth = false,
     $ldap_user = 'any'
 ) {
@@ -48,6 +49,7 @@ define apache::vhost(
                 do_includes => $do_includes,
                 htpasswd_file => $htpasswd_file,
                 htpasswd_path => $htpasswd_path,
+                use_mod_macro => $use_mod_macro,
             }
         }
         'template': {
@@ -79,6 +81,7 @@ define apache::vhost(
                 ldap_auth => $ldap_auth,
                 ldap_user => $ldap_user,
                 mod_security => $mod_security,
+                use_mod_macro => $use_mod_macro,
             }
         }
         default: { fail("no such vhost_mode: $vhost_mode defined for $name.") }
