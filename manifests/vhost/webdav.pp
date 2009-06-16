@@ -63,6 +63,7 @@ define apache::vhost::webdav(
         server_admin => $server_admin,
         run_mode => $run_mode,
         run_uid => $run_uid,
+        run_gid => $name,
         options => $options,
         additional_options => $additional_options,
         default_charset => $default_charset,
