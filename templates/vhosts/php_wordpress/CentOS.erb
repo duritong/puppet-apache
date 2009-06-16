@@ -1,4 +1,5 @@
 # <%= servername %>
+<%- unless ssl_mode.to_s == 'only'  then -%>
 <VirtualHost *:80>
     Include conf.d/defaults.inc
 
@@ -62,6 +63,7 @@
     <%= additional_options %>
     <%- end -%>
 </VirtualHost>
+<%- end -%>
 
 <%- unless ssl_mode.to_s == 'false'  then -%>
 <VirtualHost *:443>

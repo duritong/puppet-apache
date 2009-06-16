@@ -13,6 +13,7 @@
 #   - false: don't enable ssl for this vhost (default)
 #   - true: enable ssl for this vhost
 #   - force: enable ssl and redirect non-ssl to ssl
+#   - only: enable ssl only
 #
 define apache::vhost::template(
     $ensure = present,
@@ -31,6 +32,7 @@ define apache::vhost::template(
     $additional_options = 'absent',
     $default_charset = 'absent',
     $php_use_smarty = false,
+    $php_use_pear = false,
     $run_mode = 'normal',
     $run_uid = 'absent',
     $run_gid = 'absent',
