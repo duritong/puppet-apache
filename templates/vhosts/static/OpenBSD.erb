@@ -33,6 +33,7 @@
         require valid-user
         <%- end -%>
     </Directory>
+    <%- end -%>
 
     <IfModule mod_security2.c>
         <%- if mod_security.to_s == 'true' then -%>
@@ -46,7 +47,6 @@
         SecDebugLog <%= logdir %>/mod_security_debug.log
     </IfModule>
 
-    <%- end -%>
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>
     <%- end -%>
@@ -85,6 +85,7 @@
         require valid-user
         <%- end -%>
     </Directory>
+    <%- end %>
 
     <IfModule mod_security2.c>
         <%- if mod_security.to_s == 'true' then -%>
@@ -98,7 +99,6 @@
         SecDebugLog <%= logdir %>/mod_security_debug.log
     </IfModule>
 
-    <%- end %>
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>
     <%- end -%>
