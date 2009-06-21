@@ -22,7 +22,8 @@ define apache::vhost::static(
     $vhost_source = 'absent',
     $vhost_destination = 'absent',
     $htpasswd_file = 'absent',
-    $htpasswd_path = 'absent'
+    $htpasswd_path = 'absent',
+    $mod_security = false,
 ){
     # create webdir
     ::apache::vhost::webdir{$name:
@@ -55,7 +56,7 @@ define apache::vhost::static(
         ssl_mode => $ssl_mode,
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
-        mod_security => false,
+        mod_security => $mod_security,
     }
 }
 
