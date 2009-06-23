@@ -30,6 +30,7 @@
 
         AddHandler cgi-script .cgi
         <Files gitweb.cgi>
+              Options ExecCGI FollowSymLinks
               SetHandler cgi-script
         </Files>
         RewriteEngine on
@@ -79,6 +80,7 @@
 
         AddHandler cgi-script .cgi
         <Files gitweb.cgi>
+              Options ExecCGI FollowSymLinks
               SetHandler cgi-script
         </Files>
         RewriteEngine on
