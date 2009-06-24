@@ -73,13 +73,15 @@
     <IfModule mod_security2.c>
         <%- if mod_security.to_s == 'true' then -%>
         SecRuleEngine On
+        SecAuditEngine On
+        <%- else -%>
+        SecRuleEngine Off
+        SecAuditEngine Off
+        <%- end -%>
         SecAuditLogType Concurrent
         SecAuditLogStorageDir <%= logdir %>/
         SecAuditLog <%= logdir %>/mod_security_audit.log
         SecDebugLog <%= logdir %>/mod_security_debug.log
-        <%- else -%>
-        SecRuleEngine Off
-        <%- end -%>
     </IfModule>
 
     <%- unless additional_options.to_s == 'absent' then -%>
@@ -158,13 +160,15 @@
     <IfModule mod_security2.c>
         <%- if mod_security.to_s == 'true' then -%>
         SecRuleEngine On
+        SecAuditEngine On
+        <%- else -%>
+        SecRuleEngine Off
+        SecAuditEngine Off
+        <%- end -%>
         SecAuditLogType Concurrent
         SecAuditLogStorageDir <%= logdir %>/
         SecAuditLog <%= logdir %>/mod_security_audit.log
         SecDebugLog <%= logdir %>/mod_security_debug.log
-        <%- else -%>
-        SecRuleEngine Off
-        <%- end -%>
     </IfModule>
 
     <%- unless additional_options.to_s == 'absent' then -%>

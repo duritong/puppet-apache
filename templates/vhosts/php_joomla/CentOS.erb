@@ -60,6 +60,11 @@
     <IfModule mod_security2.c>
         <%- if mod_security.to_s == 'true' then -%>
         SecRuleEngine On
+        SecAuditEngine On
+        <%- else -%>
+        SecRuleEngine Off
+        SecAuditEngine Off
+        <%- end -%>
         # http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
         # Exceptions for Joomla Root Directory
         <LocationMatch '^/'>
@@ -74,9 +79,6 @@
         <LocationMatch '^/components/com_expose/expose/manager/amfphp/gateway.php'>
             SecRuleRemoveById 960010
         </LocationMatch>
-        <%- else -%>
-        SecRuleEngine DetectionOnly
-        <%- end -%>
         SecAuditLogType Concurrent
         SecAuditLogStorageDir <%= logdir %>/
         SecAuditLog <%= logdir %>/mod_security_audit.log
@@ -136,6 +138,11 @@
     <IfModule mod_security2.c>
         <%- if mod_security.to_s == 'true' then -%>
         SecRuleEngine On
+        SecAuditEngine On
+        <%- else -%>
+        SecRuleEngine Off
+        SecAuditEngine Off
+        <%- end -%>
         # http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
         # Exceptions for Joomla Root Directory
         <LocationMatch '^/'>
@@ -150,9 +157,6 @@
         <LocationMatch '^/components/com_expose/expose/manager/amfphp/gateway.php'>
             SecRuleRemoveById 960010
         </LocationMatch>
-        <%- else -%>
-        SecRuleEngine DetectionOnly
-        <%- end -%>
         SecAuditLogType Concurrent
         SecAuditLogStorageDir <%= logdir %>/
         SecAuditLog <%= logdir %>/mod_security_audit.log

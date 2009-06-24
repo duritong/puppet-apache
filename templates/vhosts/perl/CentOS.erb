@@ -54,8 +54,10 @@
     <IfModule mod_security2.c>
         <%- if mod_security.to_s == 'true' then -%>
         SecRuleEngine On
+        SecAuditEngine On
         <%- else -%>
         SecRuleEngine Off
+        SecAuditEngine Off
         <%- end -%>
         SecAuditLogType Concurrent
         SecAuditLogStorageDir <%= logdir %>/
@@ -120,8 +122,10 @@
     <IfModule mod_security2.c>
         <%- if mod_security.to_s == 'true' then -%>
         SecRuleEngine On
+        SecAuditEngine On
         <%- else -%>
         SecRuleEngine Off
+        SecAuditEngine Off
         <%- end -%>
         SecAuditLogType Concurrent
         SecAuditLogStorageDir <%= logdir %>/
