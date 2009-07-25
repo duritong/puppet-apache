@@ -33,6 +33,7 @@ define apache::vhost::template(
     $default_charset = 'absent',
     $php_use_smarty = false,
     $php_use_pear = false,
+    $php_safe_mode = true,
     $run_mode = 'normal',
     $run_uid = 'absent',
     $run_gid = 'absent',
