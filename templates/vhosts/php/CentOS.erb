@@ -39,9 +39,9 @@
         require valid-user
         <%- end -%>
         php_admin_flag engine on
-        <%- if php_safe_mode.to_s == 'false' %>
+        <%- if php_safe_mode.to_s == 'false' -%>
         php_admin_flag safe_mode Off
-        <%- end %>
+        <%- end -%>
         php_admin_value open_basedir <%- if php_use_smarty.to_s == 'true' -%>/usr/share/php/Smarty/:<%- end -%><%- if php_use_pear.to_s == 'true' -%>/usr/share/pear/:<%- end -%><%= documentroot %>:<%= real_php_upload_tmp_dir %>:<%= real_php_session_save_path %>
         php_admin_value upload_tmp_dir <%= real_php_upload_tmp_dir %>
         php_admin_value session.save_path <%= real_php_session_save_path %>
@@ -105,9 +105,9 @@
         require valid-user
         <%- end -%>
         php_admin_flag engine on
-        <%- if php_safe_mode.to_s == 'false' %>
+        <%- if php_safe_mode.to_s == 'false' -%>
         php_admin_flag safe_mode Off
-        <%- end %>
+        <%- end -%>
         php_admin_value open_basedir <%- if php_use_smarty.to_s == 'true' -%>/usr/share/php/Smarty/:<%- end -%><%- if php_use_pear.to_s == 'true' -%>/usr/share/pear/:<%- end -%><%= documentroot %>:<%= real_php_upload_tmp_dir %>:<%= real_php_session_save_path %>
         php_admin_value upload_tmp_dir <%= real_php_upload_tmp_dir %>
         php_admin_value session.save_path <%= real_php_session_save_path %>
