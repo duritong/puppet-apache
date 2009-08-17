@@ -10,15 +10,13 @@
 #   - true: enable ssl for this vhost
 #   - force: enable ssl and redirect non-ssl to ssl
 #   - only: enable ssl only
-# - vhost_destination: where to put the vhost
 define apache::vhost::redirect(
     $ensure = present,
     $domain = 'absent',
     $domainalias = 'absent',
     $target_url,
     $server_admin = 'absent',
-    $ssl_mode = false,
-    $vhost_destination = 'absent'
+    $ssl_mode = false
 ){
     # create vhost configuration file
     # we use the options field as the target_url
@@ -31,7 +29,6 @@ define apache::vhost::redirect(
         allow_override => $allow_override,
         options => $target_url,
         ssl_mode => $ssl_mode,
-    	vhost_destination => $vhost_destination,
     }
 }
 
