@@ -46,6 +46,10 @@ define apache::vhost::template(
     $ldap_auth = false,
     $ldap_user = 'any'
 ){
+    if $mod_security {
+        include mod_security
+    }
+
     $real_path = $path ? {
         'absent' => $operatingsystem ? {
             openbsd => "/var/www/htdocs/$name",
