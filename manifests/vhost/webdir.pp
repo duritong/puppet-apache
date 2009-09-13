@@ -80,9 +80,10 @@ define apache::vhost::webdir(
     }
     case $ensure {
         absent: {
-            $managed_directories = [ "$real_path", "${real_path}/private", "$logdir" ]
             if $manage_docroot {
-              $managed_directories += [ "$documentroot" ]
+              $managed_directories = [ "$real_path", "${real_path}/private", "$logdir", "$documentroot" ]
+            } else {
+              $managed_directories = [ "$real_path", "${real_path}/private", "$logdir" ]
             }
             file{$managed_directories:
                 ensure => absent,
