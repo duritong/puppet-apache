@@ -31,8 +31,7 @@ define apache::vhost::php::spip(
     $vhost_source = 'absent',
     $vhost_destination = 'absent',
     $htpasswd_file = 'absent',
-    $htpasswd_path = 'absent',
-    $manage_cron = true
+    $htpasswd_path = 'absent'
 ){
     $documentroot = $path ? {
         'absent' => $operatingsystem ? {
