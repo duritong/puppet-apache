@@ -19,16 +19,16 @@
 # $apache_default_group: Set this to the group with which the
 #                        apache is running.
 class apache {
-    case $operatingsystem {
-        centos: { include apache::centos }
-        gentoo: { include apache::gentoo }
-        debian: { include apache::debian }
-        ubuntu: { include apache::ubuntu }
-        openbsd: { include apache::openbsd }
-        default: { include apache::base }
-    }
-    if $use_munin {
-        include apache::status
-    }
+  case $operatingsystem {
+    centos: { include apache::centos }
+    gentoo: { include apache::gentoo }
+    debian: { include apache::debian }
+    ubuntu: { include apache::ubuntu }
+    openbsd: { include apache::openbsd }
+    default: { include apache::base }
+  }
+  if $use_munin {
+    include apache::status
+  }
 }
 
