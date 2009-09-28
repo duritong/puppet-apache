@@ -27,9 +27,6 @@ class apache {
         openbsd: { include apache::openbsd }
         default: { include apache::base }
     }
-    if $selinux {
-#        include apache::selinux
-    }
     if $use_munin {
         include apache::status
     }

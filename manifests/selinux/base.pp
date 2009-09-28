@@ -1,1 +1,0 @@
-class apache::selinux::base {}
