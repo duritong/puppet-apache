@@ -7,6 +7,6 @@ class apache::ssl inherits apache {
     defaults: { include apache::ssl::base }
   }
   if $use_shorewall {
-    include shorewall::rules::http
+    include shorewall::rules::https
   }
 }
