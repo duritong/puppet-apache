@@ -30,5 +30,8 @@ class apache {
   if $use_munin {
     include apache::status
   }
+  if $use_shorewall {
+    include shorewall::rules::http
+  }
 }
 
