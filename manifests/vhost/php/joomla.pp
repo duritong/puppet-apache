@@ -90,6 +90,7 @@ define apache::vhost::php::joomla(
                             "$documentroot/plugins",
                             "$documentroot/templates",
                             "$documentroot/cache",
+                            "$documentroot/tmp",
                             "$documentroot/administrator/cache" ],
         manage_config => $manage_config,
         config_webwriteable => $config_webwriteable,
