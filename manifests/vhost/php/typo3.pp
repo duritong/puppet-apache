@@ -36,8 +36,6 @@ define apache::vhost::php::typo3(
     $config_webwriteable = false,
     $manage_directories = true
 ){
-    include ::apache::typo3
-
     $documentroot = $path ? {
         'absent' => $operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}/www",
