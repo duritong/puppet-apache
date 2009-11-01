@@ -12,10 +12,10 @@ define apache::vhost::file::documentrootfile(
                     "puppet://$server/files/apache/vhost_varieties/$operatingsystem.$lsbdistcodename/$thedomain/$filename",
                     "puppet://$server/files/apache/vhost_varieties/$operatingsystem/$thedomain/$filename",
                     "puppet://$server/files/apache/vhost_varieties/$thedomain/$filename",
-                    "puppet://$server/apache/vhost_varieties/$thedomain/$filename",
-                    "puppet://$server/apache/vhost_varieties/$operatingsystem.$lsbdistcodename/$thedomain/$filename",
-                    "puppet://$server/apache/vhost_varieties/$operatingsystem/$thedomain/$filename",
-                    "puppet://$server/apache/vhost_varieties/$thedomain/$filename"
+                    "puppet://$server/modules/apache/vhost_varieties/$thedomain/$filename",
+                    "puppet://$server/modules/apache/vhost_varieties/$operatingsystem.$lsbdistcodename/$thedomain/$filename",
+                    "puppet://$server/modules/apache/vhost_varieties/$operatingsystem/$thedomain/$filename",
+                    "puppet://$server/modules/apache/vhost_varieties/$thedomain/$filename"
                    ],
         ensure  => file,
         require => Apache::Vhost::Webdir["$thedomain"],

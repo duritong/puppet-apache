@@ -10,7 +10,7 @@ class apache::ssl::openbsd inherits apache::openbsd {
     }
 
     File['/opt/bin/restart_apache.sh']{
-        source => "puppet://$server/apache/OpenBSD/bin/restart_apache_ssl.sh",
+        source => "puppet://$server/modules/apache/OpenBSD/bin/restart_apache_ssl.sh",
     }
     Service['apache']{
         start => 'apachectl startssl',

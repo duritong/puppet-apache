@@ -31,9 +31,9 @@ define apache::config::file(
                     "puppet://$server/files/apache/conf.d/${operatingsystem}.${lsbdistcodename}/${name}",
                     "puppet://$server/files/apache/conf.d/${operatingsystem}/${name}",
                     "puppet://$server/files/apache/conf.d/${name}",
-                    "puppet://$server/apache/conf.d/${operatingsystem}.${lsbdistcodename}/${name}",
-                    "puppet://$server/apache/conf.d/${operatingsystem}/${name}",
-                    "puppet://$server/apache/conf.d/${name}"
+                    "puppet://$server/modules/apache/conf.d/${operatingsystem}.${lsbdistcodename}/${name}",
+                    "puppet://$server/modules/apache/conf.d/${operatingsystem}/${name}",
+                    "puppet://$server/modules/apache/conf.d/${name}"
                 ],
                 default => "puppet://$server/$source",
             }

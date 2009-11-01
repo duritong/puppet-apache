@@ -28,8 +28,8 @@ class apache::centos inherits apache::package {
     file{'/etc/sysconfig/httpd':
       source => [ "puppet://$server/files/apache/sysconfig/${fqdn}/httpd",
                   "puppet://$server/files/apache/sysconfig/httpd",
-                  "puppet://$server/apache/sysconfig/${operatingsystem}/httpd",
-                  "puppet://$server/apache/sysconfig/httpd" ],
+                  "puppet://$server/modules/apache/sysconfig/${operatingsystem}/httpd",
+                  "puppet://$server/modules/apache/sysconfig/httpd" ],
       require => Package['apache'],
       notify => Service['apache'],
       owner => root, group => 0, mode => 0644;

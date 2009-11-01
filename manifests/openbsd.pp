@@ -25,8 +25,8 @@ class apache::openbsd inherits apache::base {
         source => [ "puppet://$server/files/apache/conf/${fqdn}/httpd.conf",
                     "puppet://$server/files/apache/conf/${apache_cluster_node}/httpd.conf",
                     "puppet://$server/files/apache/conf/httpd.conf",
-                    "puppet://$server/apache/conf/${operatingsystem}/httpd.conf",
-                    "puppet://$server/apache/conf/httpd.conf" ],
+                    "puppet://$server/modules/apache/conf/${operatingsystem}/httpd.conf",
+                    "puppet://$server/modules/apache/conf/httpd.conf" ],
         notify => Service['apache'],
         owner => root, group => 0, mode => 0644;
     }
@@ -34,7 +34,7 @@ class apache::openbsd inherits apache::base {
         path => '/var/www/htdocs/default/www/index.html',
     }
     file{'/opt/bin/restart_apache.sh':
-        source => "puppet://$server/apache/OpenBSD/bin/restart_apache.sh",
+        source => "puppet://$server/modules/apache/OpenBSD/bin/restart_apache.sh",
         require => File['/opt/bin'],
         owner => root, group => 0, mode => 0700;
     }
@@ -48,7 +48,7 @@ class apache::openbsd inherits apache::base {
         stop => 'apachectl stop',
     }
     file{'/opt/bin/apache_logrotate.sh':
-        source => "puppet://$server/apache/OpenBSD/bin/apache_logrotate.sh",
+        source => "puppet://$server/modules/apache/OpenBSD/bin/apache_logrotate.sh",
         require => File['/opt/bin'],
         owner => root, group => 0, mode => 0700;
     }

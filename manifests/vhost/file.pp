@@ -51,10 +51,10 @@ define apache::vhost::file(
                     "puppet://$server/files/apache/vhosts.d/$operatingsystem.$lsbdistcodename/$name.conf",
                     "puppet://$server/files/apache/vhosts.d/$operatingsystem/$name.conf",
                     "puppet://$server/files/apache/vhosts.d/$name.conf",
-                    "puppet://$server/apache/vhosts.d/$name.conf",
-                    "puppet://$server/apache/vhosts.d/$operatingsystem.$lsbdistcodename/$name.conf",
-                    "puppet://$server/apache/vhosts.d/$operatingsystem/$name.conf",
-                    "puppet://$server/apache/vhosts.d/$name.conf"
+                    "puppet://$server/modules/apache/vhosts.d/$name.conf",
+                    "puppet://$server/modules/apache/vhosts.d/$operatingsystem.$lsbdistcodename/$name.conf",
+                    "puppet://$server/modules/apache/vhosts.d/$operatingsystem/$name.conf",
+                    "puppet://$server/modules/apache/vhosts.d/$name.conf"
                 ],
                 default => "puppet://$server/$vhost_source",
             }
