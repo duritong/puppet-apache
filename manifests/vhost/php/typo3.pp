@@ -75,7 +75,7 @@ define apache::vhost::php::typo3(
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
         manage_directories => $manage_directories,
-        managed_directories =>  [ "$documentroot/typo3_src" ],
+        managed_directories =>  [ "$documentroot/typo3temp" ],
         manage_config => $manage_config,
     }
 
