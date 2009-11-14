@@ -26,11 +26,11 @@ define apache::config::file(
         'absent': {
             $real_source = $source ? {
                 'absent' => [
-                    "puppet://$server/files/apache/conf.d/${fqdn}/${name}",
-                    "puppet://$server/files/apache/conf.d/${apache_cluster_node}/${name}",
-                    "puppet://$server/files/apache/conf.d/${operatingsystem}.${lsbdistcodename}/${name}",
-                    "puppet://$server/files/apache/conf.d/${operatingsystem}/${name}",
-                    "puppet://$server/files/apache/conf.d/${name}",
+                    "puppet://$server/modules/site-apache/conf.d/${fqdn}/${name}",
+                    "puppet://$server/modules/site-apache/conf.d/${apache_cluster_node}/${name}",
+                    "puppet://$server/modules/site-apache/conf.d/${operatingsystem}.${lsbdistcodename}/${name}",
+                    "puppet://$server/modules/site-apache/conf.d/${operatingsystem}/${name}",
+                    "puppet://$server/modules/site-apache/conf.d/${name}",
                     "puppet://$server/modules/apache/conf.d/${operatingsystem}.${lsbdistcodename}/${name}",
                     "puppet://$server/modules/apache/conf.d/${operatingsystem}/${name}",
                     "puppet://$server/modules/apache/conf.d/${name}"

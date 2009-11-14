@@ -7,11 +7,11 @@ define apache::vhost::file::documentrootfile(
       $mode=440
 ){
     file{"$documentroot/$filename":
-        source  => [ "puppet://$server/files/apache/vhost_varieties/$fqdn/$thedomain/$filename",
-                    "puppet://$server/files/apache/vhost_varieties/$apache_cluster_node/$thedomain/$filename",
-                    "puppet://$server/files/apache/vhost_varieties/$operatingsystem.$lsbdistcodename/$thedomain/$filename",
-                    "puppet://$server/files/apache/vhost_varieties/$operatingsystem/$thedomain/$filename",
-                    "puppet://$server/files/apache/vhost_varieties/$thedomain/$filename",
+        source  => [ "puppet://$server/modules/site-apache/vhost_varieties/$fqdn/$thedomain/$filename",
+                    "puppet://$server/modules/site-apache/vhost_varieties/$apache_cluster_node/$thedomain/$filename",
+                    "puppet://$server/modules/site-apache/vhost_varieties/$operatingsystem.$lsbdistcodename/$thedomain/$filename",
+                    "puppet://$server/modules/site-apache/vhost_varieties/$operatingsystem/$thedomain/$filename",
+                    "puppet://$server/modules/site-apache/vhost_varieties/$thedomain/$filename",
                     "puppet://$server/modules/apache/vhost_varieties/$thedomain/$filename",
                     "puppet://$server/modules/apache/vhost_varieties/$operatingsystem.$lsbdistcodename/$thedomain/$filename",
                     "puppet://$server/modules/apache/vhost_varieties/$operatingsystem/$thedomain/$filename",

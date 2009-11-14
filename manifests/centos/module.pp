@@ -3,16 +3,16 @@ define apache::centos::module(
     $source = '',
     $destination = ''
 ){
-    $modules_dir = "$apache::centos::config_dir/modules.d/"
+    $modules_dir = "$apache::centos::config_dir/modules.d"
     $real_destination = $destination ? {
         '' => "${modules_dir}/${name}.so",
         default => $destination,
     }
     $real_source = $source ? {
         ''  => [
-            "puppet://$server/files/apache/modules.d/${fqdn}/${name}.so",
-            "puppet://$server/files/apache/modules.d/${apache_cluster_node}/${name}.so",
-            "puppet://$server/files/apache/modules.d/${name}.so",
+            "puppet://$server/modules/site-apache/modules.d/${fqdn}/${name}.so",
+            "puppet://$server/modules/site-apache/modules.d/${apache_cluster_node}/${name}.so",
+            "puppet://$server/modules/site-apache/modules.d/${name}.so",
             "puppet://$server/modules/apache/modules.d/${operatingsystem}/${name}.so",
             "puppet://$server/modules/apache/modules.d/${name}.so"
         ],

@@ -1,6 +1,6 @@
 ### gentoo
 class apache::gentoo inherits apache::package {
-    $config_dir = '/etc/apache2/'
+    $config_dir = '/etc/apache2'
 
     # needs module gentoo
     gentoo::etcconfd {
@@ -11,10 +11,10 @@ class apache::gentoo inherits apache::package {
         category => 'www-servers',
     }
     File[vhosts_dir]{
-        path => "$config_dir/vhosts.d/",
+        path => "$config_dir/vhosts.d",
     }
     File[modules_dir]{
-        path => "$config_dir/modules.d/",
+        path => "$config_dir/modules.d",
     }
 
     apache::gentoo::module { '00_default_settings': }

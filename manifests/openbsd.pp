@@ -1,15 +1,15 @@
 ### openbsd
 class apache::openbsd inherits apache::base {
-    $config_dir = '/var/www/'
+    $config_dir = '/var/www'
 
     File[vhosts_dir]{
-        path => "$config_dir/vhosts.d/",
+        path => "$config_dir/vhosts.d",
     }
     File[modules_dir]{
-        path => "$config_dir/conf/modules/",
+        path => "$config_dir/conf/modules",
     }
     File[config_dir]{
-        path => "$config_dir/conf.d/",
+        path => "$config_dir/conf.d",
     }
     File['htpasswd_dir']{
         group => www,
@@ -22,9 +22,9 @@ class apache::openbsd inherits apache::base {
         line => 'httpd flags=""',
     }
     file{"$config_dir/conf/httpd.conf":
-        source => [ "puppet://$server/files/apache/conf/${fqdn}/httpd.conf",
-                    "puppet://$server/files/apache/conf/${apache_cluster_node}/httpd.conf",
-                    "puppet://$server/files/apache/conf/httpd.conf",
+        source => [ "puppet://$server/modules/site-apache/conf/${fqdn}/httpd.conf",
+                    "puppet://$server/modules/site-apache/conf/${apache_cluster_node}/httpd.conf",
+                    "puppet://$server/modules/site-apache/conf/httpd.conf",
                     "puppet://$server/modules/apache/conf/${operatingsystem}/httpd.conf",
                     "puppet://$server/modules/apache/conf/httpd.conf" ],
         notify => Service['apache'],

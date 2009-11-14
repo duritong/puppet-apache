@@ -18,12 +18,12 @@ define apache::vhost::file(
     $use_mod_macro = false
 ){
     $vhosts_dir = $operatingsystem ? {
-        centos => "$apache::centos::config_dir/vhosts.d/",
-        gentoo => "$apache::gentoo::config_dir/vhosts.d/",
-        debian => "$apache::debian::config_dir/vhosts.d/",
-        ubuntu => "$apache::ubuntu::config_dir/vhosts.d/",
-        openbsd => "$apache::openbsd::config_dir/vhosts.d/",
-        default => '/etc/apache2/vhosts.d/',
+        centos => "$apache::centos::config_dir/vhosts.d",
+        gentoo => "$apache::gentoo::config_dir/vhosts.d",
+        debian => "$apache::debian::config_dir/vhosts.d",
+        ubuntu => "$apache::ubuntu::config_dir/vhosts.d",
+        openbsd => "$apache::openbsd::config_dir/vhosts.d",
+        default => '/etc/apache2/vhosts.d',
     }
     $real_vhost_destination = $vhost_destination ? {
         'absent' => "$vhosts_dir/$name.conf",
@@ -46,11 +46,11 @@ define apache::vhost::file(
         'absent': {
             $real_vhost_source = $vhost_source ? {
                 'absent'  => [
-                    "puppet://$server/files/apache/vhosts.d/$fqdn/$name.conf",
-                    "puppet://$server/files/apache/vhosts.d/$apache_cluster_node/$name.conf",
-                    "puppet://$server/files/apache/vhosts.d/$operatingsystem.$lsbdistcodename/$name.conf",
-                    "puppet://$server/files/apache/vhosts.d/$operatingsystem/$name.conf",
-                    "puppet://$server/files/apache/vhosts.d/$name.conf",
+                    "puppet://$server/modules/site-apache/vhosts.d/$fqdn/$name.conf",
+                    "puppet://$server/modules/site-apache/vhosts.d/$apache_cluster_node/$name.conf",
+                    "puppet://$server/modules/site-apache/vhosts.d/$operatingsystem.$lsbdistcodename/$name.conf",
+                    "puppet://$server/modules/site-apache/vhosts.d/$operatingsystem/$name.conf",
+                    "puppet://$server/modules/site-apache/vhosts.d/$name.conf",
                     "puppet://$server/modules/apache/vhosts.d/$name.conf",
                     "puppet://$server/modules/apache/vhosts.d/$operatingsystem.$lsbdistcodename/$name.conf",
                     "puppet://$server/modules/apache/vhosts.d/$operatingsystem/$name.conf",
@@ -78,9 +78,9 @@ define apache::vhost::file(
             }
             file{$real_htpasswd_path:
                 ensure => $ensure,
-                source => [ "puppet://$server/files/apache/htpasswds/$fqdn/$name",
-                            "puppet://$server/files/apache/htpasswds/$apache_cluster_node/$name",
-                            "puppet://$server/files/apache/htpasswds/$name" ],
+                source => [ "puppet://$server/modules/site-apache/htpasswds/$fqdn/$name",
+                            "puppet://$server/modules/site-apache/htpasswds/$apache_cluster_node/$name",
+                            "puppet://$server/modules/site-apache/htpasswds/$name" ],
                 owner => root, group => 0, mode => 0644;
             }
         }

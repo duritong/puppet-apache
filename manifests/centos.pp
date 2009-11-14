@@ -1,6 +1,6 @@
 ### centos
 class apache::centos inherits apache::package {
-    $config_dir = '/etc/httpd/'
+    $config_dir = '/etc/httpd'
 
     Package[apache]{
         name => 'httpd',
@@ -10,13 +10,13 @@ class apache::centos inherits apache::package {
         restart => '/etc/init.d/httpd graceful',
     }
     File[vhosts_dir]{
-        path => "$config_dir/vhosts.d/",
+        path => "$config_dir/vhosts.d",
     }
     File[config_dir]{
-        path => "$config_dir/conf.d/",
+        path => "$config_dir/conf.d",
     }
     File[modules_dir]{
-        path => "$config_dir/modules.d/",
+        path => "$config_dir/modules.d",
     }
     File[web_dir]{
         path => "/var/www/vhosts",
@@ -26,8 +26,8 @@ class apache::centos inherits apache::package {
     }
 
     file{'/etc/sysconfig/httpd':
-      source => [ "puppet://$server/files/apache/sysconfig/${fqdn}/httpd",
-                  "puppet://$server/files/apache/sysconfig/httpd",
+      source => [ "puppet://$server/modules/site-apache/sysconfig/${fqdn}/httpd",
+                  "puppet://$server/modules/site-apache/sysconfig/httpd",
                   "puppet://$server/modules/apache/sysconfig/${operatingsystem}/httpd",
                   "puppet://$server/modules/apache/sysconfig/httpd" ],
       require => Package['apache'],

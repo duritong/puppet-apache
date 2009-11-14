@@ -1,26 +1,26 @@
 class apache::base {
     file{'vhosts_dir':
-        path => '/etc/apache2/vhosts.d/',
+        path => '/etc/apache2/vhosts.d',
         ensure => directory,
         owner => root, group => 0, mode => 0755;
     }
     file{'config_dir':
-        path => '/etc/apache2/conf.d/',
+        path => '/etc/apache2/conf.d',
         ensure => directory,
         owner => root, group => 0, mode => 0755;
     }
     file{'modules_dir':
-        path => '/etc/apache2/modules.d/',
+        path => '/etc/apache2/modules.d',
         ensure => directory,
         owner => root, group => 0, mode => 0755;
     }
     file{'htpasswd_dir':
-        path => '/var/www/htpasswds/',
+        path => '/var/www/htpasswds',
         ensure => directory,
         owner => root, group => apache, mode => 0640;
     }
     file{'web_dir':
-        path => '/var/www/',
+        path => '/var/www',
         ensure => directory,
         owner => root, group => 0, mode => 0755;
     }
