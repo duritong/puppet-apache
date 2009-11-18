@@ -27,6 +27,7 @@ define apache::vhost::php::standard(
     $php_use_smarty = false,
     $php_use_pear = false,
     $php_safe_mode = true,
+    $php_safe_mode_exec_bins = 'absent',
     $do_includes = false,
     $options = 'absent',
     $additional_options = 'absent',
@@ -38,8 +39,7 @@ define apache::vhost::php::standard(
     $vhost_source = 'absent',
     $vhost_destination = 'absent',
     $htpasswd_file = 'absent',
-    $htpasswd_path = 'absent',
-    $php_safe_mode_exec_bins = 'absent'
+    $htpasswd_path = 'absent'
 ){
 
     ::apache::vhost::phpdirs{"${name}":
@@ -64,7 +64,7 @@ define apache::vhost::php::standard(
       recurse => true,
       purge => true,
     }
-    if $php_safe_mode_exec_bins and ($php_safe_mode_exec_bins != 'absent') {
+    if $php_safe_mode_exec_bins != 'absent' {
      File[$php_safe_mode_exec_bin_dir]{
         ensure => directory,
         source => "puppet://$server/modules/common/empty",
