@@ -22,7 +22,6 @@ define apache::vhost::php::webapp(
     $run_uid = 'absent',
     $run_gid = 'absent',
     $allow_override = 'None',
-    $php_bin_dir = 'absent',
     $php_upload_tmp_dir = 'absent',
     $php_session_save_path = 'absent',
     $do_includes = false,
@@ -40,7 +39,8 @@ define apache::vhost::php::webapp(
     $config_file = 'absent',
     $config_webwriteable = false,
     $manage_directories = true,
-    $managed_directories = 'absent'
+    $managed_directories = 'absent',
+    $php_safe_mode_exec_bins = 'absent'
 ){
     if ($ensure != 'absent') {
         if $manage_directories and ($managed_directories != 'absent') {
@@ -71,6 +71,16 @@ define apache::vhost::php::webapp(
         }
     }
 
+    if $php_safe_mode_exec_bins and ($php_safe_mode_exec_bins != 'absent') {
+      $php_safe_mode_exec_bin_dir = $path ? {
+        'absent' => $operatingsystem ? {
+          openbsd => "/var/www/htdocs/${name}/bin",
+          default => "/var/www/vhosts/${name}/bin"
+        },
+        default => "${path}/bin"
+      }
+    }
+
     # create vhost configuration file
     ::apache::vhost::php::standard{$name:
         ensure => $ensure,
@@ -90,7 +100,6 @@ define apache::vhost::php::webapp(
         run_uid => $run_uid,
         run_gid => $run_gid,
         allow_override => $allow_override,
-        php_bin_dir => $php_bin_dir,
         php_upload_tmp_dir => $php_upload_tmp_dir,
         php_session_save_path => $php_session_save_path,
         do_includes => $do_includes,
@@ -104,6 +113,8 @@ define apache::vhost::php::webapp(
         vhost_destination => $vhost_destination,
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
+        php_safe_mode_exec_bins => $php_safe_mode_exec_bins,
+        php_safe_mode_exec_bin_dir => $php_safe_mode_exec_bin_dir,
     }
 }
 

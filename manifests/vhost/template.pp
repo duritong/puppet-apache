@@ -24,7 +24,7 @@ define apache::vhost::template(
     $domainalias = 'absent',
     $server_admin = 'absent',
     $allow_override = 'None',
-    $php_bin_dir = 'absent',
+    $php_safe_mode_exec_bin_dir = 'absent',
     $php_upload_tmp_dir = 'absent',
     $php_session_save_path = 'absent',
     $cgi_binpath = 'absent',
@@ -95,12 +95,12 @@ define apache::vhost::template(
     }
 
     # set default dirs for templates
-    # php bin_dir
-    case $php_bin_dir {
+    # php php_safe_mode_exec_bin directory
+    case $php_safe_mode_exec_bin_dir {
         'absent': {
-            $real_php_bin_dir = "/var/www/vhosts/$name/bin"
+            $real_php_safe_mode_exec_bin_dir = "/var/www/vhosts/$name/bin"
         }
-        default: { $real_php_bin_dir = $php_bin_dir }
+        default: { $real_php_safe_mode_exec_bin_dir = $php_safe_mode_exec_bin_dir }
     }
     # php upload_tmp_dir
     case $php_upload_tmp_dir {

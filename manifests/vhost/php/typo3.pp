@@ -19,7 +19,6 @@ define apache::vhost::php::typo3(
     $run_uid = 'absent',
     $run_gid = 'absent',
     $allow_override = 'None',
-    $php_bin_dir = 'absent',
     $php_upload_tmp_dir = 'absent',
     $php_session_save_path = 'absent',
     $do_includes = false,
@@ -35,7 +34,8 @@ define apache::vhost::php::typo3(
     $htpasswd_path = 'absent',
     $manage_config = true,
     $config_webwriteable = false,
-    $manage_directories = true
+    $manage_directories = true,
+    $php_safe_mode_exec_bins = 'absent'
 ){
     $documentroot = $path ? {
         'absent' => $operatingsystem ? {
@@ -43,14 +43,6 @@ define apache::vhost::php::typo3(
             default => "/var/www/vhosts/${name}/www"
         },
         default => "${path}/www"
-    }
-
-    $php_bin_dir = $path ? {
-        'absent' => $operatingsystem ? {
-            openbsd => "/var/www/htdocs/${name}/bin",
-            default => "/var/www/vhosts/${name}/bin"
-        },
-        default => "${path}/bin"
     }
 
     # create vhost configuration file
@@ -70,7 +62,6 @@ define apache::vhost::php::typo3(
         run_uid => $run_uid,
         run_gid => $run_gid,
         allow_override => $allow_override,
-        php_bin_dir => $php_bin_dir,
         php_upload_tmp_dir => $php_upload_tmp_dir,
         php_session_save_path => $php_session_save_path,
         do_includes => $do_includes,
@@ -104,6 +95,7 @@ define apache::vhost::php::typo3(
                                   "$documentroot/fileadmin/_temp_"
                                 ],
         manage_config => $manage_config,
+        php_safe_mode_exec_bins => $php_safe_mode_exec_bins,
     }
 
 }

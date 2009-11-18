@@ -22,7 +22,6 @@ define apache::vhost::php::standard(
     $run_uid = 'absent',
     $run_gid = 'absent',
     $allow_override = 'None',
-    $php_bin_dir = 'absent',
     $php_upload_tmp_dir = 'absent',
     $php_session_save_path = 'absent',
     $php_use_smarty = false,
@@ -39,12 +38,14 @@ define apache::vhost::php::standard(
     $vhost_source = 'absent',
     $vhost_destination = 'absent',
     $htpasswd_file = 'absent',
-    $htpasswd_path = 'absent'
+    $htpasswd_path = 'absent',
+    $php_safe_mode_exec_bins = 'absent',
+    $php_safe_mode_exec_bin_dir = 'absent'
 ){
 
     ::apache::vhost::phpdirs{"${name}":
         ensure => $ensure,
-        php_bin_dir => $php_bin_dir,
+        php_safe_mode_exec_bin_dir => $php_safe_mode_exec_bin_dir,
         php_upload_tmp_dir => $php_upload_tmp_dir,
         php_session_save_path => $php_session_save_path,
         documentroot_owner => $documentroot_owner,
@@ -52,6 +53,20 @@ define apache::vhost::php::standard(
         documentroot_mode => $documentroot_mode,
         run_mode => $run_mode,
         run_uid => $run_uid,
+    }
+
+    if $php_safe_mode_exec_bins != 'absent' {
+      file{$php_safe_mode_exec_bin_dir:
+        ensure => directory,
+        source => "puppet://$server/modules/common/empty",
+        recurse => true,
+        purge => true,
+        owner => $owner, group => $group, mode => 0750;
+      }
+      $php_safe_mode_exec_bins_subst =  regsubst($php_safe_mode_exec_bins,"(.+)","${vhost}_\\1")
+      apache::vhost::php::safe_mode_bin{ $php_safe_mode_exec_bins_subst:
+        path => $php_safe_mode_exec_bin_dir
+      }
     }
 
     if $php_use_smarty {
@@ -92,7 +107,7 @@ define apache::vhost::php::standard(
         options => $options,
         additional_options => $additional_options,
         default_charset => $default_charset,
-        php_bin_dir => $php_bin_dir,
+        php_safe_mode_exec_bin_dir => $php_safe_mode_exec_bin_dir,
         php_upload_tmp_dir => $php_upload_tmp_dir,
         php_session_save_path => $php_session_save_path,
         php_use_smarty => $php_use_smarty,
