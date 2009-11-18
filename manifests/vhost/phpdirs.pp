@@ -14,7 +14,7 @@ define apache::vhost::phpdirs(
         'absent': {
             $real_php_safe_mode_exec_bin_dir = "/var/www/vhosts/$name/bin"
         }
-        default: { $real_php_upload_tmp_dir = $php_upload_tmp_dir }
+        default: { $real_php_safe_mode_exec_bin_dir = $php_safe_mode_exec_bin_dir }
     }
     # php upload_tmp_dir
     case $php_upload_tmp_dir {
