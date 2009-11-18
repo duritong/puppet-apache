@@ -21,6 +21,7 @@ define apache::vhost::php::typo3(
     $allow_override = 'None',
     $php_upload_tmp_dir = 'absent',
     $php_session_save_path = 'absent',
+    $php_safe_mode_exec_bins = 'absent',
     $do_includes = false,
     $options = 'absent',
     $additional_options = 'absent',
@@ -34,8 +35,7 @@ define apache::vhost::php::typo3(
     $htpasswd_path = 'absent',
     $manage_config = true,
     $config_webwriteable = false,
-    $manage_directories = true,
-    $php_safe_mode_exec_bins = 'absent'
+    $manage_directories = true
 ){
     $documentroot = $path ? {
         'absent' => $operatingsystem ? {
@@ -64,6 +64,7 @@ define apache::vhost::php::typo3(
         allow_override => $allow_override,
         php_upload_tmp_dir => $php_upload_tmp_dir,
         php_session_save_path => $php_session_save_path,
+        php_safe_mode_exec_bins => $php_safe_mode_exec_bins,
         do_includes => $do_includes,
         options => $options,
         additional_options => $additional_options,
@@ -95,7 +96,6 @@ define apache::vhost::php::typo3(
                                   "$documentroot/fileadmin/_temp_"
                                 ],
         manage_config => $manage_config,
-        php_safe_mode_exec_bins => $php_safe_mode_exec_bins,
     }
 
 }
