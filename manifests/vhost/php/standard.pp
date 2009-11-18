@@ -76,7 +76,7 @@ define apache::vhost::php::standard(
     }else{
       file{$php_safe_mode_exec_bin_dir:
         ensure => absent,
-        recurse => true
+        recurse => true,
         force => true
       }
     }
