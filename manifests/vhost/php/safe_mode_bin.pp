@@ -9,7 +9,7 @@ define apache::vhost::php::safe_mode_bin(
 ){
     $substr=regsubst($name,'^.*\/','','G')
     $real_path = "$path/$substr"
-    apache::file::link{ "$real_path":
+    link{ "$real_path":
          target => regsubst($name,'^.*_','')
     }
 }
