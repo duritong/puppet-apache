@@ -53,15 +53,14 @@ define apache::vhost::php::standard(
         run_uid => $run_uid,
     }
 
+    $php_safe_mode_exec_bin_dir = $path ? {
+      'absent' => $operatingsystem ? {
+        openbsd => "/var/www/htdocs/${name}/bin",
+        default => "/var/www/vhosts/${name}/bin"
+      },
+      default => "${path}/bin"
+    }
     if $php_safe_mode_exec_bins and ($php_safe_mode_exec_bins != 'absent') {
-      $php_safe_mode_exec_bin_dir = $path ? {
-        'absent' => $operatingsystem ? {
-          openbsd => "/var/www/htdocs/${name}/bin",
-          default => "/var/www/vhosts/${name}/bin"
-        },
-        default => "${path}/bin"
-      }
-
       file{$php_safe_mode_exec_bin_dir:
         ensure => directory,
         source => "puppet://$server/modules/common/empty",
