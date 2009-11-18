@@ -22,6 +22,7 @@ define apache::vhost::php::standard(
     $run_uid = 'absent',
     $run_gid = 'absent',
     $allow_override = 'None',
+    $php_bin_dir = 'absent',
     $php_upload_tmp_dir = 'absent',
     $php_session_save_path = 'absent',
     $php_use_smarty = false,
@@ -43,6 +44,7 @@ define apache::vhost::php::standard(
 
     ::apache::vhost::phpdirs{"${name}":
         ensure => $ensure,
+        php_bin_dir => $php_bin_dir,
         php_upload_tmp_dir => $php_upload_tmp_dir,
         php_session_save_path => $php_session_save_path,
         documentroot_owner => $documentroot_owner,
@@ -90,6 +92,7 @@ define apache::vhost::php::standard(
         options => $options,
         additional_options => $additional_options,
         default_charset => $default_charset,
+        php_bin_dir => $php_bin_dir,
         php_upload_tmp_dir => $php_upload_tmp_dir,
         php_session_save_path => $php_session_save_path,
         php_use_smarty => $php_use_smarty,

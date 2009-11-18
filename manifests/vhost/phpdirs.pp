@@ -1,5 +1,6 @@
 define apache::vhost::phpdirs(
     $ensure = present,
+    $php_bin_dir = 'absent',
     $php_upload_tmp_dir = 'absent',
     $php_session_save_path = 'absent',
     $documentroot_owner = apache,
@@ -8,6 +9,13 @@ define apache::vhost::phpdirs(
     $run_mode = 'normal',
     $run_uid = 'absent'
 ){
+    # php bin_dir
+    case $php_bin_dir {
+        'absent': {
+            $real_php_bin_dir = "/var/www/vhosts/$name/bin"
+        }
+        default: { $real_php_upload_tmp_dir = $php_upload_tmp_dir }
+    }
     # php upload_tmp_dir
     case $php_upload_tmp_dir {
         'absent': {
