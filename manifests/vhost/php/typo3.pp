@@ -75,7 +75,24 @@ define apache::vhost::php::typo3(
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
         manage_directories => $manage_directories,
-        managed_directories =>  [ "$documentroot/typo3temp" ],
+        managed_directories =>  [ "$documentroot/typo3temp", 
+                                  "$documentroot/typo3temp/pics",
+                                  "$documentroot/typo3temp/temp",
+                                  "$documentroot/typo3temp/llxml",
+                                  "$documentroot/typo3temp/cs",
+                                  "$documentroot/typo3temp/GB",
+                                  "$documentroot/typo3temp/locks",
+                                  "$documentroot/typo3conf",
+                                  "$documentroot/typo3conf/ext",
+                                  "$documentroot/typo3conf/l10n",
+                                  # "$documentroot/typo3/ext/", # only needed for ext manager installing global extensions
+                                  "$documentroot/uploads",
+                                  "$documentroot/uploads/pics",
+                                  "$documentroot/uploads/media",
+                                  "$documentroot/uploads/tf",
+                                  "$documentroot/fileadmin",
+                                  "$documentroot/fileadmin/_temp_"
+                                ],
         manage_config => $manage_config,
     }
 
