@@ -71,16 +71,6 @@ define apache::vhost::php::webapp(
         }
     }
 
-    if $php_safe_mode_exec_bins and ($php_safe_mode_exec_bins != 'absent') {
-      $php_safe_mode_exec_bin_dir = $path ? {
-        'absent' => $operatingsystem ? {
-          openbsd => "/var/www/htdocs/${name}/bin",
-          default => "/var/www/vhosts/${name}/bin"
-        },
-        default => "${path}/bin"
-      }
-    }
-
     # create vhost configuration file
     ::apache::vhost::php::standard{$name:
         ensure => $ensure,
@@ -113,8 +103,7 @@ define apache::vhost::php::webapp(
         vhost_destination => $vhost_destination,
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
-        php_safe_mode_exec_bins => $php_safe_mode_exec_bins,
-        php_safe_mode_exec_bin_dir => $php_safe_mode_exec_bin_dir,
+        php_safe_mode_exec_bins => $php_safe_mode_exec_bins
     }
 }
 
