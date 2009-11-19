@@ -27,6 +27,7 @@ define apache::vhost::php::standard(
     $php_use_smarty = false,
     $php_use_pear = false,
     $php_safe_mode = true,
+    $php_safe_mode_exec_bins = 'absent',
     $do_includes = false,
     $options = 'absent',
     $additional_options = 'absent',
@@ -38,8 +39,7 @@ define apache::vhost::php::standard(
     $vhost_source = 'absent',
     $vhost_destination = 'absent',
     $htpasswd_file = 'absent',
-    $htpasswd_path = 'absent',
-    $php_safe_mode_exec_bins = 'absent'
+    $htpasswd_path = 'absent'
 ){
 
     ::apache::vhost::phpdirs{"${name}":
@@ -60,25 +60,23 @@ define apache::vhost::php::standard(
       },
       default => "${path}/bin"
     }
-    if $php_safe_mode_exec_bins and ($php_safe_mode_exec_bins != 'absent') {
-      file{$php_safe_mode_exec_bin_dir:
+    file{$php_safe_mode_exec_bin_dir:
+      recurse => true,
+      purge => true,
+    }
+    if $php_safe_mode_exec_bins != 'absent' {
+     File[$php_safe_mode_exec_bin_dir]{
         ensure => directory,
         source => "puppet://$server/modules/common/empty",
-        recurse => true,
-        purge => true,
-        owner => $documentroot_owner,
-        group => $documentroot_group,
-        mode => 0750;
+        owner => $documentroot_owner, group => $documentroot_group, mode => 0750,
       }
-      $php_safe_mode_exec_bins_subst =  regsubst($php_safe_mode_exec_bins,"(.+)","${vhost}_\\1")
+      $php_safe_mode_exec_bins_subst = regsubst($php_safe_mode_exec_bins,"(.+)","${vhost}_\\1")
       apache::vhost::php::safe_mode_bin{ $php_safe_mode_exec_bins_subst:
         path => $php_safe_mode_exec_bin_dir
       }
     }else{
-      file{$php_safe_mode_exec_bin_dir:
+      File[$php_safe_mode_exec_bin_dir]{
         ensure => absent,
-        recurse => true,
-        force => true
       }
     }
 
