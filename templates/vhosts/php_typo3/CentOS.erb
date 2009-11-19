@@ -128,6 +128,8 @@
         <%- unless real_php_safe_mode_exec_bin_dir.to_s == 'absent' then -%>
         php_admin_value safe_mode_exec_dir <%= real_php_safe_mode_exec_bin_dir %>
         <%- end -%>
+        # turn allow_url_fopen on for the extension manager fetch
+        php_admin_value allow_url_fopen On
     </Directory>
 
     <IfModule mod_security2.c>
