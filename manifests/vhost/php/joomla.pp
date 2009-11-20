@@ -85,6 +85,7 @@ define apache::vhost::php::joomla(
                             "$documentroot/administrator/modules",
                             "$documentroot/administrator/templates",
                             "$documentroot/components",
+                            "$documentroot/dmdocuments",
                             "$documentroot/images",
                             "$documentroot/language",
                             "$documentroot/media",
