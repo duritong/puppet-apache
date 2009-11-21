@@ -77,6 +77,7 @@ define apache::vhost::php::standard(
     }
     file{$php_safe_mode_exec_bin_dir:
       recurse => true,
+      force => true,
       purge => true,
     }
     if $php_safe_mode_exec_bins != 'absent' {
