@@ -29,6 +29,7 @@ define apache::vhost::php::mediawiki(
     $php_upload_tmp_dir = 'absent',
     $php_session_save_path = 'absent',
     $php_default_charset = 'absent',
+    $php_safe_mode_exec_bins = 'absent',
     $options = 'absent',
     $additional_options = 'absent',
     $default_charset = 'absent',
