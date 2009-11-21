@@ -4,6 +4,12 @@
 #          and run_uid and run_gid are used as vhost users
 # run_uid: the uid the vhost should run as with the itk module
 # run_gid: the gid the vhost should run as with the itk module
+# php_safe_mode_exec_bins: An array of local binaries which should be linked in the
+#                          safe_mode_exec_bin for this hosting
+#                          *default*: None
+# php_default_charset: default charset header for php.
+#                      *default*: absent, which will set the same as default_charset
+#                                 of apache
 define apache::vhost::php::standard(
     $ensure = present,
     $domain = 'absent',
@@ -28,6 +34,7 @@ define apache::vhost::php::standard(
     $php_use_pear = false,
     $php_safe_mode = true,
     $php_safe_mode_exec_bins = 'absent',
+    $php_default_charset = 'absent',
     $do_includes = false,
     $options = 'absent',
     $additional_options = 'absent',
@@ -41,6 +48,14 @@ define apache::vhost::php::standard(
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent'
 ){
+
+    $real_php_default_charset = $php_default_charset ? {
+      'absent' => $default_charset ? {
+        'On' => 'iso-8859-1',
+        default => $default_charset
+      },
+      default => $php_default_charset
+    }
 
     ::apache::vhost::phpdirs{"${name}":
         ensure => $ensure,
@@ -124,6 +139,7 @@ define apache::vhost::php::standard(
         php_use_smarty => $php_use_smarty,
         php_use_pear => $php_use_pear,
         php_safe_mode => $php_safe_mode,
+        php_default_charset => $real_php_default_charset,
         ssl_mode => $ssl_mode,
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,

@@ -14,7 +14,12 @@
 #   - true: enable ssl for this vhost
 #   - force: enable ssl and redirect non-ssl to ssl
 #   - only: enable ssl only
-#
+# php_safe_mode_exec_bins: An array of local binaries which should be linked in the
+#                          safe_mode_exec_bin for this hosting
+#                          *default*: None
+# php_default_charset: default charset header for php.
+#                      *default*: absent, which will set the same as default_charset
+#                                 of apache
 define apache::vhost::template(
     $ensure = present,
     $path = 'absent',
@@ -35,6 +40,7 @@ define apache::vhost::template(
     $php_use_smarty = false,
     $php_use_pear = false,
     $php_safe_mode = true,
+    $php_default_charset = 'absent',
     $run_mode = 'normal',
     $run_uid = 'absent',
     $run_gid = 'absent',

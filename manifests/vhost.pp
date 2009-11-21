@@ -3,7 +3,12 @@
 # vhost_mode: which option is choosed to deploy the vhost
 #   - template: generate it from a template (default)
 #   - file: deploy a vhost file (apache::vhost::file will be called directly)
-#   
+# php_safe_mode_exec_bins: An array of local binaries which should be linked in the
+#                          safe_mode_exec_bin for this hosting
+#                          *default*: None
+# php_default_charset: default charset header for php.
+#                      *default*: absent, which will set the same as default_charset
+#                                 of apache
 define apache::vhost(
     $ensure = present,
     $path = 'absent',
@@ -24,6 +29,7 @@ define apache::vhost(
     $php_use_smarty = false,
     $php_use_pear = false,
     $php_safe_mode = true,
+    $php_default_charset = 'absent',
     $cgi_binpath = 'absent',
     $default_charset = 'absent',
     $do_includes = false,
@@ -75,6 +81,7 @@ define apache::vhost(
                 php_use_smarty => $php_use_smarty,
                 php_use_pear => $php_use_pear,
                 php_safe_mode => $php_safe_mode,
+                php_default_charset => $php_default_charset,
                 run_mode => $run_mode,
                 run_uid => $run_uid,
                 run_gid => $run_gid,
