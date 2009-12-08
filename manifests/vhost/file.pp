@@ -20,8 +20,8 @@ define apache::vhost::file(
     $vhosts_dir = $operatingsystem ? {
         centos => "$apache::centos::config_dir/vhosts.d",
         gentoo => "$apache::gentoo::config_dir/vhosts.d",
-        debian => "$apache::debian::config_dir/vhosts.d",
-        ubuntu => "$apache::ubuntu::config_dir/vhosts.d",
+        debian => "$apache::debian::config_dir/sites-enabled",
+        ubuntu => "$apache::ubuntu::config_dir/sites-enabled",
         openbsd => "$apache::openbsd::config_dir/vhosts.d",
         default => '/etc/apache2/vhosts.d',
     }
