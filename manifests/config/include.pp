@@ -31,13 +31,10 @@ define apache::config::include(
             default => "puppet://${server}/${source}",
         }
     }
-    else {
-        $real_content = $content
-    }
     apache::config::file { "${name}":
         ensure => $ensure,
         source => $real_source,
-        content => $real_content,
+        content => $content,
         destination => $real_destination,
     }
 }
