@@ -1,0 +1,190 @@
+# <%= servername %>
+<%- unless ssl_mode.to_s == 'only'  then -%>
+<VirtualHost *:80>
+    Include conf.d/defaults.inc
+
+    ServerName <%= servername %>
+    <%- unless serveralias.to_s.empty? then -%>
+    ServerAlias <%= serveralias %>
+    <%- end -%> 
+    <%- unless server_admin.to_s.empty? or server_admin.to_s == 'absent' then -%>
+    ServerAdmin <%= server_admin %>
+    <%- end -%>
+    DocumentRoot <%= documentroot %>/
+
+    ErrorLog <%= logdir %>/error_log
+    CustomLog <%= logdir %>/access_log combined
+    <%- if ssl_mode.to_s == 'force' then -%>
+    Redirect permanent / https://<%= servername %>/
+    <%- end -%>
+    <%- if default_charset.to_s != 'absent' then -%>
+    AddDefaultCharset <%= default_charset %>
+    <%- end -%>
+    <%- if run_mode.to_s == 'itk' -%>
+    <IfModule mpm_itk_module>
+        AssignUserId <%= run_uid+" "+run_gid %>
+    </IfModule>
+    <%- end -%>
+    <%- if not ssl_mode.to_s == 'force' then -%>
+    <Directory "<%= documentroot %>/">
+        AllowOverride <%= allow_override %>
+        <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
+        Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
+
+        <%- end -%>
+        <%- unless htpasswd_file.to_s == 'absent' then -%>
+        AuthType Basic
+        AuthName "Access fuer <%= servername %>"
+        AuthUserFile <%= real_htpasswd_path %>
+        require valid-user
+        <%- end -%>
+        php_admin_flag engine on
+        <%- unless php_default_charset.to_s == 'absent' then -%>
+        php_admin_value default_charset <%= php_default_charset %>
+        <%- end -%>
+        php_admin_value open_basedir <%= documentroot %>:<%= real_php_upload_tmp_dir %>:<%= real_php_session_save_path %>
+        php_admin_value upload_tmp_dir <%= real_php_upload_tmp_dir %>
+        php_admin_value session.save_path <%= real_php_session_save_path %>
+        <%- unless php_safe_mode_exec_bins.to_s == 'absent' then -%>
+        php_admin_value safe_mode_exec_dir <%= real_php_safe_mode_exec_bin_dir %>
+        <%- end -%>
+
+        php_value magic_quotes_gpc                0
+        php_value register_globals                0
+        php_value session.auto_start              0
+        php_value mbstring.http_input             pass
+        php_value mbstring.http_output            pass
+        php_value mbstring.encoding_translation   0
+
+        # Protect files and directories from prying eyes.
+        <FilesMatch "\.(engine|inc|info|install|module|profile|po|sh|.*sql|theme|tpl(\.php)?|xtmpl)$|^(code-style\.pl|Entries.*|Repository|Root|Tag|Template)$">
+            Order allow,deny
+        </FilesMatch>
+
+        # Customized error messages.
+        ErrorDocument 404 /index.php
+
+        RewriteEngine on
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
+    </Directory>
+    <Directory "<%= documentroot %>/files/">
+        SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006
+        Options None
+        Options +FollowSymLinks
+    </Directory>
+    <%- end -%>
+	
+    <IfModule mod_security2.c>
+        <%- if mod_security.to_s == 'true' then -%>
+        SecRuleEngine On
+        SecAuditEngine On
+        <%- else -%>
+        SecRuleEngine Off
+        SecAuditEngine Off
+        <%- end -%>
+        SecAuditLogType Concurrent
+        SecAuditLogStorageDir <%= logdir %>/
+        SecAuditLog <%= logdir %>/mod_security_audit.log
+        SecDebugLog <%= logdir %>/mod_security_debug.log
+    </IfModule>
+
+    <%- unless additional_options.to_s == 'absent' then -%>
+    <%= additional_options %>
+    <%- end -%>
+</VirtualHost>
+<%- end -%>
+
+<%- unless ssl_mode.to_s == 'false'  then -%>
+<VirtualHost *:443>
+    Include conf.d/defaults.inc
+    Include conf.d/ssl_defaults.inc
+
+    ServerName <%= servername %>
+    <%- unless serveralias.to_s.empty? then -%>
+    ServerAlias <%= serveralias %>
+    <%- end -%> 
+    <%- unless server_admin.to_s.empty? or server_admin.to_s == 'absent' then -%>
+    ServerAdmin <%= server_admin %>
+    <%- end -%>
+    DocumentRoot <%= documentroot %>/
+
+    ErrorLog <%= logdir %>/error_log
+    CustomLog <%= logdir %>/access_log combined
+    <%- if run_mode.to_s == 'itk' -%>
+    <IfModule mpm_itk_module>
+        AssignUserId <%= run_uid+" "+run_gid %>
+    </IfModule>
+    <%- end -%>
+    <%- if default_charset.to_s != 'absent' then -%>
+    AddDefaultCharset <%= default_charset %>
+    <%- end -%>
+    <Directory "<%= documentroot %>/">
+        AllowOverride <%= allow_override %>
+        <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
+        Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
+
+        <%- end -%>
+        <%- unless htpasswd_file.to_s == 'absent' then -%>
+        AuthType Basic
+        AuthName "Access fuer <%= servername %>"
+        AuthUserFile <%= real_htpasswd_path %>
+        require valid-user
+        <%- end -%>
+        php_admin_flag engine on
+        <%- unless php_default_charset.to_s == 'absent' then -%>
+        php_admin_value default_charset <%= php_default_charset %>
+        <%- end -%>
+        php_admin_value open_basedir <%= documentroot %>:<%= real_php_upload_tmp_dir %>:<%= real_php_session_save_path %>
+        php_admin_value upload_tmp_dir <%= real_php_upload_tmp_dir %>
+        php_admin_value session.save_path <%= real_php_session_save_path %>
+        <%- unless php_safe_mode_exec_bins.to_s == 'absent' then -%>
+        php_admin_value safe_mode_exec_dir <%= real_php_safe_mode_exec_bin_dir %>
+        <%- end -%>
+
+        php_value magic_quotes_gpc                0       
+        php_value register_globals                0       
+        php_value session.auto_start              0       
+        php_value mbstring.http_input             pass    
+        php_value mbstring.http_output            pass    
+        php_value mbstring.encoding_translation   0
+
+        # Protect files and directories from prying eyes.
+        <FilesMatch "\.(engine|inc|info|install|module|profile|po|sh|.*sql|theme|tpl(\.php)?|xtmpl)$|^(code-style\.pl|Entries.*|Repository|Root|Tag|Template)$">
+            Order allow,deny                  
+        </FilesMatch>                                         
+
+        # Customized error messages.
+        ErrorDocument 404 /index.php
+
+        RewriteEngine on
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteRule ^(.*)$ index.php?q=$1 [L,QSA] 
+    </Directory>
+    <Directory "<%= documentroot %>/files/">
+        SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006
+        Options None
+        Options +FollowSymLinks
+    </Directory>
+
+    <IfModule mod_security2.c>
+        <%- if mod_security.to_s == 'true' then -%>
+        SecRuleEngine On
+        SecAuditEngine On
+        <%- else -%>
+        SecRuleEngine Off
+        SecAuditEngine Off
+        <%- end -%>
+        SecAuditLogType Concurrent
+        SecAuditLogStorageDir <%= logdir %>/
+        SecAuditLog <%= logdir %>/mod_security_audit.log
+        SecDebugLog <%= logdir %>/mod_security_debug.log
+    </IfModule>
+
+    <%- unless additional_options.to_s == 'absent' then -%>
+    <%= additional_options %>
+    <%- end -%>
+</VirtualHost>
+<%- end -%>

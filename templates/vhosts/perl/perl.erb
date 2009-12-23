@@ -1,0 +1,140 @@
+# <%= servername %>
+<%- unless ssl_mode.to_s == 'only'  then -%>
+<VirtualHost *:80>
+    Include conf.d/defaults.inc
+
+    ServerName <%= servername %>
+    <%- unless serveralias.to_s.empty? then -%>
+    ServerAlias <%= serveralias %>
+    <%- end -%> 
+    <%- unless server_admin.to_s.empty? or server_admin.to_s == 'absent' then -%>
+    ServerAdmin <%= server_admin %>
+    <%- end -%>
+    DocumentRoot <%= documentroot %>/
+
+    ErrorLog <%= logdir %>/error_log
+    CustomLog <%= logdir %>/access_log combined
+    <%- if ssl_mode.to_s == 'force' then -%>
+    Redirect permanent / https://<%= servername %>/
+    <%- end -%>
+    <%- if default_charset.to_s != 'absent' then -%>
+    AddDefaultCharset <%= default_charset %>
+    <%- end -%>
+    <%- if run_mode.to_s == 'itk' -%>
+    <IfModule mpm_itk_module>
+        AssignUserId <%= run_uid+" "+run_gid %>
+    </IfModule>
+    <%- end -%>
+    <%- if not ssl_mode.to_s == 'force' then -%>
+    <Directory "<%= documentroot %>/">
+        AllowOverride <%= allow_override %>
+        <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
+        Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
+
+        <%- end -%>
+        <%- unless htpasswd_file.to_s == 'absent' then -%>
+        AuthType Basic
+        AuthName "Access fuer <%= servername %>"
+        AuthUserFile <%= real_htpasswd_path %>
+        require valid-user
+        <%- end -%>
+    </Directory>
+
+    <%- unless htpasswd_file.to_s == 'absent' then -%>
+    <Directory "<%= cgi_binpath %>/">
+        AuthType Basic
+        AuthName "Access fuer <%= servername %>"
+        AuthUserFile <%= real_htpasswd_path %>
+        require valid-user
+    </Directory>
+    <%- end -%>
+    ScriptAlias /cgi-bin/ <%= cgi_binpath %>/
+    <%- end -%>
+
+    <IfModule mod_security2.c>
+        <%- if mod_security.to_s == 'true' then -%>
+        SecRuleEngine On
+        SecAuditEngine On
+        <%- else -%>
+        SecRuleEngine Off
+        SecAuditEngine Off
+        <%- end -%>
+        SecAuditLogType Concurrent
+        SecAuditLogStorageDir <%= logdir %>/
+        SecAuditLog <%= logdir %>/mod_security_audit.log
+        SecDebugLog <%= logdir %>/mod_security_debug.log
+    </IfModule>
+
+    <%- unless additional_options.to_s == 'absent' then -%>
+    <%= additional_options %>
+    <%- end -%>
+</VirtualHost>
+<%- end -%>
+
+<%- unless ssl_mode.to_s == 'false'  then -%>
+<VirtualHost *:443>
+    Include conf.d/defaults.inc
+    Include conf.d/ssl_defaults.inc
+
+    ServerName <%= servername %>
+    <%- unless serveralias.to_s.empty? then -%>
+    ServerAlias <%= serveralias %>
+    <%- end -%> 
+    <%- unless server_admin.to_s.empty? or server_admin.to_s == 'absent' then -%>
+    ServerAdmin <%= server_admin %>
+    <%- end -%>
+    DocumentRoot <%= documentroot %>/
+
+    ErrorLog <%= logdir %>/error_log
+    CustomLog <%= logdir %>/access_log combined
+    <%- if default_charset.to_s != 'absent' then -%>
+    AddDefaultCharset <%= default_charset %>
+    <%- end -%>
+    <%- if run_mode.to_s == 'itk' -%>
+    <IfModule mpm_itk_module>
+        AssignUserId <%= run_uid+" "+run_gid %>
+    </IfModule>
+    <%- end -%>
+    <Directory "<%= documentroot %>/">
+        AllowOverride <%= allow_override %>
+        <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
+        Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
+
+        <%- end -%>
+        <%- unless htpasswd_file.to_s == 'absent' then -%>
+        AuthType Basic
+        AuthName "Access fuer <%= servername %>"
+        AuthUserFile <%= real_htpasswd_path %>
+        require valid-user
+        <%- end -%>
+    </Directory>
+
+    ScriptAlias /cgi-bin/ <%= cgi_binpath %>/
+    <%- unless htpasswd_file.to_s == 'absent' then -%>
+    <Directory "<%= cgi_binpath %>/">
+        AuthType Basic
+        AuthName "Access fuer <%= servername %>"
+        AuthUserFile <%= real_htpasswd_path %>
+        require valid-user
+    </Directory>
+    <%- end -%>
+
+    <IfModule mod_security2.c>
+        <%- if mod_security.to_s == 'true' then -%>
+        SecRuleEngine On
+        SecAuditEngine On
+        <%- else -%>
+        SecRuleEngine Off
+        SecAuditEngine Off
+        <%- end -%>
+        SecAuditLogType Concurrent
+        SecAuditLogStorageDir <%= logdir %>/
+        SecAuditLog <%= logdir %>/mod_security_audit.log
+        SecDebugLog <%= logdir %>/mod_security_debug.log
+    </IfModule>
+
+    <%- unless additional_options.to_s == 'absent' then -%>
+    <%= additional_options %>
+    <%- end -%>
+</VirtualHost>
+<%- end -%>
