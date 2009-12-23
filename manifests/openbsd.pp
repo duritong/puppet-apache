@@ -11,6 +11,9 @@ class apache::openbsd inherits apache::base {
     File[config_dir]{
         path => "$config_dir/conf.d",
     }
+    File[include_dir]{
+        path => "$config_dir/include.d",
+    }
     File['htpasswd_dir']{
         group => www,
     }

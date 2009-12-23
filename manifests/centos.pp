@@ -15,6 +15,9 @@ class apache::centos inherits apache::package {
     File[config_dir]{
         path => "$config_dir/conf.d",
     }
+    File[include_dir]{
+        path => "$config_dir/include.d",
+    }
     File[modules_dir]{
         path => "$config_dir/modules.d",
     }

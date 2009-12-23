@@ -8,6 +8,7 @@ define apache::config::global(
 ){
     apache::config::file { "${name}":
         ensure => $ensure,
+        type => 'global',
         source => $source,
         content => $content,
         destination => $destination,
