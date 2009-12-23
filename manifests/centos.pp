@@ -37,7 +37,7 @@ class apache::centos inherits apache::package {
 
     include apache::logrotate::centos
 
-    apache::config::file{ 'welcome.conf': }
-    apache::config::file{ 'vhosts.conf': }
+    apache::config::global{ 'welcome.conf': }
+    apache::config::global{ 'vhosts.conf': }
 }
 

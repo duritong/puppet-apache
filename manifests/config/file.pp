@@ -1,4 +1,5 @@
-# deploy apache (.conf) configuration file (non-vhost)
+# deploy apache configuration file
+# by default we assume it's a global configuration file
 define apache::config::file(
     $ensure = present,
     $source = 'absent',
@@ -7,11 +8,11 @@ define apache::config::file(
 ){
     $real_destination = $destination ? {
         'absent' => $operatingsystem ? {
-            centos => "$apache::centos::config_dir/conf.d/${name}",
-            gentoo => "$apache::gentoo::config_dir/${name}",
-            debian => "$apache::debian::config_dir/conf.d/${name}",
-            ubuntu => "$apache::ubuntu::config_dir/conf.d/${name}",
-            openbsd => "$apache::openbsd::config_dir/conf.d/${name}",
+            centos => "${apache::centos::config_dir}/conf.d/${name}",
+            gentoo => "${apache::gentoo::config_dir}/${name}",
+            debian => "${apache::debian::config_dir}/conf.d/${name}",
+            ubuntu => "${apache::ubuntu::config_dir}/conf.d/${name}",
+            openbsd => "${apache::openbsd::config_dir}/conf.d/${name}",
             default => "/etc/apache2/${name}",
         },
         default => $destination
@@ -26,16 +27,16 @@ define apache::config::file(
         'absent': {
             $real_source = $source ? {
                 'absent' => [
-                    "puppet://$server/modules/site-apache/conf.d/${fqdn}/${name}",
-                    "puppet://$server/modules/site-apache/conf.d/${apache_cluster_node}/${name}",
-                    "puppet://$server/modules/site-apache/conf.d/${operatingsystem}.${lsbdistcodename}/${name}",
-                    "puppet://$server/modules/site-apache/conf.d/${operatingsystem}/${name}",
-                    "puppet://$server/modules/site-apache/conf.d/${name}",
-                    "puppet://$server/modules/apache/conf.d/${operatingsystem}.${lsbdistcodename}/${name}",
-                    "puppet://$server/modules/apache/conf.d/${operatingsystem}/${name}",
-                    "puppet://$server/modules/apache/conf.d/${name}"
+                    "puppet://${server}/modules/site-apache/conf.d/${fqdn}/${name}",
+                    "puppet://${server}/modules/site-apache/conf.d/${apache_cluster_node}/${name}",
+                    "puppet://${server}/modules/site-apache/conf.d/${operatingsystem}.${lsbdistcodename}/${name}",
+                    "puppet://${server}/modules/site-apache/conf.d/${operatingsystem}/${name}",
+                    "puppet://${server}/modules/site-apache/conf.d/${name}",
+                    "puppet://${server}/modules/apache/conf.d/${operatingsystem}.${lsbdistcodename}/${name}",
+                    "puppet://${server}/modules/apache/conf.d/${operatingsystem}/${name}",
+                    "puppet://${server}/modules/apache/conf.d/${name}"
                 ],
-                default => "puppet://$server/$source",
+                default => "puppet://${server}/${source}",
             }
             File["apache_${name}"]{
                 source => $real_source,

@@ -1,5 +1,5 @@
 # manifests/includes.pp
 
 class apache::includes {
-    apache::config::file{'do_includes.conf':}
+    apache::config::global{'do_includes.conf':}
 }

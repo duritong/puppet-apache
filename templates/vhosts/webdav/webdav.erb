@@ -1,7 +1,7 @@
 # <%= servername %>
 <%- unless ssl_mode.to_s == 'only'  then -%>
 <VirtualHost *:80>
-    Include conf.d/defaults.inc
+    Include include.d/defaults.inc
 
     ServerName <%= servername %>
     <%- unless serveralias.to_s.empty? then -%>
@@ -43,7 +43,7 @@
         require valid-user
         <%- end -%>
         <%- if ldap_auth.to_s == 'true' then -%>
-        Include conf.d/ldap_auth.inc
+        Include include.d/ldap_auth.inc
         <%- unless ldap_user.to_s == 'any' -%>
         Require ldap-user <%= ldap_user.to_s %>
         <%- else -%>
@@ -75,8 +75,8 @@
 
 <%- unless ssl_mode.to_s == 'false'  then -%>
 <VirtualHost *:443>
-    Include conf.d/defaults.inc
-    Include conf.d/ssl_defaults.inc
+    Include include.d/defaults.inc
+    Include include.d/ssl_defaults.inc
 
     ServerName <%= servername %>
     <%- unless serveralias.to_s.empty? then -%>
@@ -117,7 +117,7 @@
         require valid-user
         <%- end -%>
         <%- if ldap_auth.to_s == 'true' then -%>
-        Include conf.d/ldap_auth.inc
+        Include include.d/ldap_auth.inc
         <%- unless ldap_user.to_s == 'any' -%>
         Require ldap-user <%= ldap_user.to_s %>
         <%- else -%>
