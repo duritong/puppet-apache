@@ -29,6 +29,8 @@ class apache::debian inherits apache::package {
         notify => Service['apache'],
         owner => root, group => 0, mode => 0644;
     }
+    apache::config::global{ 'charset': }
+    apache::config::global{ 'security': }
     file { 'default_debian_apache_vhost':
         path => '/etc/apache2/sites-enabled/000-default',
         ensure => absent,
