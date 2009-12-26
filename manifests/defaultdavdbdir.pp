@@ -1,6 +1,6 @@
 # manifests/defaultphpdirs.pp
 
-class apache::defaultdavdir {
+class apache::defaultdavdbdir {
     file{'/var/www/dav_db_dir':
         ensure => directory,
         require => Package['apache'],

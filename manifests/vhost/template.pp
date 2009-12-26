@@ -32,6 +32,7 @@ define apache::vhost::template(
     $php_safe_mode_exec_bin_dir = 'absent',
     $php_upload_tmp_dir = 'absent',
     $php_session_save_path = 'absent',
+    $dav_db_dir = 'absent',
     $cgi_binpath = 'absent',
     $do_includes = false,
     $options = 'absent',
@@ -121,6 +122,13 @@ define apache::vhost::template(
             $real_php_session_save_path = "/var/www/session.save_path/$name"
         }
         default: { $real_php_session_save_path = $php_session_save_path }
+    }
+    # dav db dir
+    case $dav_db_dir {
+        'absent': {
+            $real_dav_db_dir = "/var/www/dav_db_dir/$name"
+        }
+        default: { $real_dav_db_dir = $dav_db_dir }
     }
 
     apache::vhost::file{$name:

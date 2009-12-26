@@ -1,4 +1,4 @@
-define apache::vhost::davdir(
+define apache::vhost::davdbdir(
     $ensure = present,
     $dav_db_dir = 'absent',
     $documentroot_owner = apache,
@@ -10,7 +10,7 @@ define apache::vhost::davdir(
     # php db dir
     case $dav_db_dir {
         'absent': {
-            include apache::defaultdavdir
+            include apache::defaultdavdbdir
             $real_dav_db_dir = "/var/www/dav_db_dir/$name"
         }
         default: { $real_dav_db_dir = $dav_db_dir }

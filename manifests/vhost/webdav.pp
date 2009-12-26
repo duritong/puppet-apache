@@ -36,7 +36,7 @@ define apache::vhost::webdav(
     $ldap_user = 'any',
     $dav_db_dir = 'absent'
 ){
-    ::apache::vhost::davdir{"${name}":
+    ::apache::vhost::davdbdir{"${name}":
         ensure => $ensure,
         dav_db_dir => $dav_db_dir,
         documentroot_owner => $documentroot_owner,
