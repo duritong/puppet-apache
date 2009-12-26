@@ -33,8 +33,19 @@ define apache::vhost::webdav(
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
     $ldap_auth = false,
-    $ldap_user = 'any'
+    $ldap_user = 'any',
+    $dav_db_dir = 'absent'
 ){
+    ::apache::vhost::davdir{"${name}":
+        ensure => $ensure,
+        dav_db_dir => $dav_db_dir,
+        documentroot_owner => $documentroot_owner,
+        documentroot_group => $documentroot_group,
+        documentroot_mode => $documentroot_mode,
+        run_mode => $run_mode,
+        run_uid => $run_uid,
+    }
+
     if $manage_webdir {
         # create webdir
         ::apache::vhost::webdir{$name:

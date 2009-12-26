@@ -26,6 +26,7 @@
     </IfModule>
     <%- end -%>
     <%- if not ssl_mode.to_s == 'force' then -%>
+    DAVLockDB <%= real_dav_db_dir %>
     <Directory "<%= documentroot %>/">
         Dav on
         AllowOverride None
@@ -100,6 +101,7 @@
     <%- if default_charset.to_s != 'absent' then -%>
     AddDefaultCharset <%= default_charset %>
     <%- end -%>
+    DAVLockDB <%= real_dav_db_dir %>
     <Directory "<%= documentroot %>/">
         Dav on
         AllowOverride None
