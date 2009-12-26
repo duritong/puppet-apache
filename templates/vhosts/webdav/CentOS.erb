@@ -101,7 +101,7 @@
     <%- if default_charset.to_s != 'absent' then -%>
     AddDefaultCharset <%= default_charset %>
     <%- end -%>
-    DAVLockDB <%= real_dav_db_dir %>
+    DAVLockDB <%= real_dav_db_dir %>/DAVLock
     <Directory "<%= documentroot %>/">
         Dav on
         AllowOverride None
