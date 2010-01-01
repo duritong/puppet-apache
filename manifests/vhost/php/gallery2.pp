@@ -58,9 +58,6 @@ define apache::vhost::php::gallery2(
         },
         default => "${path}/g2data"
     }
-    apache::file::rw{$gdatadir:
-            owner => $documentroot_owner, group => $documentroot_group;
-    }
 
     # create vhost configuration file
     ::apache::vhost::php::webapp{$name:
