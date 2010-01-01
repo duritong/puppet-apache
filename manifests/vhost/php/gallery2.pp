@@ -98,8 +98,6 @@ define apache::vhost::php::gallery2(
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
         manage_directories => $manage_directories,
-        managed_directories =>  [ "${gdatadir}"
-                                ],
         manage_config => $manage_config,
     }
 
