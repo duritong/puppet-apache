@@ -3,8 +3,6 @@
 <VirtualHost *:80>
     Include conf.d/defaults.inc
 
-    AddDefaultCharset utf-8
-
     ServerName <%= servername %>
     <%- unless serveralias.to_s.empty? then -%>
     ServerAlias <%= serveralias %>
@@ -79,8 +77,6 @@
 <VirtualHost *:443>
     Include conf.d/defaults.inc
     Include conf.d/ssl_defaults.inc
-
-    AddDefaultCharset utf-8
 
     ServerName <%= servername %>
     <%- unless serveralias.to_s.empty? then -%>

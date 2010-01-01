@@ -28,7 +28,7 @@ define apache::vhost::php::gallery2(
     $php_upload_tmp_dir = 'absent',
     $php_session_save_path = 'absent',
     $php_safe_mode_exec_bins = 'absent',
-    $php_default_charset = 'absent',
+    $php_default_charset = 'UTF-8',
     $do_includes = false,
     $options = 'absent',
     $additional_options = 'absent',
