@@ -34,6 +34,7 @@ define apache::vhost::php::typo3(
     $additional_options = 'absent',
     $default_charset = 'absent',
     $mod_security = true,
+    $mod_security_relevantonly = true,
     $ssl_mode = false,
     $vhost_mode = 'template',
     $vhost_source = 'absent',

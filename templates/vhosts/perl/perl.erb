@@ -54,7 +54,11 @@
     <IfModule mod_security2.c>
         <%- if mod_security.to_s == 'true' then -%>
         SecRuleEngine On
+        <%- if mod_security_relevantonly.to_s == 'true' then -%>
+        SecAuditEngine RelevantOnly
+        <%- else -%>
         SecAuditEngine On
+        <%- end -%>
         <%- else -%>
         SecRuleEngine Off
         SecAuditEngine Off
@@ -122,7 +126,11 @@
     <IfModule mod_security2.c>
         <%- if mod_security.to_s == 'true' then -%>
         SecRuleEngine On
+        <%- if mod_security_relevantonly.to_s == 'true' then -%>
+        SecAuditEngine RelevantOnly
+        <%- else -%>
         SecAuditEngine On
+        <%- end -%>
         <%- else -%>
         SecRuleEngine Off
         SecAuditEngine Off

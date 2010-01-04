@@ -47,6 +47,7 @@ define apache::vhost::template(
     $template_mode = 'static',
     $ssl_mode = false,
     $mod_security = true,
+    $mod_security_relevantonly = true,
     $use_mod_macro = false,
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',

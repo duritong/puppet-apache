@@ -43,6 +43,7 @@ define apache::vhost(
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
     $mod_security = true,
+    $mod_security_relevantonly = true,
     $use_mod_macro = false,
     $ldap_auth = false,
     $ldap_user = 'any'

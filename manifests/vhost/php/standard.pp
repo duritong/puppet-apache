@@ -41,6 +41,7 @@ define apache::vhost::php::standard(
     $default_charset = 'absent',
     $use_mod_macro = false,
     $mod_security = true,
+    $mod_security_relevantonly = true,
     $ssl_mode = false,
     $vhost_mode = 'template',
     $vhost_source = 'absent',
