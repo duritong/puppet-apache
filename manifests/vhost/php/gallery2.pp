@@ -99,6 +99,7 @@ define apache::vhost::php::gallery2(
         htpasswd_path => $htpasswd_path,
         manage_directories => $manage_directories,
         manage_config => $manage_config,
+        config_file => 'config.php',
     }
 
 }
