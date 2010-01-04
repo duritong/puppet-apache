@@ -50,6 +50,14 @@
         <%- unless php_safe_mode_exec_bins.to_s == 'absent' then -%>
         php_admin_value safe_mode_exec_dir <%= real_php_safe_mode_exec_bin_dir %>
         <%- end -%>
+        # Always rewrite login's
+        RewriteEngine On
+        RewriteCond %{HTTP_COOKIE} ^GALLERYSID= [OR]
+        RewriteCond %{QUERY_STRING} subView=core\.UserLogin
+        RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [NE,R,L]
+        # https -> see below
+        # Then, unset baseUri in config.php (to keep Gallery from trying to redirect users to either HTTP or HTTPS):
+        # $gallery->setConfig('baseUri', '');
     </Directory>
     <%- end -%>
 
@@ -123,6 +131,13 @@
         <%- end -%>
         # turn allow_url_fopen on for the extension manager fetch
         php_admin_value allow_url_fopen On
+
+        # Always rewrite login's (see above)
+        RewriteEngine On
+        RewriteCond %{HTTP_COOKIE} =""
+        RewriteCond %{REQUEST_METHOD} =GET
+        RewriteCond %{QUERY_STRING} !subView=core\.UserLogin
+        RewriteRule ^ http://%{HTTP_HOST}%{REQUEST_URI} [NE,R,L]
     </Directory>
 
     <IfModule mod_security2.c>
