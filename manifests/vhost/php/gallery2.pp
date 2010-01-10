@@ -59,10 +59,13 @@ define apache::vhost::php::gallery2(
         default => "${path}/g2data"
     }
     file{$gdatadir:
-            ensure => directory,
+            ensure => $ensure ? {
+              'present' => directory,
+              default => absent
+            },
             owner => $documentroot_owner, 
             group => $documentroot_group,
-            mode => 0770;
+            mode => 0660;
     }
 
     # create vhost configuration file
