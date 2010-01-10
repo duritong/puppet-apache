@@ -5,12 +5,16 @@
 # run_uid: the uid the vhost should run as with the itk module
 # run_gid: the gid the vhost should run as with the itk module
 define apache::vhost::php::safe_mode_bin(
-   $path
+  $ensure = 'present',
+  $path
 ){
-    $substr=regsubst($name,'^.*\/','','G')
-    $real_path = "$path/$substr"
-    link{ "$real_path":
-         target => regsubst($name,'^.*_','')
+  $substr=regsubst($name,'^.*\/','','G')
+  $real_path = "$path/$substr"
+  file{$real_path:
+    ensure => $ensure ? {
+      'present' => regsubst($name,'^.*_',''),
+      default => absent,
     }
+  }
 }
 

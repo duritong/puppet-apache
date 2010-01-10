@@ -82,12 +82,16 @@ define apache::vhost::php::standard(
     }
     if $php_safe_mode_exec_bins != 'absent' {
      File[$php_safe_mode_exec_bin_dir]{
-        ensure => directory,
+        ensure => $ensure ? {
+          'present' => directory,
+          default => absent,
+        },
         source => "puppet://$server/modules/common/empty",
         owner => $documentroot_owner, group => $documentroot_group, mode => 0750,
       }
       $php_safe_mode_exec_bins_subst = regsubst($php_safe_mode_exec_bins,"(.+)","${name}_\\1")
       apache::vhost::php::safe_mode_bin{ $php_safe_mode_exec_bins_subst:
+        ensure => $ensure,
         path => $php_safe_mode_exec_bin_dir
       }
     }else{
