@@ -41,6 +41,8 @@ define apache::vhost::php::drupal(
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
     $manage_directories = true,
+    $config_webwriteable = false,
+    $manage_config = true,
     $manage_cron = true
 ){
     $documentroot = $path ? {
