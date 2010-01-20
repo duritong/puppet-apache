@@ -40,6 +40,7 @@ define apache::vhost::php::drupal(
     $vhost_destination = 'absent',
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
+    $manage_directories = true,
     $manage_cron = true
 ){
     $documentroot = $path ? {
