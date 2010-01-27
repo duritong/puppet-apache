@@ -18,7 +18,7 @@
     Redirect permanent / https://<%= servername %>/
     <%- end -%>
     # silverstripe
-    RedirectMatch /admin(.*) https://<%= servername %>.ch/admin$1
+    RedirectMatch /admin(.*) https://<%= servername %>/admin$1
     RedirectMatch /Security(.*) https://<%= servername %>/Security$1
     <%- if default_charset.to_s != 'absent' then -%>
     AddDefaultCharset <%= default_charset %>
