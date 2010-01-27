@@ -17,6 +17,9 @@
     <%- if ssl_mode.to_s == 'force' then -%>
     Redirect permanent / https://<%= servername %>/
     <%- end -%>
+    # silverstripe
+    RedirectMatch /admin(.*) https://<%= servername %>.ch/admin$1
+    RedirectMatch /Security(.*) https://<%= servername %>/Security$1
     <%- if default_charset.to_s != 'absent' then -%>
     AddDefaultCharset <%= default_charset %>
     <%- end -%>
@@ -48,25 +51,25 @@
         <%- unless php_safe_mode_exec_bins.to_s == 'absent' then -%>
         php_admin_value safe_mode_exec_dir <%= real_php_safe_mode_exec_bin_dir %>
         <%- end -%>
+        
+        # silverstripe .htaccess
+        <Files *.ss>
+          Order deny,allow
+          Deny from all
+          #Allow from 127.0.0.1
+        </Files>
+        <IfModule mod_rewrite.c>
+          RewriteEngine On
+          #RewriteBase /
+    
+          RewriteCond %{REQUEST_URI} !(\.gif$)|(\.jpg$)|(\.png$)|(\.css$)|(\.js$)
+    
+          RewriteCond %{REQUEST_URI} ^(.*)$
+          RewriteCond %{REQUEST_FILENAME} !-f
+          RewriteRule .* sapphire/main.php?url=%1&%{QUERY_STRING} [L]
+        </IfModule>
     </Directory>
     <%- end -%>
-
-    <Files *.ss>
-      Order deny,allow
-      Deny from all
-      #Allow from 127.0.0.1
-    </Files>
-
-    <IfModule mod_rewrite.c>
-      RewriteEngine On
-      RewriteBase /
-
-      RewriteCond %{REQUEST_URI} !(\.gif$)|(\.jpg$)|(\.png$)|(\.css$)|(\.js$)
-
-      RewriteCond %{REQUEST_URI} ^(.*)$
-      RewriteCond %{REQUEST_FILENAME} !-f
-      RewriteRule .* sapphire/main.php?url=%1&%{QUERY_STRING} [L]
-    </IfModule>
 
     <IfModule mod_security2.c>
         <%- if mod_security.to_s == 'true' then -%>
@@ -138,13 +141,24 @@
         <%- end -%>
         # turn allow_url_fopen on for the extension manager fetch
         php_admin_value allow_url_fopen On
+        
+        # silverstripe .htaccess
+        <Files *.ss>
+          Order deny,allow
+          Deny from all
+          #Allow from 127.0.0.1
+        </Files>
+        <IfModule mod_rewrite.c>
+          RewriteEngine On
+          #RewriteBase /
+    
+          RewriteCond %{REQUEST_URI} !(\.gif$)|(\.jpg$)|(\.png$)|(\.css$)|(\.js$)
+    
+          RewriteCond %{REQUEST_URI} ^(.*)$
+          RewriteCond %{REQUEST_FILENAME} !-f
+          RewriteRule .* sapphire/main.php?url=%1&%{QUERY_STRING} [L]
+        </IfModule>
     </Directory>
-
-    <Files *.ss>
-      Order deny,allow
-      Deny from all
-      #Allow from 127.0.0.1
-    </Files>
 
     <IfModule mod_security2.c>
         <%- if mod_security.to_s == 'true' then -%>
