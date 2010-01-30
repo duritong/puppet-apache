@@ -72,6 +72,7 @@ define apache::vhost::passenger(
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
         mod_security => $mod_security,
+        mod_security_relevantonly => $mod_security_relevantonly,
     }
 }
 

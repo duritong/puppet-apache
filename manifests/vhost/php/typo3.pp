@@ -79,6 +79,7 @@ define apache::vhost::php::typo3(
         additional_options => $additional_options,
         default_charset => $default_charset,
         mod_security => $mod_security,
+        mod_security_relevantonly => $mod_security_relevantonly,
         ssl_mode => $ssl_mode,
         vhost_mode => $vhost_mode,
         vhost_source => $vhost_source,

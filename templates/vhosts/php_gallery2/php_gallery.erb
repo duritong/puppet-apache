@@ -1,0 +1,166 @@
+# <%= servername %>
+<%- unless ssl_mode.to_s == 'only'  then -%>
+<VirtualHost *:80>
+    Include include.d/defaults.inc
+
+    ServerName <%= servername %>
+    <%- unless serveralias.to_s.empty? then -%>
+    ServerAlias <%= serveralias %>
+    <%- end -%> 
+    <%- unless server_admin.to_s.empty? or server_admin.to_s == 'absent' then -%>
+    ServerAdmin <%= server_admin %>
+    <%- end -%>
+    DocumentRoot <%= documentroot %>/
+
+    ErrorLog <%= logdir %>/error_log
+    CustomLog <%= logdir %>/access_log combined
+    <%- if ssl_mode.to_s == 'force' then -%>
+    Redirect permanent / https://<%= servername %>/
+    <%- end -%>
+    <%- if default_charset.to_s != 'absent' then -%>
+    AddDefaultCharset <%= default_charset %>
+    <%- end -%>
+    <%- if run_mode.to_s == 'itk' -%>
+    <IfModule mpm_itk_module>
+        AssignUserId <%= run_uid+" "+run_gid %>
+    </IfModule>
+    <%- end -%>
+    <%- if not ssl_mode.to_s == 'force' then -%>
+    <Directory "<%= documentroot %>/">
+        AllowOverride <%= allow_override %>
+        <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
+        Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
+
+        <%- end -%>
+        <%- unless htpasswd_file.to_s == 'absent' then -%>
+        AuthType Basic
+        AuthName "Access fuer <%= servername %>"
+        AuthUserFile <%= real_htpasswd_path %>
+        require valid-user
+        <%- end -%>
+        php_admin_flag engine on
+        php_admin_flag safe_mode Off
+        php_admin_value output_buffering Off
+        <%- unless php_default_charset.to_s == 'absent' then -%>
+        php_admin_value default_charset <%= php_default_charset %>
+        <%- end -%>
+        php_admin_value open_basedir <%= documentroot %>:<%= real_php_upload_tmp_dir %>:<%= real_php_session_save_path %>:<%= gdatadir %>
+        php_admin_value upload_tmp_dir <%= real_php_upload_tmp_dir %>
+        php_admin_value session.save_path <%= real_php_session_save_path %>
+        <%- unless php_safe_mode_exec_bins.to_s == 'absent' then -%>
+        php_admin_value safe_mode_exec_dir <%= real_php_safe_mode_exec_bin_dir %>
+        <%- end -%>
+        # Always rewrite login's
+        # Source: http://gallery.menalto.com/node/30558
+        RewriteEngine On
+        RewriteCond %{HTTP_COOKIE} ^GALLERYSID= [OR]
+        RewriteCond %{QUERY_STRING} subView=core\.UserLogin
+        RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [NE,R,L]
+        # https -> see below
+        # Then, unset baseUri in config.php (to keep Gallery from trying to redirect users to either HTTP or HTTPS):
+        # $gallery->setConfig('baseUri', '');
+    </Directory>
+    <%- end -%>
+
+    <IfModule mod_security2.c>
+        <%- if mod_security.to_s == 'true' then -%>
+        SecRuleEngine On
+        <%- if mod_security_relevantonly.to_s == 'true' then -%>
+        SecAuditEngine RelevantOnly
+        <%- else -%>
+        SecAuditEngine On
+        <%- end -%>
+        <%- else -%>
+        SecRuleEngine Off
+        SecAuditEngine Off
+        <%- end -%>
+        SecAuditLogType Concurrent
+        SecAuditLogStorageDir <%= logdir %>/
+        SecAuditLog <%= logdir %>/mod_security_audit.log
+        SecDebugLog <%= logdir %>/mod_security_debug.log
+    </IfModule>
+
+    <%- unless additional_options.to_s == 'absent' then -%>
+    <%= additional_options %>
+    <%- end -%>
+</VirtualHost>
+<%- end -%>
+
+<%- unless ssl_mode.to_s == 'false'  then -%>
+<VirtualHost *:443>
+    Include include.d/defaults.inc
+    Include include.d/ssl_defaults.inc
+
+    ServerName <%= servername %>
+    <%- unless serveralias.to_s.empty? then -%>
+    ServerAlias <%= serveralias %>
+    <%- end -%> 
+    <%- unless server_admin.to_s.empty? or server_admin.to_s == 'absent' then -%>
+    ServerAdmin <%= server_admin %>
+    <%- end -%>
+    DocumentRoot <%= documentroot %>/
+
+    ErrorLog <%= logdir %>/error_log
+    CustomLog <%= logdir %>/access_log combined
+    <%- if run_mode.to_s == 'itk' -%>
+    <IfModule mpm_itk_module>
+        AssignUserId <%= run_uid+" "+run_gid %>
+    </IfModule>
+    <%- end -%>
+    <%- if default_charset.to_s != 'absent' then -%>
+    AddDefaultCharset <%= default_charset %>
+    <%- end -%>
+    <Directory "<%= documentroot %>/">
+        AllowOverride <%= allow_override %>
+        <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
+        Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
+
+        <%- end -%>
+        <%- unless htpasswd_file.to_s == 'absent' then -%>
+        AuthType Basic
+        AuthName "Access fuer <%= servername %>"
+        AuthUserFile <%= real_htpasswd_path %>
+        require valid-user
+        <%- end -%>
+        php_admin_flag engine on
+        php_admin_flag safe_mode Off
+        php_admin_value output_buffering Off
+        <%- unless php_default_charset.to_s == 'absent' then -%>
+        php_admin_value default_charset <%= php_default_charset %>
+        <%- end -%>
+        php_admin_value open_basedir <%= documentroot %>:<%= real_php_upload_tmp_dir %>:<%= real_php_session_save_path %>:<%= gdatadir %>
+        php_admin_value upload_tmp_dir <%= real_php_upload_tmp_dir %>
+        php_admin_value session.save_path <%= real_php_session_save_path %>
+        <%- unless php_safe_mode_exec_bins.to_s == 'absent' then -%>
+        php_admin_value safe_mode_exec_dir <%= real_php_safe_mode_exec_bin_dir %>
+        <%- end -%>
+        # turn allow_url_fopen on for the extension manager fetch
+        php_admin_value allow_url_fopen On
+
+        # Always rewrite login's (see above)
+        RewriteEngine On
+        RewriteCond %{HTTP_COOKIE} =""
+        RewriteCond %{REQUEST_METHOD} =GET
+        RewriteCond %{QUERY_STRING} !subView=core\.UserLogin
+        RewriteRule ^ http://%{HTTP_HOST}%{REQUEST_URI} [NE,R,L]
+    </Directory>
+
+    <IfModule mod_security2.c>
+        <%- if mod_security.to_s == 'true' then -%>
+        SecRuleEngine On
+        SecAuditEngine On
+        <%- else -%>
+        SecRuleEngine Off
+        SecAuditEngine Off
+        <%- end -%>
+        SecAuditLogType Concurrent
+        SecAuditLogStorageDir <%= logdir %>/
+        SecAuditLog <%= logdir %>/mod_security_audit.log
+        SecDebugLog <%= logdir %>/mod_security_debug.log
+    </IfModule>
+
+    <%- unless additional_options.to_s == 'absent' then -%>
+    <%= additional_options %>
+    <%- end -%>
+</VirtualHost>
+<%- end -%>

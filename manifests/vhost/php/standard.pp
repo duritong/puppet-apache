@@ -150,6 +150,7 @@ define apache::vhost::php::standard(
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
         mod_security => $mod_security,
+        mod_security_relevantonly => $mod_security_relevantonly,
         use_mod_macro => $use_mod_macro,
     }
 }
