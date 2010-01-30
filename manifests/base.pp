@@ -9,6 +9,11 @@ class apache::base {
         ensure => directory,
         owner => root, group => 0, mode => 0755;
     }
+    file{'include_dir':
+        path => '/etc/apache2/include.d',
+        ensure => directory,
+        owner => root, group => 0, mode => 0755;
+    }
     file{'modules_dir':
         path => '/etc/apache2/modules.d',
         ensure => directory,
@@ -36,7 +41,7 @@ class apache::base {
         owner => root, group => 0, mode => 0644;
     }
 
-    apache::config::file{ 'defaults.inc': }
-    apache::config::file{ 'git.conf': }
+    apache::config::include{ 'defaults.inc': }
+    apache::config::global{ 'git.conf': }
     apache::vhost::file { '0-default': }
 }

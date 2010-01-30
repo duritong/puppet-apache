@@ -26,6 +26,7 @@ define apache::vhost::webdav(
     $additional_options = 'absent',
     $default_charset = 'absent',
     $mod_security = false,
+    $mod_security_relevantonly = true,
     $ssl_mode = false,
     $vhost_mode = 'template',
     $vhost_source = 'absent',

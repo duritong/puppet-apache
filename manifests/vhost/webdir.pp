@@ -33,6 +33,7 @@ define apache::vhost::webdir(
       if $apache_default_user == '' {
         $real_owner = $operatingsystem ? {
           openbsd => 'www',
+          debian => 'www-data',
           default => $owner
         }
       } else {
@@ -45,6 +46,7 @@ define apache::vhost::webdir(
       if $apache_default_group == '' {
         $real_group = $operatingsystem ? {
           openbsd => 'www',
+          debian => 'www-data',
           default => $group
         }
       } else {
@@ -58,6 +60,7 @@ define apache::vhost::webdir(
       if $apache_default_user == '' {
         $real_documentroot_owner = $operatingsystem ? {
           openbsd => 'www',
+          debian => 'www-data',
           default => $documentroot_owner
         }
       } else {
@@ -70,6 +73,7 @@ define apache::vhost::webdir(
       if $apache_default_group == '' {
         $real_documentroot_group = $operatingsystem ? {
           openbsd => 'www',
+          debian => 'www-data',
           default => $documentroot_group
         }
       } else {

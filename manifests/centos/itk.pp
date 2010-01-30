@@ -4,10 +4,9 @@ class apache::centos::itk inherits apache::centos {
     Package['apache']{
         name => 'httpd-itk',
     }
-    File['/etc/sysconfig/httpd']{
-      source => [ "puppet://$server/modules/site-apache/sysconfig/${fqdn}/httpd.itk",
-                  "puppet://$server/modules/site-apache/sysconfig/httpd.itk",
-                  "puppet://$server/modules/apache/sysconfig/${operatingsystem}/httpd.itk",
-                  "puppet://$server/modules/apache/sysconfig/httpd.itk" ],
+    File['apache_service_config']{
+      source => [ "puppet://$server/modules/site-apache/service/CentOS/${fqdn}/httpd.itk",
+                  "puppet://$server/modules/site-apache/service/CentOS/httpd.itk",
+                  "puppet://$server/modules/apache/service/CentOS/httpd.itk" ],
     }
 }

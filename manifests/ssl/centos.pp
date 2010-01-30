@@ -4,5 +4,5 @@ class apache::ssl::centos inherits apache::ssl::base {
         ensure => present,
         require => Package[apache],
     }
-    ::apache::config::file{ 'ssl.conf': }
+    ::apache::config::global{ 'ssl.conf': }
 }

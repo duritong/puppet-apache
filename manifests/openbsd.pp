@@ -11,6 +11,9 @@ class apache::openbsd inherits apache::base {
     File[config_dir]{
         path => "$config_dir/conf.d",
     }
+    File[include_dir]{
+        path => "$config_dir/include.d",
+    }
     File['htpasswd_dir']{
         group => www,
     }
@@ -21,12 +24,12 @@ class apache::openbsd inherits apache::base {
         file => '/etc/rc.conf.local',
         line => 'httpd flags=""',
     }
-    file{"$config_dir/conf/httpd.conf":
-        source => [ "puppet://$server/modules/site-apache/conf/${fqdn}/httpd.conf",
-                    "puppet://$server/modules/site-apache/conf/${apache_cluster_node}/httpd.conf",
-                    "puppet://$server/modules/site-apache/conf/httpd.conf",
-                    "puppet://$server/modules/apache/conf/${operatingsystem}/httpd.conf",
-                    "puppet://$server/modules/apache/conf/httpd.conf" ],
+    file{'apache_main_config':
+        path => "${config_dir}/conf/httpd.conf",
+        source => [ "puppet://$server/modules/site-apache/config/OpenBSD/${fqdn}/httpd.conf",
+                    "puppet://$server/modules/site-apache/config/OpenBSD/${apache_cluster_node}/httpd.conf",
+                    "puppet://$server/modules/site-apache/config/OpenBSD//httpd.conf",
+                    "puppet://$server/modules/apache/config/OpenBSD/httpd.conf" ],
         notify => Service['apache'],
         owner => root, group => 0, mode => 0644;
     }
@@ -34,7 +37,7 @@ class apache::openbsd inherits apache::base {
         path => '/var/www/htdocs/default/www/index.html',
     }
     file{'/opt/bin/restart_apache.sh':
-        source => "puppet://$server/modules/apache/OpenBSD/bin/restart_apache.sh",
+        source => "puppet://$server/modules/apache/scripts/OpenBSD/bin/restart_apache.sh",
         require => File['/opt/bin'],
         owner => root, group => 0, mode => 0700;
     }
@@ -48,7 +51,7 @@ class apache::openbsd inherits apache::base {
         stop => 'apachectl stop',
     }
     file{'/opt/bin/apache_logrotate.sh':
-        source => "puppet://$server/modules/apache/OpenBSD/bin/apache_logrotate.sh",
+        source => "puppet://$server/modules/apache/scripts/OpenBSD/bin/apache_logrotate.sh",
         require => File['/opt/bin'],
         owner => root, group => 0, mode => 0700;
     }

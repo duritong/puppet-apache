@@ -15,6 +15,9 @@ class apache::centos inherits apache::package {
     File[config_dir]{
         path => "$config_dir/conf.d",
     }
+    File[include_dir]{
+        path => "$config_dir/include.d",
+    }
     File[modules_dir]{
         path => "$config_dir/modules.d",
     }
@@ -25,19 +28,19 @@ class apache::centos inherits apache::package {
         path => '/var/www/html/index.html',
     }
 
-    file{'/etc/sysconfig/httpd':
-      source => [ "puppet://$server/modules/site-apache/sysconfig/${fqdn}/httpd",
-                  "puppet://$server/modules/site-apache/sysconfig/httpd",
-                  "puppet://$server/modules/apache/sysconfig/${operatingsystem}/httpd",
-                  "puppet://$server/modules/apache/sysconfig/httpd" ],
-      require => Package['apache'],
-      notify => Service['apache'],
-      owner => root, group => 0, mode => 0644;
+    file{'apache_service_config':
+        path => '/etc/sysconfig/httpd',
+        source => [ "puppet://$server/modules/site-apache/service/CentOS/${fqdn}/httpd",
+                    "puppet://$server/modules/site-apache/service/CentOS/httpd",
+                    "puppet://$server/modules/apache/service/CentOS/httpd" ],
+        require => Package['apache'],
+        notify => Service['apache'],
+        owner => root, group => 0, mode => 0644;
     }
 
     include apache::logrotate::centos
 
-    apache::config::file{ 'welcome.conf': }
-    apache::config::file{ 'vhosts.conf': }
+    apache::config::global{ 'welcome.conf': }
+    apache::config::global{ 'vhosts.conf': }
 }
 
