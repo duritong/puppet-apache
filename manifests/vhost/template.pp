@@ -42,6 +42,8 @@ define apache::vhost::template(
     $php_use_pear = false,
     $php_safe_mode = true,
     $php_default_charset = 'absent',
+    $php_additional_open_basedirs = 'absent',
+    $php_additional_options = 'absent',
     $run_mode = 'normal',
     $run_uid = 'absent',
     $run_gid = 'absent',
@@ -101,6 +103,7 @@ define apache::vhost::template(
             }
         }
     }
+
 
     # set default dirs for templates
     # php php_safe_mode_exec_bin directory

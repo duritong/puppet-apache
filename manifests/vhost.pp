@@ -30,6 +30,8 @@ define apache::vhost(
     $php_use_pear = false,
     $php_safe_mode = true,
     $php_default_charset = 'absent',
+    $php_additional_open_basedirs = 'absent',
+    $php_additional_options = 'absent',
     $cgi_binpath = 'absent',
     $default_charset = 'absent',
     $do_includes = false,
@@ -83,6 +85,8 @@ define apache::vhost(
                 php_use_pear => $php_use_pear,
                 php_safe_mode => $php_safe_mode,
                 php_default_charset => $php_default_charset,
+                php_additional_open_basedirs => $php_additional_open_basedirs,
+                php_additional_options => $php_additional_options,
                 run_mode => $run_mode,
                 run_uid => $run_uid,
                 run_gid => $run_gid,
@@ -98,6 +102,4 @@ define apache::vhost(
         }
         default: { fail("no such vhost_mode: $vhost_mode defined for $name.") }
     }
-
 }
-
