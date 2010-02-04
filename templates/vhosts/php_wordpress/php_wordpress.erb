@@ -65,6 +65,7 @@
         SecDebugLog <%= logdir %>/mod_security_debug.log
         # http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
         SecRuleRemoveById "960010"
+        SecRuleRemoveById "950018"
     </IfModule>
 
     <%- unless additional_options.to_s == 'absent' then -%>
@@ -135,6 +136,7 @@
         SecDebugLog <%= logdir %>/mod_security_debug.log
         # http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
         SecRuleRemoveById "960010"
+        SecRuleRemoveById "950018"
     </IfModule>
 
     <%- unless additional_options.to_s == 'absent' then -%>
