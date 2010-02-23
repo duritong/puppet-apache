@@ -56,7 +56,10 @@ define apache::vhost::template(
     $ldap_user = 'any'
 ){
     if $mod_security {
-        include mod_security
+        case $run_mode {
+          'itk': { include mod_security::itk }
+          default: { include mod_security }
+        }
     }
 
     $real_path = $path ? {
