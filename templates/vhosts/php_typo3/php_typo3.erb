@@ -138,6 +138,12 @@
         php_admin_value allow_url_fopen On
     </Directory>
 
+    <Location "/typo3">
+       <IfModule mod_security2.c>
+          SecRuleEngine Off
+       </IfModule>
+    </Location>
+
     <IfModule mod_security2.c>
         <%- if mod_security.to_s == 'true' then -%>
         SecRuleEngine On
