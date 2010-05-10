@@ -27,6 +27,7 @@ define apache::vhost::redirect(
         domainalias => $domainalias,
         server_admin => $server_admin,
         allow_override => $allow_override,
+        mod_security => false,
         options => $target_url,
         ssl_mode => $ssl_mode,
     }
