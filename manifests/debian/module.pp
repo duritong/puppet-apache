@@ -2,7 +2,7 @@ define apache::debian::module(
     $ensure = present,
     $package_name = 'absent'
 ){
-    $modules_dir = "$apache::debian::config_dir/mods"
+    $modules_dir = "${apache::debian::config_dir}/mods"
 
     if ($package_name != 'absent') {
         package { "${package_name}":
@@ -13,7 +13,15 @@ define apache::debian::module(
     }
 
     case $ensure {
-        'present' : {
+        'absent','purged': {
+            exec { "/usr/sbin/a2dismod ${name}":
+                onlyif => "/bin/sh -c '[ -L ${modules_dir}-enabled/${name}.load ] \\
+                    && [ ${modules_dir}-enabled/${name}.load -ef ${modules_dir}-available/${name}.load ]'",
+                notify => Service['apache'],
+                require => Package['apache'],
+            }
+        }
+        default : {
             exec { "/usr/sbin/a2enmod ${name}":
                 unless => "/bin/sh -c '[ -L ${modules_dir}-enabled/${name}.load ] \\
                     && [ ${modules_dir}-enabled/${name}.load -ef ${modules_dir}-available/${name}.load ]'",
@@ -22,14 +30,6 @@ define apache::debian::module(
                     'absent' => Package['apache'],
                     default => Package[['apache',$package_name]],
                 },
-            }
-        }
-        'absent': {
-            exec { "/usr/sbin/a2dismod ${name}":
-                onlyif => "/bin/sh -c '[ -L ${modules_dir}-enabled/${name}.load ] \\
-                    && [ ${modules_dir}-enabled/${name}.load -ef ${modules_dir}-available/${name}.load ]'",
-                notify => Service['apache'],
-                require => Package['apache'],
             }
         }
     }
