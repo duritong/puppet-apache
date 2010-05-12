@@ -42,7 +42,7 @@ define apache::config::file(
                     "puppet://${server}/modules/apache/${confdir}/${operatingsystem}/${name}",
                     "puppet://${server}/modules/apache/${confdir}/${name}"
                 ],
-                default => "puppet://${server}/${source}",
+                default => $source,
             }
             File["apache_${name}"]{
                 source => $real_source,
