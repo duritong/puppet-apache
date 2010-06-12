@@ -44,7 +44,7 @@
         <%- unless php_default_charset.to_s == 'absent' then -%>
         php_admin_value default_charset <%= php_default_charset %>
         <%- end -%>
-        php_admin_value open_basedir <%= documentroot %>:<%= real_php_upload_tmp_dir %>:<%= real_php_session_save_path %>:<%= gdatadir %>
+        php_admin_value open_basedir <%= documentroot %>:<%= real_php_upload_tmp_dir %>:<%= real_php_session_save_path %>:<%= gdatadir %><%= ":#{real_upload_dir.to_s}" if upload_dir.to_s != 'absent' %>
         php_admin_value upload_tmp_dir <%= real_php_upload_tmp_dir %>
         php_admin_value session.save_path <%= real_php_session_save_path %>
         <%- unless php_safe_mode_exec_bins.to_s == 'absent' then -%>
@@ -128,7 +128,7 @@
         <%- unless php_default_charset.to_s == 'absent' then -%>
         php_admin_value default_charset <%= php_default_charset %>
         <%- end -%>
-        php_admin_value open_basedir <%= documentroot %>:<%= real_php_upload_tmp_dir %>:<%= real_php_session_save_path %>:<%= gdatadir %>
+        php_admin_value open_basedir <%= documentroot %>:<%= real_php_upload_tmp_dir %>:<%= real_php_session_save_path %>:<%= gdatadir %><%= ":#{real_upload_dir.to_s}" if upload_dir.to_s != 'absent' %>
         php_admin_value upload_tmp_dir <%= real_php_upload_tmp_dir %>
         php_admin_value session.save_path <%= real_php_session_save_path %>
         <%- unless php_safe_mode_exec_bins.to_s == 'absent' then -%>
