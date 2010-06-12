@@ -68,11 +68,11 @@ define apache::vhost::php::gallery2(
             owner => $documentroot_owner, group => $documentroot_group, mode => 0660;
     }
 
-    if $upload_dir != 'present' {
+    if ($upload_dir == 'present') or ($upload_dir == 'absent') {
       $real_upload_dir = $operatingsystem ? {
-            openbsd => "/var/www/htdocs/${name}/upload",
-            default => "/var/www/vhosts/${name}/upload"
-        }
+        openbsd => "/var/www/htdocs/${name}/upload",
+        default => "/var/www/vhosts/${name}/upload"
+      }
     } else {
       $real_upload_dir = $upload_dir
     }
