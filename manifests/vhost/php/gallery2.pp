@@ -43,7 +43,8 @@ define apache::vhost::php::gallery2(
     $htpasswd_path = 'absent',
     $manage_config = true,
     $config_webwriteable = false,
-    $manage_directories = true
+    $manage_directories = true,
+    $upload_dir = 'present'
 ){
     $documentroot = $path ? {
         'absent' => $operatingsystem ? {
@@ -64,9 +65,32 @@ define apache::vhost::php::gallery2(
               'present' => directory,
               default => absent
             },
-            owner => $documentroot_owner, 
-            group => $documentroot_group,
-            mode => 0660;
+            owner => $documentroot_owner, group => $documentroot_group, mode => 0660;
+    }
+
+    if $upload_dir != 'present' {
+      $real_upload_dir = $operatingsystem ? {
+            openbsd => "/var/www/htdocs/${name}/upload",
+            default => "/var/www/vhosts/${name}/upload"
+        }
+    } else {
+      $real_upload_dir = $upload_dir
+    }
+
+    file{$real_upload_dir:
+      owner => $documentroot_owner, group => $documentroot_group, mode => 0660;
+    }
+    if ($ensure == 'absent') or ($upload_dir == 'absent') {
+      File[$real_upload_dir]{
+        ensure => absent,
+        purge => true,
+        force => true,
+        recurse => true
+      }
+    } else {
+      File[$real_upload_dir]{
+        ensure => directory
+      }
     }
 
     # create vhost configuration file
