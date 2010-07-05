@@ -51,7 +51,6 @@ define apache::vhost::file(
                     "puppet://$server/modules/site-apache/vhosts.d/$operatingsystem.$lsbdistcodename/$name.conf",
                     "puppet://$server/modules/site-apache/vhosts.d/$operatingsystem/$name.conf",
                     "puppet://$server/modules/site-apache/vhosts.d/$name.conf",
-                    "puppet://$server/modules/apache/vhosts.d/$name.conf",
                     "puppet://$server/modules/apache/vhosts.d/$operatingsystem.$lsbdistcodename/$name.conf",
                     "puppet://$server/modules/apache/vhosts.d/$operatingsystem/$name.conf",
                     "puppet://$server/modules/apache/vhosts.d/$name.conf"
