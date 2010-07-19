@@ -68,7 +68,7 @@ define apache::vhost::file(
         }
     }
     case $htpasswd_file {
-        'absent','nodeploy': { info("don't deploy a htpasswd file for ${name") }
+        'absent','nodeploy': { info("don't deploy a htpasswd file for ${name}") }
         default: {
             if $htpasswd_path == 'absent' {
                 $real_htpasswd_path = "/var/www/htpasswds/$name"
