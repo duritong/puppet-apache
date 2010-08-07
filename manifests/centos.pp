@@ -30,9 +30,9 @@ class apache::centos inherits apache::package {
 
     file{'apache_service_config':
         path => '/etc/sysconfig/httpd',
-        source => [ "puppet://$server/modules/site-apache/service/CentOS/${fqdn}/httpd",
-                    "puppet://$server/modules/site-apache/service/CentOS/httpd",
-                    "puppet://$server/modules/apache/service/CentOS/httpd" ],
+        source => [ "puppet:///modules/site-apache/service/CentOS/${fqdn}/httpd",
+                    "puppet:///modules/site-apache/service/CentOS/httpd",
+                    "puppet:///modules/apache/service/CentOS/httpd" ],
         require => Package['apache'],
         notify => Service['apache'],
         owner => root, group => 0, mode => 0644;

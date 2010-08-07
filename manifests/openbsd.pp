@@ -26,10 +26,10 @@ class apache::openbsd inherits apache::base {
     }
     file{'apache_main_config':
         path => "${config_dir}/conf/httpd.conf",
-        source => [ "puppet://$server/modules/site-apache/config/OpenBSD/${fqdn}/httpd.conf",
-                    "puppet://$server/modules/site-apache/config/OpenBSD/${apache_cluster_node}/httpd.conf",
-                    "puppet://$server/modules/site-apache/config/OpenBSD//httpd.conf",
-                    "puppet://$server/modules/apache/config/OpenBSD/httpd.conf" ],
+        source => [ "puppet:///modules/site-apache/config/OpenBSD/${fqdn}/httpd.conf",
+                    "puppet:///modules/site-apache/config/OpenBSD/${apache_cluster_node}/httpd.conf",
+                    "puppet:///modules/site-apache/config/OpenBSD//httpd.conf",
+                    "puppet:///modules/apache/config/OpenBSD/httpd.conf" ],
         notify => Service['apache'],
         owner => root, group => 0, mode => 0644;
     }
@@ -37,7 +37,7 @@ class apache::openbsd inherits apache::base {
         path => '/var/www/htdocs/default/www/index.html',
     }
     file{'/opt/bin/restart_apache.sh':
-        source => "puppet://$server/modules/apache/scripts/OpenBSD/bin/restart_apache.sh",
+        source => "puppet:///modules/apache/scripts/OpenBSD/bin/restart_apache.sh",
         require => File['/opt/bin'],
         owner => root, group => 0, mode => 0700;
     }
@@ -51,7 +51,7 @@ class apache::openbsd inherits apache::base {
         stop => 'apachectl stop',
     }
     file{'/opt/bin/apache_logrotate.sh':
-        source => "puppet://$server/modules/apache/scripts/OpenBSD/bin/apache_logrotate.sh",
+        source => "puppet:///modules/apache/scripts/OpenBSD/bin/apache_logrotate.sh",
         require => File['/opt/bin'],
         owner => root, group => 0, mode => 0700;
     }

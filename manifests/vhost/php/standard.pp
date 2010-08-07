@@ -87,7 +87,7 @@ define apache::vhost::php::standard(
           'present' => directory,
           default => absent,
         },
-        source => "puppet://$server/modules/common/empty",
+        source => "puppet:///modules/common/empty",
         owner => $documentroot_owner, group => $documentroot_group, mode => 0750,
       }
       $php_safe_mode_exec_bins_subst = regsubst($php_safe_mode_exec_bins,"(.+)","${name}_\\1")

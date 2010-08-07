@@ -10,13 +10,13 @@ define apache::gentoo::module(
     }
     $real_source = $source ? {
         ''  => [
-            "puppet://$server/modules/site-apache/modules.d/${fqdn}/${name}.conf",
-            "puppet://$server/modules/site-apache/modules.d/${apache_cluster_node}/${name}.conf",
-            "puppet://$server/modules/site-apache/modules.d/${name}.conf",
-            "puppet://$server/modules/apache/modules.d/${operatingsystem}/${name}.conf",
-            "puppet://$server/modules/apache/modules.d/${name}.conf"
+            "puppet:///modules/site-apache/modules.d/${fqdn}/${name}.conf",
+            "puppet:///modules/site-apache/modules.d/${apache_cluster_node}/${name}.conf",
+            "puppet:///modules/site-apache/modules.d/${name}.conf",
+            "puppet:///modules/apache/modules.d/${operatingsystem}/${name}.conf",
+            "puppet:///modules/apache/modules.d/${name}.conf"
         ],
-        default => "puppet://$server/$source",
+        default => "puppet:///$source",
     }
     file{"modules_${name}.conf":
         ensure => $ensure,
