@@ -85,8 +85,10 @@ define apache::vhost::template(
         'absent' => "$real_path/logs",
         default => $logpath
     }
-    case $logmode {
-      'semianonym','anonym': { include apache::noiplog }
+    if $ensure != 'absent' {
+      case $logmode {
+        'semianonym','anonym': { include apache::noiplog }
+      }
     }
 
     $servername = $domain ? {
