@@ -32,6 +32,11 @@ define apache::vhost::redirect(
         domain => $domain,
         domainalias => $domainalias,
         server_admin => $server_admin,
+        logpath => $operatingsystem ? {
+          openbsd => '/var/www/logs',
+          centos => '/var/log/httpd',
+          default => '/var/log/apache2'
+        },
         logmode => $logmode,
         allow_override => $allow_override,
         mod_security => false,
