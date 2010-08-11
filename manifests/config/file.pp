@@ -33,16 +33,16 @@ define apache::config::file(
         'absent': {
             $real_source = $source ? {
                 'absent' => [
-                    "puppet://${server}/modules/site-apache/${confdir}/${fqdn}/${name}",
-                    "puppet://${server}/modules/site-apache/${confdir}/${apache_cluster_node}/${name}",
-                    "puppet://${server}/modules/site-apache/${confdir}/${operatingsystem}.${lsbdistcodename}/${name}",
-                    "puppet://${server}/modules/site-apache/${confdir}/${operatingsystem}/${name}",
-                    "puppet://${server}/modules/site-apache/${confdir}/${name}",
-                    "puppet://${server}/modules/apache/${confdir}/${operatingsystem}.${lsbdistcodename}/${name}",
-                    "puppet://${server}/modules/apache/${confdir}/${operatingsystem}/${name}",
-                    "puppet://${server}/modules/apache/${confdir}/${name}"
+                    "puppet:///modules/site-apache/${confdir}/${fqdn}/${name}",
+                    "puppet:///modules/site-apache/${confdir}/${apache_cluster_node}/${name}",
+                    "puppet:///modules/site-apache/${confdir}/${operatingsystem}.${lsbdistcodename}/${name}",
+                    "puppet:///modules/site-apache/${confdir}/${operatingsystem}/${name}",
+                    "puppet:///modules/site-apache/${confdir}/${name}",
+                    "puppet:///modules/apache/${confdir}/${operatingsystem}.${lsbdistcodename}/${name}",
+                    "puppet:///modules/apache/${confdir}/${operatingsystem}/${name}",
+                    "puppet:///modules/apache/${confdir}/${name}"
                 ],
-                default => "puppet://${server}/${source}",
+                default => "puppet:///${source}",
             }
             File["apache_${name}"]{
                 source => $real_source,
