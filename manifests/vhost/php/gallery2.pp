@@ -10,11 +10,17 @@
 # php_default_charset: default charset header for php.
 #                      *default*: absent, which will set the same as default_charset
 #                                 of apache
+# logmode:
+#   - default: Do normal logging to CustomLog and ErrorLog
+#   - nologs: Send every logging to /dev/null
+#   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
+#   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 define apache::vhost::php::gallery2(
     $ensure = present,
     $domain = 'absent',
     $domainalias = 'absent',
     $server_admin = 'absent',
+    $logmode = 'default',
     $path = 'absent',
     $owner = root,
     $group = apache,
@@ -99,6 +105,7 @@ define apache::vhost::php::gallery2(
         domain => $domain,
         domainalias => $domainalias,
         server_admin => $server_admin,
+        logmode => $logmode,
         path => $path,
         template_mode => 'php_gallery2',
         owner => $owner,

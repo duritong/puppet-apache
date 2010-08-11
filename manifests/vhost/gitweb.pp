@@ -1,6 +1,12 @@
+# logmode:
+#   - default: Do normal logging to CustomLog and ErrorLog
+#   - nologs: Send every logging to /dev/null
+#   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
+#   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 define apache::vhost::gitweb(
     $ensure = present,
     $domain = 'absent',
+    $logmode = 'default',
     $domainalias = 'absent',
     $server_admin = 'absent',
     $owner = root,
@@ -29,6 +35,7 @@ define apache::vhost::gitweb(
             openbsd => '/var/www/logs',
             default => '/var/log/apache2'
         },
+        logmode => $logmode,
         template_mode => 'gitweb',
         domain => $domain,
         domainalias => $domainalias,

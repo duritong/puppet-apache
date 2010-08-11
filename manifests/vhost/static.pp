@@ -1,11 +1,17 @@
 # vhost_mode: which option is chosen to deploy the vhost
 #   - template: generate it from a template (default)
 #   - file: deploy a vhost file (apache::vhost::file will be called directly)
+# logmode:
+#   - default: Do normal logging to CustomLog and ErrorLog
+#   - nologs: Send every logging to /dev/null
+#   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
+#   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 define apache::vhost::static(
     $ensure = present,
     $domain = 'absent',
     $domainalias = 'absent',
     $server_admin = 'absent',
+    $logmode = 'default',
     $path = 'absent',
     $owner = root,
     $group = apache,
@@ -49,6 +55,7 @@ define apache::vhost::static(
         domain => $domain,
         domainalias => $domainalias,
         server_admin => $server_admin,
+        logmode => $logmode,
         allow_override => $allow_override,
         do_includes => $do_includes,
         options => $options,

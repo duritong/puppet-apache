@@ -1,10 +1,16 @@
 # run_uid: the uid the vhost should run as with the mod_passenger module
 # run_gid: the gid the vhost should run as with the mod_passenger module
+# logmode:
+#   - default: Do normal logging to CustomLog and ErrorLog
+#   - nologs: Send every logging to /dev/null
+#   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
+#   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 define apache::vhost::passenger(
     $ensure = present,
     $domain = 'absent',
     $domainalias = 'absent',
     $server_admin = 'absent',
+    $logmode = 'default',
     $path = 'absent',
     $manage_webdir = true,
     $manage_docroot = true,
@@ -54,6 +60,7 @@ define apache::vhost::passenger(
         ensure => $ensure,
         path => $path,
         template_mode => $template_mode,
+        logmode => $logmode,
         vhost_mode => $vhost_mode,
         vhost_source => $vhost_source,
         vhost_destination => $vhost_destination,

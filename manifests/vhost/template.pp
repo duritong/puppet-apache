@@ -20,11 +20,17 @@
 # php_default_charset: default charset header for php.
 #                      *default*: absent, which will set the same as default_charset
 #                                 of apache
+# logmode:
+#   - default: Do normal logging to CustomLog and ErrorLog
+#   - nologs: Send every logging to /dev/null
+#   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
+#   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 define apache::vhost::template(
     $ensure = present,
     $path = 'absent',
     $path_is_webdir = false,
     $logpath = 'absent',
+    $logmode = 'default',
     $domain = 'absent',
     $domainalias = 'absent',
     $server_admin = 'absent',
@@ -78,6 +84,9 @@ define apache::vhost::template(
     $logdir = $logpath ? {
         'absent' => "$real_path/logs",
         default => $logpath
+    }
+    case $logmode {
+      'semianonym','anonym': { include apache::noiplog }
     }
 
     $servername = $domain ? {

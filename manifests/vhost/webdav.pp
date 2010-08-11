@@ -5,11 +5,17 @@
 #          and run_uid and run_gid are used as vhost users
 # run_uid: the uid the vhost should run as with the itk module
 # run_gid: the gid the vhost should run as with the itk module
+# logmode:
+#   - default: Do normal logging to CustomLog and ErrorLog
+#   - nologs: Send every logging to /dev/null
+#   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
+#   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 define apache::vhost::webdav(
     $ensure = present,
     $domain = 'absent',
     $domainalias = 'absent',
     $server_admin = 'absent',
+    $logmode = 'default',
     $path = 'absent',
     $owner = root,
     $group = apache,
@@ -66,6 +72,7 @@ define apache::vhost::webdav(
         path => $path,
         path_is_webdir => $path_is_webdir,
         logpath => $logpath,
+        logmode => $logmode,
         template_mode => 'webdav',
         vhost_mode => $vhost_mode,
         vhost_source => $vhost_source,

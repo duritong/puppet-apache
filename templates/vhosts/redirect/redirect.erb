@@ -10,8 +10,20 @@
     ServerAdmin <%= server_admin %>
     <%- end -%>
 
-    ErrorLog logs/redirect_<%= servername %>_error.log
-    CustomLog logs/redirect_<%= servername %>_access.log combined
+    <%- case logmode.to_s
+        when 'nologs' -%>
+    ErrorLog /dev/null
+    CustomLog /dev/null
+    <%- when 'semianonym' -%>
+    ErrorLog <%= logdir %>/error_log
+    CustomLog <%= logdir %>/access_log noip
+    <%- when 'anonym' -%>
+    ErrorLog /dev/null
+    CustomLog <%= logdir %>/access_log noip
+    <%- else -%>
+    ErrorLog <%= logdir %>/error_log
+    CustomLog <%= logdir %>/access_log combined
+    <%- end -%>
     <%- if ssl_mode.to_s == 'force' then -%>
     Redirect permanent / https://<%= servername %>/
     <% else -%>
@@ -32,8 +44,20 @@
     ServerAdmin <%= server_admin %>
     <%- end -%>
 
-    ErrorLog logs/redirect_<%= servername %>_error.log
-    CustomLog logs/redirect_<%= servername %>_access.log combined
+    <%- case logmode.to_s
+        when 'nologs' -%>
+    ErrorLog /dev/null
+    CustomLog /dev/null
+    <%- when 'semianonym' -%>
+    ErrorLog <%= logdir %>/error_log
+    CustomLog <%= logdir %>/access_log noip
+    <%- when 'anonym' -%>
+    ErrorLog /dev/null
+    CustomLog <%= logdir %>/access_log noip
+    <%- else -%>
+    ErrorLog <%= logdir %>/error_log
+    CustomLog <%= logdir %>/access_log combined
+    <%- end -%>
 
     Redirect permanent / https://<%= options %>
 

@@ -10,12 +10,18 @@
 #   - true: enable ssl for this vhost
 #   - force: enable ssl and redirect non-ssl to ssl
 #   - only: enable ssl only
+# logmode:
+#   - default: Do normal logging to CustomLog and ErrorLog
+#   - nologs: Send every logging to /dev/null
+#   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
+#   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 define apache::vhost::redirect(
     $ensure = present,
     $domain = 'absent',
     $domainalias = 'absent',
     $target_url,
     $server_admin = 'absent',
+    $logmode = 'default',
     $ssl_mode = false
 ){
     # create vhost configuration file
@@ -26,6 +32,7 @@ define apache::vhost::redirect(
         domain => $domain,
         domainalias => $domainalias,
         server_admin => $server_admin,
+        logmode => $logmode,
         allow_override => $allow_override,
         mod_security => false,
         options => $target_url,
