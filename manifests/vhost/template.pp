@@ -85,11 +85,6 @@ define apache::vhost::template(
         'absent' => "$real_path/logs",
         default => $logpath
     }
-    if $ensure != 'absent' {
-      case $logmode {
-        'semianonym','anonym': { include apache::noiplog }
-      }
-    }
 
     $servername = $domain ? {
         'absent' => $name,
@@ -148,11 +143,18 @@ define apache::vhost::template(
 
     apache::vhost::file{$name:
         ensure => $ensure,
-        content => template("apache/vhosts/$template_mode/$operatingsystem.erb"),
         do_includes => $do_includes,
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
         use_mod_macro => $use_mod_macro,
+    }
+    if $ensure != 'absent' {
+      case $logmode {
+        'semianonym','anonym': { include apache::noiplog }
+      }
+      Apache::Vhost::File[$name]{
+        content => template("apache/vhosts/$template_mode/$operatingsystem.erb")
+      }
     }
 }
 

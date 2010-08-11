@@ -42,7 +42,8 @@ define apache::vhost::file(
     if $use_mod_macro {
         include ::apache::mod_macro
     }
-    case $content {
+    if $ensure != 'absent' {
+      case $content {
         'absent': {
             $real_vhost_source = $vhost_source ? {
                 'absent'  => [
@@ -66,6 +67,7 @@ define apache::vhost::file(
                 content => $content,
             }
         }
+      }
     }
     case $htpasswd_file {
         'absent','nodeploy': { info("don't deploy a htpasswd file for ${name}") }
