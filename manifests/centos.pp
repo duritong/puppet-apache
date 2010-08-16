@@ -38,6 +38,18 @@ class apache::centos inherits apache::package {
         owner => root, group => 0, mode => 0644;
     }
 
+    line{
+      'pidfile_httpd.conf':
+        file => '/etc/httpd/conf/httpd.conf',
+        line => 'PidFile run/httpd.pid';
+      'listen_httpd.conf':
+        file => '/etc/httpd/conf/httpd.conf',
+        line => 'Listen 80';
+    }
+    apache::config::global{'00-listen.conf':
+      ensure => absent,
+    }
+
     include apache::logrotate::centos
 
     apache::config::global{ 'welcome.conf': }

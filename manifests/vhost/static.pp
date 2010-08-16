@@ -1,11 +1,17 @@
 # vhost_mode: which option is chosen to deploy the vhost
 #   - template: generate it from a template (default)
 #   - file: deploy a vhost file (apache::vhost::file will be called directly)
+#
 # logmode:
 #   - default: Do normal logging to CustomLog and ErrorLog
 #   - nologs: Send every logging to /dev/null
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
+#
+# mod_security: Whether we use mod_security or not (will include mod_security module)
+#    - false: (*default*) don't activate mod_security
+#    - true: activate mod_security
+#
 define apache::vhost::static(
     $ensure = present,
     $domain = 'absent',

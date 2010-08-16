@@ -1,15 +1,28 @@
 # Webdav vhost: to manage webdav accessible targets
-# run_mode:
-#   - normal: nothing special (*default*)
-#   - itk: apache is running with the itk module
-#          and run_uid and run_gid are used as vhost users
+# run_mode: controls in which mode the vhost should be run, there are different setups
+#           possible:
+#   - normal: (*default*) run vhost with the current active worker (default: prefork) don't
+#             setup anything special
+#   - itk: run vhost with the mpm_itk module (Incompatibility: cannot be used in combination
+#          with 'proxy-itk' & 'static-itk' mode)
+#   - proxy-itk: run vhost with a dual prefork/itk setup, where prefork just proxies all the
+#                requests for the itk setup, that listens only on the loobpack device.
+#                (Incompatibility: cannot be used in combination with the itk setup.)
+#   - static-itk: this mode is not possible and will be rewritten to proxy-itk
+#
 # run_uid: the uid the vhost should run as with the itk module
 # run_gid: the gid the vhost should run as with the itk module
+#
+# mod_security: Whether we use mod_security or not (will include mod_security module)
+#    - false: (*default*) don't activate mod_security
+#    - true: activate mod_security
+#
 # logmode:
 #   - default: Do normal logging to CustomLog and ErrorLog
 #   - nologs: Send every logging to /dev/null
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
+#
 define apache::vhost::webdav(
     $ensure = present,
     $domain = 'absent',
@@ -66,6 +79,14 @@ define apache::vhost::webdav(
             documentroot_mode => $documentroot_mode,
         }
     }
+
+    if $run_mode == 'static-itk' {
+      notice("static-itk mode is not possible for webdav vhosts, rewriting it to proxy-itk")
+      $real_run_mode = 'proxy-itk'
+    } else {
+      $real_run_mode = $run_mode
+    }
+
     # create vhost configuration file
     ::apache::vhost{$name:
         ensure => $ensure,
@@ -80,7 +101,7 @@ define apache::vhost::webdav(
         domain => $domain,
         domainalias => $domainalias,
         server_admin => $server_admin,
-        run_mode => $run_mode,
+        run_mode => $real_run_mode,
         run_uid => $run_uid,
         run_gid => $run_gid,
         options => $options,

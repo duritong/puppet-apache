@@ -1,9 +1,24 @@
-# run_mode:
-#   - normal: nothing special (*default*)
-#   - itk: apache is running with the itk module
-#          and run_uid and run_gid are used as vhost users
+# run_mode: controls in which mode the vhost should be run, there are different setups
+#           possible:
+#   - normal: (*default*) run vhost with the current active worker (default: prefork) don't
+#             setup anything special
+#   - itk: run vhost with the mpm_itk module (Incompatibility: cannot be used in combination
+#          with 'proxy-itk' & 'static-itk' mode)
+#   - proxy-itk: run vhost with a dual prefork/itk setup, where prefork just proxies all the
+#                requests for the itk setup, that listens only on the loobpack device.
+#                (Incompatibility: cannot be used in combination with the itk setup.)
+#   - static-itk: run vhost with a dual prefork/itk setup, where prefork serves all the static
+#                 content and proxies the dynamic calls to the itk setup, that listens only on
+#                 the loobpack device (Incompatibility: cannot be used in combination with
+#                 'itk' mode)
+#
 # run_uid: the uid the vhost should run as with the itk module
 # run_gid: the gid the vhost should run as with the itk module
+#
+# mod_security: Whether we use mod_security or not (will include mod_security module)
+#    - false: don't activate mod_security
+#    - true: (*default*) activate mod_security
+#
 # php_safe_mode_exec_bins: An array of local binaries which should be linked in the
 #                          safe_mode_exec_bin for this hosting
 #                          *default*: None

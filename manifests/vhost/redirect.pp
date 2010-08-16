@@ -1,5 +1,6 @@
 # Redirect VHost to redirect hosts
 # Parameters:
+#
 # - ensure: wether this vhost is `present` or `absent`
 # - domain: the domain to redirect (*name*)
 # - domainalias: A list of whitespace seperated domains to redirect
@@ -10,11 +11,14 @@
 #   - true: enable ssl for this vhost
 #   - force: enable ssl and redirect non-ssl to ssl
 #   - only: enable ssl only
+#
 # logmode:
+#
 #   - default: Do normal logging to CustomLog and ErrorLog
 #   - nologs: Send every logging to /dev/null
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
+#
 define apache::vhost::redirect(
     $ensure = present,
     $domain = 'absent',
@@ -39,6 +43,7 @@ define apache::vhost::redirect(
         },
         logmode => $logmode,
         allow_override => $allow_override,
+        run_mode => 'normal',
         mod_security => false,
         options => $target_url,
         ssl_mode => $ssl_mode,

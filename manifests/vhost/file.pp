@@ -7,16 +7,48 @@
 #   - absent: standardpath (default)
 #   - else: path to deploy
 #
+# run_mode: controls in which mode the vhost should be run, there are different setups
+#           possible:
+#   - normal: (*default*) run vhost with the current active worker (default: prefork) don't
+#             setup anything special
+#   - itk: run vhost with the mpm_itk module (Incompatibility: cannot be used in combination
+#          with 'proxy-itk' & 'static-itk' mode)
+#   - proxy-itk: run vhost with a dual prefork/itk setup, where prefork just proxies all the
+#                requests for the itk setup, that listens only on the loobpack device.
+#                (Incompatibility: cannot be used in combination with the itk setup.)
+#   - static-itk: run vhost with a dual prefork/itk setup, where prefork serves all the static
+#                 content and proxies the dynamic calls to the itk setup, that listens only on
+#                 the loobpack device (Incompatibility: cannot be used in combination with
+#                 'itk' mode)
+#
+# mod_security: Whether we use mod_security or not (will include mod_security module)
+#    - false: (*default*) don't activate mod_security
+#    - true: activate mod_security
+#
 define apache::vhost::file(
     $ensure = present,
     $vhost_source = 'absent',
     $vhost_destination = 'absent',
     $content = 'absent',
     $do_includes = false,
+    $run_mode = 'normal',
+    $mod_security = false,
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
     $use_mod_macro = false
 ){
+    if $mod_security {
+        case $run_mode {
+          'itk': { include mod_security::itk }
+          'proxy-itk','static-itk': { include mod_security::itk_plus }
+          default: { include mod_security }
+        }
+    }
+
+    case $run_mode {
+      'itk': { include ::apache::itk::lock }
+      'proxy-itk','static-itk': { include ::apache::itk_plus::lock }
+    }
     $vhosts_dir = $operatingsystem ? {
         centos => "$apache::centos::config_dir/vhosts.d",
         gentoo => "$apache::gentoo::config_dir/vhosts.d",

@@ -3,6 +3,7 @@
 #   - nologs: Send every logging to /dev/null
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
+#
 define apache::vhost::gitweb(
     $ensure = present,
     $domain = 'absent',
@@ -45,6 +46,7 @@ define apache::vhost::gitweb(
         options => $options,
         additional_options => $additional_options,
         default_charset => $default_charset,
+        run_mode => 'normal',
         ssl_mode => $ssl_mode,
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
