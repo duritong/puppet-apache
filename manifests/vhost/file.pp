@@ -26,6 +26,12 @@
 #                 content and proxies the dynamic calls to the itk setup, that listens only on
 #                 the loobpack device (Incompatibility: cannot be used in combination with
 #                 'itk' mode)
+# logmode:
+#   - default: Do normal logging to CustomLog and ErrorLog
+#   - nologs: Send every logging to /dev/null
+#   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
+#   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
+#
 #
 # mod_security: Whether we use mod_security or not (will include mod_security module)
 #    - false: (*default*) don't activate mod_security
@@ -38,42 +44,13 @@ define apache::vhost::file(
     $content = 'absent',
     $do_includes = false,
     $run_mode = 'normal',
+    $logmode = 'default',
     $ssl_mode = false,
     $mod_security = false,
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
     $use_mod_macro = false
 ){
-    if $mod_security {
-        case $run_mode {
-          'itk': { include mod_security::itk }
-          'proxy-itk','static-itk': { include mod_security::itk_plus }
-          default: { include mod_security }
-        }
-    }
-
-    case $run_mode {
-      'itk': {
-        include ::apache::itk
-        include ::apache::itk::lock
-        if $ssl_mode {
-          include ::apache::ssl::itk
-        }
-      ]
-      'proxy-itk','static-itk': {
-        include ::apache::itk_plus
-        include ::apache::itk_plus::lock
-        if $ssl_mode {
-          include ::apache::ssl::itk_plus
-        }
-      }
-      default: {
-        include ::apache
-        if $ssl_mode {
-          include ::apache::ssl
-        }
-      }
-    }
     $vhosts_dir = $operatingsystem ? {
         centos => "$apache::centos::config_dir/vhosts.d",
         gentoo => "$apache::gentoo::config_dir/vhosts.d",
@@ -100,6 +77,41 @@ define apache::vhost::file(
         include ::apache::mod_macro
     }
     if $ensure != 'absent' {
+      case $logmode {
+        'semianonym','anonym': { include apache::noiplog }
+      }
+      case $run_mode {
+        'itk': {
+          include ::apache::itk
+          include ::apache::itk::lock
+          if $ssl_mode {
+            include ::apache::ssl::itk
+          }
+          if $mod_security {
+            include mod_security::itk
+          }
+        }
+        'proxy-itk','static-itk': {
+          include ::apache::itk_plus
+          include ::apache::itk_plus::lock
+          if $ssl_mode {
+            include ::apache::ssl::itk_plus
+          }
+          if $mod_security {
+            include mod_security::itk_plus
+          }
+        }
+        default: {
+          include ::apache
+          if $ssl_mode {
+            include ::apache::ssl
+          }
+          if $mod_security {
+            include mod_security
+          }
+        }
+      }
+
       case $content {
         'absent': {
             $real_vhost_source = $vhost_source ? {

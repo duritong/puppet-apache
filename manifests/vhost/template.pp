@@ -166,15 +166,13 @@ define apache::vhost::template(
         do_includes => $do_includes,
         run_mode => $run_mode,
         ssl_mode => $ssl_mode,
+        logmode => $logmode,
         mod_security => $mod_security,
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
         use_mod_macro => $use_mod_macro,
     }
     if $ensure != 'absent' {
-      case $logmode {
-        'semianonym','anonym': { include apache::noiplog }
-      }
       Apache::Vhost::File[$name]{
         content => template("apache/vhosts/$template_mode/$operatingsystem.erb")
       }
