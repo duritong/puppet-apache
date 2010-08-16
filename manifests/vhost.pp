@@ -82,7 +82,7 @@ define apache::vhost(
                 vhost_destination => $vhost_destination,
                 do_includes => $do_includes,
                 run_mode => $run_mode,
-                mode_security => $mod_security,
+                mod_security => $mod_security,
                 htpasswd_file => $htpasswd_file,
                 htpasswd_path => $htpasswd_path,
                 use_mod_macro => $use_mod_macro,
