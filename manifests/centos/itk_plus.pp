@@ -5,7 +5,7 @@ class apache::centos::itk_plus inherits apache::centos::itk {
   }
 
   Apache::Config::Global['00-listen.conf']{
-    ensure => present,
+    ensure => 'present',
     content => template("apache/itk_plus/${operatingsystem}/00-listen.conf.erb"),
   }
 

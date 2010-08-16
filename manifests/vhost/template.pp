@@ -14,6 +14,7 @@
 #   - true: enable ssl for this vhost
 #   - force: enable ssl and redirect non-ssl to ssl
 #   - only: enable ssl only
+#
 # php_safe_mode_exec_bins: An array of local binaries which should be linked in the
 #                          safe_mode_exec_bin for this hosting
 #                          *default*: None
@@ -164,6 +165,7 @@ define apache::vhost::template(
         ensure => $ensure,
         do_includes => $do_includes,
         run_mode => $run_mode,
+        ssl_mode => $ssl_mode,
         mod_security => $mod_security,
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,

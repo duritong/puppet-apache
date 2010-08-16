@@ -7,6 +7,12 @@
 #   - absent: standardpath (default)
 #   - else: path to deploy
 #
+# ssl_mode: wether this vhost supports ssl or not
+#   - false: don't enable ssl for this vhost (default)
+#   - true: enable ssl for this vhost
+#   - force: enable ssl and redirect non-ssl to ssl
+#   - only: enable ssl only
+#
 # run_mode: controls in which mode the vhost should be run, there are different setups
 #           possible:
 #   - normal: (*default*) run vhost with the current active worker (default: prefork) don't
@@ -32,6 +38,7 @@ define apache::vhost::file(
     $content = 'absent',
     $do_includes = false,
     $run_mode = 'normal',
+    $ssl_mode = false,
     $mod_security = false,
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
@@ -46,8 +53,26 @@ define apache::vhost::file(
     }
 
     case $run_mode {
-      'itk': { include ::apache::itk::lock }
-      'proxy-itk','static-itk': { include ::apache::itk_plus::lock }
+      'itk': {
+        include ::apache::itk
+        include ::apache::itk::lock
+        if $ssl_mode {
+          include ::apache::ssl::itk
+        }
+      ]
+      'proxy-itk','static-itk': {
+        include ::apache::itk_plus
+        include ::apache::itk_plus::lock
+        if $ssl_mode {
+          include ::apache::ssl::itk_plus
+        }
+      }
+      default: {
+        include ::apache
+        if $ssl_mode {
+          include ::apache::ssl
+        }
+      }
     }
     $vhosts_dir = $operatingsystem ? {
         centos => "$apache::centos::config_dir/vhosts.d",
