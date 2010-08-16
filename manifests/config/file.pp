@@ -29,7 +29,8 @@ define apache::config::file(
         notify => Service[apache],
         owner => root, group => 0, mode => 0644;
     }
-    case $content {
+    if $ensure == 'present' {
+      case $content {
         'absent': {
             $real_source = $source ? {
                 'absent' => [
@@ -53,6 +54,7 @@ define apache::config::file(
                 content => $content,
             }
         }
+      }
     }
     case $operatingsystem {
         openbsd: { info("no package dependency on ${operatingsystem} for ${name}") }
