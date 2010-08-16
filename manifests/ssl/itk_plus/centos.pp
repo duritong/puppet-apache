@@ -4,7 +4,7 @@ class apache::ssl::itk_plus::centos inherits apache::ssl::centos {
     source => "apache/itk_plus/conf.d/${operatingsystem}/ssl.conf",
   }
 
-  Apache::Config::Global{'00-listen-ssl.conf':
+  Apache::Config::Global['00-listen-ssl.conf']{
     ensure => 'present',
     content => template("apache/itk_plus/${operatingsystem}/00-listen-ssl.conf.erb"),
   }
