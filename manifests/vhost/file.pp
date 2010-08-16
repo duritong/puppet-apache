@@ -95,19 +95,19 @@ define apache::vhost::file(
           include ::apache::itk_plus
           include ::apache::itk_plus::lock
           if $ssl_mode {
-            include apache::ssl::itk_plus
+            include ::apache::ssl::itk_plus
           }
           if $mod_security {
-            include mod_security::itk_plus
+            include ::mod_security::itk_plus
           }
         }
         default: {
           include ::apache
           if $ssl_mode {
-            include apache::ssl
+            include ::apache::ssl
           }
           if $mod_security {
-            include mod_security
+            include ::mod_security
           }
         }
       }
