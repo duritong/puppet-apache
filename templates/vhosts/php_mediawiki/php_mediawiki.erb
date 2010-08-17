@@ -295,6 +295,7 @@
 
     ProxyPreserveHost On
     ProxyRequests off
+    SSLProxyEngine On
     <%- if run_mode.to_s == 'static-itk' -%>
     ProxyPassMatch ^/(.*\.php/?.*)$ https://127.0.0.1/$1
     <%- else -%>

@@ -222,8 +222,8 @@
 
     ProxyPreserveHost On
     ProxyRequests off
-    ProxyPass / https://127.0.0.1/
-    ProxyPassReverse / https://127.0.0.1/
+    ProxyPass / http://127.0.0.1/
+    ProxyPassReverse / http://127.0.0.1/
 
     <%- if ssl_mode.to_s == 'force' then -%>
     Redirect permanent / https://<%= servername %>/
@@ -287,8 +287,9 @@
 
     ProxyPreserveHost On
     ProxyRequests off
-    ProxyPass / http://127.0.0.1/
-    ProxyPassReverse / http://127.0.0.1/
+    SSLProxyEngine On
+    ProxyPass / https://127.0.0.1/
+    ProxyPassReverse / https://127.0.0.1/
 
     <%- if default_charset.to_s != 'absent' then -%>
     AddDefaultCharset <%= default_charset %>
