@@ -78,7 +78,7 @@ define apache::vhost::php::drupal(
 
     if $manage_cron {
         file{"/etc/cron.d/drupal_cron_${name}":
-            content => "0   *   *   *   *   apache wget -O - -q -t 1 http://${doamin}/cron.php\n",
+            content => "0   *   *   *   *   apache wget -O - -q -t 1 http://${domain}/cron.php\n",
             owner => root, group => 0, mode => 0644;
         }
     }
