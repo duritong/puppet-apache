@@ -77,10 +77,16 @@ define apache::vhost::php::drupal(
     }
 
     if $manage_cron {
-        file{"/etc/cron.d/drupal_cron_${name}":
-            content => "0   *   *   *   *   apache wget -O - -q -t 1 http://${domain}/cron.php\n",
-            owner => root, group => 0, mode => 0644;
-        }
+      if $domain == 'absent' {
+        $real_domain = $name
+      } else {
+        $real_domain = $domain
+      }
+
+      file{"/etc/cron.d/drupal_cron_${name}":
+        content => "0   *   *   *   *   apache wget -O - -q -t 1 http://${real_domain}/cron.php\n",
+        owner => root, group => 0, mode => 0644;
+      }
     }
 
     # create vhost configuration file
