@@ -90,12 +90,6 @@ define apache::vhost::php::standard(
         run_uid => $run_uid,
     }
 
-    case $run_mode {
-      'itk': { include ::php::itk }
-      'proxy-itk','static-itk': { include ::php::itk_plus }
-      default: { include ::php }
-    }
-
     $php_safe_mode_exec_bin_dir = $path ? {
       'absent' => $operatingsystem ? {
         openbsd => "/var/www/htdocs/${name}/bin",

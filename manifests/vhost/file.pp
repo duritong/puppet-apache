@@ -82,33 +82,10 @@ define apache::vhost::file(
       }
       case $run_mode {
         'itk': {
-          include ::apache::itk
           include ::apache::itk::lock
-          if $ssl_mode {
-            include ::apache::ssl::itk
-          }
-          if $mod_security {
-            include mod_security::itk
-          }
         }
         'proxy-itk','static-itk': {
-          include ::apache::itk_plus
           include ::apache::itk_plus::lock
-          if $ssl_mode {
-            include ::apache::ssl::itk_plus
-          }
-          if $mod_security {
-            include ::mod_security::itk_plus
-          }
-        }
-        default: {
-          include ::apache
-          if $ssl_mode {
-            include ::apache::ssl
-          }
-          if $mod_security {
-            include ::mod_security
-          }
         }
       }
 
