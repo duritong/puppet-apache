@@ -20,7 +20,7 @@ define apache::vhost::webdir(
         default => "${path}"
     }
 
-    if ($run_mode == 'itk') and ($mode == '0640'){
+    if ($run_mode =~ /^(static\-|proxy\-)?itk$/) and ($mode == '0640'){
       $real_mode = 0644
     } else {
       $real_mode = $mode
