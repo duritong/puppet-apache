@@ -38,7 +38,9 @@ define apache::vhost::phpdirs(
             file{[$real_php_upload_tmp_dir, $real_php_session_save_path ]:
                 ensure => directory,
                 owner => $run_mode ? {
-                    'itk','static-itk','proxy-itk' => $run_uid,
+                    'itk' => $run_uid,
+                    'static-itk' => $run_uid,
+                    'proxy-itk' => $run_uid,
                     default => $documentroot_owner
                 },
                 group => $documentroot_group, mode => $documentroot_mode;
