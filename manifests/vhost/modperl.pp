@@ -71,7 +71,10 @@ define apache::vhost::modperl(
     }
 
     file{$real_cgi_binpath:
-        ensure => directory,
+        ensure => $ensure ? {
+          'absent' => 'absent',
+          default => directory
+        },
         owner => $documentroot_owner,
         group => $documentroot_group,
         mode => $documentroot_mode;
