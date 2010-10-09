@@ -131,7 +131,7 @@ define apache::vhost::file(
                 source => [ "puppet:///modules/site-apache/htpasswds/$fqdn/$name",
                             "puppet:///modules/site-apache/htpasswds/$apache_cluster_node/$name",
                             "puppet:///modules/site-apache/htpasswds/$name" ],
-                owner => root, group => 0, mode => 0644;
+                owner => root, group => 0, mode => 0644,
               }
             }
         }
