@@ -125,10 +125,14 @@ define apache::vhost::file(
             }
             file{$real_htpasswd_path:
                 ensure => $ensure,
+            }
+            if ($ensure!='absent') {
+              File[$real_htpasswd_path]{
                 source => [ "puppet:///modules/site-apache/htpasswds/$fqdn/$name",
                             "puppet:///modules/site-apache/htpasswds/$apache_cluster_node/$name",
                             "puppet:///modules/site-apache/htpasswds/$name" ],
                 owner => root, group => 0, mode => 0644;
+              }
             }
         }
     }
