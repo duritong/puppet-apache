@@ -25,7 +25,9 @@
     CustomLog <%= logdir %>/access_log combined
     <%- end -%>
     <%- if ssl_mode.to_s == 'force' then -%>
-    Redirect permanent / https://<%= servername %>/
+    RewriteEngine On
+    RewriteCond %{HTTPS} !=on
+    RewriteRule (.*) https://%{SERVER_NAME}$1 [R=permanent,L]
     <% else -%>
     Redirect permanent / http://<%= options %>
     <%- end -%>

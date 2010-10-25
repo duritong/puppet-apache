@@ -31,7 +31,9 @@
     <%- end -%>
 
     <%- if ssl_mode.to_s == 'force' then -%>
-    Redirect permanent / https://<%= servername %>/
+    RewriteEngine On
+    RewriteCond %{HTTPS} !=on
+    RewriteRule (.*) https://%{SERVER_NAME}$1 [R=permanent,L]
 
     <%- end -%>
     <%- if default_charset.to_s != 'absent' then -%>
@@ -226,7 +228,9 @@
     ProxyPassReverse / http://127.0.0.1/
 
     <%- if ssl_mode.to_s == 'force' then -%>
-    Redirect permanent / https://<%= servername %>/
+    RewriteEngine On
+    RewriteCond %{HTTPS} !=on
+    RewriteRule (.*) https://%{SERVER_NAME}$1 [R=permanent,L]
 
     <%- end -%>
     <%- if default_charset.to_s != 'absent' then -%>
