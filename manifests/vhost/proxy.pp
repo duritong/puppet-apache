@@ -23,6 +23,7 @@ define apache::vhost::proxy(
     $ensure = present,
     $domain = 'absent',
     $domainalias = 'absent',
+    $htpasswd_file = 'absent',
     $target_url,
     $server_admin = 'absent',
     $logmode = 'default',
@@ -35,6 +36,7 @@ define apache::vhost::proxy(
         ensure => $ensure,
         template_mode => 'proxy',
         domain => $domain,
+        htpasswd_file => $htpasswd_file,
         domainalias => $domainalias,
         server_admin => $server_admin,
         logpath => $operatingsystem ? {
