@@ -19,7 +19,7 @@
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 #
-define apache::vhost::redirect(
+define apache::vhost::proxy(
     $ensure = present,
     $domain = 'absent',
     $domainalias = 'absent',
