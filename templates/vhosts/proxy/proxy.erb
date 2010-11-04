@@ -37,6 +37,10 @@
     ProxyPass        /   <%= options %>/
     ProxyPassReverse /   <%= options %>/
     <%- end -%>
+
+    <%- unless additional_options.to_s == 'absent' then -%>
+    <%= additional_options %>
+    <%- end -%>
 </VirtualHost>
 <%- end -%>
 
@@ -74,5 +78,9 @@
     ProxyRequests Off
     ProxyPass        /   <%= options %>/
     ProxyPassReverse /   <%= options %>/
+
+    <%- unless additional_options.to_s == 'absent' then -%>
+    <%= additional_options %>
+    <%- end -%>
 </VirtualHost>
 <%- end -%>

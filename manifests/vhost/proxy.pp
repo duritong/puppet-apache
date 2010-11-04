@@ -28,7 +28,8 @@ define apache::vhost::proxy(
     $server_admin = 'absent',
     $logmode = 'default',
     $mod_security = false,
-    $ssl_mode = false
+    $ssl_mode = false,
+    $additional_options = 'absent'
 ){
     # create vhost configuration file
     # we use the options field as the target_url
@@ -50,6 +51,7 @@ define apache::vhost::proxy(
         mod_security => $mod_security,
         options => $target_url,
         ssl_mode => $ssl_mode,
+        additional_options => $additional_options,
     }
 }
 
