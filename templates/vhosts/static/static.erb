@@ -106,6 +106,10 @@
     AddDefaultCharset <%= default_charset %>
     <%- end -%>
 
+    <%- if ssl_mode.to_s == 'force' then -%>
+    Header add Strict-Transport-Security "max-age=15768000"
+
+    <%- end -%>
     <%- if options.to_s != 'absent' or htpasswd_file.to_s != 'absent' then -%>
     <Directory "<%= documentroot %>/">
         AllowOverride <%= allow_override %>

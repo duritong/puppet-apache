@@ -116,6 +116,10 @@
     AddDefaultCharset <%= default_charset %>
     <%- end -%>
 
+    <%- if ssl_mode.to_s == 'force' then -%>
+    Header add Strict-Transport-Security "max-age=15768000"
+    <%- end -%>
+
     SetEnv GITWEB_CONFIG <%= gitweb_config %>
     DirectoryIndex gitweb.cgi
     <%- if not ssl_mode.to_s == 'force' then -%>

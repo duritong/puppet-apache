@@ -131,6 +131,10 @@
     AddDefaultCharset <%= default_charset %>
 
     <%- end -%>
+    <%- if ssl_mode.to_s == 'force' then -%>
+    Header add Strict-Transport-Security "max-age=15768000"
+
+    <%- end -%>
     <%- if run_mode.to_s =~ /(proxy\-|static\-)?itk/ -%>
     <IfModule mpm_itk_module>
         AssignUserId <%= run_uid+" "+run_gid %>
@@ -336,6 +340,10 @@
 
     <%- if default_charset.to_s != 'absent' then -%>
     AddDefaultCharset <%= default_charset %>
+
+    <%- end -%>
+    <%- if ssl_mode.to_s == 'force' then -%>
+    Header add Strict-Transport-Security "max-age=15768000"
 
     <%- end -%>
     <%- unless run_mode.to_s == 'static-itk' -%>

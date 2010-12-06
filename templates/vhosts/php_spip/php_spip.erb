@@ -140,6 +140,10 @@
     </IfModule>
 
     <%- end -%>
+    <%- if ssl_mode.to_s == 'force' then -%>
+    Header add Strict-Transport-Security "max-age=15768000"
+
+    <%- end -%>
     <Directory "<%= documentroot %>/">
         AllowOverride <%= allow_override %>
         <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
@@ -331,6 +335,10 @@
 
     <%- if default_charset.to_s != 'absent' then -%>
     AddDefaultCharset <%= default_charset %>
+
+    <%- end -%>
+    <%- if ssl_mode.to_s == 'force' then -%>
+    Header add Strict-Transport-Security "max-age=15768000"
 
     <%- end -%>
     <%- if run_mode.to_s == 'static-itk' -%>

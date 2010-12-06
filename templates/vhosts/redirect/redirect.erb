@@ -61,6 +61,10 @@
     CustomLog <%= logdir %>/access_log combined
     <%- end -%>
 
+    <%- if ssl_mode.to_s == 'force' then -%>
+    Header add Strict-Transport-Security "max-age=15768000"
+
+    <%- end -%>
     Redirect permanent / https://<%= options %>
 
 </VirtualHost>
