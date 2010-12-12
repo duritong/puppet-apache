@@ -11,14 +11,16 @@ SSLEngine on
 #   SSL Protocol support:
 # List the enable protocol levels with which clients will be able to
 # connect.  Disable SSLv2 access by default:
-SSLProtocol all -SSLv2
+#SSLProtocol all -SSLv2
+SSLProtocol -all +SSLv3 +TLSv1
 
 #   SSL Cipher Suite:
 # List the ciphers that the client is permitted to negotiate.
 # See the mod_ssl documentation for a complete list.
 #SSLCipherSuite HIGH:MEDIUM:!ADH:-SSLv2
-SSLCipherSuite HIGH:MEDIUM:!aNULL:!SSLv2:@STRENGTH
+SSLCipherSuite HIGH:MEDIUM:!aNULL:!SSLv2:!MD5:@STRENGTH
 
+SSLHonorCipherOrder on
 
 #   Server Certificate:
 # Point SSLCertificateFile at a PEM encoded certificate.  If
