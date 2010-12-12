@@ -29,27 +29,23 @@
     ErrorLog <%= logdir %>/error_log
     CustomLog <%= logdir %>/access_log combined
     <%- end -%>
-
     <%- if ssl_mode.to_s == 'force' then -%>
+
     RewriteEngine On
     RewriteCond %{HTTPS} !=on
     RewriteRule (.*) https://%{SERVER_NAME}$1 [R=permanent,L]
-
     <%- end -%>
     <%- if default_charset.to_s != 'absent' then -%>
-    AddDefaultCharset <%= default_charset %>
 
+    AddDefaultCharset <%= default_charset %>
     <%- end -%>
     <%- if run_mode.to_s =~ /(proxy\-|static\-)?itk/ -%>
+
     <IfModule mpm_itk_module>
         AssignUserId <%= run_uid+" "+run_gid %>
     </IfModule>
-
     <%- end -%>
-    <%- if ssl_mode.to_s == 'force' then -%>
-    Header add Strict-Transport-Security "max-age=15768000"
 
-    <%- end -%>
     <%- if not ssl_mode.to_s == 'force' then -%>
     <Directory "<%= documentroot %>/">
         AllowOverride <%= allow_override %>
@@ -149,17 +145,19 @@
     ErrorLog <%= logdir %>/error_log
     CustomLog <%= logdir %>/access_log combined
     <%- end -%>
-
     <%- if default_charset.to_s != 'absent' then -%>
-    AddDefaultCharset <%= default_charset %>
 
+    AddDefaultCharset <%= default_charset %>
     <%- end -%>
     <%- if run_mode.to_s =~ /(proxy\-|static\-)?itk/ -%>
+
     <IfModule mpm_itk_module>
         AssignUserId <%= run_uid+" "+run_gid %>
     </IfModule>
-
     <%- end -%>
+
+    Header add Strict-Transport-Security "max-age=15768000"
+
     <Directory "<%= documentroot %>/">
         AllowOverride <%= allow_override %>
         <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
@@ -373,15 +371,13 @@
     ProxyPass / https://127.0.0.1/
     <%- end -%>
     ProxyPassReverse / https://127.0.0.1/
-
     <%- if default_charset.to_s != 'absent' then -%>
-    AddDefaultCharset <%= default_charset %>
 
+    AddDefaultCharset <%= default_charset %>
     <%- end -%>
-    <%- if ssl_mode.to_s == 'force' then -%>
+
     Header add Strict-Transport-Security "max-age=15768000"
 
-    <%- end -%>
     <%- if run_mode.to_s == 'static-itk' -%>
     <Directory "<%= documentroot %>/">
         AllowOverride <%= allow_override %>

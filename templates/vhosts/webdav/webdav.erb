@@ -129,21 +129,19 @@
     ErrorLog <%= logdir %>/error_log
     CustomLog <%= logdir %>/access_log combined
     <%- end -%>
-
     <%- if default_charset.to_s != 'absent' then -%>
-    AddDefaultCharset <%= default_charset %>
 
+    AddDefaultCharset <%= default_charset %>
     <%- end -%>
     <%- if run_mode.to_s =~ /(proxy\-|static\-)?itk/ -%>
+
     <IfModule mpm_itk_module>
         AssignUserId <%= run_uid+" "+run_gid %>
     </IfModule>
-
     <%- end -%>
-    <%- if ssl_mode.to_s == 'force' then -%>
+
     Header add Strict-Transport-Security "max-age=15768000"
 
-    <%- end -%>
     DAVLockDB <%= real_dav_db_dir %>/DAVLock
     <Directory "<%= documentroot %>/">
         Dav on
@@ -298,11 +296,13 @@
     SSLProxyEngine On
     ProxyPass / https://127.0.0.1/
     ProxyPassReverse / https://127.0.0.1/
-
     <%- if default_charset.to_s != 'absent' then -%>
-    AddDefaultCharset <%= default_charset %>
 
+    AddDefaultCharset <%= default_charset %>
     <%- end -%>
+
+    Header add Strict-Transport-Security "max-age=15768000"
+
     <IfModule mod_security2.c>
         <%- if mod_security.to_s == 'true' then -%>
         SecRuleEngine On
