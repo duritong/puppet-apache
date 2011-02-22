@@ -75,6 +75,7 @@ define apache::vhost::template(
     $run_uid = 'absent',
     $run_gid = 'absent',
     $template_mode = 'static',
+    $template_partial = 'absent',
     $ssl_mode = false,
     $mod_security = true,
     $mod_security_relevantonly = true,
@@ -174,7 +175,10 @@ define apache::vhost::template(
     }
     if $ensure != 'absent' {
       Apache::Vhost::File[$name]{
-        content => template("apache/vhosts/$template_mode/$operatingsystem.erb")
+        content => $template_partial ? {
+          'absent' => template("apache/vhosts/$template_mode/$operatingsystem.erb"),
+          default => template("apache/vhosts/default.erb"),
+        }
       }
     }
 }
