@@ -38,6 +38,7 @@ define apache::vhost::php::standard(
     $logmode = 'default',
     $path = 'absent',
     $manage_webdir = true,
+    $path_is_webdir = false,
     $manage_docroot = true,
     $template_mode = 'php',
     $template_partial = 'absent',
@@ -152,6 +153,7 @@ define apache::vhost::php::standard(
     ::apache::vhost{$name:
         ensure => $ensure,
         path => $path,
+        path_is_webdir => $path_is_webdir,
         template_mode => $template_mode,
         template_partial => $template_partial,
         vhost_mode => $vhost_mode,
