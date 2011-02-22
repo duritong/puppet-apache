@@ -1,4 +1,11 @@
-<%- [:normal,:ssl].each do |vhost_part|
+<%- 
+vhost_parts = case ssl_mode
+  when 'only' then [:ssl]
+  when false then  [:normal]
+  when 'false' then  [:normal]
+  else [:normal,:ssl]
+end
+vhost_parts.each do |vhost_part|
   # we need this variable in included templates
   @vhost_part = vhost_part
 %>
@@ -7,7 +14,7 @@
   <%= scope.function_template('apache/vhosts/partials/header_default.erb') %>
   <%= scope.function_template('apache/vhosts/partials/logs.erb') %>
 
-  <%- if ssl_mode == 'force' && vhost_part == :ssl %>
+  <%- if ssl_mode == 'force' && vhost_part == :normal %>
   RewriteEngine On
   RewriteCond %{HTTPS} !=on
   RewriteRule (.*) https://%{SERVER_NAME}$1 [R=permanent,L]
