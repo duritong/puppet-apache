@@ -142,3 +142,6 @@ SetEnvIf User-Agent ".*MSIE.*" \
 #   compact non-error SSL logfile on a virtual host basis.
 CustomLog logs/ssl_request_log \
           "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
+
+# set STS Header
+Header add Strict-Transport-Security "max-age=15768000"
