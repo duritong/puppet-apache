@@ -1,4 +1,7 @@
-<%- [:normal,:ssl].each do |vhost_part| %>
+<%- [:normal,:ssl].each do |vhost_part|
+  # we need this variable in included templates
+  @vhost_part = vhost_part
+%>
 <VirtualHost *:<%= vhost_part == :ssl ? '443' : '80' %> >
 
   <%= scope.function_template('apache/vhosts/partials/header_default.erb') %>
