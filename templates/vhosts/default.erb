@@ -1,5 +1,5 @@
 <%- [:normal,:ssl].each do |vhost_part| %>
-<VirtualHost *:<%= vhost_part == :ssl ? '443' : '80' >
+<VirtualHost *:<%= vhost_part == :ssl ? '443' : '80' %> >
 
   <%= scope.function_template('apache/vhost/partials/header_default.erb') %>
   <%= scope.function_template('apache/vhost/partials/logs.erb') %>
