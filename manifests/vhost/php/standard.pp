@@ -118,7 +118,7 @@ define apache::vhost::php::standard(
         source => "puppet:///modules/common/empty",
         owner => $documentroot_owner, group => $documentroot_group, mode => 0750,
       }
-      $php_safe_mode_exec_bins_subst = regsubst($php_safe_mode_exec_bins,"(.+)","${name}_|_\\1")
+      $php_safe_mode_exec_bins_subst = regsubst($php_safe_mode_exec_bins,"(.+)","${name}@\\1")
       apache::vhost::php::safe_mode_bin{ $php_safe_mode_exec_bins_subst:
         ensure => $ensure,
         path => $real_php_safe_mode_exec_bin_dir
