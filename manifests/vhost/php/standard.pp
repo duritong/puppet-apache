@@ -58,6 +58,7 @@ define apache::vhost::php::standard(
     $php_use_pear = false,
     $php_safe_mode = true,
     $php_safe_mode_exec_bins = 'absent',
+    $php_safe_mode_exec_bin_dir = 'absent',
     $php_default_charset = 'absent',
     $do_includes = false,
     $options = 'absent',
@@ -93,20 +94,23 @@ define apache::vhost::php::standard(
         run_uid => $run_uid,
     }
 
-    $php_safe_mode_exec_bin_dir = $path ? {
-      'absent' => $operatingsystem ? {
-        openbsd => "/var/www/htdocs/${name}/bin",
-        default => "/var/www/vhosts/${name}/bin"
+    $real_php_safe_mode_exec_bin_dir = $php_safe_mode_exec_bin_dir ? {
+      'absent' => $path ? {
+        'absent' => $operatingsystem ? {
+          openbsd => "/var/www/htdocs/${name}/bin",
+          default => "/var/www/vhosts/${name}/bin"
+        },
+        default => "${path}/bin"
       },
-      default => "${path}/bin"
+      default => $php_safe_mode_exec_bin_dir
     }
-    file{$php_safe_mode_exec_bin_dir:
+    file{$real_php_safe_mode_exec_bin_dir:
       recurse => true,
       force => true,
       purge => true,
     }
     if $php_safe_mode_exec_bins != 'absent' {
-     File[$php_safe_mode_exec_bin_dir]{
+     File[$real_php_safe_mode_exec_bin_dir]{
         ensure => $ensure ? {
           'present' => directory,
           default => absent,
@@ -117,10 +121,10 @@ define apache::vhost::php::standard(
       $php_safe_mode_exec_bins_subst = regsubst($php_safe_mode_exec_bins,"(.+)","${name}_\\1")
       apache::vhost::php::safe_mode_bin{ $php_safe_mode_exec_bins_subst:
         ensure => $ensure,
-        path => $php_safe_mode_exec_bin_dir
+        path => $real_php_safe_mode_exec_bin_dir
       }
     }else{
-      File[$php_safe_mode_exec_bin_dir]{
+      File[$real_php_safe_mode_exec_bin_dir]{
         ensure => absent,
       }
     }
@@ -173,7 +177,7 @@ define apache::vhost::php::standard(
         options => $options,
         additional_options => $additional_options,
         default_charset => $default_charset,
-        php_safe_mode_exec_bin_dir => $php_safe_mode_exec_bin_dir,
+        php_safe_mode_exec_bin_dir => $real_php_safe_mode_exec_bin_dir,
         php_upload_tmp_dir => $php_upload_tmp_dir,
         php_session_save_path => $php_session_save_path,
         php_use_smarty => $php_use_smarty,
