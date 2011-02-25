@@ -1,14 +1,14 @@
-    <%- case logmode.to_s
-        when 'nologs' %>
-    ErrorLog /dev/null
-    CustomLog /dev/null
-    <%- when 'semianonym' %>
-    ErrorLog <%= logdir %>/error_log
-    CustomLog <%= logdir %>/access_log noip
-    <%- when 'anonym' %>
-    ErrorLog /dev/null
-    CustomLog <%= logdir %>/access_log noip
-    <%- else %>
-    ErrorLog <%= logdir %>/error_log
-    CustomLog <%= logdir %>/access_log combined
-    <%- end %>
+  <% case logmode.to_s
+      when 'nologs' -%>
+  ErrorLog /dev/null
+  CustomLog /dev/null
+  <% when 'semianonym' -%>
+  ErrorLog <%= logdir %>/error_log
+  CustomLog <%= logdir %>/access_log noip
+  <% when 'anonym' -%>
+  ErrorLog /dev/null
+  CustomLog <%= logdir %>/access_log noip
+  <% else -%>
+  ErrorLog <%= logdir %>/error_log
+  CustomLog <%= logdir %>/access_log combined
+  <% end -%>
