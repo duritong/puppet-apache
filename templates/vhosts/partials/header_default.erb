@@ -3,10 +3,10 @@
   Include include.d/ssl_defaults.inc
   <%- end %>
   ServerName <%= servername %>
-  <%- unless (serveralias.to_s.empty? || serveralias.to_s == 'absent' -%>
+  <%- unless serveralias.to_s.empty? || (serveralias.to_s == 'absent') %>
   ServerAlias <%= serveralias %>
-  <%- end -%>
-  <%- unless server_admin.to_s.empty? || (server_admin.to_s == 'absent') -%>
+  <%- end %>
+  <%- unless server_admin.to_s.empty? || (server_admin.to_s == 'absent') %>
   ServerAdmin <%= server_admin %>
-  <%- end -%>
+  <%- end %>
   DocumentRoot <%= documentroot %>/
