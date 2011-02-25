@@ -4,7 +4,7 @@
   <% end -%>
   ServerName <%= servername %>
   <% unless serveralias.to_s.empty? || (serveralias.to_s == 'absent') -%>
-  ServerAlias <%= serveralias -%>
+  ServerAlias <%= serveralias %>
   <% end -%>
   <% unless server_admin.to_s.empty? || (server_admin.to_s == 'absent') -%>
   ServerAdmin <%= server_admin %>
