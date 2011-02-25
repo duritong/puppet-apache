@@ -6,12 +6,13 @@ vhost_parts = case ssl_mode
   else [:normal,:ssl]
 end
 vhost_parts.each do |vhost_part|
-  # we need this variable in included templates
-  @vhost_part = vhost_part
+  scope.unsetvar('vhost_part')
+  scope.setvar('vhost_part',vhost_part)
 %>
 <VirtualHost *:<%= vhost_part == :ssl ? '443' : '80' %> >
 
   <%= scope.function_template('apache/vhosts/partials/header_default.erb') %>
+
   <%= scope.function_template('apache/vhosts/partials/logs.erb') %>
 
   <%- if ssl_mode == 'force' && vhost_part == :normal %>
