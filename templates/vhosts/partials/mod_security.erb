@@ -1,0 +1,17 @@
+  <IfModule mod_security2.c>
+    <%- if mod_security.to_s == 'true' then -%>
+    SecRuleEngine On
+    <%- if mod_security_relevantonly.to_s == 'true' then -%>
+    SecAuditEngine RelevantOnly
+    <%- else -%>
+    SecAuditEngine On
+    <%- end -%>
+    <%- else -%>
+    SecRuleEngine Off
+    SecAuditEngine Off
+    <%- end -%>
+    SecAuditLogType Concurrent
+    SecAuditLogStorageDir <%= logdir %>/
+    SecAuditLog <%= logdir %>/mod_security_audit.log
+    SecDebugLog <%= logdir %>/mod_security_debug.log
+  </IfModule>
