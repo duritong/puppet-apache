@@ -22,6 +22,26 @@ vhost_parts.each do |vhost_part|
   <% else -%>
 <%= scope.function_template(template_partial) %>
   <% end -%>
+  <IfModule mod_security2.c>
+    <%- if mod_security.to_s == 'true' then -%>
+    SecRuleEngine On
+    <%- if mod_security_relevantonly.to_s == 'true' then -%>
+    SecAuditEngine RelevantOnly
+    <%- else -%>
+    SecAuditEngine On
+    <%- end -%>
+    <%- else -%>
+    SecRuleEngine Off
+    SecAuditEngine Off
+    <%- end -%>
+    SecAuditLogType Concurrent
+    SecAuditLogStorageDir <%= logdir %>/
+    SecAuditLog <%= logdir %>/mod_security_audit.log
+    SecDebugLog <%= logdir %>/mod_security_debug.log
+  </IfModule>
 
+  <%- unless additional_options.to_s == 'absent' then -%>
+  <%= additional_options %>
+  <%- end -%>
 </VirtualHost>
 <% end -%>
