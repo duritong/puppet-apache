@@ -1,9 +1,3 @@
-# Use separate log files for the SSL virtual host; note that LogLevel
-# is not inherited from httpd.conf.
-ErrorLog logs/ssl_error_log
-TransferLog logs/ssl_access_log
-LogLevel warn
-
 #   SSL Engine Switch:
 #   Enable/Disable SSL for this virtual host.
 SSLEngine on
@@ -136,12 +130,6 @@ SSLHonorCipherOrder on
 SetEnvIf User-Agent ".*MSIE.*" \
          nokeepalive ssl-unclean-shutdown \
          downgrade-1.0 force-response-1.0
-
-#   Per-Server Logging:
-#   The home of a custom SSL log file. Use this when you want a
-#   compact non-error SSL logfile on a virtual host basis.
-CustomLog logs/ssl_request_log \
-          "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
 
 # set STS Header
 Header add Strict-Transport-Security "max-age=15768000"
