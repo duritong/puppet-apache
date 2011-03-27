@@ -44,7 +44,7 @@ define apache::vhost::passenger(
     $htpasswd_path = 'absent'
 ){
 
-    include ::pasenger
+    include ::passenger
 
     if $manage_webdir {
       # create webdir
