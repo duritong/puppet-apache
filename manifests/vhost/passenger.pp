@@ -71,7 +71,7 @@ define apache::vhost::passenger(
       ["${path}/www/tmp", "${path}/www/logs"]:
         ensure => directory,
         owner => $documentroot_owner, group => $run_gid, mode => 0660;
-      "${path}/www/public":
+      ["${path}/www/public", "${path}/gems"]:
         ensure => directory,
         owner => $documentroot_owner, group => $run_gid, mode => 0640;      
     }
