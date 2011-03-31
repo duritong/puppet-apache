@@ -42,7 +42,8 @@ define apache::vhost::passenger(
     $vhost_destination = 'absent',
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
-    $passenger_ree = false
+    $passenger_ree = false,
+    $passenger_app = 'rails'
 ){
 
     if $passenger_ree {
@@ -63,6 +64,32 @@ define apache::vhost::passenger(
         documentroot_owner => $documentroot_owner,
         documentroot_group => $run_gid,
         documentroot_mode => $documentroot_mode,
+      }
+    }
+    
+    file{
+      ["${path}/www/tmp", "${path}/www/logs"]:
+        ensure => directory,
+        owner => $documentroot_owner, group => $run_gid, mode => 0660;
+      "${path}/www/public":
+        ensure => directory,
+        owner => $documentroot_owner, group => $run_gid, mode => 0640;      
+    }
+    if $passenger_app == 'rails' {
+      file{
+        "${path}/www/config":
+          ensure => directory,
+          owner => $documentroot_owner, group => $run_gid, mode => 0640;      
+        "${path}/www/config/environment.rb":
+          ensure => present,
+          owner => $run_uid, group => $run_gid, mode => 0660;
+      }
+    } else {
+      #rack based
+      file{
+        "${path}/www/config.ru":
+          ensure => present,
+          owner => $run_uid, group => $run_gid, mode => 0660;
       }
     }
 

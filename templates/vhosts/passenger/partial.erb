@@ -1,0 +1,7 @@
+  <Directory <%= documentroot %>/>
+        AllowOverride <%= allow_override %>
+        Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- unless !options.to_s.include?('MultiViews') then -%> -MultiViews<%- end -%>
+
+        <%- end -%>        
+<%= scope.function_template('apache/vhosts/partials/authentication.erb') %>
+  </Directory>
