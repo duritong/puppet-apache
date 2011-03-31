@@ -59,6 +59,7 @@ define apache::vhost::passenger(
         path => $path,
         owner => $owner,
         group => $group,
+        mode => 0644,
         run_mode => 'normal',
         manage_docroot => $manage_docroot,
         documentroot_owner => $documentroot_owner,
