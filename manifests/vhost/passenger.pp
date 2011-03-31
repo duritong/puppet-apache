@@ -74,7 +74,7 @@ define apache::vhost::passenger(
         default => "${path}"
     }
     file{
-      ["${real_path}/www/tmp", "${real_path}/www/logs"]:
+      ["${real_path}/www/tmp", "${real_path}/www/log"]:
         ensure => directory,
         owner => $documentroot_owner, group => $run_gid, mode => 0660;
       ["${real_path}/www/public", "${real_path}/gems"]:
