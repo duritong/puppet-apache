@@ -41,10 +41,15 @@ define apache::vhost::passenger(
     $vhost_source = 'absent',
     $vhost_destination = 'absent',
     $htpasswd_file = 'absent',
-    $htpasswd_path = 'absent'
+    $htpasswd_path = 'absent',
+    $passenger_ree = false
 ){
 
-    include ::passenger
+    if $passenger_ree {
+      include ::passenger::ree::apache
+    } else {
+      include ::passenger::apache
+    }
 
     if $manage_webdir {
       # create webdir
@@ -53,10 +58,10 @@ define apache::vhost::passenger(
         path => $path,
         owner => $owner,
         group => $group,
-        run_mode => $run_mode,
+        run_mode => 'normal',
         manage_docroot => $manage_docroot,
         documentroot_owner => $documentroot_owner,
-        documentroot_group => $documentroot_group,
+        documentroot_group => $run_gid,
         documentroot_mode => $documentroot_mode,
       }
     }
@@ -64,9 +69,12 @@ define apache::vhost::passenger(
     # create vhost configuration file
     ::apache::vhost{$name:
         ensure => $ensure,
-        path => $path,
+        path => "${path}/www/public",
+        path_is_webdir => true,
         template_mode => $template_mode,
+        template_partial => 'apache/vhosts/passenger/partial.erb',
         logmode => $logmode,
+        logpath => "${path}/logs",
         vhost_mode => $vhost_mode,
         vhost_source => $vhost_source,
         vhost_destination => $vhost_destination,
