@@ -66,28 +66,34 @@ define apache::vhost::passenger(
         documentroot_mode => $documentroot_mode,
       }
     }
-    
+    $real_path = $path ? {
+        'absent' => $operatingsystem ? {
+            openbsd => "/var/www/htdocs/${name}",
+            default => "/var/www/vhosts/${name}"
+        },
+        default => "${path}"
+    }
     file{
-      ["${path}/www/tmp", "${path}/www/logs"]:
+      ["${real_path}/www/tmp", "${real_path}/www/logs"]:
         ensure => directory,
         owner => $documentroot_owner, group => $run_gid, mode => 0660;
-      ["${path}/www/public", "${path}/gems"]:
+      ["${real_path}/www/public", "${real_path}/gems"]:
         ensure => directory,
         owner => $documentroot_owner, group => $run_gid, mode => 0640;      
     }
     if $passenger_app == 'rails' {
       file{
-        "${path}/www/config":
+        "${real_path}/www/config":
           ensure => directory,
           owner => $documentroot_owner, group => $run_gid, mode => 0640;      
-        "${path}/www/config/environment.rb":
+        "${real_path}/www/config/environment.rb":
           ensure => present,
           owner => $run_uid, group => $run_gid, mode => 0660;
       }
     } else {
       #rack based
       file{
-        "${path}/www/config.ru":
+        "${real_path}/www/config.ru":
           ensure => present,
           owner => $run_uid, group => $run_gid, mode => 0660;
       }
@@ -96,12 +102,12 @@ define apache::vhost::passenger(
     # create vhost configuration file
     ::apache::vhost{$name:
         ensure => $ensure,
-        path => "${path}/www/public",
+        path => "${real_path}/www/public",
         path_is_webdir => true,
         template_mode => $template_mode,
         template_partial => 'apache/vhosts/passenger/partial.erb',
         logmode => $logmode,
-        logpath => "${path}/logs",
+        logpath => "${real_path}/logs",
         vhost_mode => $vhost_mode,
         vhost_source => $vhost_source,
         vhost_destination => $vhost_destination,
