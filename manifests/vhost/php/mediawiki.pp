@@ -46,7 +46,7 @@ define apache::vhost::php::mediawiki(
     $run_mode = 'normal',
     $run_uid = 'absent',
     $run_gid = 'absent',
-    $allow_override = 'FileInfo',
+    $allow_override = 'FileInfo Limit',
     $php_upload_tmp_dir = 'absent',
     $php_session_save_path = 'absent',
     $php_default_charset = 'absent',
