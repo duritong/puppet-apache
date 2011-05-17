@@ -43,6 +43,7 @@
 	
     <%- unless run_mode.to_s =~ /(proxy\-|static\-)itk/ -%>
 <%= scope.function_template('apache/vhosts/partials/mod_security.erb') %>
+    <%- end -%>
 
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>
