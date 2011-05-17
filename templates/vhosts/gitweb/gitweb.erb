@@ -11,20 +11,7 @@
     <%- end -%>
     DocumentRoot <%= documentroot %>/
 
-    <%- case logmode.to_s
-        when 'nologs' -%>
-    ErrorLog /dev/null
-    CustomLog /dev/null
-    <%- when 'semianonym' -%>
-    ErrorLog <%= logdir %>/error_log
-    CustomLog <%= logdir %>/access_log noip
-    <%- when 'anonym' -%>
-    ErrorLog /dev/null
-    CustomLog <%= logdir %>/access_log noip
-    <%- else -%>
-    ErrorLog <%= logdir %>/error_log
-    CustomLog <%= logdir %>/access_log combined
-    <%- end -%>
+<%= scope.function_template('apache/vhosts/partials/logs.erb') %>
     <%- if default_charset.to_s != 'absent' then -%>
     AddDefaultCharset <%= default_charset %>
     <%- end -%>
@@ -82,20 +69,7 @@
     <%- end -%>
     DocumentRoot <%= documentroot %>/
 
-    <%- case logmode.to_s
-        when 'nologs' -%>
-    ErrorLog /dev/null
-    CustomLog /dev/null
-    <%- when 'semianonym' -%>
-    ErrorLog <%= logdir %>/error_log
-    CustomLog <%= logdir %>/access_log noip
-    <%- when 'anonym' -%>
-    ErrorLog /dev/null
-    CustomLog <%= logdir %>/access_log noip
-    <%- else -%>
-    ErrorLog <%= logdir %>/error_log
-    CustomLog <%= logdir %>/access_log combined
-    <%- end -%>
+<%= scope.function_template('apache/vhosts/partials/logs.erb') %>
     <%- if default_charset.to_s != 'absent' then -%>
     AddDefaultCharset <%= default_charset %>
     <%- end -%>

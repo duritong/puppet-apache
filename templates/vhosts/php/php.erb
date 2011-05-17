@@ -15,20 +15,7 @@
     <%- end -%>
     DocumentRoot <%= documentroot %>/
 
-    <%- case logmode.to_s
-        when 'nologs' -%>
-    ErrorLog /dev/null
-    CustomLog /dev/null
-    <%- when 'semianonym' -%>
-    ErrorLog <%= logdir %>/error_log
-    CustomLog <%= logdir %>/access_log noip
-    <%- when 'anonym' -%>
-    ErrorLog /dev/null
-    CustomLog <%= logdir %>/access_log noip
-    <%- else -%>
-    ErrorLog <%= logdir %>/error_log
-    CustomLog <%= logdir %>/access_log combined
-    <%- end -%>
+<%= scope.function_template('apache/vhosts/partials/logs.erb') %>
 
     <%- if ssl_mode.to_s == 'force' then -%>
     RewriteEngine On
@@ -99,21 +86,8 @@
     <%- end -%>
     DocumentRoot <%= documentroot %>/
 
-    <%- case logmode.to_s
-        when 'nologs' -%>
-    ErrorLog /dev/null
-    CustomLog /dev/null
-    <%- when 'semianonym' -%>
-    ErrorLog <%= logdir %>/error_log
-    CustomLog <%= logdir %>/access_log noip
-    <%- when 'anonym' -%>
-    ErrorLog /dev/null
-    CustomLog <%= logdir %>/access_log noip
-    <%- else -%>
-    ErrorLog <%= logdir %>/error_log
-    CustomLog <%= logdir %>/access_log combined
+<%= scope.function_template('apache/vhosts/partials/logs.erb') %>
 
-    <%- end -%>
     <%- if run_mode.to_s =~ /(proxy\-|static\-)?itk/ -%>
     <IfModule mpm_itk_module>
         AssignUserId <%= run_uid+" "+run_gid %>
@@ -181,20 +155,7 @@
     DirectoryIndex index.htm index.html index.php
     <%- end -%>
 
-    <%- case logmode.to_s
-        when 'nologs' -%>
-    ErrorLog /dev/null
-    CustomLog /dev/null
-    <%- when 'semianonym' -%>
-    ErrorLog <%= logdir %>/<%= logfileprefix %>-error_log
-    CustomLog <%= logdir %>/<%= logfileprefix %>-access_log noip
-    <%- when 'anonym' -%>
-    ErrorLog /dev/null
-    CustomLog <%= logdir %>/<%= logfileprefix %>-access_log noip
-    <%- else -%>
-    ErrorLog <%= logdir %>/<%= logfileprefix %>-error_log
-    CustomLog <%= logdir %>/<%= logfileprefix %>-access_log combined
-    <%- end -%>
+<%= scope.function_template('apache/vhosts/partials/logs.erb') %>
 
     ProxyPreserveHost On
     ProxyRequests off
@@ -258,20 +219,7 @@
     DirectoryIndex index.htm index.html index.php
     <%- end -%>
 
-    <%- case logmode.to_s
-        when 'nologs' -%>
-    ErrorLog /dev/null
-    CustomLog /dev/null
-    <%- when 'semianonym' -%>
-    ErrorLog <%= logdir %>/<%= logfileprefix %>-error_log
-    CustomLog <%= logdir %>/<%= logfileprefix %>-access_log noip
-    <%- when 'anonym' -%>
-    ErrorLog /dev/null
-    CustomLog <%= logdir %>/<%= logfileprefix %>-access_log noip
-    <%- else -%>
-    ErrorLog <%= logdir %>/<%= logfileprefix %>-error_log
-    CustomLog <%= logdir %>/<%= logfileprefix %>-access_log combined
-    <%- end -%>
+<%= scope.function_template('apache/vhosts/partials/logs.erb') %>
 
     ProxyPreserveHost On
     ProxyRequests off
