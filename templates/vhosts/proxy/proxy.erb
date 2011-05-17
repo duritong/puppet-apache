@@ -44,6 +44,8 @@
     ProxyPassReverse /   <%= options %>/
     <%- end -%>
 
+<%= scope.function_template('apache/vhosts/partials/mod_security.erb') %>
+
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>
     <%- end -%>
@@ -78,6 +80,8 @@
     <%- end -%>
 
     Header add Strict-Transport-Security "max-age=15768000"
+
+<%= scope.function_template('apache/vhosts/partials/mod_security.erb') %>
 
     <Proxy *>
       Order deny,allow

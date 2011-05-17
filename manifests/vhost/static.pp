@@ -37,7 +37,9 @@ define apache::vhost::static(
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
     $mod_security = false,
-    $mod_security_relevantonly = true
+    $mod_security_relevantonly = true,
+    $mod_security_rules_to_disable = [],
+    $mod_security_additional_options = 'absent'
 ){
     # create webdir
     ::apache::vhost::webdir{$name:
@@ -73,6 +75,8 @@ define apache::vhost::static(
         htpasswd_path => $htpasswd_path,
         mod_security => $mod_security,
         mod_security_relevantonly => $mod_security_relevantonly,
+        mod_security_rules_to_disable => $mod_security_rules_to_disable,
+        mod_security_additional_options => $mod_security_additional_options,
     }
 }
 

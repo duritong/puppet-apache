@@ -73,23 +73,7 @@
     <%- end -%>
 	
     <%- unless run_mode.to_s =~ /(proxy\-|static\-)itk/ -%>
-    <IfModule mod_security2.c>
-        <%- if mod_security.to_s == 'true' then -%>
-        SecRuleEngine On
-        SecAuditEngine On
-        <%- else -%>
-        SecRuleEngine Off
-        SecAuditEngine Off
-        <%- end -%>
-        SecAuditLogType Concurrent
-        SecAuditLogStorageDir <%= logdir %>/
-        SecAuditLog <%= logdir %>/mod_security_audit.log
-        SecDebugLog <%= logdir %>/mod_security_debug.log
-        # http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
-        SecRuleRemoveById "960010"
-        SecRuleRemoveById "950018"
-    </IfModule>
-    <%- end -%>
+<%= scope.function_template('apache/vhosts/partials/mod_security.erb') %>
 
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>
@@ -163,22 +147,7 @@
     </Directory>
 
     <%- unless run_mode.to_s =~ /(proxy\-|static\-)itk/ -%>
-    <IfModule mod_security2.c>
-        <%- if mod_security.to_s == 'true' then -%>
-        SecRuleEngine On
-        SecAuditEngine On
-        <%- else -%>
-        SecRuleEngine Off
-        SecAuditEngine Off
-        <%- end -%>
-        SecAuditLogType Concurrent
-        SecAuditLogStorageDir <%= logdir %>/
-        SecAuditLog <%= logdir %>/mod_security_audit.log
-        SecDebugLog <%= logdir %>/mod_security_debug.log
-        # http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
-        SecRuleRemoveById "960010"
-        SecRuleRemoveById "950018"
-    </IfModule>
+<%= scope.function_template('apache/vhosts/partials/mod_security.erb') %>
     <%- end -%>
 
     <%- unless additional_options.to_s == 'absent' then -%>
@@ -257,22 +226,7 @@
     <%- end -%>
     <%- end -%>
 
-    <IfModule mod_security2.c>
-        <%- if mod_security.to_s == 'true' then -%>
-        SecRuleEngine On
-        SecAuditEngine On
-        <%- else -%>
-        SecRuleEngine Off
-        SecAuditEngine Off
-        <%- end -%>
-        SecAuditLogType Concurrent
-        SecAuditLogStorageDir <%= logdir %>/
-        SecAuditLog <%= logdir %>/mod_security_audit.log
-        SecDebugLog <%= logdir %>/mod_security_debug.log
-        # http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
-        SecRuleRemoveById "960010"
-        SecRuleRemoveById "950018"
-    </IfModule>
+<%= scope.function_template('apache/vhosts/partials/mod_security.erb') %>
 
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>
@@ -344,22 +298,7 @@
     </Directory>
     <%- end -%>
 
-    <IfModule mod_security2.c>
-        <%- if mod_security.to_s == 'true' then -%>
-        SecRuleEngine On
-        SecAuditEngine On
-        <%- else -%>
-        SecRuleEngine Off
-        SecAuditEngine Off
-        <%- end -%>
-        SecAuditLogType Concurrent
-        SecAuditLogStorageDir <%= logdir %>/
-        SecAuditLog <%= logdir %>/mod_security_audit.log
-        SecDebugLog <%= logdir %>/mod_security_debug.log
-        # http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
-        SecRuleRemoveById "960010"
-        SecRuleRemoveById "950018"
-    </IfModule>
+<%= scope.function_template('apache/vhosts/partials/mod_security.erb') %>
 
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>

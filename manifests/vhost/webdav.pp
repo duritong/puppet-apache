@@ -46,6 +46,8 @@ define apache::vhost::webdav(
     $default_charset = 'absent',
     $mod_security = false,
     $mod_security_relevantonly = true,
+    $mod_security_rules_to_disable = [],
+    $mod_security_additional_options = 'absent',
     $ssl_mode = false,
     $vhost_mode = 'template',
     $vhost_source = 'absent',
@@ -113,6 +115,9 @@ define apache::vhost::webdav(
         ldap_auth => $ldap_auth,
         ldap_user => $ldap_user,
         mod_security => $mod_security,
+        mod_security_relevantonly => $mod_security_relevantonly,
+        mod_security_rules_to_disable => $mod_security_rules_to_disable,
+        mod_security_additional_options => $mod_security_additional_options,
     }
 }
 

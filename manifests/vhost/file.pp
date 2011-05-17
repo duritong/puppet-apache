@@ -70,22 +70,27 @@ define apache::vhost::file(
         notify => Service[apache],
         owner => root, group => 0, mode => 0644;
     }
-    if $do_includes {
-        include ::apache::includes
-    }
-    if $use_mod_macro {
-        include ::apache::mod_macro
-    }
     if $ensure != 'absent' {
+      if $do_includes {
+        include ::apache::includes
+      }
+      if $use_mod_macro {
+        include ::apache::mod_macro
+      }
       case $logmode {
         'semianonym','anonym': { include apache::noiplog }
       }
       case $run_mode {
         'itk': {
           include ::apache::itk::lock
+          if $mod_security { include mod_security::itk }
         }
         'proxy-itk','static-itk': {
           include ::apache::itk_plus::lock
+          if $mod_security { include mod_security::itk_plus }
+        }
+        default: {
+          if $mod_security { include mod_security }
         }
       }
 

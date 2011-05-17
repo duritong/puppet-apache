@@ -56,6 +56,8 @@ define apache::vhost::php::typo3(
     $default_charset = 'absent',
     $mod_security = true,
     $mod_security_relevantonly = true,
+    $mod_security_rules_to_disable = [],
+    $mod_security_additional_options = 'absent',
     $ssl_mode = false,
     $vhost_mode = 'template',
     $vhost_source = 'absent',
@@ -72,6 +74,18 @@ define apache::vhost::php::typo3(
             default => "/var/www/vhosts/${name}/www"
         },
         default => "${path}/www"
+    }
+    
+    $modsec_rules = ["960010"]
+    $real_mod_security_rules_to_disable = array_union($mod_security_rules_to_disable,$modsec_rules)
+    if $mod_security_additional_options == 'absent' {
+      $real_mod_security_additional_options = '<Location "/typo3">
+          SecRuleEngine Off
+          SecAuditEngine Off
+    </Location>
+'
+    } else {
+      $real_mod_security_additional_options = $mod_security_additional_options
     }
 
     # create vhost configuration file
@@ -102,6 +116,8 @@ define apache::vhost::php::typo3(
         default_charset => $default_charset,
         mod_security => $mod_security,
         mod_security_relevantonly => $mod_security_relevantonly,
+        mod_security_rules_to_disable => $real_mod_security_rules_to_disable,
+        mod_security_additional_options => $real_mod_security_additional_options,
         ssl_mode => $ssl_mode,
         vhost_mode => $vhost_mode,
         vhost_source => $vhost_source,

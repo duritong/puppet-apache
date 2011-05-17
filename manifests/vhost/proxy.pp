@@ -29,6 +29,9 @@ define apache::vhost::proxy(
     $logmode = 'default',
     $mod_security = false,
     $ssl_mode = false,
+    $mod_security_relevantonly = true,
+    $mod_security_rules_to_disable = [],
+    $mod_security_additional_options = 'absent',
     $additional_options = 'absent'
 ){
     # create vhost configuration file
@@ -49,6 +52,9 @@ define apache::vhost::proxy(
         allow_override => $allow_override,
         run_mode => 'normal',
         mod_security => $mod_security,
+        mod_security_relevantonly => $mod_security_relevantonly,
+        mod_security_rules_to_disable => $mod_security_rules_to_disable,
+        mod_security_additional_options => $mod_security_additional_options,
         options => $target_url,
         ssl_mode => $ssl_mode,
         additional_options => $additional_options,

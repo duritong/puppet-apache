@@ -73,23 +73,7 @@
     <%- end -%>
 
     <%- unless run_mode.to_s =~ /(proxy\-|static\-)itk/ -%>
-    <IfModule mod_security2.c>
-        <%- if mod_security.to_s == 'true' then -%>
-        SecRuleEngine On
-        <%- if mod_security_relevantonly.to_s == 'true' then -%>
-        SecAuditEngine RelevantOnly
-        <%- else -%>
-        SecAuditEngine On
-        <%- end -%>
-        <%- else -%>
-        SecRuleEngine Off
-        SecAuditEngine Off
-        <%- end -%>
-        SecAuditLogType Concurrent
-        SecAuditLogStorageDir <%= logdir %>/
-        SecAuditLog <%= logdir %>/mod_security_audit.log
-        SecDebugLog <%= logdir %>/mod_security_debug.log
-    </IfModule>
+<%= scope.function_template('apache/vhosts/partials/mod_security.erb') %>
     <%- end -%>
 
     <%- unless additional_options.to_s == 'absent' then -%>
@@ -164,23 +148,7 @@
     <%- end -%>
 
     <%- unless run_mode.to_s =~ /(proxy\-|static\-)itk/ -%>
-    <IfModule mod_security2.c>
-        <%- if mod_security.to_s == 'true' then -%>
-        SecRuleEngine On
-        <%- if mod_security_relevantonly.to_s == 'true' then -%>
-        SecAuditEngine RelevantOnly
-        <%- else -%>
-        SecAuditEngine On
-        <%- end -%>
-        <%- else -%>
-        SecRuleEngine Off
-        SecAuditEngine Off
-        <%- end -%>
-        SecAuditLogType Concurrent
-        SecAuditLogStorageDir <%= logdir %>/
-        SecAuditLog <%= logdir %>/mod_security_audit.log
-        SecDebugLog <%= logdir %>/mod_security_debug.log
-    </IfModule>
+<%= scope.function_template('apache/vhosts/partials/mod_security.erb') %>
     <%- end -%>
 
     <%- unless additional_options.to_s == 'absent' then -%>
@@ -270,23 +238,7 @@
     <%- end -%>
     <%- end -%>
 
-    <IfModule mod_security2.c>
-        <%- if mod_security.to_s == 'true' then -%>
-        SecRuleEngine On
-        <%- if mod_security_relevantonly.to_s == 'true' then -%>
-        SecAuditEngine RelevantOnly
-        <%- else -%>
-        SecAuditEngine On
-        <%- end -%>
-        <%- else -%>
-        SecRuleEngine Off
-        SecAuditEngine Off
-        <%- end -%>
-        SecAuditLogType Concurrent
-        SecAuditLogStorageDir <%= logdir %>/
-        SecAuditLog <%= logdir %>/mod_security_audit.log
-        SecDebugLog <%= logdir %>/mod_security_debug.log
-    </IfModule>
+<%= scope.function_template('apache/vhosts/partials/mod_security.erb') %>
 
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>
@@ -368,23 +320,7 @@
     ScriptAlias /cgi-bin/ <%= cgi_binpath %>/
     <%- end -%>
 
-    <IfModule mod_security2.c>
-        <%- if mod_security.to_s == 'true' then -%>
-        SecRuleEngine On
-        <%- if mod_security_relevantonly.to_s == 'true' then -%>
-        SecAuditEngine RelevantOnly
-        <%- else -%>
-        SecAuditEngine On
-        <%- end -%>
-        <%- else -%>
-        SecRuleEngine Off
-        SecAuditEngine Off
-        <%- end -%>
-        SecAuditLogType Concurrent
-        SecAuditLogStorageDir <%= logdir %>/
-        SecAuditLog <%= logdir %>/mod_security_audit.log
-        SecDebugLog <%= logdir %>/mod_security_debug.log
-    </IfModule>
+<%= scope.function_template('apache/vhosts/partials/mod_security.erb') %>
 
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>

@@ -56,6 +56,8 @@ define apache::vhost::php::joomla(
     $default_charset = 'absent',
     $mod_security = true,
     $mod_security_relevantonly = true,
+    $mod_security_rules_to_disable = [],
+    $mod_security_additional_options = 'absent',
     $ssl_mode = false,
     $vhost_mode = 'template',
     $vhost_source = 'absent',
@@ -75,6 +77,24 @@ define apache::vhost::php::joomla(
         },
         default => "${path}/www"
     }
+    
+    if $mod_security_additional_options == 'absent' {
+        $real_mod_security_additional_options = '# http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
+        # Exceptions for Joomla Root Directory
+        <LocationMatch "^/">
+            SecRuleRemoveById 950013
+        </LocationMatch>
+
+        # Exceptions for Joomla Administration Panel
+        SecRule REQUEST_FILENAME "/administrator/index2.php" \
+        "allow,phase:1,nolog,ctl:ruleEngine=Off"
+
+        # Exceptions for Joomla Component Expose
+        <LocationMatch "^/components/com_expose/expose/manager/amfphp/gateway.php">
+            SecRuleRemoveById 960010
+        </LocationMatch>
+'
+   } else { $real_mod_security_additional_options = $mod_security_additional_options }
 
     # create vhost configuration file
     ::apache::vhost::php::webapp{$name:
@@ -104,6 +124,8 @@ define apache::vhost::php::joomla(
         default_charset => $default_charset,
         mod_security => $mod_security,
         mod_security_relevantonly => $mod_security_relevantonly,
+        mod_security_rules_to_disable => $mod_security_rules_to_disable,
+        mod_security_additional_options => $real_mod_security_additional_options,
         ssl_mode => $ssl_mode,
         vhost_mode => $vhost_mode,
         vhost_source => $vhost_source,

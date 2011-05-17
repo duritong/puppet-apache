@@ -48,6 +48,8 @@ define apache::vhost::modperl(
     $default_charset = 'absent',
     $mod_security = true,
     $mod_security_relevantonly = true,
+    $mod_security_rules_to_disable = [],
+    $mod_security_additional_options = 'absent',
     $ssl_mode = false,
     $vhost_mode = 'template',
     $vhost_source = 'absent',
@@ -123,6 +125,8 @@ define apache::vhost::modperl(
         htpasswd_path => $htpasswd_path,
         mod_security => $mod_security,
         mod_security_relevantonly => $mod_security_relevantonly,
+        mod_security_rules_to_disable => $mod_security_rules_to_disable,
+        mod_security_additional_options => $mod_security_additional_options,
     }
 }
 

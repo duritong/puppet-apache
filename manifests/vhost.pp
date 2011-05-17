@@ -70,6 +70,8 @@ define apache::vhost(
     $htpasswd_path = 'absent',
     $mod_security = true,
     $mod_security_relevantonly = true,
+    $mod_security_rules_to_disable = [],
+    $mod_security_additional_options = 'absent',
     $use_mod_macro = false,
     $ldap_auth = false,
     $ldap_user = 'any'
@@ -123,6 +125,9 @@ define apache::vhost(
                 ldap_auth => $ldap_auth,
                 ldap_user => $ldap_user,
                 mod_security => $mod_security,
+                mod_security_relevantonly => $mod_security_relevantonly,
+                mod_security_rules_to_disable => $mod_security_rules_to_disable,
+                mod_security_additional_options => $mod_security_additional_options,
                 use_mod_macro => $use_mod_macro,
             }
         }
