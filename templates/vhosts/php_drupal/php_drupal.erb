@@ -4,17 +4,16 @@
 <%- end -%>
 <%- unless ssl_mode.to_s == 'only'  then -%>
 <VirtualHost *:80>
-<%= scope.function_template('apache/vhosts/partials/header_default.erb') %>
+<%  scope.unsetvar('vhost_part')
+  scope.setvar('vhost_part',:normal) -%> 
+  <%= scope.function_template('apache/vhosts/partials/header_default.erb') %>
+<%  scope.unsetvar('vhost_part') -%>
 
 <%= scope.function_template('apache/vhosts/partials/logs.erb') %>
     <%- if ssl_mode.to_s == 'force' then -%>
     RewriteEngine On
     RewriteCond %{HTTPS} !=on
     RewriteRule (.*) https://%{SERVER_NAME}$1 [R=permanent,L]
-
-    <%- end -%>
-    <%- if default_charset.to_s != 'absent' then -%>
-    AddDefaultCharset <%= default_charset %>
 
     <%- end -%>
     <%- if run_mode.to_s =~ /(proxy\-|static\-)?itk/ -%>
@@ -153,7 +152,10 @@
 <IfDefine !HttpdLocal>
 <%- unless ssl_mode.to_s == 'only'  then -%>
 <VirtualHost *:80>
-<%= scope.function_template('apache/vhosts/partials/header_default.erb') %>
+<%  scope.unsetvar('vhost_part')
+  scope.setvar('vhost_part',:normal) -%> 
+  <%= scope.function_template('apache/vhosts/partials/header_default.erb') %>
+<%  scope.unsetvar('vhost_part') -%>
     DirectoryIndex index.htm index.html index.php
 
 <%= scope.function_template('apache/vhosts/partials/logs.erb') %>
@@ -174,10 +176,6 @@
 
     <%- end -%>
 
-    <%- if default_charset.to_s != 'absent' then -%>
-    AddDefaultCharset <%= default_charset %>
-
-    <%- end -%>
     <%- if run_mode.to_s == 'static-itk' then -%>
     <%- if not ssl_mode.to_s == 'force' then -%>
     <Directory "<%= documentroot %>/">

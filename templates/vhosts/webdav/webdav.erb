@@ -4,7 +4,10 @@
 <%- end -%>
 <%- unless ssl_mode.to_s == 'only'  then -%>
 <VirtualHost *:80>
-<%= scope.function_template('apache/vhosts/partials/header_default.erb') %>
+<%  scope.unsetvar('vhost_part')
+  scope.setvar('vhost_part',:normal) -%> 
+  <%= scope.function_template('apache/vhosts/partials/header_default.erb') %>
+<%  scope.unsetvar('vhost_part') -%>
 
 <%= scope.function_template('apache/vhosts/partials/logs.erb') %>
 
@@ -106,7 +109,10 @@
 <IfDefine !HttpdLocal>
 <%- unless ssl_mode.to_s == 'only'  then -%>
 <VirtualHost *:80>
-<%= scope.function_template('apache/vhosts/partials/header_default.erb') %>
+<%  scope.unsetvar('vhost_part')
+  scope.setvar('vhost_part',:normal) -%> 
+  <%= scope.function_template('apache/vhosts/partials/header_default.erb') %>
+<%  scope.unsetvar('vhost_part') -%>
 
 <%= scope.function_template('apache/vhosts/partials/logs.erb') %>
 
