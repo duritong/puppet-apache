@@ -16,7 +16,7 @@
     SecDebugLog <%= logdir %>/mod_security_debug.log
     <% unless mod_security_rules_to_disable.to_a.empty? -%>
 
-    <% mod_security_rules_to_disable.to_a.each do |rule|
+    <% mod_security_rules_to_disable.to_a.each do |rule| -%>
     SecRuleRemoveById "<%= rule %>"
     <% end -%>
     <% end -%>
