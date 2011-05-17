@@ -1,14 +1,7 @@
 # <%= servername %>
 <%- unless ssl_mode.to_s == 'only'  then -%>
 <VirtualHost *:80>
-    Include include.d/defaults.inc
-    ServerName <%= servername %>
-    <%- unless serveralias.to_s.empty? then -%>
-    ServerAlias <%= serveralias %>
-    <%- end -%>
-    <%- unless server_admin.to_s.empty? or server_admin.to_s == 'absent' then -%>
-    ServerAdmin <%= server_admin %>
-    <%- end -%>
+<%= scope.function_template('apache/vhosts/partials/header_default.erb') %>
 
 <%= scope.function_template('apache/vhosts/partials/logs.erb') %>
     <%- if ssl_mode.to_s == 'force' then -%>
@@ -36,15 +29,10 @@
 
 <%- unless ssl_mode.to_s == 'false'  then -%>
 <VirtualHost *:443>
-    Include include.d/defaults.inc
-    Include include.d/ssl_defaults.inc
-    ServerName <%= servername %>
-    <%- unless serveralias.to_s.empty? then -%>
-    ServerAlias <%= serveralias %>
-    <%- end -%>
-    <%- unless server_admin.to_s.empty? or server_admin.to_s == 'absent' then -%>
-    ServerAdmin <%= server_admin %>
-    <%- end -%>
+<%  scope.unsetvar('vhost_part')
+  scope.setvar('vhost_part',:ssl) -%> 
+  <%= scope.function_template('apache/vhosts/partials/header_default.erb') %>
+<%  scope.unsetvar('vhost_part') -%>
 
 <%= scope.function_template('apache/vhosts/partials/logs.erb') %>
 

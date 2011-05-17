@@ -4,16 +4,7 @@
 <%- end -%>
 <%- unless ssl_mode.to_s == 'only'  then -%>
 <VirtualHost *:80>
-    Include include.d/defaults.inc
-
-    ServerName <%= servername %>
-    <%- unless serveralias.to_s.empty? then -%>
-    ServerAlias <%= serveralias %>
-    <%- end -%> 
-    <%- unless server_admin.to_s.empty? or server_admin.to_s == 'absent' then -%>
-    ServerAdmin <%= server_admin %>
-    <%- end -%>
-    DocumentRoot <%= documentroot %>/
+<%= scope.function_template('apache/vhosts/partials/header_default.erb') %>
 
 <%= scope.function_template('apache/vhosts/partials/logs.erb') %>
 
@@ -27,10 +18,6 @@
     RedirectMatch /admin(.*) https://<%= servername %>/admin$1
     RedirectMatch /Security(.*) https://<%= servername %>/Security$1
 
-    <%- if default_charset.to_s != 'absent' then -%>
-    AddDefaultCharset <%= default_charset %>
-
-    <%- end -%>
     <%- if run_mode.to_s =~ /(proxy\-|static\-)?itk/ -%>
     <IfModule mpm_itk_module>
         AssignUserId <%= run_uid+" "+run_gid %>
@@ -89,22 +76,12 @@
 <%- unless ssl_mode.to_s == 'false'  then -%>
 <VirtualHost *:443>
     Include include.d/defaults.inc
-    Include include.d/ssl_defaults.inc
-
-    ServerName <%= servername %>
-    <%- unless serveralias.to_s.empty? then -%>
-    ServerAlias <%= serveralias %>
-    <%- end -%> 
-    <%- unless server_admin.to_s.empty? or server_admin.to_s == 'absent' then -%>
-    ServerAdmin <%= server_admin %>
-    <%- end -%>
-    DocumentRoot <%= documentroot %>/
+<%  scope.unsetvar('vhost_part')
+  scope.setvar('vhost_part',:ssl) -%> 
+  <%= scope.function_template('apache/vhosts/partials/header_default.erb') %>
+<%  scope.unsetvar('vhost_part') -%>
 
 <%= scope.function_template('apache/vhosts/partials/logs.erb') %>
-    <%- if default_charset.to_s != 'absent' then -%>
-
-    AddDefaultCharset <%= default_charset %>
-    <%- end -%>
     <%- if run_mode.to_s =~ /(proxy\-|static\-)?itk/ -%>
 
     <IfModule mpm_itk_module>
@@ -164,19 +141,8 @@
 <IfDefine !HttpdLocal>
 <%- unless ssl_mode.to_s == 'only'  then -%>
 <VirtualHost *:80>
-   Include include.d/defaults.inc
-
-    ServerName <%= servername %>
-    <%- unless serveralias.to_s.empty? then -%>
-    ServerAlias <%= serveralias %>
-    <%- end -%>
-    <%- unless server_admin.to_s.empty? or server_admin.to_s == 'absent' then -%>
-    ServerAdmin <%= server_admin %>
-    <%- end -%>
-    <%- if run_mode.to_s == 'static-itk' -%>
-    DocumentRoot <%= documentroot %>/
+<%= scope.function_template('apache/vhosts/partials/header_default.erb') %>
     DirectoryIndex index.htm index.html index.php
-    <%- end -%>
 
 <%= scope.function_template('apache/vhosts/partials/logs.erb') %>
 
@@ -199,10 +165,6 @@
     RedirectMatch /admin(.*) https://<%= servername %>/admin$1
     RedirectMatch /Security(.*) https://<%= servername %>/Security$1
 
-    <%- if default_charset.to_s != 'absent' then -%>
-    AddDefaultCharset <%= default_charset %>
-
-    <%- end -%>
     <%- if run_mode.to_s == 'static-itk' then -%>
     <%- if not ssl_mode.to_s == 'force' then -%>
     <Directory "<%= documentroot %>/">
@@ -243,19 +205,11 @@
 
 <%- unless ssl_mode.to_s == 'false'  then -%>
 <VirtualHost *:443>
-    Include include.d/defaults.inc
-    Include include.d/ssl_defaults.inc
-    ServerName <%= servername %>
-    <%- unless serveralias.to_s.empty? then -%>
-    ServerAlias <%= serveralias %>
-    <%- end -%>
-    <%- unless server_admin.to_s.empty? or server_admin.to_s == 'absent' then -%>
-    ServerAdmin <%= server_admin %>
-    <%- end -%>
-    <%- if run_mode.to_s == 'static-itk' -%>
-    DocumentRoot <%= documentroot %>/
+<%  scope.unsetvar('vhost_part')
+  scope.setvar('vhost_part',:ssl) -%> 
+  <%= scope.function_template('apache/vhosts/partials/header_default.erb') %>
+<%  scope.unsetvar('vhost_part') -%>
     DirectoryIndex index.htm index.html index.php
-    <%- end -%>
 
 <%= scope.function_template('apache/vhosts/partials/logs.erb') %>
 
@@ -268,10 +222,6 @@
     ProxyPass / https://127.0.0.1/
     <%- end -%>
     ProxyPassReverse / https://127.0.0.1/
-    <%- if default_charset.to_s != 'absent' then -%>
-
-    AddDefaultCharset <%= default_charset %>
-    <%- end -%>
 
     <%- if run_mode.to_s == 'static-itk' -%>
     <Directory "<%= documentroot %>/">
