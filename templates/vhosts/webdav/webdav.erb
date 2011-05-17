@@ -45,12 +45,7 @@
         Options Indexes
 
         <%- end -%>
-        <%- unless htpasswd_file.to_s == 'absent' then -%>
-        AuthType Basic
-        AuthName "Access fuer <%= servername %>"
-        AuthUserFile <%= real_htpasswd_path %>
-        require valid-user
-        <%- end -%>
+<%= scope.function_template('apache/vhosts/partials/authentication.erb') %>
         <%- if ldap_auth.to_s == 'true' then -%>
         Include include.d/ldap_auth.inc
         <%- unless ldap_user.to_s == 'any' -%>
@@ -111,12 +106,7 @@
         Options Indexes
 
         <%- end -%>
-        <%- unless htpasswd_file.to_s == 'absent' then -%>
-        AuthType Basic
-        AuthName "Access fuer <%= servername %>"
-        AuthUserFile <%= real_htpasswd_path %>
-        require valid-user
-        <%- end -%>
+<%= scope.function_template('apache/vhosts/partials/authentication.erb') %>
         <%- if ldap_auth.to_s == 'true' then -%>
         Include include.d/ldap_auth.inc
         <%- unless ldap_user.to_s == 'any' -%>

@@ -39,12 +39,7 @@
         Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
 
         <%- end -%>
-        <%- unless htpasswd_file.to_s == 'absent' then -%>
-        AuthType Basic
-        AuthName "Access fuer <%= servername %>"
-        AuthUserFile <%= real_htpasswd_path %>
-        require valid-user
-        <%- end -%>
+<%= scope.function_template('apache/vhosts/partials/authentication.erb') %>
         php_admin_flag engine on
         <%- unless php_default_charset.to_s == 'absent' then -%>
         php_admin_value default_charset <%= php_default_charset %>
@@ -127,12 +122,7 @@
         Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
 
         <%- end -%>
-        <%- unless htpasswd_file.to_s == 'absent' then -%>
-        AuthType Basic
-        AuthName "Access fuer <%= servername %>"
-        AuthUserFile <%= real_htpasswd_path %>
-        require valid-user
-        <%- end -%>
+<%= scope.function_template('apache/vhosts/partials/authentication.erb') %>
         php_admin_flag engine on
         <%- unless php_default_charset.to_s == 'absent' then -%>
         php_admin_value default_charset <%= php_default_charset %>
@@ -228,12 +218,7 @@
         Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
 
         <%- end -%>
-        <%- unless htpasswd_file.to_s == 'absent' then -%>
-        AuthType Basic
-        AuthName "Access fuer <%= servername %>"
-        AuthUserFile <%= real_htpasswd_path %>
-        require valid-user
-        <%- end -%>
+<%= scope.function_template('apache/vhosts/partials/authentication.erb') %>
 
         # Protect files and directories from prying eyes.
         <FilesMatch "\.(engine|inc|info|install|module|profile|po|sh|.*sql|theme|tpl(\.php)?|xtmpl)$|^(code-style\.pl|Entries.*|Repository|Root|Tag|Template)$">
@@ -306,12 +291,7 @@
         Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
 
         <%- end -%>
-        <%- unless htpasswd_file.to_s == 'absent' then -%>
-        AuthType Basic
-        AuthName "Access fuer <%= servername %>"
-        AuthUserFile <%= real_htpasswd_path %>
-        require valid-user
-        <%- end -%>
+<%= scope.function_template('apache/vhosts/partials/authentication.erb') %>
 
         # Protect files and directories from prying eyes.
         <FilesMatch "\.(engine|inc|info|install|module|profile|po|sh|.*sql|theme|tpl(\.php)?|xtmpl)$|^(code-style\.pl|Entries.*|Repository|Root|Tag|Template)$">

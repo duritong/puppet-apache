@@ -40,12 +40,7 @@
         Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
 
         <%- end -%>
-        <%- unless htpasswd_file.to_s == 'absent' then -%>
-        AuthType Basic
-        AuthName "Access fuer <%= servername %>"
-        AuthUserFile <%= real_htpasswd_path %>
-        require valid-user
-        <%- end -%>
+<%= scope.function_template('apache/vhosts/partials/authentication.erb') %>
     </Directory>
 
     <%- unless htpasswd_file.to_s == 'absent' then -%>
@@ -103,12 +98,7 @@
         Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
 
         <%- end -%>
-        <%- unless htpasswd_file.to_s == 'absent' then -%>
-        AuthType Basic
-        AuthName "Access fuer <%= servername %>"
-        AuthUserFile <%= real_htpasswd_path %>
-        require valid-user
-        <%- end -%>
+<%= scope.function_template('apache/vhosts/partials/authentication.erb') %>
     </Directory>
 
     ScriptAlias /cgi-bin/ <%= cgi_binpath %>/
@@ -179,12 +169,7 @@
         Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
 
         <%- end -%>
-        <%- unless htpasswd_file.to_s == 'absent' then -%>
-        AuthType Basic
-        AuthName "Access fuer <%= servername %>"
-        AuthUserFile <%= real_htpasswd_path %>
-        require valid-user
-        <%- end -%>
+<%= scope.function_template('apache/vhosts/partials/authentication.erb') %>
     </Directory>
 
     <%- unless htpasswd_file.to_s == 'absent' then -%>
@@ -249,12 +234,7 @@
         Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
 
         <%- end -%>
-        <%- unless htpasswd_file.to_s == 'absent' then -%>
-        AuthType Basic
-        AuthName "Access fuer <%= servername %>"
-        AuthUserFile <%= real_htpasswd_path %>
-        require valid-user
-        <%- end -%>
+<%= scope.function_template('apache/vhosts/partials/authentication.erb') %>
     </Directory>
 
     <%- if htpasswd_file.to_s == 'absent' then -%>
