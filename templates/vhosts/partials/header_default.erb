@@ -9,7 +9,9 @@
 <% unless server_admin.to_s.empty? || (server_admin.to_s == 'absent') -%>
   ServerAdmin <%= server_admin %>
 <% end -%>
+<% unless documentroot.to_s == 'really_absent' -%>
   DocumentRoot <%= documentroot %>/
+<% end -%>
 <% if default_charset.to_s != 'absent' then -%>
   AddDefaultCharset <%= default_charset %>
 <% end -%>

@@ -34,6 +34,8 @@ define apache::vhost::redirect(
         ensure => $ensure,
         template_mode => 'redirect',
         domain => $domain,
+        path => 'really_absent',
+        path_is_webdir => true,
         domainalias => $domainalias,
         server_admin => $server_admin,
         logpath => $operatingsystem ? {

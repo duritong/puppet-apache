@@ -40,6 +40,8 @@ define apache::vhost::proxy(
         ensure => $ensure,
         template_mode => 'proxy',
         domain => $domain,
+        path => 'really_absent',
+        path_is_webdir => true,
         htpasswd_file => $htpasswd_file,
         domainalias => $domainalias,
         server_admin => $server_admin,
