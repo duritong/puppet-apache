@@ -103,8 +103,6 @@
     </IfModule>
     <%- end -%>
 
-    Header add Strict-Transport-Security "max-age=15768000"
-
     <Directory "<%= documentroot %>/">
         Include include.d/joomla.inc
 
@@ -239,8 +237,6 @@
 
     AddDefaultCharset <%= default_charset %>
     <%- end -%>
-
-    Header add Strict-Transport-Security "max-age=15768000"
 
     <%- if run_mode.to_s == 'static-itk' -%>
     <Directory "<%= documentroot %>/">

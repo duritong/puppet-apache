@@ -10,11 +10,11 @@
     ServerAdmin <%= server_admin %>
     <%- end -%>
     DocumentRoot <%= documentroot %>/
-
-<%= scope.function_template('apache/vhosts/partials/logs.erb') %>
     <%- if default_charset.to_s != 'absent' then -%>
     AddDefaultCharset <%= default_charset %>
     <%- end -%>
+
+<%= scope.function_template('apache/vhosts/partials/logs.erb') %>
     <%- if ssl_mode.to_s == 'force' then -%>
     RewriteEngine On
     RewriteCond %{HTTPS} !=on
@@ -63,13 +63,11 @@
     ServerAdmin <%= server_admin %>
     <%- end -%>
     DocumentRoot <%= documentroot %>/
-
-<%= scope.function_template('apache/vhosts/partials/logs.erb') %>
     <%- if default_charset.to_s != 'absent' then -%>
     AddDefaultCharset <%= default_charset %>
     <%- end -%>
 
-    Header add Strict-Transport-Security "max-age=15768000"
+<%= scope.function_template('apache/vhosts/partials/logs.erb') %>
 
     SetEnv GITWEB_CONFIG <%= gitweb_config %>
     DirectoryIndex gitweb.cgi

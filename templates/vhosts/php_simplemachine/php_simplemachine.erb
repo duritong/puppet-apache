@@ -87,8 +87,6 @@
     </IfModule>
     <%- end -%>
 
-    Header add Strict-Transport-Security "max-age=15768000"
-
     <Directory "<%= documentroot %>/">
         AllowOverride <%= allow_override %>
         <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
@@ -207,8 +205,6 @@
 
     AddDefaultCharset <%= default_charset %>
     <%- end -%>
-
-    Header add Strict-Transport-Security "max-age=15768000"
 
     <%- if run_mode.to_s == 'static-itk' -%>
     <Directory "<%= documentroot %>/">

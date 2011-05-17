@@ -35,8 +35,6 @@
 
 <%= scope.function_template('apache/vhosts/partials/logs.erb') %>
 
-    Header add Strict-Transport-Security "max-age=15768000"
-
     Redirect permanent / https://<%= options %>
 
 </VirtualHost>
