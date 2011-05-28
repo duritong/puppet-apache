@@ -50,6 +50,7 @@ define apache::vhost::php::gallery2(
     $php_session_save_path = 'absent',
     $php_safe_mode_exec_bins = 'absent',
     $php_default_charset = 'absent',
+    $php_settings = {},
     $do_includes = false,
     $options = 'absent',
     $additional_options = 'absent',
@@ -115,6 +116,35 @@ define apache::vhost::php::gallery2(
         ensure => directory
       }
     }
+    
+    # php upload_tmp_dir
+    case $php_upload_tmp_dir {
+      'absent': {
+        $real_php_upload_tmp_dir = "/var/www/upload_tmp_dir/$name"
+      }
+      default: { $real_php_upload_tmp_dir = $php_upload_tmp_dir }
+    }
+    # php session_save_path
+    case $php_session_save_path {
+      'absent': {
+        $real_php_session_save_path = "/var/www/session.save_path/$name"
+      }
+      default: { $real_php_session_save_path = $php_session_save_path }
+    }
+    
+    $gallery_php_settings = {
+      safe_mode => 'Off',
+      output_buffering => 'Off',
+    }
+    $open_basedir = "${documentroot}:${real_php_upload_tmp_dir}:${real_php_session_save_path}:${gdatadir}"
+    if $upload_dir != 'absent' {
+      $real_open_basedir = "${open_basedir}:${real_upload_dir}"
+    } else {
+      $real_open_basedir = "${open_basedir}"
+    } 
+    $gallery_php_settings[open_basedir] = $real_open_basedir
+    
+    $real_php_settings = hash_merge($gallery_php_settings,$php_settings)
 
     # create vhost configuration file
     ::apache::vhost::php::webapp{$name:
@@ -138,6 +168,7 @@ define apache::vhost::php::gallery2(
         php_session_save_path => $php_session_save_path,
         php_safe_mode_exec_bins => $real_php_safe_mode_exec_bins,
         php_default_charset => $php_default_charset,
+        php_settings => $real_php_settings,
         do_includes => $do_includes,
         options => $options,
         additional_options => $additional_options,

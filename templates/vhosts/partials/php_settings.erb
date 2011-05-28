@@ -1,0 +1,7 @@
+<% php_settings.each do |key,value| -%>
+<% if ['on','off' ].include?(value.downcase) -%>
+    php_admin_flag <%= key %> <%= value %>
+<% else -%>
+    php_admin_value <%= key %> <%= value %>
+<% end -%>
+<% end -%>
