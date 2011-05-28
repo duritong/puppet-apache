@@ -71,6 +71,7 @@ define apache::vhost::template(
     $php_use_pear = false,
     $php_safe_mode = true,
     $php_default_charset = 'absent',
+    $php_settings = {},
     $run_mode = 'normal',
     $run_uid = 'absent',
     $run_gid = 'absent',

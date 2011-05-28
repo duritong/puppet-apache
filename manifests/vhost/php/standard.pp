@@ -60,6 +60,7 @@ define apache::vhost::php::standard(
     $php_safe_mode_exec_bins = 'absent',
     $php_safe_mode_exec_bin_dir = 'absent',
     $php_default_charset = 'absent',
+    $php_settings = {},
     $do_includes = false,
     $options = 'absent',
     $additional_options = 'absent',
@@ -76,14 +77,6 @@ define apache::vhost::php::standard(
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent'
 ){
-
-    $real_php_default_charset = $php_default_charset ? {
-      'absent' => $default_charset ? {
-        'On' => 'iso-8859-1',
-        default => $default_charset
-      },
-      default => $php_default_charset
-    }
 
     ::apache::vhost::phpdirs{"${name}":
         ensure => $ensure,
@@ -154,6 +147,46 @@ define apache::vhost::php::standard(
         documentroot_mode => $documentroot_mode,
       }
     }
+    
+    # php upload_tmp_dir
+    case $php_upload_tmp_dir {
+        'absent': {
+            $real_php_upload_tmp_dir = "/var/www/upload_tmp_dir/$name"
+        }
+        default: { $real_php_upload_tmp_dir = $php_upload_tmp_dir }
+    }
+    # php session_save_path
+    case $php_session_save_path {
+        'absent': {
+            $real_php_session_save_path = "/var/www/session.save_path/$name"
+        }
+        default: { $real_php_session_save_path = $php_session_save_path }
+    }
+    
+    $std_php_settings = {
+        engine =>  'On',
+        upload_tmp_dir => $real_php_upload_tmp_dir,
+        session.save_path => $real_php_session_save_path,
+    }
+    if $php_safe_mode_exec_bins != 'absent' {
+      $std_php_settings[safe_mode_exec_dir] = $real_php_safe_mode_exec_bin_dir
+    }
+
+    $real_php_default_charset = $php_settings[default_charset] ? {
+      '' => $default_charset ? {
+        'On' => 'iso-8859-1',
+        default => $default_charset ? {
+          'absent' => 'absent',
+          default => $default_charset
+        }
+      },
+      default => $php_settings[default_charset]
+    }
+    if $real_php_default_charset != 'absent' {
+      $std_php_settings[default_charset] = $real_php_default_charset 
+    }
+    
+    $real_php_settings = hash_merge($std_php_settings,$php_settings)
 
     # create vhost configuration file
     ::apache::vhost{$name:
@@ -185,6 +218,7 @@ define apache::vhost::php::standard(
         php_use_pear => $php_use_pear,
         php_safe_mode => $php_safe_mode,
         php_default_charset => $real_php_default_charset,
+        php_settings => $real_php_settings,
         ssl_mode => $ssl_mode,
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
