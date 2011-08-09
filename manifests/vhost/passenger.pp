@@ -91,14 +91,14 @@ define apache::vhost::passenger(
           owner => $documentroot_owner, group => $run_gid, mode => 0640;      
         "${real_path}/www/config/environment.rb":
           ensure => present,
-          owner => $run_uid, group => $run_gid, mode => 0660;
+          owner => $run_uid, group => $run_gid, mode => 0640;
       }
     } else {
       #rack based
       file{
         "${real_path}/www/config.ru":
           ensure => present,
-          owner => $run_uid, group => $run_gid, mode => 0660;
+          owner => $run_uid, group => $run_gid, mode => 0640;
       }
     }
 
