@@ -2,6 +2,7 @@
 # by default we assume it's a global configuration file
 define apache::config::file(
     $ensure = present,
+    $target = false,
     $type = 'global',
     $source = 'absent',
     $content = 'absent',
@@ -29,28 +30,36 @@ define apache::config::file(
         notify => Service[apache],
         owner => root, group => 0, mode => 0644;
     }
-    case $content {
-        'absent': {
-            $real_source = $source ? {
-                'absent' => [
-                    "puppet://${server}/modules/site-apache/${confdir}/${fqdn}/${name}",
-                    "puppet://${server}/modules/site-apache/${confdir}/${apache_cluster_node}/${name}",
-                    "puppet://${server}/modules/site-apache/${confdir}/${operatingsystem}.${lsbdistcodename}/${name}",
-                    "puppet://${server}/modules/site-apache/${confdir}/${operatingsystem}/${name}",
-                    "puppet://${server}/modules/site-apache/${confdir}/${name}",
-                    "puppet://${server}/modules/apache/${confdir}/${operatingsystem}.${lsbdistcodename}/${name}",
-                    "puppet://${server}/modules/apache/${confdir}/${operatingsystem}/${name}",
-                    "puppet://${server}/modules/apache/${confdir}/${name}"
-                ],
-                default => $source,
-            }
-            File["apache_${name}"]{
-                source => $real_source,
-            }
+
+    if ($ensure == 'link') and ($target != false) {
+        File["apache_${name}"] {
+            target => $target,
         }
-        default: {
-            File["apache_${name}"]{
-                content => $content,
+    }
+    else {
+        case $content {
+            'absent': {
+                $real_source = $source ? {
+                    'absent' => [
+                        "puppet://${server}/modules/site-apache/${confdir}/${fqdn}/${name}",
+                        "puppet://${server}/modules/site-apache/${confdir}/${apache_cluster_node}/${name}",
+                        "puppet://${server}/modules/site-apache/${confdir}/${operatingsystem}.${lsbdistcodename}/${name}",
+                        "puppet://${server}/modules/site-apache/${confdir}/${operatingsystem}/${name}",
+                        "puppet://${server}/modules/site-apache/${confdir}/${name}",
+                        "puppet://${server}/modules/apache/${confdir}/${operatingsystem}.${lsbdistcodename}/${name}",
+                        "puppet://${server}/modules/apache/${confdir}/${operatingsystem}/${name}",
+                        "puppet://${server}/modules/apache/${confdir}/${name}"
+                    ],
+                    default => $source,
+                }
+                File["apache_${name}"]{
+                    source => $real_source,
+                }
+            }
+            default: {
+                File["apache_${name}"]{
+                    content => $content,
+                }
             }
         }
     }
