@@ -52,6 +52,7 @@ define apache::vhost::modperl(
     $mod_security_additional_options = 'absent',
     $ssl_mode = false,
     $vhost_mode = 'template',
+    $template_partial = 'apache/vhosts/perl/partial.erb',
     $vhost_source = 'absent',
     $vhost_destination = 'absent',
     $htpasswd_file = 'absent',
@@ -83,7 +84,10 @@ define apache::vhost::modperl(
     }
 
     case $run_mode {
-      'proxy-itk','static-itk': { include ::mod_perl::itk_plus }
+      'proxy-itk','static-itk': {
+        $passing_extension = 'pl'
+        include ::mod_perl::itk_plus
+      }
       default: { include ::mod_perl }
     }
 
@@ -106,6 +110,7 @@ define apache::vhost::modperl(
         template_mode => 'perl',
         logmode => $logmode,
         vhost_mode => $vhost_mode,
+        template_partial => $template_partial,
         vhost_source => $vhost_source,
         vhost_destination => $vhost_destination,
         domain => $domain,

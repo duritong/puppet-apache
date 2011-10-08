@@ -1,5 +1,3 @@
-# manifests/joomla.pp
-
-class apache::joomla {
+class apache::include::joomla {
     apache::config::include{'joomla.inc': }
 }

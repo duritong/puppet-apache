@@ -16,6 +16,7 @@ define apache::vhost::gitweb(
     $documentroot_group = 0,
     $documentroot_mode = 0640,
     $allow_override = 'None',
+    $template_partial = 'apache/vhosts/gitweb/partial.erb',
     $do_includes = false,
     $options = 'absent',
     $additional_options = 'absent',
@@ -37,7 +38,7 @@ define apache::vhost::gitweb(
             default => '/var/log/apache2'
         },
         logmode => $logmode,
-        template_partial => 'apache/vhosts/gitweb/partial.erb',
+        template_partial => $template_partial,
         domain => $domain,
         domainalias => $domainalias,
         server_admin => $server_admin,

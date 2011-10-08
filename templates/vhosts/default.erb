@@ -1,8 +1,7 @@
 <%
 vhost_parts = case ssl_mode
   when 'only' then [:ssl]
-  when false then  [:normal]
-  when 'false' then  [:normal]
+  when false,'false' then  [:normal]
   else [:normal,:ssl]
 end
 vhost_parts.each do |vhost_part|
@@ -15,6 +14,12 @@ vhost_parts.each do |vhost_part|
 
 <%= scope.function_template('apache/vhosts/partials/logs.erb') %>
 
+  <% if run_mode.to_s =~ /(proxy\-|static\-)?itk/ -%>
+  <IfModule mpm_itk_module>
+      AssignUserId <%= run_uid+" "+run_gid %>
+  </IfModule>
+
+  <% end -%>
   <% if ssl_mode == 'force' && vhost_part == :normal -%>
   RewriteEngine On
   RewriteCond %{HTTPS} !=on
@@ -22,11 +27,11 @@ vhost_parts.each do |vhost_part|
   <% else -%>
 <%= scope.function_template(template_partial) %>
   <% end -%>
-
+<%- unless template_partial == 'apache/vhosts/itk_plus/partial.erb' -%>
 <%= scope.function_template('apache/vhosts/partials/mod_security.erb') %>
-
-  <%- unless additional_options.to_s == 'absent' then -%>
+<% end -%>
+<% unless additional_options.to_s == 'absent' -%>
   <%= additional_options %>
-  <%- end -%>
+<% end -%>
 </VirtualHost>
 <% end -%>

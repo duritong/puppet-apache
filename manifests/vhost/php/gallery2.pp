@@ -46,11 +46,8 @@ define apache::vhost::php::gallery2(
     $run_uid = 'absent',
     $run_gid = 'absent',
     $allow_override = 'None',
-    $php_upload_tmp_dir = 'absent',
-    $php_session_save_path = 'absent',
-    $php_safe_mode_exec_bins = 'absent',
-    $php_default_charset = 'absent',
     $php_settings = {},
+    $php_options = {},
     $do_includes = false,
     $options = 'absent',
     $additional_options = 'absent',
@@ -61,6 +58,7 @@ define apache::vhost::php::gallery2(
     $mod_security_additional_options = 'absent',
     $ssl_mode = false,
     $vhost_mode = 'template',
+    $template_partial = 'apache/vhosts/php_gallery2/partial.erb',
     $vhost_source = 'absent',
     $vhost_destination = 'absent',
     $htpasswd_file = 'absent',
@@ -85,11 +83,11 @@ define apache::vhost::php::gallery2(
         default => "${path}/g2data"
     }
     file{$gdatadir:
-            ensure => $ensure ? {
-              'present' => directory,
-              default => absent
-            },
-            owner => $documentroot_owner, group => $documentroot_group, mode => 0660;
+      ensure => $ensure ? {
+        'present' => directory,
+        default => absent
+      },
+      owner => $documentroot_owner, group => $documentroot_group, mode => 0660;
     }
 
     if ($upload_dir == 'present') or ($upload_dir == 'absent') {
@@ -116,33 +114,30 @@ define apache::vhost::php::gallery2(
         ensure => directory
       }
     }
-    
-    # php upload_tmp_dir
-    case $php_upload_tmp_dir {
-      'absent': {
-        $real_php_upload_tmp_dir = "/var/www/upload_tmp_dir/$name"
-      }
-      default: { $real_php_upload_tmp_dir = $php_upload_tmp_dir }
-    }
-    # php session_save_path
-    case $php_session_save_path {
-      'absent': {
-        $real_php_session_save_path = "/var/www/session.save_path/$name"
-      }
-      default: { $real_php_session_save_path = $php_session_save_path }
-    }
-    
+
     $gallery_php_settings = {
       safe_mode => 'Off',
       output_buffering => 'Off',
     }
-    $open_basedir = "${documentroot}:${real_php_upload_tmp_dir}:${real_php_session_save_path}:${gdatadir}"
+    
+    # php upload_tmp_dir
+    case $php_settings[upload_tmp_dir] {
+      '',undef: {
+        $php_settings[upload_tmp_dir] = "/var/www/upload_tmp_dir/$name"
+      }
+    }
+    # php session_save_path
+    case $php_settings['session.save_path'] {
+      '',undef: {
+        $php_settings['session.save_path'] = "/var/www/session.save_path/$name"
+      }
+    }
+
     if $upload_dir != 'absent' {
-      $real_open_basedir = "${open_basedir}:${real_upload_dir}"
+      $gallery_php_settings[open_basedir] = "${documentroot}:${php_settings[upload_tmp_dir]}:${php_settings['session.save_path']}:${gdatadir}:${real_upload_dir}"
     } else {
-      $real_open_basedir = "${open_basedir}"
+      $gallery_php_settings[open_basedir] = "${documentroot}:${php_settings[upload_tmp_dir]}:${php_settings['session.save_path']}:${gdatadir}"
     } 
-    $gallery_php_settings[open_basedir] = $real_open_basedir
     
     $real_php_settings = hash_merge($gallery_php_settings,$php_settings)
 
@@ -164,11 +159,8 @@ define apache::vhost::php::gallery2(
         run_uid => $run_uid,
         run_gid => $run_gid,
         allow_override => $allow_override,
-        php_upload_tmp_dir => $php_upload_tmp_dir,
-        php_session_save_path => $php_session_save_path,
-        php_safe_mode_exec_bins => $real_php_safe_mode_exec_bins,
-        php_default_charset => $php_default_charset,
         php_settings => $real_php_settings,
+        php_options => $php_options,
         do_includes => $do_includes,
         options => $options,
         additional_options => $additional_options,
@@ -187,6 +179,5 @@ define apache::vhost::php::gallery2(
         manage_config => $manage_config,
         config_file => 'config.php',
     }
-
 }
 

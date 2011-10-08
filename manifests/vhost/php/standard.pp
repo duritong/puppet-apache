@@ -19,12 +19,6 @@
 #    - false: don't activate mod_security
 #    - true: (*default*) activate mod_security
 #
-# php_safe_mode_exec_bins: An array of local binaries which should be linked in the
-#                          safe_mode_exec_bin for this hosting
-#                          *default*: None
-# php_default_charset: default charset header for php.
-#                      *default*: absent, which will set the same as default_charset
-#                                 of apache
 # logmode:
 #   - default: Do normal logging to CustomLog and ErrorLog
 #   - nologs: Send every logging to /dev/null
@@ -41,8 +35,6 @@ define apache::vhost::php::standard(
     $manage_webdir = true,
     $path_is_webdir = false,
     $manage_docroot = true,
-    $template_mode = 'php',
-    $template_partial = 'absent',
     $owner = root,
     $group = apache,
     $documentroot_owner = apache,
@@ -52,15 +44,8 @@ define apache::vhost::php::standard(
     $run_uid = 'absent',
     $run_gid = 'absent',
     $allow_override = 'None',
-    $php_upload_tmp_dir = 'absent',
-    $php_session_save_path = 'absent',
-    $php_use_smarty = false,
-    $php_use_pear = false,
-    $php_safe_mode = true,
-    $php_safe_mode_exec_bins = 'absent',
-    $php_safe_mode_exec_bin_dir = 'absent',
-    $php_default_charset = 'absent',
     $php_settings = {},
+    $php_options = {},
     $do_includes = false,
     $options = 'absent',
     $additional_options = 'absent',
@@ -72,63 +57,18 @@ define apache::vhost::php::standard(
     $mod_security_additional_options = 'absent',
     $ssl_mode = false,
     $vhost_mode = 'template',
+    $template_partial = 'apache/vhosts/php/partials.erb',
     $vhost_source = 'absent',
     $vhost_destination = 'absent',
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent'
 ){
 
-    ::apache::vhost::phpdirs{"${name}":
-        ensure => $ensure,
-        php_upload_tmp_dir => $php_upload_tmp_dir,
-        php_session_save_path => $php_session_save_path,
-        documentroot_owner => $documentroot_owner,
-        documentroot_group => $documentroot_group,
-        documentroot_mode => $documentroot_mode,
-        run_mode => $run_mode,
-        run_uid => $run_uid,
-    }
-
-    $real_php_safe_mode_exec_bin_dir = $php_safe_mode_exec_bin_dir ? {
-      'absent' => $path ? {
-        'absent' => $operatingsystem ? {
-          openbsd => "/var/www/htdocs/${name}/bin",
-          default => "/var/www/vhosts/${name}/bin"
-        },
-        default => "${path}/bin"
-      },
-      default => $php_safe_mode_exec_bin_dir
-    }
-    file{$real_php_safe_mode_exec_bin_dir:
-      recurse => true,
-      force => true,
-      purge => true,
-    }
-    if $php_safe_mode_exec_bins != 'absent' {
-     File[$real_php_safe_mode_exec_bin_dir]{
-        ensure => $ensure ? {
-          'present' => directory,
-          default => absent,
-        },
-        owner => $documentroot_owner, group => $documentroot_group, mode => 0750,
-      }
-      $php_safe_mode_exec_bins_subst = regsubst($php_safe_mode_exec_bins,"(.+)","${name}@\\1")
-      apache::vhost::php::safe_mode_bin{ $php_safe_mode_exec_bins_subst:
-        ensure => $ensure,
-        path => $real_php_safe_mode_exec_bin_dir
-      }
-    }else{
-      File[$real_php_safe_mode_exec_bin_dir]{
-        ensure => absent,
-      }
-    }
-
-    if $php_use_smarty {
-        include php::extensions::smarty
-    }
-
     case $run_mode {
-      'proxy-itk','static-itk': { include ::php::itk_plus }
+      'proxy-itk','static-itk': {
+        $passing_extension = 'php'
+        include ::php::itk_plus
+      }
       'itk': { include ::php::itk }
       default: { include ::php }
     }
@@ -148,54 +88,116 @@ define apache::vhost::php::standard(
       }
     }
     
-    # php upload_tmp_dir
-    case $php_upload_tmp_dir {
-        'absent': {
-            $real_php_upload_tmp_dir = "/var/www/upload_tmp_dir/$name"
-        }
-        default: { $real_php_upload_tmp_dir = $php_upload_tmp_dir }
-    }
-    # php session_save_path
-    case $php_session_save_path {
-        'absent': {
-            $real_php_session_save_path = "/var/www/session.save_path/$name"
-        }
-        default: { $real_php_session_save_path = $php_session_save_path }
-    }
-    
-    $std_php_settings = {
-        engine =>  'On',
-        upload_tmp_dir => $real_php_upload_tmp_dir,
-        session.save_path => $real_php_session_save_path,
-    }
-    if $php_safe_mode_exec_bins != 'absent' {
-      $std_php_settings[safe_mode_exec_dir] = $real_php_safe_mode_exec_bin_dir
+    $real_path = $path ? {
+        'absent' => $operatingsystem ? {
+            openbsd => "/var/www/htdocs/${name}",
+            default => "/var/www/vhosts/${name}"
+        },
+        default => $path
     }
 
-    $real_php_default_charset = $php_settings[default_charset] ? {
-      '' => $default_charset ? {
-        'On' => 'iso-8859-1',
-        default => $default_charset ? {
-          'absent' => 'absent',
-          default => $default_charset
-        }
-      },
-      default => $php_settings[default_charset]
+    if $path_is_webdir {
+        $documentroot = $real_path
+    } else {
+        $documentroot = "${real_path}/www"
     }
-    if $real_php_default_charset != 'absent' {
-      $std_php_settings[default_charset] = $real_php_default_charset 
+    
+    $std_php_options = {
+      smarty => false,
+      pear => false,
+    }
+    $real_php_options = hash_merge($std_php_options,$php_options)
+    
+    if $real_php_options[smarty] {
+        include php::extensions::smarty
+        $smarty_path = '/usr/share/php/Smarty/:'
+    } else {
+      $smarty_path = ''
+    }
+
+    if $real_php_options[pear] {
+      $pear_path = '/usr/share/pear/:'
+    } else {
+      $pear_path = ''
+    }
+    
+
+    $std_php_settings = {
+        engine =>  'On',
+        upload_tmp_dir => "/var/www/upload_tmp_dir/${name}",
+        'session.save_path' => "/var/www/session.save_path/${name}",
+        open_basedir => "${smarty_path}${pear_path}${documentroot}:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}",
+        safe_mode => 'On',
+    }
+        
+    case $php_settings[safe_mode_exec_bin_dir] {
+      '',undef: {
+        $php_safe_mode_exec_bin_dir =  $path ? {
+          'absent' => $operatingsystem ? {
+            openbsd => "/var/www/htdocs/${name}/bin",
+            default => "/var/www/vhosts/${name}/bin"
+          },
+          default => "${path}/bin"
+        }
+      }
+      default: { $php_safe_mode_exec_bin_dir = $php_settings[safe_mode_exec_bin_dir] }
+    }
+    file{$php_safe_mode_exec_bin_dir:
+      recurse => true,
+      force => true,
+      purge => true,
+    }
+    if $php_options[safe_mode_exec_bins] {
+     $std_php_settings[safe_mode_exec_dir] = $php_safe_mode_exec_bin_dir
+     File[$php_safe_mode_exec_bin_dir]{
+        ensure => $ensure ? {
+          'present' => directory,
+          default => absent,
+        },
+        owner => $documentroot_owner, group => $documentroot_group, mode => 0750,
+      }
+      $php_safe_mode_exec_bins_subst = regsubst($php_options[safe_mode_exec_bins],"(.+)","${name}@\\1")
+      apache::vhost::php::safe_mode_bin{ $php_safe_mode_exec_bins_subst:
+        ensure => $ensure,
+        path => $php_safe_mode_exec_bin_dir
+      }
+    }else{
+      File[$php_safe_mode_exec_bin_dir]{
+        ensure => absent,
+      }
+    }
+    
+    case $php_settings[default_charset] {
+      '',undef: {
+        if $default_charset != 'absent' {
+          $std_php_settings[default_charset] =  $default_charset ? {
+            'On' => 'iso-8859-1',
+            default => $default_charset
+          }
+        }
+      }
     }
     
     $real_php_settings = hash_merge($std_php_settings,$php_settings)
+    
+    ::apache::vhost::phpdirs{"${name}":
+        ensure => $ensure,
+        php_upload_tmp_dir => $real_php_settings[upload_tmp_dir],
+        php_session_save_path => $real_php_settings['session.save_path'],
+        documentroot_owner => $documentroot_owner,
+        documentroot_group => $documentroot_group,
+        documentroot_mode => $documentroot_mode,
+        run_mode => $run_mode,
+        run_uid => $run_uid,
+    }
 
     # create vhost configuration file
     ::apache::vhost{$name:
         ensure => $ensure,
         path => $path,
         path_is_webdir => $path_is_webdir,
-        template_mode => $template_mode,
-        template_partial => $template_partial,
         vhost_mode => $vhost_mode,
+        template_partial => $template_partial,
         vhost_source => $vhost_source,
         vhost_destination => $vhost_destination,
         domain => $domain,
@@ -211,14 +213,8 @@ define apache::vhost::php::standard(
         options => $options,
         additional_options => $additional_options,
         default_charset => $default_charset,
-        php_safe_mode_exec_bin_dir => $real_php_safe_mode_exec_bin_dir,
-        php_upload_tmp_dir => $php_upload_tmp_dir,
-        php_session_save_path => $php_session_save_path,
-        php_use_smarty => $php_use_smarty,
-        php_use_pear => $php_use_pear,
-        php_safe_mode => $php_safe_mode,
-        php_default_charset => $real_php_default_charset,
         php_settings => $real_php_settings,
+        php_options => $real_php_options,
         ssl_mode => $ssl_mode,
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,

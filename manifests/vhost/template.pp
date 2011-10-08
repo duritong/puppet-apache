@@ -1,8 +1,6 @@
-# template_mode:
-#   - php: for a default php application
-#   - static: for a static application (default)
-#   - perl: for a mod_perl application
-#   - php_joomla: for a joomla application
+# template_partial:
+#  which template should be used to generate the type specific part
+#  of the vhost entry.
 #
 # domainalias:
 #   - absent: no domainalias is set (*default*)
@@ -15,12 +13,6 @@
 #   - force: enable ssl and redirect non-ssl to ssl
 #   - only: enable ssl only
 #
-# php_safe_mode_exec_bins: An array of local binaries which should be linked in the
-#                          safe_mode_exec_bin for this hosting
-#                          *default*: None
-# php_default_charset: default charset header for php.
-#                      *default*: absent, which will set the same as default_charset
-#                                 of apache
 # logmode:
 #   - default: Do normal logging to CustomLog and ErrorLog
 #   - nologs: Send every logging to /dev/null
@@ -58,25 +50,18 @@ define apache::vhost::template(
     $domainalias = 'absent',
     $server_admin = 'absent',
     $allow_override = 'None',
-    $php_safe_mode_exec_bin_dir = 'absent',
-    $php_upload_tmp_dir = 'absent',
-    $php_session_save_path = 'absent',
     $dav_db_dir = 'absent',
     $cgi_binpath = 'absent',
     $do_includes = false,
     $options = 'absent',
     $additional_options = 'absent',
     $default_charset = 'absent',
-    $php_use_smarty = false,
-    $php_use_pear = false,
-    $php_safe_mode = true,
-    $php_default_charset = 'absent',
+    $php_options = {},
     $php_settings = {},
     $run_mode = 'normal',
     $run_uid = 'absent',
     $run_gid = 'absent',
-    $template_mode = 'static',
-    $template_partial = 'absent',
+    $template_partial = 'apache/vhosts/static/partial.erb',
     $ssl_mode = false,
     $mod_security = true,
     $mod_security_relevantonly = true,
@@ -121,8 +106,8 @@ define apache::vhost::template(
       $real_htpasswd_path = $htpasswd_path
     }
     case $run_mode {
-        'proxy-itk': { $logfileprefix = 'proxy' }
-        'static-itk': { $logfileprefix = 'static' }
+      'proxy-itk': { $logfileprefix = 'proxy' }
+      'static-itk': { $logfileprefix = 'static' }
     }
     case $run_mode {
         'itk','proxy-itk','static-itk': {
@@ -135,28 +120,6 @@ define apache::vhost::template(
         }
     }
 
-    # set default dirs for templates
-    # php php_safe_mode_exec_bin directory
-    case $php_safe_mode_exec_bin_dir {
-        'absent': {
-            $real_php_safe_mode_exec_bin_dir = "/var/www/vhosts/$name/bin"
-        }
-        default: { $real_php_safe_mode_exec_bin_dir = $php_safe_mode_exec_bin_dir }
-    }
-    # php upload_tmp_dir
-    case $php_upload_tmp_dir {
-        'absent': {
-            $real_php_upload_tmp_dir = "/var/www/upload_tmp_dir/$name"
-        }
-        default: { $real_php_upload_tmp_dir = $php_upload_tmp_dir }
-    }
-    # php session_save_path
-    case $php_session_save_path {
-        'absent': {
-            $real_php_session_save_path = "/var/www/session.save_path/$name"
-        }
-        default: { $real_php_session_save_path = $php_session_save_path }
-    }
     # dav db dir
     case $dav_db_dir {
         'absent': {
@@ -178,9 +141,10 @@ define apache::vhost::template(
     }
     if $ensure != 'absent' {
       Apache::Vhost::File[$name]{
-        content => $template_partial ? {
-          'absent' => template("apache/vhosts/$template_mode/$operatingsystem.erb"),
-          default => template("apache/vhosts/default.erb"),
+        content => $run_mode ? {
+          'proxy-itk'  => template("apache/vhosts/itk_plus.erb"),
+          'static-itk' => template("apache/vhosts/itk_plus.erb"),
+          default      => template("apache/vhosts/default.erb"),
         }
       }
     }

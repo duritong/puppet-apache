@@ -19,12 +19,6 @@
 #    - false: don't activate mod_security
 #    - true: (*default*) activate mod_security
 #
-# php_safe_mode_exec_bins: An array of local binaries which should be linked in the
-#                          safe_mode_exec_bin for this hosting
-#                          *default*: None
-# php_default_charset: default charset header for php.
-#                      *default*: absent, which will set the same as default_charset
-#                                 of apache
 # logmode:
 #   - default: Do normal logging to CustomLog and ErrorLog
 #   - nologs: Send every logging to /dev/null
@@ -46,10 +40,9 @@ define apache::vhost::php::spip(
     $run_uid = 'absent',
     $run_gid = 'absent',
     $allow_override = 'FileInfo',
-    $php_upload_tmp_dir = 'absent',
-    $php_session_save_path = 'absent',
-    $php_safe_mode_exec_bins = 'absent',
-    $php_default_charset = 'absent',
+    $php_settings = {},
+    $php_options = {},
+    $template_partial = 'apache/vhosts/php/partial.erb',
     $do_includes = false,
     $options = 'absent',
     $additional_options = 'absent',
@@ -91,10 +84,8 @@ define apache::vhost::php::spip(
         run_uid => $run_uid,
         run_gid => $run_gid,
         allow_override => $allow_override,
-        php_upload_tmp_dir => $php_upload_tmp_dir,
-        php_session_save_path => $php_session_save_path,
-        php_safe_mode_exec_bins => $php_safe_mode_exec_bins,
-        php_default_charset => $php_default_charset,
+        php_settings => $php_settings,
+        php_options => $php_options,
         do_includes => $do_includes,
         options => $options,
         additional_options => $additional_options,
@@ -105,6 +96,7 @@ define apache::vhost::php::spip(
         mod_security_additional_options=> $mod_security_additional_options,
         ssl_mode => $ssl_mode,
         vhost_mode => $vhost_mode,
+        template_partial => $template_partial,
         vhost_source => $vhost_source,
         vhost_destination => $vhost_destination,
         htpasswd_file => $htpasswd_file,

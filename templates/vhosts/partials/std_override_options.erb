@@ -1,0 +1,4 @@
+        AllowOverride <%= allow_override %>
+        <% if options.to_s != 'absent' || do_includes.to_s == 'true' -%>
+        Options <%- unless options.to_s == 'absent' then -%><%= options %><% end -%><% if do_includes.to_s == 'true' && !options.include?('+Includes') -%> +Includes<% end -%>
+				<% end -%>

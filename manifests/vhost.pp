@@ -3,12 +3,7 @@
 # vhost_mode: which option is choosed to deploy the vhost
 #   - template: generate it from a template (default)
 #   - file: deploy a vhost file (apache::vhost::file will be called directly)
-# php_safe_mode_exec_bins: An array of local binaries which should be linked in the
-#                          safe_mode_exec_bin for this hosting
-#                          *default*: None
-# php_default_charset: default charset header for php.
-#                      *default*: absent, which will set the same as default_charset
-#                                 of apache
+#
 # logmode:
 #   - default: Do normal logging to CustomLog and ErrorLog
 #   - nologs: Send every logging to /dev/null
@@ -39,9 +34,8 @@ define apache::vhost(
     $path_is_webdir = false,
     $logpath = 'absent',
     $logmode = 'default',
-    $template_mode = 'static',
-    $template_partial = 'absent',
     $vhost_mode = 'template',
+    $template_partial = 'apache/vhosts/static/partial.erb',
     $vhost_source = 'absent',
     $vhost_destination = 'absent',
     $content = 'absent',
@@ -49,14 +43,8 @@ define apache::vhost(
     $domainalias = 'absent',
     $server_admin = 'absent',
     $allow_override = 'None',
-    $php_safe_mode_exec_bin_dir = 'absent',
-    $php_upload_tmp_dir = 'absent',
-    $php_session_save_path = 'absent',
-    $php_use_smarty = false,
-    $php_use_pear = false,
-    $php_safe_mode = true,
-    $php_default_charset = 'absent',
     $php_settings = {},
+    $php_options = {},
     $cgi_binpath = 'absent',
     $default_charset = 'absent',
     $do_includes = false,
@@ -65,7 +53,6 @@ define apache::vhost(
     $run_mode = 'normal',
     $run_uid = 'absent',
     $run_gid = 'absent',
-    $template_mode = 'static',
     $ssl_mode = false,
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
@@ -99,28 +86,21 @@ define apache::vhost(
                 path_is_webdir => $path_is_webdir,
                 logpath => $logpath,
                 logmode => $logmode,
-                template_partial => $template_partial,
                 domain => $domain,
                 domainalias => $domainalias,
                 server_admin => $server_admin,
-                php_safe_mode_exec_bin_dir => $php_safe_mode_exec_bin_dir,
-                php_upload_tmp_dir => $php_upload_tmp_dir,
-                php_session_save_path => $php_session_save_path,
                 cgi_binpath => $cgi_binpath,
                 allow_override => $allow_override,
                 do_includes => $do_includes,
                 options => $options,
                 additional_options => $additional_options,
                 default_charset => $default_charset,
-                php_use_smarty => $php_use_smarty,
-                php_use_pear => $php_use_pear,
-                php_safe_mode => $php_safe_mode,
-                php_default_charset => $php_default_charset,
                 php_settings => $php_settings,
+                php_options => $php_options,
                 run_mode => $run_mode,
                 run_uid => $run_uid,
                 run_gid => $run_gid,
-                template_mode => $template_mode,
+                template_partial => $template_partial,
                 ssl_mode => $ssl_mode,
                 htpasswd_file => $htpasswd_file,
                 htpasswd_path => $htpasswd_path,

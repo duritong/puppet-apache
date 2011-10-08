@@ -32,6 +32,7 @@ define apache::vhost::static(
     $ssl_mode = false,
     $run_mode = 'normal',
     $vhost_mode = 'template',
+    $template_partial = 'apache/vhosts/static/partial.erb',
     $vhost_source = 'absent',
     $vhost_destination = 'absent',
     $htpasswd_file = 'absent',
@@ -57,7 +58,7 @@ define apache::vhost::static(
     ::apache::vhost{$name:
         ensure => $ensure,
         path => $path,
-        template_partial => 'apache/vhosts/static/partial.erb',
+        template_partial => $template_partial,
         vhost_mode => $vhost_mode,
         vhost_source => $vhost_source,
         vhost_destination => $vhost_destination,
