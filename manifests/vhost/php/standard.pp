@@ -178,6 +178,9 @@ define apache::vhost::php::standard(
     $passing_extension = 'php'
     if $ensure != 'absent' {
       case $run_mode {
+        'itk': {
+          include ::php::itk
+        }
         'proxy-itk','static-itk': {
           include ::php::itk_plus
         }
