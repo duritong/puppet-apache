@@ -64,15 +64,25 @@ define apache::vhost::php::standard(
     $htpasswd_path = 'absent'
 ){
 
-    case $run_mode {
-      'proxy-itk','static-itk': {
-        $passing_extension = 'php'
-        include ::php::itk_plus
+    $passing_extension = 'php'
+    if $ensure != 'absent' {
+      case $run_mode {
+        'proxy-itk','static-itk': {
+          include ::php::itk_plus
+        }
+        'itk': { include ::php::itk }
+        'fcgid': {
+          include ::php::mod_fcgid
+          mod_fcgid::starter {$name:
+            type => 'php',
+            owner => $run_uid,
+            group => $run_gid,
+            notify => Service['apache'],
+          }
+        }
+        default: { include ::php }
       }
-      'itk': { include ::php::itk }
-      default: { include ::php }
     }
-
     if $manage_webdir {
       # create webdir
       ::apache::vhost::webdir{$name:

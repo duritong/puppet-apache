@@ -83,12 +83,25 @@ define apache::vhost::modperl(
         mode => $documentroot_mode;
     }
 
-    case $run_mode {
-      'proxy-itk','static-itk': {
-        $passing_extension = 'pl'
-        include ::mod_perl::itk_plus
+    $passing_extension = 'pl'
+    if $ensure != 'absent' {
+      case $run_mode {
+        'proxy-itk','static-itk': {
+          include ::mod_perl::itk_plus
+        }
+        'fcgid': {
+          include ::mod_fcgid
+          # we don't need mod_perl if we run it as fcgid
+          include ::mod_perl::disable
+          mod_fcgid::starter {$name:
+            type => 'perl',
+            owner => $run_uid,
+            group => $run_gid,
+            notify => Service['apache'],
+          }
+        }
+        default: { include ::mod_perl }
       }
-      default: { include ::mod_perl }
     }
 
     # create webdir
