@@ -15,6 +15,6 @@
 <% if default_charset.to_s != 'absent' then -%>
   AddDefaultCharset <%= default_charset %>
 <% end -%>
-<% unless passing_extension.to_s.empty? -%>
+<% if has_variable?('passing_extension') && !passing_extension.to_s.empty? -%>
   DirectoryIndex index.htm index.html index.<%= passing_extension %>
 <% end -%>
