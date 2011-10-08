@@ -57,7 +57,7 @@ define apache::vhost::php::standard(
     $mod_security_additional_options = 'absent',
     $ssl_mode = false,
     $vhost_mode = 'template',
-    $template_partial = 'apache/vhosts/php/partials.erb',
+    $template_partial = 'apache/vhosts/php/partial.erb',
     $vhost_source = 'absent',
     $vhost_destination = 'absent',
     $htpasswd_file = 'absent',
