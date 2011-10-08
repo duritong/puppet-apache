@@ -58,6 +58,11 @@ define apache::vhost::php::mediawiki(
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent'
 ){
+
+    $mediawiki_php_settings = {
+      safe_mode => false,
+    }
+
     # create vhost configuration file
     ::apache::vhost::php::webapp{$name:
         ensure => $ensure,
@@ -76,7 +81,7 @@ define apache::vhost::php::mediawiki(
         run_uid => $run_uid,
         run_gid => $run_gid,
         allow_override => $allow_override,
-        php_settings => $php_settings,
+        php_settings => merge($mediawiki_php_settings,$php_settings),
         php_options => $php_options,
         options => $options,
         additional_options => $additional_options,
