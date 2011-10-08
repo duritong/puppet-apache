@@ -19,7 +19,7 @@ vhost_parts.each do |vhost_part|
       AssignUserId <%= run_uid+" "+run_gid %>
   </IfModule>
 
-  <% elsif run_mod.to_s == 'fcgid' -%>
+  <% elsif run_mode.to_s == 'fcgid' -%>
   <IfModule mod_fcgid.c>
     SuexecUserGroup <%= run_uid+" "+run_gid %>
     <% if passing_extension.to_s == 'php' -%>
