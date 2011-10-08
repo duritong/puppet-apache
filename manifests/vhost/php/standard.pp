@@ -72,6 +72,7 @@ define apache::vhost::php::standard(
         }
         'itk': { include ::php::itk }
         'fcgid': {
+          include ::mod_fcgid
           include ::php::mod_fcgid
           mod_fcgid::starter {$name:
             type => 'php',
