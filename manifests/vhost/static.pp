@@ -57,7 +57,7 @@ define apache::vhost::static(
     ::apache::vhost{$name:
         ensure => $ensure,
         path => $path,
-        template_mode => 'static',
+        template_partial => 'apache/vhosts/static/partial.erb',
         vhost_mode => $vhost_mode,
         vhost_source => $vhost_source,
         vhost_destination => $vhost_destination,

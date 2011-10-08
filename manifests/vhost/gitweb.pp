@@ -37,7 +37,7 @@ define apache::vhost::gitweb(
             default => '/var/log/apache2'
         },
         logmode => $logmode,
-        template_mode => 'gitweb',
+        template_partial => 'apache/vhosts/gitweb/partial.erb',
         domain => $domain,
         domainalias => $domainalias,
         server_admin => $server_admin,

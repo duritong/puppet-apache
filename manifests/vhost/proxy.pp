@@ -38,7 +38,7 @@ define apache::vhost::proxy(
     # we use the options field as the target_url
     ::apache::vhost::template{$name:
         ensure => $ensure,
-        template_mode => 'proxy',
+        template_partial => 'apache/vhosts/proxy/partial.erb',
         domain => $domain,
         path => 'really_absent',
         path_is_webdir => true,

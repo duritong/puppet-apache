@@ -1,0 +1,18 @@
+    SetEnv GITWEB_CONFIG <%= gitweb_config %>
+    DirectoryIndex gitweb.cgi
+    <%- if not ssl_mode.to_s == 'force' then -%>
+    <Directory "<%= documentroot %>/">
+        <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
+        Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%><%- unless options.include?('+ExecCGI') then -%> +ExecCGI<%- end -%>
+        <%- end -%>
+
+        AddHandler cgi-script .cgi
+        <Files gitweb.cgi>
+              Options ExecCGI FollowSymLinks
+              SetHandler cgi-script
+        </Files>
+        RewriteEngine on
+        RewriteRule ^[a-zA-Z0-9_-]+.git/?(\?.)?$ /gitweb.cgi%{REQUESTURI} [L,PT]
+
+<%= scope.function_template('apache/vhosts/partials/authentication.erb') %>
+    </Directory>
