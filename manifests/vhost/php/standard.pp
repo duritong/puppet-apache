@@ -188,7 +188,7 @@ define apache::vhost::php::standard(
         'fcgid': {
           include ::mod_fcgid
           include ::php::mod_fcgid
-          apache::include::mod_fcgid
+          include apache::include::mod_fcgid
 
           mod_fcgid::starter {$name:
             cgi_type => 'php',

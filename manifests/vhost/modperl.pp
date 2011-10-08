@@ -91,7 +91,7 @@ define apache::vhost::modperl(
         }
         'fcgid': {
           include ::mod_fcgid
-          apache::include::mod_fcgid
+          include apache::include::mod_fcgid
 
           # we don't need mod_perl if we run it as fcgid
           include ::mod_perl::disable
