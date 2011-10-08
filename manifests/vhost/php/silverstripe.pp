@@ -82,7 +82,6 @@ define apache::vhost::php::silverstripe(
         server_admin => $server_admin,
         logmode => $logmode,
         path => $path,
-        template_mode => 'php_silverstripe',
         owner => $owner,
         group => $group,
         documentroot_owner => $documentroot_owner,

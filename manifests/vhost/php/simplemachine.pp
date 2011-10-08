@@ -77,7 +77,6 @@ define apache::vhost::php::simplemachine(
         server_admin => $server_admin,
         logmode => $logmode,
         path => $path,
-        template_mode => 'php_simplemachine',
         owner => $owner,
         group => $group,
         documentroot_owner => $documentroot_owner,

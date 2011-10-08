@@ -149,7 +149,6 @@ define apache::vhost::php::gallery2(
         server_admin => $server_admin,
         logmode => $logmode,
         path => $path,
-        template_mode => 'php_gallery2',
         owner => $owner,
         group => $group,
         documentroot_owner => $documentroot_owner,

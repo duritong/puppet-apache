@@ -97,7 +97,6 @@ define apache::vhost::php::joomla(
         server_admin => $server_admin,
         logmode => $logmode,
         path => $path,
-        template_mode => 'php_joomla',
         owner => $owner,
         group => $group,
         documentroot_owner => $documentroot_owner,

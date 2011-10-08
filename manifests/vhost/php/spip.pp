@@ -74,7 +74,6 @@ define apache::vhost::php::spip(
         server_admin => $server_admin,
         logmode => $logmode,
         path => $path,
-        template_mode => 'php_spip',
         owner => $owner,
         group => $group,
         documentroot_owner => $documentroot_owner,

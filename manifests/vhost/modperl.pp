@@ -107,7 +107,6 @@ define apache::vhost::modperl(
     ::apache::vhost{$name:
         ensure => $ensure,
         path => $path,
-        template_mode => 'perl',
         logmode => $logmode,
         vhost_mode => $vhost_mode,
         template_partial => $template_partial,

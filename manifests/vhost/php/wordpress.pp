@@ -80,7 +80,6 @@ define apache::vhost::php::wordpress(
         server_admin => $server_admin,
         logmode => $logmode,
         path => $path,
-        template_mode => 'php_wordpress',
         owner => $owner,
         group => $group,
         documentroot_owner => $documentroot_owner,

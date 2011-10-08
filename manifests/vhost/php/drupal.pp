@@ -109,7 +109,6 @@ define apache::vhost::php::drupal(
         server_admin => $server_admin,
         logmode => $logmode,
         path => $path,
-        template_mode => 'php_drupal',
         owner => $owner,
         group => $group,
         documentroot_owner => $documentroot_owner,
