@@ -92,6 +92,10 @@ define apache::vhost::php::standard(
     } else {
         $documentroot = "${real_path}/www"
     }
+    $logdir = $logpath ? {
+        'absent' => "$real_path/logs",
+        default => $logpath
+    }
     
     $std_php_options = {
       smarty => false,
@@ -119,6 +123,9 @@ define apache::vhost::php::standard(
         'session.save_path' => "/var/www/session.save_path/${name}",
         open_basedir => "${smarty_path}${pear_path}${documentroot}:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}",
         safe_mode => 'On',
+    }
+    if $logmode != 'nologs' {
+      $std_php_settings[error_log] = "${logdir}/php_error_log"
     }
         
     if has_key($php_settings,'safe_mode_exec_dir') {
@@ -178,6 +185,7 @@ define apache::vhost::php::standard(
         'fcgid': {
           include ::mod_fcgid
           include ::php::mod_fcgid
+
           mod_fcgid::starter {$name:
             cgi_type => 'php',
             cgi_type_options => $real_php_settings,
