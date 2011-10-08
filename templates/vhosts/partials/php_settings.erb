@@ -1,17 +1,19 @@
-<% php_settings.each do |key,value|
-  dvalue = value.to_s.downcase
-  munged_value = if dvalue == 'true'
-	    'on'
-	  elsif dvalue == 'false'
-	    'off'
-	  elsif ['on','off'].include?(dvalue)
-	    dvalue
-	  else
-	    value
-	  end
-  if ['on','off' ].include?(munged_value) -%>
+<% if run_mode != 'fcgid'
+  php_settings.each do |key,value|
+    dvalue = value.to_s.downcase
+    munged_value = if dvalue == 'true'
+	      'on'
+	    elsif dvalue == 'false'
+	      'off'
+	    elsif ['on','off'].include?(dvalue)
+	      dvalue
+	    else
+	      value
+	    end
+    if ['on','off' ].include?(munged_value) -%>
     php_admin_flag <%= key %> <%= munged_value %>
 <% else -%>
     php_admin_value <%= key %> <%= munged_value %>
+<% end -%>
 <% end -%>
 <% end -%>

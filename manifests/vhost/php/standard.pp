@@ -64,26 +64,6 @@ define apache::vhost::php::standard(
     $htpasswd_path = 'absent'
 ){
 
-    $passing_extension = 'php'
-    if $ensure != 'absent' {
-      case $run_mode {
-        'proxy-itk','static-itk': {
-          include ::php::itk_plus
-        }
-        'itk': { include ::php::itk }
-        'fcgid': {
-          include ::mod_fcgid
-          include ::php::mod_fcgid
-          mod_fcgid::starter {$name:
-            cgi_type => 'php',
-            owner => $run_uid,
-            group => $run_gid,
-            notify => Service['apache'],
-          }
-        }
-        default: { include ::php }
-      }
-    }
     if $manage_webdir {
       # create webdir
       ::apache::vhost::webdir{$name:
@@ -188,6 +168,28 @@ define apache::vhost::php::standard(
     
     $real_php_settings = merge($std_php_settings,$php_settings)
     
+    $passing_extension = 'php'
+    if $ensure != 'absent' {
+      case $run_mode {
+        'proxy-itk','static-itk': {
+          include ::php::itk_plus
+        }
+        'itk': { include ::php::itk }
+        'fcgid': {
+          include ::mod_fcgid
+          include ::php::mod_fcgid
+          mod_fcgid::starter {$name:
+            cgi_type => 'php',
+            cgi_type_options => $real_php_settings,
+            owner => $run_uid,
+            group => $run_gid,
+            notify => Service['apache'],
+          }
+        }
+        default: { include ::php }
+      }
+    }
+
     ::apache::vhost::phpdirs{"${name}":
         ensure => $ensure,
         php_upload_tmp_dir => $real_php_settings[upload_tmp_dir],
