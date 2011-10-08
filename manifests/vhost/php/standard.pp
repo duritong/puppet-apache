@@ -108,14 +108,14 @@ define apache::vhost::php::standard(
     }
     $real_php_options = merge($std_php_options,$php_options)
     
-    if has_key($real_php_options,'smarty') {
+    if $real_php_options[smarty] {
         include php::extensions::smarty
         $smarty_path = '/usr/share/php/Smarty/:'
     } else {
       $smarty_path = ''
     }
 
-    if has_key($real_php_options,'pear') {
+    if $real_php_options[pear] {
       $pear_path = '/usr/share/pear/:'
     } else {
       $pear_path = ''
