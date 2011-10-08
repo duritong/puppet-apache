@@ -75,7 +75,7 @@ define apache::vhost::php::standard(
           include ::mod_fcgid
           include ::php::mod_fcgid
           mod_fcgid::starter {$name:
-            type => 'php',
+            cgi_type => 'php',
             owner => $run_uid,
             group => $run_gid,
             notify => Service['apache'],

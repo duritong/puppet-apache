@@ -94,7 +94,7 @@ define apache::vhost::modperl(
           # we don't need mod_perl if we run it as fcgid
           include ::mod_perl::disable
           mod_fcgid::starter {$name:
-            type => 'perl',
+            cgi_type => 'perl',
             owner => $run_uid,
             group => $run_gid,
             notify => Service['apache'],
