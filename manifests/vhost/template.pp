@@ -110,7 +110,7 @@ define apache::vhost::template(
       'static-itk': { $logfileprefix = 'static' }
     }
     case $run_mode {
-        'itk','proxy-itk','static-itk': {
+        'fcgid','itk','proxy-itk','static-itk': {
             case $run_uid {
                 'absent': { fail("you have to define run_uid for $name on $fqdn") }
             }

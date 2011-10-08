@@ -24,6 +24,7 @@ define apache::vhost::phpdirs(
                     'itk' => $run_uid,
                     'static-itk' => $run_uid,
                     'proxy-itk' => $run_uid,
+                    'fcgid' => $run_uid,
                     default => $documentroot_owner
                 },
                 group => $documentroot_group, mode => $documentroot_mode;
