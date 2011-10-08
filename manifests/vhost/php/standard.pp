@@ -106,16 +106,16 @@ define apache::vhost::php::standard(
       smarty => false,
       pear => false,
     }
-    $real_php_options = hash_merge($std_php_options,$php_options)
+    $real_php_options = merge($std_php_options,$php_options)
     
-    if $real_php_options[smarty] {
+    if has_key($real_php_options,'smarty') {
         include php::extensions::smarty
         $smarty_path = '/usr/share/php/Smarty/:'
     } else {
       $smarty_path = ''
     }
 
-    if $real_php_options[pear] {
+    if has_key($real_php_options,'pear') {
       $pear_path = '/usr/share/pear/:'
     } else {
       $pear_path = ''
@@ -130,26 +130,25 @@ define apache::vhost::php::standard(
         safe_mode => 'On',
     }
         
-    case $php_settings[safe_mode_exec_bin_dir] {
-      '',undef: {
-        $php_safe_mode_exec_bin_dir =  $path ? {
-          'absent' => $operatingsystem ? {
-            openbsd => "/var/www/htdocs/${name}/bin",
-            default => "/var/www/vhosts/${name}/bin"
-          },
-          default => "${path}/bin"
-        }
+    if has_key($php_settings,'safe_mode_exec_dir') {
+      $php_safe_mode_exec_dir = $php_settings[safe_mode_exec_dir]
+    } else {
+      $php_safe_mode_exec_dir =  $path ? {
+        'absent' => $operatingsystem ? {
+          openbsd => "/var/www/htdocs/${name}/bin",
+          default => "/var/www/vhosts/${name}/bin"
+        },
+        default => "${path}/bin"
       }
-      default: { $php_safe_mode_exec_bin_dir = $php_settings[safe_mode_exec_bin_dir] }
     }
-    file{$php_safe_mode_exec_bin_dir:
+    file{$php_safe_mode_exec_dir:
       recurse => true,
       force => true,
       purge => true,
     }
-    if $php_options[safe_mode_exec_bins] {
-     $std_php_settings[safe_mode_exec_dir] = $php_safe_mode_exec_bin_dir
-     File[$php_safe_mode_exec_bin_dir]{
+    if has_key($php_options,'safe_mode_exec_bins') {
+     $std_php_settings[safe_mode_exec_dir] = $php_safe_mode_exec_dir
+     File[$php_safe_mode_exec_dir]{
         ensure => $ensure ? {
           'present' => directory,
           default => absent,
@@ -159,26 +158,24 @@ define apache::vhost::php::standard(
       $php_safe_mode_exec_bins_subst = regsubst($php_options[safe_mode_exec_bins],"(.+)","${name}@\\1")
       apache::vhost::php::safe_mode_bin{ $php_safe_mode_exec_bins_subst:
         ensure => $ensure,
-        path => $php_safe_mode_exec_bin_dir
+        path => $php_safe_mode_exec_dir
       }
     }else{
-      File[$php_safe_mode_exec_bin_dir]{
+      File[$php_safe_mode_exec_dir]{
         ensure => absent,
       }
     }
     
-    case $php_settings[default_charset] {
-      '',undef: {
-        if $default_charset != 'absent' {
-          $std_php_settings[default_charset] =  $default_charset ? {
-            'On' => 'iso-8859-1',
-            default => $default_charset
-          }
+    if !has_key($php_settings,'default_charset') {
+      if $default_charset != 'absent' {
+        $std_php_settings[default_charset] =  $default_charset ? {
+          'On' => 'iso-8859-1',
+          default => $default_charset
         }
       }
     }
     
-    $real_php_settings = hash_merge($std_php_settings,$php_settings)
+    $real_php_settings = merge($std_php_settings,$php_settings)
     
     ::apache::vhost::phpdirs{"${name}":
         ensure => $ensure,

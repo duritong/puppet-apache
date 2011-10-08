@@ -85,7 +85,7 @@ define apache::vhost::php::typo3(
       # turn allow_url_fopen on for the extension manager fetch
       allow_url_fopen => 'On'
     }
-    $real_php_settings = hash_merge($typo3_php_settings,$php_settings)
+    $real_php_settings = merge($typo3_php_settings,$php_settings)
 
     # create vhost configuration file
     ::apache::vhost::php::webapp{$name:

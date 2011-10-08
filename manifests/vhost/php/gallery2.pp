@@ -139,7 +139,7 @@ define apache::vhost::php::gallery2(
       $gallery_php_settings[open_basedir] = "${documentroot}:${php_settings[upload_tmp_dir]}:${php_settings['session.save_path']}:${gdatadir}"
     } 
     
-    $real_php_settings = hash_merge($gallery_php_settings,$php_settings)
+    $real_php_settings = merge($gallery_php_settings,$php_settings)
 
     # create vhost configuration file
     ::apache::vhost::php::webapp{$name:
