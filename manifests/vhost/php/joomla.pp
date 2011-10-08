@@ -61,7 +61,7 @@ define apache::vhost::php::joomla(
     $config_webwriteable = false,
     $manage_directories = true
 ){
-    include ::apache::joomla
+    include ::apache::include::joomla
 
     $documentroot = $path ? {
         'absent' => $operatingsystem ? {
