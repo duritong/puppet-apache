@@ -99,8 +99,6 @@ define apache::vhost::php::drupal(
       'mbstring.encoding_translation' => 0,
     }
     
-    $drupal_php_settings = hash_merg($std_drupal_php_settings, $php_settings)
-
     # create vhost configuration file
     ::apache::vhost::php::webapp{$name:
         ensure => $ensure,
@@ -118,7 +116,7 @@ define apache::vhost::php::drupal(
         run_uid => $run_uid,
         run_gid => $run_gid,
         allow_override => $allow_override,
-        php_settings => $drupal_php_settings,
+        php_settings =>merge($std_drupal_php_settings, $php_settings),
         php_options => $php_options,
         do_includes => $do_includes,
         options => $options,
