@@ -52,7 +52,7 @@ define apache::vhost::php::mediawiki(
     $mod_security_additional_options = 'absent',
     $ssl_mode = false,
     $vhost_mode = 'template',
-    $template_partial = 'apache/vhosts/php/partial.erb',
+    $template_partial = 'apache/vhosts/php_mediawiki/partial.erb',
     $vhost_source = 'absent',
     $vhost_destination = 'absent',
     $htpasswd_file = 'absent',
