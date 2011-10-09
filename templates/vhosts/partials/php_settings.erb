@@ -1,6 +1,6 @@
 <% if run_mode != 'fcgid'
   php_settings.keys.sort.each do |key|
-    dvalue = php_settings[value].to_s.downcase
+    dvalue = php_settings[keys].to_s.downcase
     munged_value = if dvalue == 'true'
 	      'on'
 	    elsif dvalue == 'false'
