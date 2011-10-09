@@ -43,12 +43,12 @@ class apache::centos inherits apache::package {
         path => '/etc/httpd/conf/httpd.conf',
         line => 'PidFile run/httpd.pid',
         require => Package['apache'],
-        notify=> Package['apache'];
+        notify=> Service['apache'];
       'listen_httpd.conf':
         path => '/etc/httpd/conf/httpd.conf',
         line => 'Listen 80',
         require => Package['apache'],
-        notify=> Package['apache'];
+        notify=> Service['apache'];
     }
     apache::config::global{'00-listen.conf':
       ensure => absent,
