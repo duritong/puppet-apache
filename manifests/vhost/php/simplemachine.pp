@@ -86,7 +86,6 @@ define apache::vhost::php::simplemachine(
         run_uid => $run_uid,
         run_gid => $run_gid,
         allow_override => $allow_override,
-        php_upload_tmp_dir => $php_upload_tmp_dir,
         php_settings => $php_settings,
         php_options => $php_options,
         do_includes => $do_includes,
