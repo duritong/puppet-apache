@@ -26,9 +26,9 @@ define apache::htpasswd_user(
         $real_password = htpasswd_sha1($password)
     }
 
-    line{"htpasswd_for_${real_site}":
+    file_line{"htpasswd_for_${real_site}":
         ensure => $ensure,
-        file => $real_path,
+        path => $real_path,
         line => "${username}:${real_password}",
     }
 }

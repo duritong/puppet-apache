@@ -20,8 +20,8 @@ class apache::openbsd inherits apache::base {
     File[web_dir]{
         group => daemon,
     }
-    line{'enable_apache_on_boot':
-        file => '/etc/rc.conf.local',
+    file_line{'enable_apache_on_boot':
+        path => '/etc/rc.conf.local',
         line => 'httpd flags=""',
     }
     file{'apache_main_config':
