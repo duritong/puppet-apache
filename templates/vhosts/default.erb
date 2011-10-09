@@ -22,6 +22,7 @@ vhost_parts.each do |vhost_part|
   <% elsif run_mode.to_s == 'fcgid' -%>
   <IfModule mod_fcgid.c>
     SuexecUserGroup <%= run_uid+" "+run_gid %>
+    FcgidMaxRequestsPerProcess 5000
     FCGIWrapper /var/www/mod_fcgid-starters/<%= name %>/<%= name %>-starter .<%= passing_extension %>
     AddHandler fcgid-script .<%= passing_extension %>
   </IfModule>
