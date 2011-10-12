@@ -32,7 +32,7 @@ define apache::vhost::redirect(
     # we use the options field as the target_url
     ::apache::vhost::template{$name:
         ensure => $ensure,
-        template_partial => 'apache/vhost/redirect/partial.erb',
+        template_partial => 'apache/vhosts/redirect/partial.erb',
         domain => $domain,
         path => 'really_absent',
         path_is_webdir => true,
