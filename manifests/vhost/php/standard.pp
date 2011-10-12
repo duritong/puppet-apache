@@ -127,6 +127,9 @@ define apache::vhost::php::standard(
     if $logmode != 'nologs' {
       $std_php_settings[error_log] = "${logdir}/php_error_log"
     }
+    if $run_mode == 'fcgid' {
+      $std_php_settings[safe_mode_gid] = 'On'
+    }
         
     if has_key($php_settings,'safe_mode_exec_dir') {
       $php_safe_mode_exec_dir = $php_settings[safe_mode_exec_dir]
