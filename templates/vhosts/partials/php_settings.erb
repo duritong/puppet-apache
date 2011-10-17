@@ -8,7 +8,7 @@
 	    elsif ['on','off'].include?(dvalue)
 	      dvalue
 	    else
-	      value
+	      php_settings[key]
 	    end
     if ['on','off' ].include?(munged_value) -%>
     php_admin_flag <%= key %> <%= munged_value %>
