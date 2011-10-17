@@ -170,6 +170,7 @@ define apache::vhost::php::gallery2(
         mod_security_additional_options => $mod_security_additional_options,
         ssl_mode => $ssl_mode,
         vhost_mode => $vhost_mode,
+        template_partial => $template_partial,
         vhost_source => $vhost_source,
         vhost_destination => $vhost_destination,
         htpasswd_file => $htpasswd_file,
