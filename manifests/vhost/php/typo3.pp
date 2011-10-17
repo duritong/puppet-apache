@@ -81,7 +81,7 @@ define apache::vhost::php::typo3(
       $real_mod_security_additional_options = $mod_security_additional_options
     }
     
-    $typo3_php_options = {
+    $typo3_php_settings = {
       # turn allow_url_fopen on for the extension manager fetch
       allow_url_fopen => 'On'
     }
