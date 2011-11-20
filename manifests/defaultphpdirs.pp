@@ -1,5 +1,3 @@
-# manifests/defaultphpdirs.pp
-
 class apache::defaultphpdirs {
     file{'/var/www/upload_tmp_dir':
         ensure => directory,

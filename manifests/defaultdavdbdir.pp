@@ -1,5 +1,3 @@
-# manifests/defaultphpdirs.pp
-
 class apache::defaultdavdbdir {
     file{'/var/www/dav_db_dir':
         ensure => directory,
