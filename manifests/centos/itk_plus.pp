@@ -1,6 +1,6 @@
 # http://hostby.net/home/2008/07/12/centos-5-and-mpm-itk/
 class apache::centos::itk_plus inherits apache::centos::itk {
-  Line['pidfile_httpd.conf','listen_httpd.conf']{
+  File_line['pidfile_httpd.conf','listen_httpd.conf']{
     ensure => absent,
   }
 
