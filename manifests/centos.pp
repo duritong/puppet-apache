@@ -46,8 +46,8 @@ class apache::centos inherits apache::package {
         require => Package['apache'],
         notify => Service['apache'];
       'adjust_listen':
-        command => 'sed -i  "s/^#Listen \(.*\)/Listen \1/g" /etc/httpd/conf/httpd.conf',
-        unless => "grep -qE '^Listen ' /etc/httpd/conf/httpd.conf",
+        command => 'sed -i  "s/^#Listen 80/Listen 80/g" /etc/httpd/conf/httpd.conf',
+        unless => "grep -qE '^Listen 80' /etc/httpd/conf/httpd.conf",
         require => Package['apache'],
         notify => Service['apache'];
     }

@@ -5,8 +5,8 @@ class apache::centos::itk_plus inherits apache::centos::itk {
     unless => "grep -qE '^#PidFile ' /etc/httpd/conf/httpd.conf",
   }
   Exec['adjust_listen']{
-    command => "sed -i  's/^Listen \(.*\)/#Listen \1/g' /etc/httpd/conf/httpd.conf",
-    unless => "grep -qE '^#Listen ' /etc/httpd/conf/httpd.conf",
+    command => "sed -i  's/^Listen 80/#Listen 80/g' /etc/httpd/conf/httpd.conf",
+    unless => "grep -qE '^#Listen 80' /etc/httpd/conf/httpd.conf",
   }
 
   Apache::Config::Global['00-listen.conf']{
