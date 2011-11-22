@@ -1,7 +1,12 @@
 # http://hostby.net/home/2008/07/12/centos-5-and-mpm-itk/
 class apache::centos::itk_plus inherits apache::centos::itk {
-  File_line['pidfile_httpd.conf','listen_httpd.conf']{
-    ensure => absent,
+  Exec['adjust_pidfile']{
+    command => "sed -i  's/^PidFile \(.*\)/#PidFile \1/g' /etc/httpd/conf/httpd.conf",
+    unless => "grep -qE '^#PidFile ' /etc/httpd/conf/httpd.conf",
+  }
+  Exec['adjust_listen']{
+    command => "sed -i  's/^Listen \(.*\)/#Listen \1/g' /etc/httpd/conf/httpd.conf",
+    unless => "grep -qE '^#Listen ' /etc/httpd/conf/httpd.conf",
   }
 
   Apache::Config::Global['00-listen.conf']{

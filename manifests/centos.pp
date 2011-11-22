@@ -38,18 +38,20 @@ class apache::centos inherits apache::package {
         owner => root, group => 0, mode => 0644;
     }
 
-    file_line{
-      'pidfile_httpd.conf':
-        path => '/etc/httpd/conf/httpd.conf',
-        line => 'PidFile run/httpd.pid',
+    # this is for later fixes
+    exec{
+      'adjust_pidfile':
+        command => 'sed -i  "s/^#PidFile \(.*\)/PidFile \1/g" /etc/httpd/conf/httpd.conf',
+        unless => "grep -qE '^PidFile ' /etc/httpd/conf/httpd.conf",
         require => Package['apache'],
-        notify=> Service['apache'];
-      'listen_httpd.conf':
-        path => '/etc/httpd/conf/httpd.conf',
-        line => 'Listen 80',
+        notify => Service['apache'];
+      'adjust_listen':
+        command => 'sed -i  "s/^#Listen \(.*\)/Listen \1/g" /etc/httpd/conf/httpd.conf',
+        unless => "grep -qE '^Listen ' /etc/httpd/conf/httpd.conf",
         require => Package['apache'],
-        notify=> Service['apache'];
+        notify => Service['apache'];
     }
+
     apache::config::global{'00-listen.conf':
       ensure => absent,
     }
