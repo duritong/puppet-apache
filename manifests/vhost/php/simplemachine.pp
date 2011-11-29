@@ -111,6 +111,7 @@ define apache::vhost::php::simplemachine(
           "$documentroot/cache",
           "$documentroot/Packages",
           "$documentroot/Packages/installed.list",
+          "$documentroot/Smileys",
           "$documentroot/Themes",
           "$documentroot/Themes/default/languages/Install.english.php"
         ],
