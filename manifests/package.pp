@@ -25,5 +25,8 @@ class apache::package inherits apache::base {
     File['htpasswd_dir']{
         require => Package[apache],
     }
+    File['include_dir']{
+        require => Package[apache],
+    }
 }
 
