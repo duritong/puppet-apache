@@ -1,5 +1,5 @@
 <% if run_mode != 'fcgid'
-  php_settings.keys.sort.each do |key|
+  php_settings.reject{|k,v| v == :undef }.keys.sort.each do |key|
     dvalue = php_settings[key].to_s.downcase
     munged_value = if dvalue == 'true'
 	      'on'
