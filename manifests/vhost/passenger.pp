@@ -76,6 +76,7 @@ define apache::vhost::passenger(
         },
         default => "${path}"
     }
+    $gempath = "${real_path}/gems"
     file{
       ["${real_path}/www/tmp", "${real_path}/www/log"]:
         ensure => directory,
