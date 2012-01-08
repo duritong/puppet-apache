@@ -1,5 +1,7 @@
 class apache::include::mod_fcgid {
   apache::config::global{'mod_fcgid.conf':
-    content => "FcgidFixPathinfo 1\n"
+    content => "<IfModule mod_fcgid.c>
+  FcgidFixPathinfo 1
+</IfModule>\n"
   }
 }
