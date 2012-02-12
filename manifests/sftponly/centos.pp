@@ -1,4 +1,5 @@
 class apache::sftponly::centos {
+  require user::groups::sftponly
   augeas{"add_apache_to_group_sftponly":
     context => "/files/etc/group",
     changes => [ "ins user after sftponly/user[last()]",
