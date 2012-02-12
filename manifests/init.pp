@@ -19,7 +19,7 @@
 # $apache_default_group: Set this to the group with which the
 #                        apache is running.
 class apache {
-  case $operatingsystem {
+  case $::operatingsystem {
     centos: { include apache::centos }
     gentoo: { include apache::gentoo }
     debian: { include apache::debian }
@@ -27,10 +27,10 @@ class apache {
     openbsd: { include apache::openbsd }
     default: { include apache::base }
   }
-  if $use_munin {
+  if hiera('use_munin',false) {
     include apache::status
   }
-  if $use_shorewall {
+  if hiera('use_shorewall',false) {
     include shorewall::rules::http
   }
 }

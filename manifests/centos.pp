@@ -28,6 +28,16 @@ class apache::centos inherits apache::package {
         path => '/var/www/html/index.html',
     }
 
+    if $::selinux != 'false' {
+      selinux::fcontext{
+        ['/var/www/vhosts/.+/www(/.*)?',
+         '/var/www/vhosts/.+/non_public(/.*)?',
+         '/var/www/vhosts/.+/g2data(/.*)?',
+         '/var/www/vhosts/.+/upload(/.*)?' ]:
+          setype => 'httpd_sys_rw_content_t',
+          before => File[web_dir];
+      }
+    }
     file{'apache_service_config':
         path => '/etc/sysconfig/httpd',
         source => [ "puppet:///modules/site-apache/service/CentOS/${fqdn}/httpd",
