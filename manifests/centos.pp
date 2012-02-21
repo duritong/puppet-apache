@@ -34,7 +34,7 @@ class apache::centos inherits apache::package {
          '/var/www/vhosts/.+/non_public(/.*)?',
          '/var/www/vhosts/.+/g2data(/.*)?',
          '/var/www/vhosts/.+/upload(/.*)?' ]:
-          setype => 'httpd_sys_rw_content_t',
+          setype => 'httpd_sys_script_rw_t',
           before => File[web_dir];
       }
     }
