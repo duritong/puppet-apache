@@ -6,5 +6,6 @@ class apache::logrotate::centos::vhosts inherits apache::logrotate::centos {
         'ins file before /files/etc/logrotate.d/httpd/rule/*[1]',
         'set /files/etc/logrotate.d/httpd/rule/file[1] /var/log/httpd/*log',
         'set /files/etc/logrotate.d/httpd/rule/file[2] /var/www/vhosts/*/logs/*log' ],
+      onlyif => 'get /files/etc/logrotate.d/httpd/rule/file[2] != "/var/www/vhosts/*/logs/*log"',
     }
 }
