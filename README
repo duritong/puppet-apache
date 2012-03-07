@@ -1,6 +1,30 @@
 puppet module apache
 ====================
 
+This module tries to manage apache on different distros in a similar manner. a
+few additional directories have to be created as well some configuration files
+have to be deployed to fit this schema.
+
+! Upgrade Notice !
+
+ currently deployed apache::config::file resources could be broken
+ so one should change occurences of this resource's argument from:
+
+      source => "modules/site-apache/blah"
+
+ to a full source specification string:
+
+      source => "puppet:///modules/site-apache/blah"
+
+
+vhosts can be added with the vhosts define:
+(currently only plain vhosts file are supported)
+
+apache::vhosts::file { '$domain' }
+
+
+###################################
+
 written by immerda project group
 admin+puppet(at)immerda.ch
 
@@ -12,14 +36,4 @@ original idea by David Schmitt
 
 License: GPLv3
 
-###################################
 
-This module tries to manage apache on different distros in a
-similar manner. a few additional directories have to be
-created as well some configuration files have to be deployed
-to fit this schema.
-
-vhosts can be added with the vhosts define:
-(currently only plain vhosts file are supported)
-
-apache::vhosts::file { '$domain' }
