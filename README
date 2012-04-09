@@ -1,5 +1,5 @@
-puppet module apache
-====================
+puppet module for managing an Apache web server
+===============================================
 
 This module tries to manage apache on different distros in a similar manner. a
 few additional directories have to be created as well some configuration files
@@ -17,14 +17,6 @@ have to be deployed to fit this schema.
       source => "puppet:///modules/site-apache/blah"
 
 
-vhosts can be added with the vhosts define:
-(currently only plain vhosts file are supported)
-
-apache::vhosts::file { '$domain' }
-
-
-###################################
-
 written by immerda project group
 admin+puppet(at)immerda.ch
 
@@ -36,4 +28,69 @@ original idea by David Schmitt
 
 License: GPLv3
 
+Usage
+=====
 
+Installing Apache
+-----------------
+
+To install Apache, simply include the 'apache' class in your manifests:
+
+    include apache
+
+If you want to install Apache and also enable SSL support:
+
+    include apache::ssl
+
+You can install the ITK worker model to enforce stronger, per-user security:
+
+    include apache::itk
+
+You can combine SSL support and the ITK worker model by including both classes.
+
+Configuring Apache
+------------------
+
+To deploy a global configuration file in the conf.d directory under Apache's
+config directory, you can use the following:
+
+apache::config::global { 'filename':
+  content => 'Alias /thisApplication /usr/share/thisApplication/htdocs',
+}
+
+To manage users in an htpasswd file:
+
+apache::htpasswd_user { "joe@$domain":
+  site => "$domain",
+  username => 'joe',
+  password => "$pass",
+  password_iscrypted = true,
+}
+
+VirtualHost files
+-----------------
+
+vhosts can be added with the vhosts define:
+(currently only plain vhosts file are supported)
+
+apache::vhosts::file { "$domain" }
+
+multiple shortcuts can be used to define a vhost with certain capabilities:
+
+apache::vhosts::php::drupal { "$domain" }
+
+Munin
+-----
+
+If you are using munin, and have the puppet munin module installed, you can set
+the variable $use_munin = true to have graphs setup for you.
+
+For now, though, this only enables the server-status page in apache.
+
+Shorewall
+---------
+
+If you have the shorewall module installed and are using it, you can set the
+variable $use_shorewall = true to have a rule automatically defined for you to
+let traffic come from the exterior into the web server via port 80, and also
+443 if you're using the apache::ssl class.
