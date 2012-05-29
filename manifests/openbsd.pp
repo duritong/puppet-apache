@@ -26,9 +26,9 @@ class apache::openbsd inherits apache::base {
     }
     file{'apache_main_config':
         path => "${config_dir}/conf/httpd.conf",
-        source => [ "puppet:///modules/site-apache/config/OpenBSD/${fqdn}/httpd.conf",
-                    "puppet:///modules/site-apache/config/OpenBSD/${apache_cluster_node}/httpd.conf",
-                    "puppet:///modules/site-apache/config/OpenBSD//httpd.conf",
+        source => [ "puppet:///modules/site_apache/config/OpenBSD/${fqdn}/httpd.conf",
+                    "puppet:///modules/site_apache/config/OpenBSD/${apache_cluster_node}/httpd.conf",
+                    "puppet:///modules/site_apache/config/OpenBSD//httpd.conf",
                     "puppet:///modules/apache/config/OpenBSD/httpd.conf" ],
         notify => Service['apache'],
         owner => root, group => 0, mode => 0644;

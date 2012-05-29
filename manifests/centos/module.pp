@@ -10,9 +10,9 @@ define apache::centos::module(
     }
     $real_source = $source ? {
         ''  => [
-            "puppet:///modules/site-apache/modules.d/${fqdn}/${name}.so",
-            "puppet:///modules/site-apache/modules.d/${apache_cluster_node}/${name}.so",
-            "puppet:///modules/site-apache/modules.d/${name}.so",
+            "puppet:///modules/site_apache/modules.d/${fqdn}/${name}.so",
+            "puppet:///modules/site_apache/modules.d/${apache_cluster_node}/${name}.so",
+            "puppet:///modules/site_apache/modules.d/${name}.so",
             "puppet:///modules/apache/modules.d/${operatingsystem}/${name}.so",
             "puppet:///modules/apache/modules.d/${name}.so"
         ],

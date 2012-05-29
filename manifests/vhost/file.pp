@@ -98,11 +98,11 @@ define apache::vhost::file(
         'absent': {
             $real_vhost_source = $vhost_source ? {
                 'absent'  => [
-                    "puppet:///modules/site-apache/vhosts.d/$fqdn/$name.conf",
-                    "puppet:///modules/site-apache/vhosts.d/$apache_cluster_node/$name.conf",
-                    "puppet:///modules/site-apache/vhosts.d/$operatingsystem.$lsbdistcodename/$name.conf",
-                    "puppet:///modules/site-apache/vhosts.d/$operatingsystem/$name.conf",
-                    "puppet:///modules/site-apache/vhosts.d/$name.conf",
+                    "puppet:///modules/site_apache/vhosts.d/$fqdn/$name.conf",
+                    "puppet:///modules/site_apache/vhosts.d/$apache_cluster_node/$name.conf",
+                    "puppet:///modules/site_apache/vhosts.d/$operatingsystem.$lsbdistcodename/$name.conf",
+                    "puppet:///modules/site_apache/vhosts.d/$operatingsystem/$name.conf",
+                    "puppet:///modules/site_apache/vhosts.d/$name.conf",
                     "puppet:///modules/apache/vhosts.d/$operatingsystem.$lsbdistcodename/$name.conf",
                     "puppet:///modules/apache/vhosts.d/$operatingsystem/$name.conf",
                     "puppet:///modules/apache/vhosts.d/$name.conf"
@@ -133,9 +133,9 @@ define apache::vhost::file(
             }
             if ($ensure!='absent') {
               File[$real_htpasswd_path]{
-                source => [ "puppet:///modules/site-apache/htpasswds/$fqdn/$name",
-                            "puppet:///modules/site-apache/htpasswds/$apache_cluster_node/$name",
-                            "puppet:///modules/site-apache/htpasswds/$name" ],
+                source => [ "puppet:///modules/site_apache/htpasswds/$fqdn/$name",
+                            "puppet:///modules/site_apache/htpasswds/$apache_cluster_node/$name",
+                            "puppet:///modules/site_apache/htpasswds/$name" ],
                 owner => root, group => 0, mode => 0644,
               }
             }
