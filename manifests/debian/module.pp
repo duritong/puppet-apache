@@ -2,10 +2,10 @@ define apache::debian::module(
     $ensure = present,
     $package_name = 'absent'
 ){
-    $modules_dir = "$apache::debian::config_dir/mods"
+    $modules_dir = "${apache::debian::config_dir}/mods"
 
     if ($package_name != 'absent') {
-        package { "${package_name}":
+        package { $package_name:
             ensure => $ensure,
             notify => Service['apache'],
             require => Package['apache'],

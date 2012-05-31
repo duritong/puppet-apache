@@ -16,10 +16,6 @@ define apache::htpasswd_user(
         'absent': { $real_site = $name }
         default: { $real_site = $site }
     }
-    case $path {
-        'absent': { $real_path = "/var/www/htpasswds/${real_site}" }
-        default: { $real_path = $path }
-    }
     if $password_iscrypted {
         $real_password = $password
     } else {
@@ -28,7 +24,10 @@ define apache::htpasswd_user(
 
     file_line{"htpasswd_for_${real_site}":
         ensure => $ensure,
-        path => $real_path,
+        path => $path ? {
+          'absent' => "/var/www/htpasswds/${real_site}",
+          default => $path
+        },
         line => "${username}:${real_password}",
     }
 }

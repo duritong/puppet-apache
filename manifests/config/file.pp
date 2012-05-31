@@ -34,13 +34,13 @@ define apache::config::file(
         'absent': {
             $real_source = $source ? {
                 'absent' => [
-                    "puppet:///modules/site_apache/${confdir}/${fqdn}/${name}",
-                    "puppet:///modules/site_apache/${confdir}/${apache_cluster_node}/${name}",
-                    "puppet:///modules/site_apache/${confdir}/${operatingsystem}.${lsbdistcodename}/${name}",
-                    "puppet:///modules/site_apache/${confdir}/${operatingsystem}/${name}",
+                    "puppet:///modules/site_apache/${confdir}/${::fqdn}/${name}",
+                    "puppet:///modules/site_apache/${confdir}/${apache::cluster_node}/${name}",
+                    "puppet:///modules/site_apache/${confdir}/${::operatingsystem}.${::lsbdistcodename}/${name}",
+                    "puppet:///modules/site_apache/${confdir}/${::operatingsystem}/${name}",
                     "puppet:///modules/site_apache/${confdir}/${name}",
-                    "puppet:///modules/apache/${confdir}/${operatingsystem}.${lsbdistcodename}/${name}",
-                    "puppet:///modules/apache/${confdir}/${operatingsystem}/${name}",
+                    "puppet:///modules/apache/${confdir}/${::operatingsystem}.${::lsbdistcodename}/${name}",
+                    "puppet:///modules/apache/${confdir}/${::operatingsystem}/${name}",
                     "puppet:///modules/apache/${confdir}/${name}"
                 ],
                 default => "puppet:///${source}",
@@ -56,8 +56,8 @@ define apache::config::file(
         }
       }
     }
-    case $operatingsystem {
-        openbsd: { info("no package dependency on ${operatingsystem} for ${name}") }
+    case $::operatingsystem {
+        openbsd: { info("no package dependency on ${::operatingsystem} for ${name}") }
         default: {
             File["apache_${name}"]{
                 require => Package[apache],

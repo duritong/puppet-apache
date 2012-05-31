@@ -78,9 +78,9 @@ define apache::vhost::php::standard(
         documentroot_mode => $documentroot_mode,
       }
     }
-    
+
     $real_path = $path ? {
-        'absent' => $operatingsystem ? {
+        'absent' => $::operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}",
             default => "/var/www/vhosts/${name}"
         },
@@ -96,13 +96,13 @@ define apache::vhost::php::standard(
         'absent' => "$real_path/logs",
         default => $logpath
     }
-    
+
     $std_php_options = {
       smarty => false,
       pear => false,
     }
     $real_php_options = merge($std_php_options,$php_options)
-    
+
     if $real_php_options[smarty] {
         include php::extensions::smarty
         $smarty_path = '/usr/share/php/Smarty/:'
@@ -115,7 +115,7 @@ define apache::vhost::php::standard(
     } else {
       $pear_path = ''
     }
-    
+
 
     $std_php_settings = {
         engine =>  'On',
@@ -130,7 +130,7 @@ define apache::vhost::php::standard(
     if $run_mode == 'fcgid' {
       $std_php_settings[safe_mode_gid] = 'On'
     }
-        
+
     if has_key($php_settings,'safe_mode_exec_dir') {
       $php_safe_mode_exec_dir = $php_settings[safe_mode_exec_dir]
     } else {
@@ -166,7 +166,7 @@ define apache::vhost::php::standard(
         ensure => absent,
       }
     }
-    
+
     if !has_key($php_settings,'default_charset') {
       if $default_charset != 'absent' {
         $std_php_settings[default_charset] =  $default_charset ? {
@@ -175,15 +175,12 @@ define apache::vhost::php::standard(
         }
       }
     }
-    
+
     $real_php_settings = merge($std_php_settings,$php_settings)
-    
+
     $passing_extension = 'php'
     if $ensure != 'absent' {
       case $run_mode {
-        'itk': {
-          include ::php::itk
-        }
         'proxy-itk','static-itk': {
           include ::php::itk_plus
         }

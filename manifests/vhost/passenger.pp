@@ -70,11 +70,11 @@ define apache::vhost::passenger(
       }
     }
     $real_path = $path ? {
-        'absent' => $operatingsystem ? {
+        'absent' => $::operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}",
             default => "/var/www/vhosts/${name}"
         },
-        default => "${path}"
+        default => $path
     }
     $gempath = "${real_path}/gems"
     file{
@@ -83,13 +83,13 @@ define apache::vhost::passenger(
         owner => $documentroot_owner, group => $run_gid, mode => 0660;
       ["${real_path}/www/public", "${real_path}/gems"]:
         ensure => directory,
-        owner => $documentroot_owner, group => $run_gid, mode => 0640;      
+        owner => $documentroot_owner, group => $run_gid, mode => 0640;
     }
     if $passenger_app == 'rails' {
       file{
         "${real_path}/www/config":
           ensure => directory,
-          owner => $documentroot_owner, group => $run_gid, mode => 0640;      
+          owner => $documentroot_owner, group => $run_gid, mode => 0640;
         "${real_path}/www/config/environment.rb":
           ensure => present,
           owner => $run_uid, group => $run_gid, mode => 0640;

@@ -70,7 +70,7 @@ define apache::vhost::php::drupal(
     $manage_cron = true
 ){
     $documentroot = $path ? {
-        'absent' => $operatingsystem ? {
+        'absent' => $::operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}/www",
             default => "/var/www/vhosts/${name}/www"
         },
@@ -89,7 +89,7 @@ define apache::vhost::php::drupal(
         owner => root, group => 0, mode => 0644;
       }
     }
-    
+
     $std_drupal_php_settings = {
       magic_quotes_gpc                => 0,
       register_globals                => 0,
@@ -98,7 +98,7 @@ define apache::vhost::php::drupal(
       'mbstring.http_output'          => 'pass',
       'mbstring.encoding_translation' => 0,
     }
-    
+
     # create vhost configuration file
     ::apache::vhost::php::webapp{$name:
         ensure => $ensure,

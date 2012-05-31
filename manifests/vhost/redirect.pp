@@ -38,7 +38,7 @@ define apache::vhost::redirect(
         path_is_webdir => true,
         domainalias => $domainalias,
         server_admin => $server_admin,
-        logpath => $operatingsystem ? {
+        logpath => $::operatingsystem ? {
           openbsd => '/var/www/logs',
           centos => '/var/log/httpd',
           default => '/var/log/apache2'

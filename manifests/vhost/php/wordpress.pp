@@ -63,7 +63,7 @@ define apache::vhost::php::wordpress(
 ){
 
     $documentroot = $path ? {
-        'absent' => $operatingsystem ? {
+        'absent' => $::operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}/www",
             default => "/var/www/vhosts/${name}/www"
         },
@@ -98,7 +98,7 @@ define apache::vhost::php::wordpress(
         mod_security => $mod_security,
         mod_security_relevantonly => $mod_security_relevantonly,
         mod_security_rules_to_disable => $real_mod_security_rules_to_disable,
-        mod_security_additional_options => $mod_security_additional_options,        
+        mod_security_additional_options => $mod_security_additional_options,
         ssl_mode => $ssl_mode,
         vhost_mode => $vhost_mode,
         template_partial => $template_partial,
@@ -107,7 +107,7 @@ define apache::vhost::php::wordpress(
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
         manage_directories => $manage_directories,
-        managed_directories => "$documentroot/wp-content",
+        managed_directories => "${documentroot}/wp-content",
         manage_config => $manage_config,
         config_webwriteable => $config_webwriteable,
         config_file => 'wp-config.php',

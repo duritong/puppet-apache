@@ -64,13 +64,13 @@ define apache::vhost::php::joomla(
     include ::apache::include::joomla
 
     $documentroot = $path ? {
-        'absent' => $operatingsystem ? {
+        'absent' => $::operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}/www",
             default => "/var/www/vhosts/${name}/www"
         },
         default => "${path}/www"
     }
-    
+
     if $mod_security_additional_options == 'absent' {
         $real_mod_security_additional_options = '# http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
         # Exceptions for Joomla Root Directory
@@ -79,8 +79,7 @@ define apache::vhost::php::joomla(
         </LocationMatch>
 
         # Exceptions for Joomla Administration Panel
-        SecRule REQUEST_FILENAME "/administrator/index2.php" \
-        "allow,phase:1,nolog,ctl:ruleEngine=Off"
+        SecRule REQUEST_FILENAME "/administrator/index2.php" "allow,phase:1,nolog,ctl:ruleEngine=Off"
 
         # Exceptions for Joomla Component Expose
         <LocationMatch "^/components/com_expose/expose/manager/amfphp/gateway.php">
@@ -124,22 +123,22 @@ define apache::vhost::php::joomla(
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
         manage_directories => $manage_directories,
-        managed_directories =>  [ "$documentroot/administrator/backups",
-                            "$documentroot/administrator/components",
-                            "$documentroot/administrator/language",
-                            "$documentroot/administrator/modules",
-                            "$documentroot/administrator/templates",
-                            "$documentroot/components",
-                            "$documentroot/dmdocuments",
-                            "$documentroot/images",
-                            "$documentroot/language",
-                            "$documentroot/media",
-                            "$documentroot/modules",
-                            "$documentroot/plugins",
-                            "$documentroot/templates",
-                            "$documentroot/cache",
-                            "$documentroot/tmp",
-                            "$documentroot/administrator/cache" ],
+        managed_directories =>  [ "${documentroot}/administrator/backups",
+                            "${documentroot}/administrator/components",
+                            "${documentroot}/administrator/language",
+                            "${documentroot}/administrator/modules",
+                            "${documentroot}/administrator/templates",
+                            "${documentroot}/components",
+                            "${documentroot}/dmdocuments",
+                            "${documentroot}/images",
+                            "${documentroot}/language",
+                            "${documentroot}/media",
+                            "${documentroot}/modules",
+                            "${documentroot}/plugins",
+                            "${documentroot}/templates",
+                            "${documentroot}/cache",
+                            "${documentroot}/tmp",
+                            "${documentroot}/administrator/cache" ],
         manage_config => $manage_config,
         config_webwriteable => $config_webwriteable,
         config_file => 'configuration.php',

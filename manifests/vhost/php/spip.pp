@@ -59,7 +59,7 @@ define apache::vhost::php::spip(
     $htpasswd_path = 'absent'
 ){
     $documentroot = $path ? {
-        'absent' => $operatingsystem ? {
+        'absent' => $::operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}/www",
             default => "/var/www/vhosts/${name}/www"
         },
@@ -100,7 +100,12 @@ define apache::vhost::php::spip(
         vhost_destination => $vhost_destination,
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
-        managed_directories => [ "$documentroot/IMG", "$documentroot/tmp", "$documentroot/local", "$documentroot/config" ],
+        managed_directories => [
+          "${documentroot}/IMG",
+          "${documentroot}/tmp",
+          "${documentroot}/local",
+          "${documentroot}/config"
+        ],
         manage_config => false,
     }
 }

@@ -61,11 +61,11 @@ define apache::vhost::php::silverstripe(
     $config_webwriteable = false,
     $manage_directories = true
 ){
-  
+
     include ::apache::include::silverstripe
-    
+
     $documentroot = $path ? {
-        'absent' => $operatingsystem ? {
+        'absent' => $::operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}/www",
             default => "/var/www/vhosts/${name}/www"
         },
@@ -109,7 +109,7 @@ define apache::vhost::php::silverstripe(
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
         manage_directories => $manage_directories,
-        managed_directories =>  [ "$documentroot/assets" ],
+        managed_directories =>  [ "${documentroot}/assets" ],
         manage_config => $manage_config,
     }
 

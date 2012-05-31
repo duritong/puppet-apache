@@ -74,20 +74,20 @@ define apache::vhost::template(
     $ldap_user = 'any'
 ){
     $real_path = $path ? {
-        'absent' => $operatingsystem ? {
-            openbsd => "/var/www/htdocs/$name",
-            default => "/var/www/vhosts/$name"
+        'absent' => $::operatingsystem ? {
+            openbsd => "/var/www/htdocs/${name}",
+            default => "/var/www/vhosts/${name}"
         },
         default => $path
     }
 
     if $path_is_webdir {
-        $documentroot = "$real_path"
+        $documentroot = $real_path
     } else {
-        $documentroot = "$real_path/www"
+        $documentroot = "${real_path}/www"
     }
     $logdir = $logpath ? {
-        'absent' => "$real_path/logs",
+        'absent' => "${real_path}/logs",
         default => $logpath
     }
 
@@ -101,7 +101,7 @@ define apache::vhost::template(
         default => $domainalias
     }
     if $htpasswd_path == 'absent' {
-      $real_htpasswd_path = "/var/www/htpasswds/$name"
+      $real_htpasswd_path = "/var/www/htpasswds/${name}"
     } else {
       $real_htpasswd_path = $htpasswd_path
     }
@@ -112,10 +112,10 @@ define apache::vhost::template(
     case $run_mode {
         'fcgid','itk','proxy-itk','static-itk': {
             case $run_uid {
-                'absent': { fail("you have to define run_uid for $name on $fqdn") }
+                'absent': { fail("you have to define run_uid for ${name} on ${::fqdn}") }
             }
             case $run_gid {
-                'absent': { fail("you have to define run_gid for $name on $fqdn") }
+                'absent': { fail("you have to define run_gid for ${name} on ${::fqdn}") }
             }
         }
     }
@@ -123,7 +123,7 @@ define apache::vhost::template(
     # dav db dir
     case $dav_db_dir {
         'absent': {
-            $real_dav_db_dir = "/var/www/dav_db_dir/$name"
+            $real_dav_db_dir = "/var/www/dav_db_dir/${name}"
         }
         default: { $real_dav_db_dir = $dav_db_dir }
     }

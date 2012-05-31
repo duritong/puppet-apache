@@ -69,38 +69,36 @@ define apache::vhost::php::gallery2(
     $upload_dir = 'present'
 ){
     $documentroot = $path ? {
-        'absent' => $operatingsystem ? {
+        'absent' => $::operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}/www",
             default => "/var/www/vhosts/${name}/www"
         },
         default => "${path}/www"
     }
     $gdatadir = $path ? {
-        'absent' => $operatingsystem ? {
+        'absent' => $::operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}/g2data",
             default => "/var/www/vhosts/${name}/g2data"
         },
         default => "${path}/g2data"
     }
-    file{$gdatadir:
-      ensure => $ensure ? {
-        'present' => directory,
-        default => absent
-      },
-      owner => $documentroot_owner, group => $documentroot_group, mode => 0660;
-    }
-
     if ($upload_dir == 'present') or ($upload_dir == 'absent') {
-      $real_upload_dir = $operatingsystem ? {
+      $real_upload_dir = $::operatingsystem ? {
         openbsd => "/var/www/htdocs/${name}/upload",
         default => "/var/www/vhosts/${name}/upload"
       }
     } else {
       $real_upload_dir = $upload_dir
     }
-
-    file{$real_upload_dir:
-      owner => $documentroot_owner, group => $documentroot_group, mode => 0660;
+    file{
+      $gdatadir:
+        ensure => $ensure ? {
+          'present' => directory,
+          default => absent
+        },
+        owner => $documentroot_owner, group => $documentroot_group, mode => 0660;
+      $real_upload_dir:
+        owner => $documentroot_owner, group => $documentroot_group, mode => 0660;
     }
     if ($ensure == 'absent') or ($upload_dir == 'absent') {
       File[$real_upload_dir]{
@@ -119,7 +117,7 @@ define apache::vhost::php::gallery2(
       safe_mode => 'Off',
       output_buffering => 'Off',
     }
-    
+
     # php upload_tmp_dir
     case $php_settings[upload_tmp_dir] {
       '',undef: {
@@ -137,8 +135,8 @@ define apache::vhost::php::gallery2(
       $gallery_php_settings[open_basedir] = "${documentroot}:${php_settings[upload_tmp_dir]}:${php_settings['session.save_path']}:${gdatadir}:${real_upload_dir}"
     } else {
       $gallery_php_settings[open_basedir] = "${documentroot}:${php_settings[upload_tmp_dir]}:${php_settings['session.save_path']}:${gdatadir}"
-    } 
-    
+    }
+
     $real_php_settings = merge($gallery_php_settings,$php_settings)
 
     # create vhost configuration file

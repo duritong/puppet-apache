@@ -62,7 +62,7 @@ define apache::vhost::php::simplemachine(
     $manage_directories = true
 ){
     $documentroot = $path ? {
-        'absent' => $operatingsystem ? {
+        'absent' => $::operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}/www",
             default => "/var/www/vhosts/${name}/www"
         },
@@ -105,15 +105,15 @@ define apache::vhost::php::simplemachine(
         htpasswd_path => $htpasswd_path,
         manage_directories => $manage_directories,
         managed_directories => [
-          "$documentroot/agreement.txt",
-          "$documentroot/attachments",
-          "$documentroot/avatars",
-          "$documentroot/cache",
-          "$documentroot/Packages",
-          "$documentroot/Packages/installed.list",
-          "$documentroot/Smileys",
-          "$documentroot/Themes",
-          "$documentroot/Themes/default/languages/Install.english.php"
+          "${documentroot}/agreement.txt",
+          "${documentroot}/attachments",
+          "${documentroot}/avatars",
+          "${documentroot}/cache",
+          "${documentroot}/Packages",
+          "${documentroot}/Packages/installed.list",
+          "${documentroot}/Smileys",
+          "${documentroot}/Themes",
+          "${documentroot}/Themes/default/languages/Install.english.php"
         ],
         manage_config => $manage_config,
         config_webwriteable => $config_webwriteable,

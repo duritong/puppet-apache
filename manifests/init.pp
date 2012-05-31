@@ -6,9 +6,9 @@
 # Marcel Härry haerry+puppet(at)puzzle.ch
 # Simon Josi josi+puppet(at)puzzle.ch
 #
-# This program is free software; you can redistribute 
-# it and/or modify it under the terms of the GNU 
-# General Public License version 3 as published by 
+# This program is free software; you can redistribute
+# it and/or modify it under the terms of the GNU
+# General Public License version 3 as published by
 # the Free Software Foundation.
 #
 
@@ -18,12 +18,13 @@
 #                       apache is running.
 # $apache_default_group: Set this to the group with which the
 #                        apache is running.
-class apache {
+class apache(
+  $cluster_node = hiera('apache_cluster_node','')
+) {
   case $::operatingsystem {
     centos: { include apache::centos }
     gentoo: { include apache::gentoo }
-    debian: { include apache::debian }
-    ubuntu: { include apache::ubuntu }
+    debian,ubuntu: { include apache::debian }
     openbsd: { include apache::openbsd }
     default: { include apache::base }
   }

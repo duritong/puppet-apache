@@ -62,13 +62,13 @@ define apache::vhost::php::typo3(
     $manage_directories = true
 ){
     $documentroot = $path ? {
-        'absent' => $operatingsystem ? {
+        'absent' => $::operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}/www",
             default => "/var/www/vhosts/${name}/www"
         },
         default => "${path}/www"
     }
-    
+
     $modsec_rules = ["960010"]
     $real_mod_security_rules_to_disable = array_union($mod_security_rules_to_disable,$modsec_rules)
     if $mod_security_additional_options == 'absent' {
@@ -80,7 +80,7 @@ define apache::vhost::php::typo3(
     } else {
       $real_mod_security_additional_options = $mod_security_additional_options
     }
-    
+
     $typo3_php_settings = {
       # turn allow_url_fopen on for the extension manager fetch
       allow_url_fopen => 'On'
@@ -122,23 +122,23 @@ define apache::vhost::php::typo3(
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
         manage_directories => $manage_directories,
-        managed_directories =>  [ "$documentroot/typo3temp", 
-                                  "$documentroot/typo3temp/pics",
-                                  "$documentroot/typo3temp/temp",
-                                  "$documentroot/typo3temp/llxml",
-                                  "$documentroot/typo3temp/cs",
-                                  "$documentroot/typo3temp/GB",
-                                  "$documentroot/typo3temp/locks",
-                                  "$documentroot/typo3conf",
-                                  "$documentroot/typo3conf/ext",
-                                  "$documentroot/typo3conf/l10n",
-                                  # "$documentroot/typo3/ext/", # only needed for ext manager installing global extensions
-                                  "$documentroot/uploads",
-                                  "$documentroot/uploads/pics",
-                                  "$documentroot/uploads/media",
-                                  "$documentroot/uploads/tf",
-                                  "$documentroot/fileadmin",
-                                  "$documentroot/fileadmin/_temp_"
+        managed_directories =>  [ "${documentroot}/typo3temp",
+                                  "${documentroot}/typo3temp/pics",
+                                  "${documentroot}/typo3temp/temp",
+                                  "${documentroot}/typo3temp/llxml",
+                                  "${documentroot}/typo3temp/cs",
+                                  "${documentroot}/typo3temp/GB",
+                                  "${documentroot}/typo3temp/locks",
+                                  "${documentroot}/typo3conf",
+                                  "${documentroot}/typo3conf/ext",
+                                  "${documentroot}/typo3conf/l10n",
+                                  # "${documentroot}/typo3/ext/", # only needed for ext manager installing global extensions
+                                  "${documentroot}/uploads",
+                                  "${documentroot}/uploads/pics",
+                                  "${documentroot}/uploads/media",
+                                  "${documentroot}/uploads/tf",
+                                  "${documentroot}/fileadmin",
+                                  "${documentroot}/fileadmin/_temp_"
                                 ],
         manage_config => $manage_config,
     }

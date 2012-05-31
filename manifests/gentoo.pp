@@ -26,7 +26,7 @@ class apache::gentoo inherits apache::package {
 
     # set the default for the ServerName
     file{"${config_dir}/modules.d/00_default_settings_ServerName.conf":
-        content => "ServerName ${fqdn}\n",
+        content => "ServerName ${::fqdn}\n",
         require => Package[apache],
         owner => root, group => 0, mode => 0644;
     }

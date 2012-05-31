@@ -51,16 +51,16 @@ define apache::vhost::file(
     $htpasswd_path = 'absent',
     $use_mod_macro = false
 ){
-    $vhosts_dir = $operatingsystem ? {
-        centos => "$apache::centos::config_dir/vhosts.d",
-        gentoo => "$apache::gentoo::config_dir/vhosts.d",
-        debian => "$apache::debian::config_dir/sites-enabled",
-        ubuntu => "$apache::ubuntu::config_dir/sites-enabled",
-        openbsd => "$apache::openbsd::config_dir/vhosts.d",
+    $vhosts_dir = $::operatingsystem ? {
+        centos => "${apache::centos::config_dir}/vhosts.d",
+        gentoo => "${apache::gentoo::config_dir}/vhosts.d",
+        debian => "${apache::debian::config_dir}/sites-enabled",
+        ubuntu => "${apache::ubuntu::config_dir}/sites-enabled",
+        openbsd => "${apache::openbsd::config_dir}/vhosts.d",
         default => '/etc/apache2/vhosts.d',
     }
     $real_vhost_destination = $vhost_destination ? {
-        'absent' => "$vhosts_dir/$name.conf",
+        'absent' => "${vhosts_dir}/${name}.conf",
         default => $vhost_destination,
     }
     file{"${name}.conf":
@@ -98,16 +98,16 @@ define apache::vhost::file(
         'absent': {
             $real_vhost_source = $vhost_source ? {
                 'absent'  => [
-                    "puppet:///modules/site_apache/vhosts.d/$fqdn/$name.conf",
-                    "puppet:///modules/site_apache/vhosts.d/$apache_cluster_node/$name.conf",
-                    "puppet:///modules/site_apache/vhosts.d/$operatingsystem.$lsbdistcodename/$name.conf",
-                    "puppet:///modules/site_apache/vhosts.d/$operatingsystem/$name.conf",
-                    "puppet:///modules/site_apache/vhosts.d/$name.conf",
-                    "puppet:///modules/apache/vhosts.d/$operatingsystem.$lsbdistcodename/$name.conf",
-                    "puppet:///modules/apache/vhosts.d/$operatingsystem/$name.conf",
-                    "puppet:///modules/apache/vhosts.d/$name.conf"
+                    "puppet:///modules/site_apache/vhosts.d/${::fqdn}/${name}.conf",
+                    "puppet:///modules/site_apache/vhosts.d/{$apache::cluster_node}/${name}.conf",
+                    "puppet:///modules/site_apache/vhosts.d/${::operatingsystem}.${::lsbdistcodename}/${name}.conf",
+                    "puppet:///modules/site_apache/vhosts.d/${::operatingsystem}/${name}.conf",
+                    "puppet:///modules/site_apache/vhosts.d/${name}.conf",
+                    "puppet:///modules/apache/vhosts.d/${::operatingsystem}.${::lsbdistcodename}/${name}.conf",
+                    "puppet:///modules/apache/vhosts.d/${::operatingsystem}/${name}.conf",
+                    "puppet:///modules/apache/vhosts.d/${name}.conf"
                 ],
-                default => "puppet:///$vhost_source",
+                default => "puppet:///${vhost_source}",
             }
             File["${name}.conf"]{
                 source => $real_vhost_source,
@@ -124,7 +124,7 @@ define apache::vhost::file(
         'absent','nodeploy': { info("don't deploy a htpasswd file for ${name}") }
         default: {
             if $htpasswd_path == 'absent' {
-                $real_htpasswd_path = "/var/www/htpasswds/$name"
+                $real_htpasswd_path = "/var/www/htpasswds/${name}"
             } else {
                 $real_htpasswd_path = $htpasswd_path
             }
@@ -133,9 +133,9 @@ define apache::vhost::file(
             }
             if ($ensure!='absent') {
               File[$real_htpasswd_path]{
-                source => [ "puppet:///modules/site_apache/htpasswds/$fqdn/$name",
-                            "puppet:///modules/site_apache/htpasswds/$apache_cluster_node/$name",
-                            "puppet:///modules/site_apache/htpasswds/$name" ],
+                source => [ "puppet:///modules/site_apache/htpasswds/${::fqdn}/${name}",
+                            "puppet:///modules/site_apache/htpasswds/${apache::cluster_node}/${name}",
+                            "puppet:///modules/site_apache/htpasswds/${name}" ],
                 owner => root, group => 0, mode => 0644,
               }
             }

@@ -3,6 +3,6 @@ Listen 127.0.0.1:80
 PidFile run/httpdlocal.pid
 </IfDefine>
 <IfDefine !HttpdLocal>
-Listen <%= ipaddress %>:80
+Listen <%= scope.lookupvar('::ipaddress') %>:80
 PidFile run/httpd.pid
 </IfDefine>

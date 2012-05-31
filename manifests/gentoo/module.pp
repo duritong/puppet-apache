@@ -3,17 +3,17 @@ define apache::gentoo::module(
     $source = '',
     $destination = ''
 ){
-    $modules_dir = "$apache::gentoo::config_dir/modules.d"
+    $modules_dir = "${apache::gentoo::config_dir}/modules.d"
     $real_destination = $destination ? {
         '' => "${modules_dir}/${name}.conf",
         default => $destination,
     }
     $real_source = $source ? {
         ''  => [
-            "puppet:///modules/site_apache/modules.d/${fqdn}/${name}.conf",
-            "puppet:///modules/site_apache/modules.d/${apache_cluster_node}/${name}.conf",
+            "puppet:///modules/site_apache/modules.d/${::fqdn}/${name}.conf",
+            "puppet:///modules/site_apache/modules.d/${apache::cluster_node}/${name}.conf",
             "puppet:///modules/site_apache/modules.d/${name}.conf",
-            "puppet:///modules/apache/modules.d/${operatingsystem}/${name}.conf",
+            "puppet:///modules/apache/modules.d/${::operatingsystem}/${name}.conf",
             "puppet:///modules/apache/modules.d/${name}.conf"
         ],
         default => "puppet:///$source",
