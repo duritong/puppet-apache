@@ -13,7 +13,7 @@ define apache::config::file(
         default: { fail("Wrong config file type specified for ${name}") }
     }
     $real_destination = $destination ? {
-        'absent' => $operatingsystem ? {
+        'absent' => $::operatingsystem ? {
             centos => "${apache::centos::config_dir}/${confdir}/${name}",
             gentoo => "${apache::gentoo::config_dir}/${name}",
             debian => "${apache::debian::config_dir}/${confdir}/${name}",

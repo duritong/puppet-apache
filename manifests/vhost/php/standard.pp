@@ -135,7 +135,7 @@ define apache::vhost::php::standard(
       $php_safe_mode_exec_dir = $php_settings[safe_mode_exec_dir]
     } else {
       $php_safe_mode_exec_dir =  $path ? {
-        'absent' => $operatingsystem ? {
+        'absent' => $::operatingsystem ? {
           openbsd => "/var/www/htdocs/${name}/bin",
           default => "/var/www/vhosts/${name}/bin"
         },

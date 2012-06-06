@@ -74,7 +74,7 @@ define apache::vhost::php::webapp(
         }
 
         if $manage_config {
-            if $config_file == 'absent' { fail("No config file defined for ${name} on ${fqdn}, if you'd like to manage the config, you have to add one!") }
+            if $config_file == 'absent' { fail("No config file defined for ${name} on ${::fqdn}, if you'd like to manage the config, you have to add one!") }
             ::apache::vhost::file::documentrootfile{"configurationfile_${name}":
                 documentroot => $documentroot,
                 filename => $config_file,

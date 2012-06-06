@@ -45,7 +45,7 @@ define apache::vhost::proxy(
         htpasswd_file => $htpasswd_file,
         domainalias => $domainalias,
         server_admin => $server_admin,
-        logpath => $operatingsystem ? {
+        logpath => $::operatingsystem ? {
           openbsd => '/var/www/logs',
           centos => '/var/log/httpd',
           default => '/var/log/apache2'

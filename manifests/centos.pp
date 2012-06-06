@@ -10,16 +10,16 @@ class apache::centos inherits apache::package {
         restart => '/etc/init.d/httpd graceful',
     }
     File[vhosts_dir]{
-        path => "$config_dir/vhosts.d",
+        path => "${config_dir}/vhosts.d",
     }
     File[config_dir]{
-        path => "$config_dir/conf.d",
+        path => "${config_dir}/conf.d",
     }
     File[include_dir]{
-        path => "$config_dir/include.d",
+        path => "${config_dir}/include.d",
     }
     File[modules_dir]{
-        path => "$config_dir/modules.d",
+        path => "${config_dir}/modules.d",
     }
     File[web_dir]{
         path => "/var/www/vhosts",
@@ -40,7 +40,7 @@ class apache::centos inherits apache::package {
     }
     file{'apache_service_config':
         path => '/etc/sysconfig/httpd',
-        source => [ "puppet:///modules/site_apache/service/CentOS/${fqdn}/httpd",
+        source => [ "puppet:///modules/site_apache/service/CentOS/${::fqdn}/httpd",
                     "puppet:///modules/site_apache/service/CentOS/httpd",
                     "puppet:///modules/apache/service/CentOS/httpd" ],
         require => Package['apache'],
