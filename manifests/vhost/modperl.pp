@@ -83,7 +83,6 @@ define apache::vhost::modperl(
         mode => $documentroot_mode;
     }
 
-    $passing_extension = 'pl'
     if $ensure != 'absent' {
       case $run_mode {
         'proxy-itk','static-itk': {
@@ -146,6 +145,7 @@ define apache::vhost::modperl(
         mod_security_relevantonly => $mod_security_relevantonly,
         mod_security_rules_to_disable => $mod_security_rules_to_disable,
         mod_security_additional_options => $mod_security_additional_options,
+        passing_extension => 'pl'
     }
 }
 

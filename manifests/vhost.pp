@@ -62,7 +62,9 @@ define apache::vhost(
     $mod_security_additional_options = 'absent',
     $use_mod_macro = false,
     $ldap_auth = false,
-    $ldap_user = 'any'
+    $ldap_user = 'any',
+    $passing_extension = 'absent',
+    $gempath = 'absent'
 ) {
     # file or template mode?
     case $vhost_mode {
@@ -111,6 +113,8 @@ define apache::vhost(
                 mod_security_rules_to_disable => $mod_security_rules_to_disable,
                 mod_security_additional_options => $mod_security_additional_options,
                 use_mod_macro => $use_mod_macro,
+                passing_extension => $passing_extension,
+                gempath => $gempath,
             }
         }
         default: { fail("no such vhost_mode: $vhost_mode defined for $name.") }

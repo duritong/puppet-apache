@@ -178,7 +178,6 @@ define apache::vhost::php::standard(
 
     $real_php_settings = merge($std_php_settings,$php_settings)
 
-    $passing_extension = 'php'
     if $ensure != 'absent' {
       case $run_mode {
         'proxy-itk','static-itk': {
@@ -245,6 +244,7 @@ define apache::vhost::php::standard(
         mod_security_rules_to_disable => $mod_security_rules_to_disable,
         mod_security_additional_options => $mod_security_additional_options,
         use_mod_macro => $use_mod_macro,
+        passing_extension => $passing_extension,
     }
 }
 

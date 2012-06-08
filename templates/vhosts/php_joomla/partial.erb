@@ -1,9 +1,9 @@
     <Directory "<%= documentroot %>/">
-<%= scope.function_template('apache/vhosts/partials/std_override_options.erb') %>
+<%= scope.function_template(['apache/vhosts/partials/std_override_options.erb']) %>
 
-<%= scope.function_template('apache/vhosts/partials/php_settings.erb') %>        
+<%= scope.function_template(['apache/vhosts/partials/php_settings.erb']) %> 
 
-<%= scope.function_template('apache/vhosts/partials/authentication.erb') %>
+<%= scope.function_template(['apache/vhosts/partials/authentication.erb']) %>
 
         Include include.d/joomla.inc
     </Directory>

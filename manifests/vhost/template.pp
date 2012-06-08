@@ -71,7 +71,9 @@ define apache::vhost::template(
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
     $ldap_auth = false,
-    $ldap_user = 'any'
+    $ldap_user = 'any',
+    $passing_extension = 'absent',
+    $gempath = 'absent'
 ){
     $real_path = $path ? {
         'absent' => $::operatingsystem ? {

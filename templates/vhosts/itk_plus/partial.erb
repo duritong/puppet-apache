@@ -25,7 +25,7 @@
         Options <% unless options.to_s == 'absent' then -%><%= options %><% end -%><% if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<% end -%>
 
         <% end -%>
-<%= scope.function_template('apache/vhosts/partials/authentication.erb') %>
+<%= scope.function_template(['apache/vhosts/partials/authentication.erb']) %>
     </Directory>
     <% end -%>
 

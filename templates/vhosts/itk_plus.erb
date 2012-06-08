@@ -1,10 +1,10 @@
 <IfDefine HttpdLocal>
-<%= scope.function_template('apache/vhost/default.erb') %>
+<%= scope.function_template(['apache/vhost/default.erb']) %>
 </IfDefine>
 <IfDefine !HttpdLocal>
 <%
   scope.unsetvar('template_partial')
   scope.setvar('template_partial','apache/vhosts/itk_plus/partial.erb')
 -%>
-<%= scope.function_template('apache/vhost/default.erb') %>
+<%= scope.function_template(['apache/vhost/default.erb']) %>
 </IfDefine>

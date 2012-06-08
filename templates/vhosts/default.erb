@@ -10,9 +10,9 @@ vhost_parts.each do |vhost_part|
 -%>
 <VirtualHost *:<%= vhost_part == :ssl ? '443' : '80' %> >
 
-<%= scope.function_template('apache/vhosts/partials/header_default.erb') %>
+<%= scope.function_template(['apache/vhosts/partials/header_default.erb']) %>
 
-<%= scope.function_template('apache/vhosts/partials/logs.erb') %>
+<%= scope.function_template(['apache/vhosts/partials/logs.erb']) %>
 
   <% if run_mode.to_s =~ /(proxy\-|static\-)?itk/ -%>
   <IfModule mpm_itk_module>
@@ -33,10 +33,10 @@ vhost_parts.each do |vhost_part|
   RewriteCond %{HTTPS} !=on
   RewriteRule (.*) https://%{SERVER_NAME}$1 [R=permanent,L]
   <% else -%>
-<%= scope.function_template(template_partial) %>
+<%= scope.function_template([template_partial]) %>
   <% end -%>
 <%- unless template_partial == 'apache/vhosts/itk_plus/partial.erb' -%>
-<%= scope.function_template('apache/vhosts/partials/mod_security.erb') %>
+<%= scope.function_template(['apache/vhosts/partials/mod_security.erb']) %>
 <% end -%>
 <% unless additional_options.to_s == 'absent' -%>
   <%= additional_options %>

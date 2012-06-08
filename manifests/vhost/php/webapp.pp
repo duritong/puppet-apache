@@ -75,6 +75,19 @@ define apache::vhost::php::webapp(
 
         if $manage_config {
             if $config_file == 'absent' { fail("No config file defined for ${name} on ${::fqdn}, if you'd like to manage the config, you have to add one!") }
+
+            $real_path = $path ? {
+              'absent' => $::operatingsystem ? {
+                openbsd => "/var/www/htdocs/${name}",
+                default => "/var/www/vhosts/${name}"
+              },
+              default => $path
+            }
+            if $path_is_webdir {
+              $documentroot = $real_path
+            } else {
+              $documentroot = "${real_path}/www"
+            }
             ::apache::vhost::file::documentrootfile{"configurationfile_${name}":
                 documentroot => $documentroot,
                 filename => $config_file,
