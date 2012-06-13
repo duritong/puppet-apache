@@ -19,7 +19,9 @@
 # $apache_default_group: Set this to the group with which the
 #                        apache is running.
 class apache(
-  $cluster_node = hiera('apache_cluster_node','')
+  $cluster_node = '',
+  $manage_shorewall = false,
+  $manage_munin = false
 ) {
   case $::operatingsystem {
     centos: { include apache::centos }
@@ -28,10 +30,10 @@ class apache(
     openbsd: { include apache::openbsd }
     default: { include apache::base }
   }
-  if hiera('use_munin',false) {
+  if $apache::manage_munin {
     include apache::status
   }
-  if hiera('use_shorewall',false) {
+  if $apache::manage_shorewall {
     include shorewall::rules::http
   }
 }

@@ -1,12 +1,12 @@
 # manifests/status.pp
 
 class apache::status {
-    case $::operatingsystem {
-        centos: { include apache::status::centos }
-        defaults: { include apache::status::base }
-    }
-    if hiera('use_munin',false) {
-        include munin::plugins::apache
-    }
+  case $::operatingsystem {
+    centos: { include apache::status::centos }
+    defaults: { include apache::status::base }
+  }
+  if $apache::manage_munin {
+    include munin::plugins::apache
+  }
 }
 
