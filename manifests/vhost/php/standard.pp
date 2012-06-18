@@ -244,7 +244,7 @@ define apache::vhost::php::standard(
         mod_security_rules_to_disable => $mod_security_rules_to_disable,
         mod_security_additional_options => $mod_security_additional_options,
         use_mod_macro => $use_mod_macro,
-        passing_extension => $passing_extension,
+        passing_extension => 'php',
     }
 }
 
