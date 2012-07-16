@@ -4,13 +4,13 @@ class apache::module (
 {
 
   case $operatingsystem {
-    centos: {
+    'centos': {
       apache::centos::module { "$module":
         ensure => $ensure, source => $source,
         destination => $destination
       }
     }
-    gentoo: {
+    'gentoo': {
       apache::gentoo::module { "$module":
         ensure => $ensure, source => $source,
         destination => $destination
@@ -22,6 +22,6 @@ class apache::module (
       }
     }
     default: {
-      err("Your operating system does not have a module deployment mechanism defined") }
+      err('Your operating system does not have a module deployment mechanism defined') }
   }
 }
