@@ -1,6 +1,6 @@
-class apache::module (
-  $ensure = 'present', $source = '',
-  $destination = '', $module = '', $package_name = '' ) 
+define apache::module (
+  $ensure = present, $source = '',
+  $destination = '', $module = $name, $package_name = '' ) 
 {
 
   case $operatingsystem {
