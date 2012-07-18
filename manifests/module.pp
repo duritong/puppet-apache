@@ -1,23 +1,28 @@
 define apache::module (
   $ensure = present, $source = '',
-  $destination = '', $module = $name, $package_name = '' ) 
+  $destination = '', $module = '', $package_name = '' )
 {
+
+  $real_module = $module ? {
+    '' => $name,
+    default => $module,
+  }
 
   case $operatingsystem {
     'centos': {
-      apache::centos::module { "$module":
+      apache::centos::module { "$real_module":
         ensure => $ensure, source => $source,
         destination => $destination
       }
     }
     'gentoo': {
-      apache::gentoo::module { "$module":
+      apache::gentoo::module { "$real_module":
         ensure => $ensure, source => $source,
         destination => $destination
       }
     }
     'debian','ubuntu': {
-      apache::debian::module { "$module":
+      apache::debian::module { "$real_module":
         ensure => $ensure, package_name => $package_name
       }
     }
