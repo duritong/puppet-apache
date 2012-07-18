@@ -1,6 +1,6 @@
 define apache::module (
   $ensure = present, $source = '',
-  $destination = '', $module = '', $package_name = '' )
+  $destination = '', $module = '', $package_name = 'absent' )
 {
 
   $real_module = $module ? {
