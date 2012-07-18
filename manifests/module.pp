@@ -22,6 +22,7 @@ define apache::module (
       }
     }
     default: {
-      err('Your operating system does not have a module deployment mechanism defined') }
+      err('Your operating system does not have a module deployment mechanism defined')
+    }
   }
 }
