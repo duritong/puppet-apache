@@ -43,7 +43,7 @@ define apache::config::file(
                     "puppet:///modules/apache/${confdir}/${::operatingsystem}/${name}",
                     "puppet:///modules/apache/${confdir}/${name}"
                 ],
-                default => "puppet:///${source}",
+                default => $source
             }
             File["apache_${name}"]{
                 source => $real_source,
