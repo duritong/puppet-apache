@@ -1,27 +1,33 @@
 define apache::module (
   $ensure = present, $source = '',
-  $destination = '', $module = $name, $package_name = '' ) 
+  $destination = '', $module = '', $package_name = 'absent' )
 {
+
+  $real_module = $module ? {
+    '' => $name,
+    default => $module,
+  }
 
   case $operatingsystem {
     'centos': {
-      apache::centos::module { "$module":
+      apache::centos::module { "$real_module":
         ensure => $ensure, source => $source,
         destination => $destination
       }
     }
     'gentoo': {
-      apache::gentoo::module { "$module":
+      apache::gentoo::module { "$real_module":
         ensure => $ensure, source => $source,
         destination => $destination
       }
     }
     'debian','ubuntu': {
-      apache::debian::module { "$module":
+      apache::debian::module { "$real_module":
         ensure => $ensure, package_name => $package_name
       }
     }
     default: {
-      err('Your operating system does not have a module deployment mechanism defined') }
+      err('Your operating system does not have a module deployment mechanism defined')
+    }
   }
 }
