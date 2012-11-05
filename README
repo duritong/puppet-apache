@@ -48,6 +48,10 @@ You can install the ITK worker model to enforce stronger, per-user security:
 
 You can combine SSL support and the ITK worker model by including both classes.
 
+If you do not want the 0-default.conf and 0-default_ssl.conf virtualhosts
+automatically created, then simply set $apache_no_default_site = true in your
+node configuration.
+
 Configuring Apache
 ------------------
 
