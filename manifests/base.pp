@@ -43,5 +43,7 @@ class apache::base {
 
     apache::config::include{ 'defaults.inc': }
     apache::config::global{ 'git.conf': }
-    apache::vhost::file { '0-default': }
+    if !$apache_no_default_site {
+      apache::vhost::file { '0-default': }
+    }
 }
