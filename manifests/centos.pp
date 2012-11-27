@@ -22,7 +22,7 @@ class apache::centos inherits apache::package {
         path => "${config_dir}/modules.d",
     }
     File[web_dir]{
-        path => "/var/www/vhosts",
+        path => '/var/www/vhosts',
     }
     File[default_apache_index]{
         path => '/var/www/html/index.html',
@@ -43,27 +43,29 @@ class apache::centos inherits apache::package {
       }
     }
     file{'apache_service_config':
-        path => '/etc/sysconfig/httpd',
-        source => [ "puppet:///modules/site_apache/service/CentOS/${::fqdn}/httpd",
-                    "puppet:///modules/site_apache/service/CentOS/httpd",
-                    "puppet:///modules/apache/service/CentOS/httpd" ],
+        path    => '/etc/sysconfig/httpd',
+        source  => [  "puppet:///modules/site_apache/service/CentOS/${::fqdn}/httpd",
+                      'puppet:///modules/site_apache/service/CentOS/httpd',
+                      'puppet:///modules/apache/service/CentOS/httpd' ],
         require => Package['apache'],
-        notify => Service['apache'],
-        owner => root, group => 0, mode => 0644;
+        notify  => Service['apache'],
+        owner   => root,
+        group   => 0,
+        mode    => '0644';
     }
 
     # this is for later fixes
     exec{
       'adjust_pidfile':
         command => 'sed -i  "s/^#PidFile \(.*\)/PidFile \1/g" /etc/httpd/conf/httpd.conf',
-        unless => "grep -qE '^PidFile ' /etc/httpd/conf/httpd.conf",
+        unless  => 'grep -qE \'^PidFile \' /etc/httpd/conf/httpd.conf',
         require => Package['apache'],
-        notify => Service['apache'];
+        notify  => Service['apache'];
       'adjust_listen':
         command => 'sed -i  "s/^#Listen 80/Listen 80/g" /etc/httpd/conf/httpd.conf',
-        unless => "grep -qE '^Listen 80' /etc/httpd/conf/httpd.conf",
+        unless  => 'grep -qE \'^Listen 80\' /etc/httpd/conf/httpd.conf',
         require => Package['apache'],
-        notify => Service['apache'];
+        notify  => Service['apache'];
     }
 
     apache::config::global{'00-listen.conf':
