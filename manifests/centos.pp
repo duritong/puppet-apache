@@ -29,13 +29,17 @@ class apache::centos inherits apache::package {
     }
 
     if $::selinux != 'false' {
+      Selinux::Fcontext{
+        before => File[web_dir],
+      }
       selinux::fcontext{
-        ['/var/www/vhosts/.+/www(/.*)?',
-         '/var/www/vhosts/.+/non_public(/.*)?',
-         '/var/www/vhosts/.+/g2data(/.*)?',
-         '/var/www/vhosts/.+/upload(/.*)?' ]:
-          setype => 'httpd_sys_script_rw_t',
-          before => File[web_dir];
+        [ '/var/www/vhosts/.+/www(/.*)?',
+          '/var/www/vhosts/.+/non_public(/.*)?',
+          '/var/www/vhosts/.+/g2data(/.*)?',
+          '/var/www/vhosts/.+/upload(/.*)?' ]:
+          setype => 'httpd_sys_script_rw_t';
+        '/var/www/vhosts/.*/logs(/.*)?':
+          setpye => 'httpd_log_t';
       }
     }
     file{'apache_service_config':
