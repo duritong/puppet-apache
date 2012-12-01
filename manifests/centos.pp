@@ -39,7 +39,7 @@ class apache::centos inherits apache::package {
           '/var/www/vhosts/.+/upload(/.*)?' ]:
           setype => 'httpd_sys_script_rw_t';
         '/var/www/vhosts/.*/logs(/.*)?':
-          setpye => 'httpd_log_t';
+          setype => 'httpd_log_t';
       }
     }
     file{'apache_service_config':
