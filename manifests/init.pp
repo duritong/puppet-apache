@@ -12,12 +12,7 @@
 # the Free Software Foundation.
 #
 
-# Global variables:
-#
-# $apache_default_user: Set this to the user with which the
-#                       apache is running.
-# $apache_default_group: Set this to the group with which the
-#                        apache is running.
+# manage a simple apache
 class apache(
   $cluster_node = '',
   $manage_shorewall = false,

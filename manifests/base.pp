@@ -1,47 +1,57 @@
+# setup base apache class
 class apache::base {
-    file{'vhosts_dir':
-        path => '/etc/apache2/vhosts.d',
-        ensure => directory,
-        owner => root, group => 0, mode => 0755;
-    }
-    file{'config_dir':
-        path => '/etc/apache2/conf.d',
-        ensure => directory,
-        owner => root, group => 0, mode => 0755;
-    }
-    file{'include_dir':
-        path => '/etc/apache2/include.d',
-        ensure => directory,
-        owner => root, group => 0, mode => 0755;
-    }
-    file{'modules_dir':
-        path => '/etc/apache2/modules.d',
-        ensure => directory,
-        owner => root, group => 0, mode => 0755;
-    }
-    file{'htpasswd_dir':
-        path => '/var/www/htpasswds',
-        ensure => directory,
-        owner => root, group => apache, mode => 0640;
-    }
-    file{'web_dir':
-        path => '/var/www',
-        ensure => directory,
-        owner => root, group => 0, mode => 0755;
-    }
-    service { apache:
-        name => 'apache2',
-        enable => true,
-        ensure => running,
-    }
-    file { 'default_apache_index':
-        path => '/var/www/localhost/htdocs/index.html',
-        ensure => file,
-        content => template('apache/default/default_index.erb'),
-        owner => root, group => 0, mode => 0644;
-    }
+  file{
+    'vhosts_dir':
+      ensure  => directory,
+      path    => '/etc/apache2/vhosts.d',
+      owner   => root,
+      group   => 0,
+      mode    => '0644';
+    'config_dir':
+      ensure  => directory,
+      path    => '/etc/apache2/conf.d',
+      owner   => root,
+      group   => 0,
+      mode    => '0644';
+    'include_dir':
+      ensure  => directory,
+      path    => '/etc/apache2/include.d',
+      owner   => root,
+      group   => 0,
+      mode    => '0644';
+    'modules_dir':
+      ensure  => directory,
+      path    => '/etc/apache2/modules.d',
+      owner   => root,
+      group   => 0,
+      mode    => '0644';
+    'htpasswd_dir':
+      ensure  => directory,
+      path    => '/var/www/htpasswds',
+      owner   => root,
+      group   => 0,
+      mode    => '0640';
+    'web_dir':
+      ensure  => directory,
+      path    => '/var/www',
+      owner   => root,
+      group   => 0,
+      mode    => '0644';
+    'default_apache_index':
+      path    => '/var/www/localhost/htdocs/index.html',
+      content => template('apache/default/default_index.erb'),
+      owner   => root,
+      group   => 0,
+      mode    => '0644';
+  } -> anchor{'apache::basic_dirs::ready': }
 
-    apache::config::include{ 'defaults.inc': }
-    apache::config::global{ 'git.conf': }
-    apache::vhost::file { '0-default': }
+  service{'apache':
+    ensure  => running,
+    name    => 'apache2',
+    enable  => true,
+  }
+
+  apache::config::include{ 'defaults.inc': }
+  apache::config::global{ 'git.conf': }
+  apache::vhost::file { '0-default': }
 }
