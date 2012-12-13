@@ -43,7 +43,10 @@ class apache::base {
       owner   => root,
       group   => 0,
       mode    => '0644';
-  } -> anchor{'apache::basic_dirs::ready': }
+  }
+  anchor{'apache::basic_dirs::ready':
+    require => File['vhosts_dir','config_dir','include_dir','modules_dir','htpasswd_dir','web_dir','default_apache_index']
+  }
 
   service{'apache':
     ensure  => running,
