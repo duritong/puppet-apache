@@ -87,9 +87,10 @@ Munin
 -----
 
 If you are using munin, and have the puppet munin module installed, you can set
-the variable $use_munin = true to have graphs setup for you.
+the variable $use_munin = true to have graphs setup for you. This requires
+you have the perl module installed.
 
-For now, though, this only enables the server-status page in apache.
+This will setup the apache_accesses, apache_processes and apache_volume graphs.
 
 Shorewall
 ---------
