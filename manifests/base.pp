@@ -29,7 +29,7 @@ class apache::base {
       ensure  => directory,
       path    => '/var/www/htpasswds',
       owner   => root,
-      group   => 0,
+      group   => 'apache',
       mode    => '0640';
     'web_dir':
       ensure  => directory,
