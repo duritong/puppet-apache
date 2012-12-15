@@ -1,5 +1,5 @@
+# add vhost folders to logrotation
 class apache::logrotate::centos::vhosts inherits apache::logrotate::centos {
-    # add vhost folders to logrotation
     Augeas['logrotate_httpd']{
       changes => [ 'rm /files/etc/logrotate.d/httpd/rule/file',
         'ins file before /files/etc/logrotate.d/httpd/rule/*[1]',
