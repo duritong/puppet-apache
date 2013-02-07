@@ -85,6 +85,7 @@ define apache::vhost::webdir(
           mode    => $real_mode;
         $logdir:
           ensure  => directory,
+          before  => Service['apache'],
           owner   => $real_documentroot_owner,
           group   => $real_documentroot_group,
           mode    => '0660';
@@ -97,6 +98,7 @@ define apache::vhost::webdir(
       if $manage_docroot {
         file{$documentroot:
           ensure  => directory,
+          before  => Service['apache'],
           recurse => $documentroot_recurse,
           owner   => $real_documentroot_owner,
           group   => $real_documentroot_group,
