@@ -33,12 +33,12 @@ class apache::centos inherits apache::package {
         before => File[web_dir],
       }
       selinux::fcontext{
-        [ '/var/www/vhosts/.+/www(/.*)?',
-          '/var/www/vhosts/.+/non_public(/.*)?',
-          '/var/www/vhosts/.+/g2data(/.*)?',
-          '/var/www/vhosts/.+/upload(/.*)?' ]:
+        [ '/var/www/vhosts/[^/]*/www(/.*)?',
+          '/var/www/vhosts/[^/]*/non_public(/.*)?',
+          '/var/www/vhosts/[^/]*/g2data(/.*)?',
+          '/var/www/vhosts/[^/]*/upload(/.*)?' ]:
           setype => 'httpd_sys_script_rw_t';
-        '/var/www/vhosts/.*/logs(/.*)?':
+        '/var/www/vhosts/[^/]*/logs(/.*)?':
           setype => 'httpd_log_t';
       }
     }
