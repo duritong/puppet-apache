@@ -46,6 +46,7 @@ define apache::vhost::template(
     $path_is_webdir = false,
     $logpath = 'absent',
     $logmode = 'default',
+    $logprefix = '',
     $domain = 'absent',
     $domainalias = 'absent',
     $server_admin = 'absent',
