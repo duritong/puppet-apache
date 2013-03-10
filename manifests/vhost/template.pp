@@ -41,47 +41,47 @@
 #    - true: (*default*) activate mod_security
 #
 define apache::vhost::template(
-    $ensure = present,
-    $path = 'absent',
-    $path_is_webdir = false,
-    $logpath = 'absent',
-    $logmode = 'default',
-    $logprefix = '',
-    $domain = 'absent',
-    $domainalias = 'absent',
-    $server_admin = 'absent',
-    $allow_override = 'None',
-    $dav_db_dir = 'absent',
-    $cgi_binpath = 'absent',
-    $do_includes = false,
-    $options = 'absent',
-    $additional_options = 'absent',
-    $default_charset = 'absent',
-    $php_options = {},
-    $php_settings = {},
-    $run_mode = 'normal',
-    $run_uid = 'absent',
-    $run_gid = 'absent',
-    $template_partial = 'apache/vhosts/static/partial.erb',
-    $ssl_mode = false,
-    $mod_security = true,
-    $mod_security_relevantonly = true,
-    $mod_security_rules_to_disable = [],
-    $mod_security_additional_options = 'absent',
-    $use_mod_macro = false,
-    $htpasswd_file = 'absent',
-    $htpasswd_path = 'absent',
-    $ldap_auth = false,
-    $ldap_user = 'any',
-    $passing_extension = 'absent',
-    $gempath = 'absent'
+    $ensure                           = present,
+    $path                             = 'absent',
+    $path_is_webdir                   = false,
+    $logpath                          = 'absent',
+    $logmode                          = 'default',
+    $logprefix                        = '',
+    $domain                           = 'absent',
+    $domainalias                      = 'absent',
+    $server_admin                     = 'absent',
+    $allow_override                   = 'None',
+    $dav_db_dir                       = 'absent',
+    $cgi_binpath                      = 'absent',
+    $do_includes                      = false,
+    $options                          = 'absent',
+    $additional_options               = 'absent',
+    $default_charset                  = 'absent',
+    $php_options                      = {},
+    $php_settings                     = {},
+    $run_mode                         = 'normal',
+    $run_uid                          = 'absent',
+    $run_gid                          = 'absent',
+    $template_partial                 = 'apache/vhosts/static/partial.erb',
+    $ssl_mode                         = false,
+    $mod_security                     = true,
+    $mod_security_relevantonly        = true,
+    $mod_security_rules_to_disable    = [],
+    $mod_security_additional_options  = 'absent',
+    $use_mod_macro                    = false,
+    $htpasswd_file                    = 'absent',
+    $htpasswd_path                    = 'absent',
+    $ldap_auth                        = false,
+    $ldap_user                        = 'any',
+    $passing_extension                = 'absent',
+    $gempath                          = 'absent'
 ){
     $real_path = $path ? {
-        'absent' => $::operatingsystem ? {
+        'absent'  => $::operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}",
             default => "/var/www/vhosts/${name}"
         },
-        default => $path
+        default   => $path
     }
 
     if $path_is_webdir {
@@ -90,18 +90,18 @@ define apache::vhost::template(
         $documentroot = "${real_path}/www"
     }
     $logdir = $logpath ? {
-        'absent' => "${real_path}/logs",
-        default => $logpath
+        'absent'  => "${real_path}/logs",
+        default   => $logpath
     }
 
     $servername = $domain ? {
-        'absent' => $name,
-        default => $domain
+        'absent'  => $name,
+        default   => $domain
     }
     $serveralias = $domainalias ? {
-        'absent' => '',
-        'www' => "www.${servername}",
-        default => $domainalias
+        'absent'  => '',
+        'www'     => "www.${servername}",
+        default   => $domainalias
     }
     if $htpasswd_path == 'absent' {
       $real_htpasswd_path = "/var/www/htpasswds/${name}"
@@ -132,12 +132,12 @@ define apache::vhost::template(
     }
 
     apache::vhost::file{$name:
-        ensure => $ensure,
-        do_includes => $do_includes,
-        run_mode => $run_mode,
-        ssl_mode => $ssl_mode,
-        logmode => $logmode,
-        mod_security => $mod_security,
+        ensure        => $ensure,
+        do_includes   => $do_includes,
+        run_mode      => $run_mode,
+        ssl_mode      => $ssl_mode,
+        logmode       => $logmode,
+        mod_security  => $mod_security,
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
         use_mod_macro => $use_mod_macro,
@@ -145,9 +145,9 @@ define apache::vhost::template(
     if $ensure != 'absent' {
       Apache::Vhost::File[$name]{
         content => $run_mode ? {
-          'proxy-itk'  => template("apache/vhosts/itk_plus.erb"),
-          'static-itk' => template("apache/vhosts/itk_plus.erb"),
-          default      => template("apache/vhosts/default.erb"),
+          'proxy-itk'  => template('apache/vhosts/itk_plus.erb'),
+          'static-itk' => template('apache/vhosts/itk_plus.erb'),
+          default      => template('apache/vhosts/default.erb'),
         }
       }
     }
