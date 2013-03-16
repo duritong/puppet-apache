@@ -6,7 +6,7 @@ class apache::centos inherits apache::package {
         name => 'httpd',
     }
     Service[apache]{
-        name => 'httpd',
+        name    => 'httpd',
         restart => '/etc/init.d/httpd graceful',
     }
     File[vhosts_dir]{
@@ -37,9 +37,11 @@ class apache::centos inherits apache::package {
           '/var/www/vhosts/[^/]*/non_public(/.*)?',
           '/var/www/vhosts/[^/]*/g2data(/.*)?',
           '/var/www/vhosts/[^/]*/upload(/.*)?' ]:
-          setype => 'httpd_sys_script_rw_t';
+          require => Package['apache'],
+          setype  => 'httpd_sys_script_rw_t';
         '/var/www/vhosts/[^/]*/logs(/.*)?':
-          setype => 'httpd_log_t';
+          require => Package['apache'],
+          setype  => 'httpd_log_t';
       }
     }
     file{'apache_service_config':
