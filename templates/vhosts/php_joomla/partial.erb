@@ -17,3 +17,16 @@
         RewriteCond %{REQUEST_URI} (.*/administrator/.*)
         RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R]
     </Directory>
+
+    # Deny various directories that
+    # shouldn't be webaccessible
+    <Directory "<%= documentroot %>/tmp/">
+       Deny From All
+    </Directory>
+    <Directory "<%= documentroot %>/logs/">
+       Deny From All
+    </Directory>
+    <Directory "<%= documentroot %>/cli/">
+       Deny From All
+    </Directory>
+
