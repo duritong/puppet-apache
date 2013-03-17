@@ -16,11 +16,15 @@ class apache::defaultphpdirs {
     }
 
     if $::selinux != 'false' {
+      $seltype_rw = $::lsbmajdistrelease ? {
+        5 => 'httpd_sys_script_rw_t',
+        default => 'httpd_sys_rw_content_t'
+      }
       selinux::fcontext{
         [ '/var/www/upload_tmp_dir/.+(/.*)?',
           '/var/www/session.save_path/.+(/.*)?' ]:
           require => Package['apache'],
-          setype  => 'httpd_sys_script_rw_t',
+          setype  => $seltype_rw,
           before  => File['/var/www/upload_tmp_dir','/var/www/session.save_path'];
       }
     }

@@ -32,13 +32,17 @@ class apache::centos inherits apache::package {
       Selinux::Fcontext{
         before => File[web_dir],
       }
+      $seltype_rw = $::lsbmajdistrelease ? {
+        5 => 'httpd_sys_script_rw_t',
+        default => 'httpd_sys_rw_content_t'
+      }
       selinux::fcontext{
         [ '/var/www/vhosts/[^/]*/www(/.*)?',
           '/var/www/vhosts/[^/]*/non_public(/.*)?',
           '/var/www/vhosts/[^/]*/g2data(/.*)?',
           '/var/www/vhosts/[^/]*/upload(/.*)?' ]:
           require => Package['apache'],
-          setype  => 'httpd_sys_script_rw_t';
+          setype  => $seltype_rw;
         '/var/www/vhosts/[^/]*/logs(/.*)?':
           require => Package['apache'],
           setype  => 'httpd_log_t';
