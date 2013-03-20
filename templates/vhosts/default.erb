@@ -4,13 +4,10 @@ vhost_parts = case ssl_mode
   when false,'false' then  [:normal]
   else [:normal,:ssl]
 end
-vhost_parts.each do |vhost_part|
-  scope.unsetvar('vhost_part')
-  scope.setvar('vhost_part',vhost_part)
--%>
+vhost_parts.each do |vhost_part| -%>
 <VirtualHost *:<%= vhost_part == :ssl ? '443' : '80' %> >
 
-<%= scope.function_template(['apache/vhosts/partials/header_default.erb']) %>
+<%= scope.function_templatewlv(['apache/vhosts/partials/header_default.erb', {'vhost_part' => vhost_part } ]) %>
 
 <%= scope.function_template(['apache/vhosts/partials/logs.erb']) %>
 
@@ -33,7 +30,7 @@ vhost_parts.each do |vhost_part|
   RewriteCond %{HTTPS} !=on
   RewriteRule (.*) https://%{SERVER_NAME}$1 [R=permanent,L]
   <% else -%>
-<%= scope.function_template([template_partial]) %>
+<%= scope.function_templatewlv([template_partial, {'vhost_part' => vhost_part } ]) %>
   <% end -%>
 <%- unless template_partial == 'apache/vhosts/itk_plus/partial.erb' -%>
 <%= scope.function_template(['apache/vhosts/partials/mod_security.erb']) %>
