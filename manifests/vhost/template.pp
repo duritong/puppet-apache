@@ -63,6 +63,7 @@ define apache::vhost::template(
     $run_uid                          = 'absent',
     $run_gid                          = 'absent',
     $template_partial                 = 'apache/vhosts/static/partial.erb',
+    $template_vars                    = {},
     $ssl_mode                         = false,
     $mod_security                     = true,
     $mod_security_relevantonly        = true,
