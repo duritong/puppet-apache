@@ -12,19 +12,18 @@ class apache::debian inherits apache::package {
         path => "${config_dir}/mods-enabled",
     }
     File[htpasswd_dir] {
-        path => "/var/www/htpasswds",
-	group => 'www-data',
+       path => "/var/www/htpasswds",
+	     group => 'www-data',
     }
     File[default_apache_index] {
         path => '/var/www/index.html',
     }
     file { 'apache_main_config':
         path => "${config_dir}/apache2.conf",
-        source => [ "puppet://$server/modules/site-apache/config/Debian.${lsbdistcodename}/${fqdn}/apache2.conf",
-                    "puppet://$server/modules/site-apache/config/Debian/{$fqdn}/apache2.conf",
-                    "puppet://$server/modules/site-apache/config/Debian.${lsbdistcodename}/apache2.conf",
-                    "puppet://$server/modules/site-apache/config/Debian/apache2.conf",
-                    "puppet://$server/modules/apache/config/Debian/apache2.conf" ],
+        source => [ "puppet:///modules/site_apache/config/Debian/{$::fqdn}/apache2.conf",
+                    "puppet:///modules/site_apache/config/Debian.${::lsbdistcodename}/apache2.conf",
+                    "puppet:///modules/site_apache/config/Debian/apache2.conf",
+                    "puppet:///modules/apache/config/Debian/apache2.conf" ],
         require => Package['apache'],
         notify => Service['apache'],
         owner => root, group => 0, mode => 0644;

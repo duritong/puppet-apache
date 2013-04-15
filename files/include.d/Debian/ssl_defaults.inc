@@ -11,13 +11,13 @@ SSLEngine on
 #   SSL Protocol support:
 # List the enable protocol levels with which clients will be able to
 # connect.  Disable SSLv2 access by default:
-SSLProtocol all -SSLv2
+SSLProtocol -all +SSLv3 +TLSv1
 
 #   SSL Cipher Suite:
 # List the ciphers that the client is permitted to negotiate.
 # See the mod_ssl documentation for a complete list.
-SSLCipherSuite HIGH:MEDIUM:!ADH:-SSLv2
-
+SSLCipherSuite HIGH:MEDIUM:!aNULL:!SSLv2:!MD5:@STRENGTH
+SSLHonorCipherOrder on
 
 #   Server Certificate:
 # Point SSLCertificateFile at a PEM encoded certificate.  If
@@ -139,3 +139,6 @@ SetEnvIf User-Agent ".*MSIE.*" \
 #   compact non-error SSL logfile on a virtual host basis.
 CustomLog /var/log/apache2/ssl_request_log \
           "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
+
+# set STS Header
+Header add Strict-Transport-Security "max-age=15768000"

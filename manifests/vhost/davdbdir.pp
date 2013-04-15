@@ -11,7 +11,7 @@ define apache::vhost::davdbdir(
     case $dav_db_dir {
         'absent': {
             include apache::defaultdavdbdir
-            $real_dav_db_dir = "/var/www/dav_db_dir/$name"
+            $real_dav_db_dir = "/var/www/dav_db_dir/${name}"
         }
         default: { $real_dav_db_dir = $dav_db_dir }
     }

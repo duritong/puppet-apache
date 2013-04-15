@@ -1,5 +1,5 @@
 class apache::sftponly {
-  case $operatingsystem {
+  case $::operatingsystem {
     centos: { include apache::sftponly::centos }
   }
 }
