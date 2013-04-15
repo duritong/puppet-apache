@@ -16,6 +16,9 @@ have to be deployed to fit this schema.
 
  * this module no longer requires the common module
 
+ * if using the munin module, you need a version of the munin module that is
+   at or newer than commit 77e0a70999a8c4c20ee8d9eb521b927c525ac653 (Feb 28, 2013)
+
  * you must change your modules/site-apache to modules/site_apache
 
  * the $apache_no_default_site variable is no longer supported, you should
