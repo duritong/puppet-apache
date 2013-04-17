@@ -19,13 +19,13 @@ class apache::package inherits apache::base {
     File['modules_dir']{
         require => Package[apache],
     }
+    File['include_dir']{
+        require => Package[apache],
+    }
     File['web_dir']{
         require => Package[apache],
     }
     File['htpasswd_dir']{
-        require => Package[apache],
-    }
-    File['include_dir']{
         require => Package[apache],
     }
 }
