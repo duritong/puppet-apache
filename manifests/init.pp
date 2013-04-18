@@ -17,7 +17,8 @@ class apache(
   $cluster_node = '',
   $manage_shorewall = false,
   $manage_munin = false,
-  $no_default_site = false
+  $no_default_site = false,
+  $ssl = false
 ) {
   case $::operatingsystem {
     centos: { include apache::centos }
@@ -31,6 +32,9 @@ class apache(
   }
   if $apache::manage_shorewall {
     include shorewall::rules::http
+  }
+  if $ssl {
+    include apache::ssl
   }
 }
 

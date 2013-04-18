@@ -77,17 +77,17 @@ class to have the module do some things for you:
     0-default_ssl.conf virtualhosts automatically created in your node
     configuration. (Default: false)
 
+  * ssl: If you want to install Apache SSL support enabled, just pass this
+    parameter (Default: false)
+
 For example:
 
    class { 'apache': 
      manage_shorewall => true, 
      manage_munin     => true, 
-     no_default_site  => true 
+     no_default_site  => true,
+     ssl              => true
    }
-
-If you want to install Apache and also enable SSL support:
-
-    include apache::ssl
 
 You can install the ITK worker model to enforce stronger, per-user security:
 
