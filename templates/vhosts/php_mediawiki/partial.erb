@@ -5,12 +5,3 @@
   RewriteRule ^/?index.php/(.*)$ /index.php?title=$1 [PT,L,QSA]
 <% end -%>
 <%= scope.function_template(['apache/vhosts/php/partial.erb']) %>
-    <Directory "<%= documentroot %>/typo3/">
-        RewriteEngine on
-
-        # Rewrite URLs to https that go for the admin area
-        RewriteCond %{REMOTE_ADDR} !^127\.[0-9]+\.[0-9]+\.[0-9]+$
-        RewriteCond %{HTTPS} !=on
-        RewriteCond %{REQUEST_URI} (.*/typo3/.*)
-        RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R]
-    </Directory>
