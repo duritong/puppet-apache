@@ -68,6 +68,11 @@ define apache::vhost::webdir(
   }
   case $ensure {
     absent: {
+      exec{"cleanup_webdir_${real_path}":
+        command => "rm -rf ${real_path}",
+        onlyif  => "test -d  ${real_path}",
+        before  => File[$real_path],
+      }
       file{$real_path:
         ensure  => absent,
         purge   => true,
