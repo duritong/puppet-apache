@@ -190,11 +190,12 @@ define apache::vhost::php::standard(
           include apache::include::mod_fcgid
 
           mod_fcgid::starter {$name:
-            cgi_type => 'php',
+            cgi_type         => 'php',
             cgi_type_options => $real_php_settings,
-            owner => $run_uid,
-            group => $run_gid,
-            notify => Service['apache'],
+            owner            => $run_uid,
+            group            => $run_gid,
+            notify           => Service['apache'],
+            php_tmp_dir      => $real_php_settings[php_tmp_dir]
           }
         }
         default: { include ::php }
