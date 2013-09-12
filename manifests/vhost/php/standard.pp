@@ -122,8 +122,7 @@ define apache::vhost::php::standard(
         upload_tmp_dir      => "/var/www/upload_tmp_dir/${name}",
         'session.save_path' => "/var/www/session.save_path/${name}",
         open_basedir        => "${smarty_path}${pear_path}${documentroot}:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}",
-        safe_mode           => 'On',
-        php_tmp_dir         => false,
+        safe_mode           => 'On'
     }
     if $logmode != 'nologs' {
       $std_php_settings[error_log] = "${logdir}/php_error_log"
@@ -191,12 +190,12 @@ define apache::vhost::php::standard(
           include apache::include::mod_fcgid
 
           mod_fcgid::starter {$name:
+            php_tmp_dir      => $real_php_settings[php_tmp_dir],
             cgi_type         => 'php',
-            cgi_type_options => $real_php_settings,
+            cgi_type_options => delete($real_php_settings, php_tmp_dir),
             owner            => $run_uid,
             group            => $run_gid,
             notify           => Service['apache'],
-            php_tmp_dir      => $real_php_settings[php_tmp_dir]
           }
         }
         default: { include ::php }
