@@ -118,11 +118,12 @@ define apache::vhost::php::standard(
 
 
     $std_php_settings = {
-        engine =>  'On',
-        upload_tmp_dir => "/var/www/upload_tmp_dir/${name}",
+        engine              =>  'On',
+        upload_tmp_dir      => "/var/www/upload_tmp_dir/${name}",
         'session.save_path' => "/var/www/session.save_path/${name}",
-        open_basedir => "${smarty_path}${pear_path}${documentroot}:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}",
-        safe_mode => 'On',
+        open_basedir        => "${smarty_path}${pear_path}${documentroot}:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}",
+        safe_mode           => 'On',
+        php_tmp_dir         => false,
     }
     if $logmode != 'nologs' {
       $std_php_settings[error_log] = "${logdir}/php_error_log"
