@@ -97,6 +97,11 @@ define apache::vhost::php::joomla(
     $real_mod_security_additional_options = $mod_security_additional_options
   }
 
+  $std_joomla_php_settings = {
+    'allow_url_fopen'   => 'on',
+    'allow_url_include' => 'off',
+  }
+
   # create vhost configuration file
   ::apache::vhost::php::webapp{
     $name:
@@ -115,7 +120,7 @@ define apache::vhost::php::joomla(
       run_uid                         => $run_uid,
       run_gid                         => $run_gid,
       allow_override                  => $allow_override,
-      php_settings                    => $php_settings,
+      php_settings                    => merge($std_joomla_php_settings, $php_settings),
       php_options                     => $php_options,
       do_includes                     => $do_includes,
       options                         => $options,
