@@ -4,7 +4,7 @@
   CustomLog /dev/null
 <% when 'noaccess' -%>
   ErrorLog <%= logdir %>/<%= logprefix %>error_log
-  CustomLog /dev/null
+  CustomLog /dev/null noip
 <% when 'semianonym' -%>
   ErrorLog <%= logdir %>/<%= logprefix %>error_log
   CustomLog <%= logdir %>/<%= logprefix %>access_log noip
