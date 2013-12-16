@@ -1,16 +1,16 @@
 class apache::ssl::openbsd inherits apache::openbsd {
     include apache::ssl::base
 
-    Line['enable_apache_on_boot']{
+    File_line['enable_apache_on_boot']{
         ensure => 'absent',
     }
-    line{'enable_apachessl_on_boot':
-        file => '/etc/rc.conf.local',
+    file_line{'enable_apachessl_on_boot':
+        path => '/etc/rc.conf.local',
         line => 'httpd flags="-DSSL"',
     }
 
     File['/opt/bin/restart_apache.sh']{
-        source => "puppet://$server/modules/apache/scripts/OpenBSD/bin/restart_apache_ssl.sh",
+        source => "puppet:///modules/apache/scripts/OpenBSD/bin/restart_apache_ssl.sh",
     }
     Service['apache']{
         start => 'apachectl startssl',
