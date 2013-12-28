@@ -15,9 +15,9 @@ class apache::defaultphpdirs {
         mode    => '0755';
     }
 
-    if $::selinux != 'false' {
-      $seltype_rw = $::lsbmajdistrelease ? {
-        5 => 'httpd_sys_script_rw_t',
+    if str2bool($::selinux) {
+      $seltype_rw = $::operatingsystemmajrelease ? {
+        5       => 'httpd_sys_script_rw_t',
         default => 'httpd_sys_rw_content_t'
       }
       selinux::fcontext{

@@ -144,7 +144,7 @@ modules/site_apache/{templates,files}/vhosts.d, searched in this order:
 
    "puppet:///modules/site_apache/vhosts.d/${::fqdn}/${name}.conf",
    "puppet:///modules/site_apache/vhosts.d/{$apache::cluster_node}/${name}.conf",
-   "puppet:///modules/site_apache/vhosts.d/${::operatingsystem}.${::lsbdistcodename}/${name}.conf",
+   "puppet:///modules/site_apache/vhosts.d/${::operatingsystem}.${::operatingsystemmajrelease}/${name}.conf",
    "puppet:///modules/site_apache/vhosts.d/${::operatingsystem}/${name}.conf",
    "puppet:///modules/site_apache/vhosts.d/${name}.conf",
 

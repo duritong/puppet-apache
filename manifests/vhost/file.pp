@@ -33,42 +33,45 @@
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 #
 #
-# mod_security: Whether we use mod_security or not (will include mod_security module)
+# mod_security: Whether we use mod_security or not
+#               (will include mod_security module)
 #    - false: (*default*) don't activate mod_security
 #    - true: activate mod_security
 #
 define apache::vhost::file(
-    $ensure = present,
-    $vhost_source = 'absent',
-    $vhost_destination = 'absent',
-    $content = 'absent',
-    $do_includes = false,
-    $run_mode = 'normal',
-    $logmode = 'default',
-    $ssl_mode = false,
-    $mod_security = false,
-    $htpasswd_file = 'absent',
-    $htpasswd_path = 'absent',
-    $use_mod_macro = false
+    $ensure             = present,
+    $vhost_source       = 'absent',
+    $vhost_destination  = 'absent',
+    $content            = 'absent',
+    $do_includes        = false,
+    $run_mode           = 'normal',
+    $logmode            = 'default',
+    $ssl_mode           = false,
+    $mod_security       = false,
+    $htpasswd_file      = 'absent',
+    $htpasswd_path      = 'absent',
+    $use_mod_macro      = false
 ){
     $vhosts_dir = $::operatingsystem ? {
-        centos => "${apache::centos::config_dir}/vhosts.d",
-        gentoo => "${apache::gentoo::config_dir}/vhosts.d",
-        debian => "${apache::debian::config_dir}/sites-enabled",
-        ubuntu => "${apache::ubuntu::config_dir}/sites-enabled",
+        centos  => "${apache::centos::config_dir}/vhosts.d",
+        gentoo  => "${apache::gentoo::config_dir}/vhosts.d",
+        debian  => "${apache::debian::config_dir}/sites-enabled",
+        ubuntu  => "${apache::ubuntu::config_dir}/sites-enabled",
         openbsd => "${apache::openbsd::config_dir}/vhosts.d",
         default => '/etc/apache2/vhosts.d',
     }
     $real_vhost_destination = $vhost_destination ? {
-        'absent' => "${vhosts_dir}/${name}.conf",
-        default => $vhost_destination,
+        'absent'  => "${vhosts_dir}/${name}.conf",
+        default   => $vhost_destination,
     }
     file{"${name}.conf":
-        ensure => $ensure,
-        path => $real_vhost_destination,
+        ensure  => $ensure,
+        path    => $real_vhost_destination,
         require => File[vhosts_dir],
-        notify => Service[apache],
-        owner => root, group => 0, mode => 0644;
+        notify  => Service[apache],
+        owner   => root,
+        group   => 0,
+        mode    => '0644';
     }
     if $ensure != 'absent' {
       if $do_includes {
@@ -98,12 +101,12 @@ define apache::vhost::file(
         'absent': {
             $real_vhost_source = $vhost_source ? {
                 'absent'  => [
-                    "puppet:///modules/site_apache/vhosts.d/${::fqdn}/${name}.conf",
-                    "puppet:///modules/site_apache/vhosts.d/{$apache::cluster_node}/${name}.conf",
-                    "puppet:///modules/site_apache/vhosts.d/${::operatingsystem}.${::lsbdistcodename}/${name}.conf",
+                    "puppet:///modules/site_apache/vhosts.d/{::fqdn}/${name}.conf",
+                    "puppet:///modules/site_apache/vhosts.d/${apache::cluster_node}/${name}.conf",
+                    "puppet:///modules/site_apache/vhosts.d/${::operatingsystem}.${::operatingsystemmajrelease}/${name}.conf",
                     "puppet:///modules/site_apache/vhosts.d/${::operatingsystem}/${name}.conf",
                     "puppet:///modules/site_apache/vhosts.d/${name}.conf",
-                    "puppet:///modules/apache/vhosts.d/${::operatingsystem}.${::lsbdistcodename}/${name}.conf",
+                    "puppet:///modules/apache/vhosts.d/${::operatingsystem}.${::operatingsystemmajrelease}/${name}.conf",
                     "puppet:///modules/apache/vhosts.d/${::operatingsystem}/${name}.conf",
                     "puppet:///modules/apache/vhosts.d/${name}.conf"
                 ],
@@ -133,10 +136,12 @@ define apache::vhost::file(
             }
             if ($ensure!='absent') {
               File[$real_htpasswd_path]{
-                source => [ "puppet:///modules/site_apache/htpasswds/${::fqdn}/${name}",
+                source  => [ "puppet:///modules/site_apache/htpasswds/${::fqdn}/${name}",
                             "puppet:///modules/site_apache/htpasswds/${apache::cluster_node}/${name}",
                             "puppet:///modules/site_apache/htpasswds/${name}" ],
-                owner => root, group => 0, mode => 0644,
+                owner   => root,
+                group   => 0,
+                mode    => '0644',
               }
             }
         }

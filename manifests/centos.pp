@@ -28,12 +28,12 @@ class apache::centos inherits apache::package {
         path => '/var/www/html/index.html',
     }
 
-    if $::selinux != 'false' {
+    if str2bool($::selinux) {
       Selinux::Fcontext{
         before => File[web_dir],
       }
-      $seltype_rw = $::lsbmajdistrelease ? {
-        5 => 'httpd_sys_script_rw_t',
+      $seltype_rw = $::operatingsystemmajrelease ? {
+        5       => 'httpd_sys_script_rw_t',
         default => 'httpd_sys_rw_content_t'
       }
       selinux::fcontext{

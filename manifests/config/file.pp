@@ -25,10 +25,12 @@ define apache::config::file(
         default => $destination
     }
     file{"apache_${name}":
-        ensure => $ensure,
-        path => $real_destination,
-        notify => Service[apache],
-        owner => root, group => 0, mode => 0644;
+        ensure  => $ensure,
+        path    => $real_destination,
+        notify  => Service[apache],
+        owner   => root,
+        group   => 0,
+        mode    => '0644';
     }
     if $ensure == 'present' {
       case $content {
@@ -37,10 +39,10 @@ define apache::config::file(
                 'absent' => [
                     "puppet:///modules/site_apache/${confdir}/${::fqdn}/${name}",
                     "puppet:///modules/site_apache/${confdir}/${apache::cluster_node}/${name}",
-                    "puppet:///modules/site_apache/${confdir}/${::operatingsystem}.${::lsbdistcodename}/${name}",
+                    "puppet:///modules/site_apache/${confdir}/${::operatingsystem}.${::operatingsystemmajrelease}/${name}",
                     "puppet:///modules/site_apache/${confdir}/${::operatingsystem}/${name}",
                     "puppet:///modules/site_apache/${confdir}/${name}",
-                    "puppet:///modules/apache/${confdir}/${::operatingsystem}.${::lsbdistcodename}/${name}",
+                    "puppet:///modules/apache/${confdir}/${::operatingsystem}.${::operatingsystemmajrelease}/${name}",
                     "puppet:///modules/apache/${confdir}/${::operatingsystem}/${name}",
                     "puppet:///modules/apache/${confdir}/${name}"
                 ],
@@ -55,14 +57,14 @@ define apache::config::file(
                 'absent': {
                     $real_source = $source ? {
                         'absent' => [
-                            "puppet://${server}/modules/site-apache/${confdir}/${fqdn}/${name}",
-                            "puppet://${server}/modules/site-apache/${confdir}/${apache_cluster_node}/${name}",
-                            "puppet://${server}/modules/site-apache/${confdir}/${operatingsystem}.${lsbdistcodename}/${name}",
-                            "puppet://${server}/modules/site-apache/${confdir}/${operatingsystem}/${name}",
-                            "puppet://${server}/modules/site-apache/${confdir}/${name}",
-                            "puppet://${server}/modules/apache/${confdir}/${operatingsystem}.${lsbdistcodename}/${name}",
-                            "puppet://${server}/modules/apache/${confdir}/${operatingsystem}/${name}",
-                            "puppet://${server}/modules/apache/${confdir}/${name}"
+                            "puppet:///modules/site-apache/${confdir}/${::fqdn}/${name}",
+                            "puppet:///modules/site-apache/${confdir}/${apache::cluster_node}/${name}",
+                            "puppet:///modules/site-apache/${confdir}/${::operatingsystem}.${::operatingsystemmajrelease}/${name}",
+                            "puppet:///modules/site-apache/${confdir}/${::operatingsystem}/${name}",
+                            "puppet:///modules/site-apache/${confdir}/${name}",
+                            "puppet:///modules/apache/${confdir}/${::operatingsystem}.${::operatingsystemmajrelease}/${name}",
+                            "puppet:///modules/apache/${confdir}/${::operatingsystem}/${name}",
+                            "puppet:///modules/apache/${confdir}/${name}"
                         ],
                         default => $source,
                     }
