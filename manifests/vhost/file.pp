@@ -101,7 +101,7 @@ define apache::vhost::file(
         'absent': {
             $real_vhost_source = $vhost_source ? {
                 'absent'  => [
-                    "puppet:///modules/site_apache/vhosts.d/{::fqdn}/${name}.conf",
+                    "puppet:///modules/site_apache/vhosts.d/${::fqdn}/${name}.conf",
                     "puppet:///modules/site_apache/vhosts.d/${apache::cluster_node}/${name}.conf",
                     "puppet:///modules/site_apache/vhosts.d/${::operatingsystem}.${::operatingsystemmajrelease}/${name}.conf",
                     "puppet:///modules/site_apache/vhosts.d/${::operatingsystem}/${name}.conf",
