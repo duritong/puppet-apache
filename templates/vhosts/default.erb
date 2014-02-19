@@ -28,6 +28,7 @@ vhost_parts.each do |vhost_part| -%>
   <% if ssl_mode == 'force' && vhost_part == :normal -%>
   RewriteEngine On
   RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
   RewriteRule (.*) https://%{SERVER_NAME}$1 [R=permanent,L]
   <% else -%>
 <%= scope.function_templatewlv([template_partial, {'vhost_part' => vhost_part } ]) %>
