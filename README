@@ -50,6 +50,7 @@ Requirements:
 
  * puppet 2.7 or newer
  * stdlib
+ * templatewlv
 
 
 Usage
