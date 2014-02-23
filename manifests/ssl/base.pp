@@ -1,3 +1,4 @@
+# basic defaults for ssl support
 class apache::ssl::base {
   ::apache::config::include{ 'ssl_defaults.inc': }
 
