@@ -84,7 +84,7 @@ define apache::vhost::webdav(
   }
 
   if $run_mode == 'static-itk' {
-    notice("static-itk mode is not possible for webdav vhosts, rewriting it to proxy-itk")
+    notice('static-itk mode is not possible for webdav vhosts, rewriting it to proxy-itk')
     $real_run_mode = 'proxy-itk'
   } else {
     $real_run_mode = $run_mode
