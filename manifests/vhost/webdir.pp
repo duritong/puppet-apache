@@ -7,6 +7,7 @@ define apache::vhost::webdir(
   $mode                 = 0640,
   $run_mode             = 'normal',
   $manage_docroot       = true,
+  $datadir              = true,
   $documentroot_owner   = root,
   $documentroot_group   = apache,
   $documentroot_mode    = 0640,
@@ -108,6 +109,14 @@ define apache::vhost::webdir(
           owner   => $real_documentroot_owner,
           group   => $real_documentroot_group,
           mode    => $documentroot_mode;
+        }
+      }
+      if $datadir {
+        file{"${real_path}/data":
+          ensure  => directory,
+          owner   => $real_documentroot_owner,
+          group   => $real_documentroot_group,
+          mode    => '0640';
         }
       }
       case $::operatingsystem {

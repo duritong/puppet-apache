@@ -46,7 +46,9 @@ class apache::openbsd inherits apache::base {
     mode    => '0700';
   }
 
-  ::apache::vhost::webdir{'default': }
+  ::apache::vhost::webdir{'default':
+    datadir => false,
+  }
 
   Service['apache']{
     restart => '/opt/bin/restart_apache.sh',

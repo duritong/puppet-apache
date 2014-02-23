@@ -49,6 +49,7 @@ define apache::vhost::static(
         owner               => $owner,
         group               => $group,
         run_mode            => $run_mode,
+        datadir             => false,
         documentroot_owner  => $documentroot_owner,
         documentroot_group  => $documentroot_group,
         documentroot_mode   => $documentroot_mode,

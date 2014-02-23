@@ -39,6 +39,7 @@ class apache::centos inherits apache::package {
       selinux::fcontext{
         [ '/var/www/vhosts/[^/]*/www(/.*)?',
           '/var/www/vhosts/[^/]*/non_public(/.*)?',
+          '/var/www/vhosts/[^/]*/data(/.*)?',
           '/var/www/vhosts/[^/]*/g2data(/.*)?',
           '/var/www/vhosts/[^/]*/upload(/.*)?' ]:
           require => Package['apache'],
