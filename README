@@ -19,6 +19,8 @@ have to be deployed to fit this schema.
  * if using the munin module, you need a version of the munin module that is
    at or newer than commit 77e0a70999a8c4c20ee8d9eb521b927c525ac653 (Feb 28, 2013)
 
+ * if using munin, you will need to have the perl module installed
+
  * you must change your modules/site-apache to modules/site_apache
 
  * the $apache_no_default_site variable is no longer supported, you should
@@ -48,6 +50,7 @@ Requirements:
 
  * puppet 2.7 or newer
  * stdlib
+ * templatewlv
 
 
 Usage
@@ -75,17 +78,17 @@ class to have the module do some things for you:
     0-default_ssl.conf virtualhosts automatically created in your node
     configuration. (Default: false)
 
+  * ssl: If you want to install Apache SSL support enabled, just pass this
+    parameter (Default: false)
+
 For example:
 
    class { 'apache': 
      manage_shorewall => true, 
      manage_munin     => true, 
-     no_default_site  => true 
+     no_default_site  => true,
+     ssl              => true
    }
-
-If you want to install Apache and also enable SSL support:
-
-    include apache::ssl
 
 You can install the ITK worker model to enforce stronger, per-user security:
 

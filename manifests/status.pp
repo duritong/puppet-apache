@@ -3,6 +3,7 @@
 class apache::status {
   case $::operatingsystem {
     centos: { include apache::status::centos }
+    debian: { include apache::status::debian }
     defaults: { include apache::status::base }
   }
   if $apache::manage_munin {
