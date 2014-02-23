@@ -1,15 +1,15 @@
 # create webdir
 define apache::vhost::webdir(
-  $ensure = present,
-  $path = 'absent',
-  $owner = root,
-  $group = apache,
-  $mode = 0640,
-  $run_mode = 'normal',
-  $manage_docroot = true,
-  $documentroot_owner = root,
-  $documentroot_group = apache,
-  $documentroot_mode = 0640,
+  $ensure               = present,
+  $path                 = 'absent',
+  $owner                = root,
+  $group                = apache,
+  $mode                 = 0640,
+  $run_mode             = 'normal',
+  $manage_docroot       = true,
+  $documentroot_owner   = root,
+  $documentroot_group   = apache,
+  $documentroot_mode    = 0640,
   $documentroot_recurse = false
 ){
   $real_path = $path ? {
