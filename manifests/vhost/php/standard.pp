@@ -122,7 +122,10 @@ define apache::vhost::php::standard(
         upload_tmp_dir => "/var/www/upload_tmp_dir/${name}",
         'session.save_path' => "/var/www/session.save_path/${name}",
         open_basedir => "${smarty_path}${pear_path}${documentroot}:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}",
-        safe_mode => 'On',
+        safe_mode => $::operatingsystem ? {
+            debian => undef,
+            default => 'On',
+          },
     }
     if $logmode != 'nologs' {
       $std_php_settings[error_log] = "${logdir}/php_error_log"
