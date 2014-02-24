@@ -121,7 +121,10 @@ define apache::vhost::php::standard(
         engine =>  'On',
         upload_tmp_dir => "/var/www/upload_tmp_dir/${name}",
         'session.save_path' => "/var/www/session.save_path/${name}",
-        open_basedir => "${smarty_path}${pear_path}${documentroot}:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}",
+        open_basedir => has_key($php_settings,'open_basedir') ? {
+            true => "${smarty_path}${pear_path}${documentroot}:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}:${php_settings[open_basedir]}",
+            false => "${smarty_path}${pear_path}${documentroot}:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}",
+          },
         safe_mode => $::operatingsystem ? {
             debian => undef,
             default => 'On',
