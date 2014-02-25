@@ -30,52 +30,43 @@ define apache::config::file(
         notify => Service[apache],
         owner => root, group => 0, mode => 0644;
     }
-    if $ensure == 'present' {
-      case $content {
-        'absent': {
+
+    case $ensure {
+      'absent', 'purged': {
+        # We want to avoid all stuff related to source and content
+      }
+      'link': {
+        if $target != false {
+          File["apache_${name}"] {
+            target => $target,
+          }
+        }
+      }
+      default: {
+        case $content {
+          'absent': {
             $real_source = $source ? {
-                'absent' => [
-                    "puppet:///modules/site_apache/${confdir}/${::fqdn}/${name}",
-                    "puppet:///modules/site_apache/${confdir}/${apache::cluster_node}/${name}",
-                    "puppet:///modules/site_apache/${confdir}/${::operatingsystem}.${::lsbdistcodename}/${name}",
-                    "puppet:///modules/site_apache/${confdir}/${::operatingsystem}/${name}",
-                    "puppet:///modules/site_apache/${confdir}/${name}",
-                    "puppet:///modules/apache/${confdir}/${::operatingsystem}.${::lsbdistcodename}/${name}",
-                    "puppet:///modules/apache/${confdir}/${::operatingsystem}/${name}",
-                    "puppet:///modules/apache/${confdir}/${name}"
-                ],
-                default => $source
+              'absent' => [
+                           "puppet:///modules/site_apache/${confdir}/${::fqdn}/${name}",
+                           "puppet:///modules/site_apache/${confdir}/${apache::cluster_node}/${name}",
+                           "puppet:///modules/site_apache/${confdir}/${::operatingsystem}.${::lsbdistcodename}/${name}",
+                           "puppet:///modules/site_apache/${confdir}/${::operatingsystem}/${name}",
+                           "puppet:///modules/site_apache/${confdir}/${name}",
+                           "puppet:///modules/apache/${confdir}/${::operatingsystem}.${::lsbdistcodename}/${name}",
+                           "puppet:///modules/apache/${confdir}/${::operatingsystem}/${name}",
+                           "puppet:///modules/apache/${confdir}/${name}"
+                           ],
+              default => $source,
             }
             File["apache_${name}"]{
-                source => $real_source,
+              source => $real_source,
             }
-        }
-        default: {
-            case $content {
-                'absent': {
-                    $real_source = $source ? {
-                        'absent' => [
-                            "puppet://${server}/modules/site-apache/${confdir}/${fqdn}/${name}",
-                            "puppet://${server}/modules/site-apache/${confdir}/${apache_cluster_node}/${name}",
-                            "puppet://${server}/modules/site-apache/${confdir}/${operatingsystem}.${lsbdistcodename}/${name}",
-                            "puppet://${server}/modules/site-apache/${confdir}/${operatingsystem}/${name}",
-                            "puppet://${server}/modules/site-apache/${confdir}/${name}",
-                            "puppet://${server}/modules/apache/${confdir}/${operatingsystem}.${lsbdistcodename}/${name}",
-                            "puppet://${server}/modules/apache/${confdir}/${operatingsystem}/${name}",
-                            "puppet://${server}/modules/apache/${confdir}/${name}"
-                        ],
-                        default => $source,
-                    }
-                    File["apache_${name}"]{
-                        source => $real_source,
-                    }
-                }
-                default: {
-                    File["apache_${name}"]{
-                        content => $content,
-                    }
-                }
+          }
+          default: {
+            File["apache_${name}"]{
+              content => $content,
             }
+          }
         }
       }
     }
