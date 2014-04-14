@@ -16,7 +16,7 @@ vhost_parts.each do |vhost_part| -%>
       AssignUserId <%= run_uid+" "+run_gid %>
   </IfModule>
 
-<% elsif run_mode.to_s == 'fcgid' && !(ssl_mode == 'force' && vhost_part == :normal) -%>
+<% elsif run_mode.to_s == 'fcgid' -%>
   <IfModule mod_fcgid.c>
     SuexecUserGroup <%= run_uid+" "+run_gid %>
     FcgidMaxRequestsPerProcess 5000
