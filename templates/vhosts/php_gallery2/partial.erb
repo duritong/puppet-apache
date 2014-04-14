@@ -5,12 +5,12 @@
 
 <%= scope.function_template(['apache/vhosts/partials/authentication.erb']) %>
 
-<% if vhost_part != :ssl -%>
     # Always rewrite login's
     # Source: http://gallery.menalto.com/node/30558
     RewriteEngine On
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !=https
     RewriteCond %{HTTP_COOKIE} ^GALLERYSID= [OR]
     RewriteCond %{QUERY_STRING} subView=core\.UserLogin
     RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [NE,R,L]
-<% end -%>
   </Directory>
