@@ -1,6 +1,6 @@
 <%= scope.function_template(['apache/vhosts/php/partial.erb']) %>
 
-# fixes: http://git.zx2c4.com/w3-total-fail/tree/w3-total-fail.sh
-<Directory "<%= documentroot %>/wp-content/w3tc/dbcache">
-      Deny From All
-</Directory>
+  # fixes: http://git.zx2c4.com/w3-total-fail/tree/w3-total-fail.sh
+  <Directory "<%= documentroot %>/wp-content/w3tc/dbcache">
+    Deny From All
+  </Directory>
