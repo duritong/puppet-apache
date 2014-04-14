@@ -11,12 +11,12 @@ vhost_parts.each do |vhost_part| -%>
 
 <%= scope.function_template(['apache/vhosts/partials/logs.erb']) %>
 
-  <% if run_mode.to_s =~ /(proxy\-|static\-)?itk/ -%>
+<% if run_mode.to_s =~ /(proxy\-|static\-)?itk/ -%>
   <IfModule mpm_itk_module>
       AssignUserId <%= run_uid+" "+run_gid %>
   </IfModule>
 
-  <% elsif run_mode.to_s == 'fcgid' && !(ssl_mode == 'force' && vhost_part == :normal) -%>
+<% elsif run_mode.to_s == 'fcgid' && !(ssl_mode == 'force' && vhost_part == :normal) -%>
   <IfModule mod_fcgid.c>
     SuexecUserGroup <%= run_uid+" "+run_gid %>
     FcgidMaxRequestsPerProcess 5000
@@ -24,16 +24,15 @@ vhost_parts.each do |vhost_part| -%>
     AddHandler fcgid-script .<%= passing_extension %>
   </IfModule>
 
-  <% end -%>
-  <% if ssl_mode == 'force' && vhost_part == :normal -%>
+<% end -%>
+<% if ssl_mode == 'force' && vhost_part == :normal -%>
   RewriteEngine On
   RewriteCond %{HTTPS} !=on
   RewriteCond %{HTTP:X-Forwarded-Proto} !=https
   RewriteRule (.*) https://%{SERVER_NAME}$1 [R=permanent,L]
-  <% else -%>
+<% end -%>
 <%= scope.function_templatewlv([template_partial, {'vhost_part' => vhost_part } ]) %>
-  <% end -%>
-<%- unless template_partial == 'apache/vhosts/itk_plus/partial.erb' -%>
+<% unless template_partial == 'apache/vhosts/itk_plus/partial.erb' -%>
 <%= scope.function_template(['apache/vhosts/partials/mod_security.erb']) %>
 <% end -%>
 <% unless additional_options.to_s == 'absent' -%>

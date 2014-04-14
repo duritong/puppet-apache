@@ -1,9 +1,10 @@
-<% if vhost_part != :ssl && ![false,'false'].include?(ssl_mode) -%>
     # silverstripe
-    RedirectMatch /admin(.*) https://<%= servername %>/admin$1
-    RedirectMatch /Security(.*) https://<%= servername %>/Security$1
+    RewriteEngine On
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+    RewriteRule /admin(.*) https://<%= servername %>/admin$1 [L,R,NE]
+    RewriteRule /Security(.*) https://<%= servername %>/Security$1 [L,R,NE]
 
-<% end -%>
     <Directory "<%= documentroot %>/">
 
 <%= scope.function_template(['apache/vhosts/partials/std_override_options.erb']) %>

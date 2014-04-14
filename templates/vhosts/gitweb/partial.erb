@@ -1,10 +1,9 @@
-    <% unless ssl_mode.to_s == 'force' -%>
     SetEnv GITWEB_CONFIG <%= gitweb_config %>
     DirectoryIndex gitweb.cgi
     <Directory "<%= documentroot %>/">
-        <% if options.to_s != 'absent' or do_includes.to_s == 'true'-%>
+<% if options.to_s != 'absent' || do_includes.to_s == 'true'-%>
         Options <% unless options.to_s == 'absent' -%><%= options %><% end -%><% if do_includes.to_s == 'true' && !options.include?('+Includes') -%> +Includes<% end -%><% unless options.include?('+ExecCGI') -%> +ExecCGI<% end -%>
-        <% end -%>
+<% end -%>
 
         AddHandler cgi-script .cgi
         <Files gitweb.cgi>
@@ -16,4 +15,3 @@
 
 <%= scope.function_template(['apache/vhosts/partials/authentication.erb']) %>
     </Directory>
-    <% end -%>
