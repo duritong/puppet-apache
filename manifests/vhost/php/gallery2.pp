@@ -31,151 +31,156 @@
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 define apache::vhost::php::gallery2(
-    $ensure = present,
-    $domain = 'absent',
-    $domainalias = 'absent',
-    $server_admin = 'absent',
-    $logmode = 'default',
-    $path = 'absent',
-    $owner = root,
-    $group = apache,
-    $documentroot_owner = apache,
-    $documentroot_group = 0,
-    $documentroot_mode = 0640,
-    $run_mode = 'normal',
-    $run_uid = 'absent',
-    $run_gid = 'absent',
-    $allow_override = 'None',
-    $php_settings = {},
-    $php_options = {},
-    $do_includes = false,
-    $options = 'absent',
-    $additional_options = 'absent',
-    $default_charset = 'absent',
-    $mod_security = false,
-    $mod_security_relevantonly = true,
-    $mod_security_rules_to_disable = [],
-    $mod_security_additional_options = 'absent',
-    $ssl_mode = false,
-    $vhost_mode = 'template',
-    $template_partial = 'apache/vhosts/php_gallery2/partial.erb',
-    $vhost_source = 'absent',
-    $vhost_destination = 'absent',
-    $htpasswd_file = 'absent',
-    $htpasswd_path = 'absent',
-    $manage_config = true,
-    $config_webwriteable = false,
-    $manage_directories = true,
-    $upload_dir = 'present'
+  $ensure                           = present,
+  $domain                           = 'absent',
+  $domainalias                      = 'absent',
+  $server_admin                     = 'absent',
+  $logmode                          = 'default',
+  $path                             = 'absent',
+  $owner                            = root,
+  $group                            = apache,
+  $documentroot_owner               = apache,
+  $documentroot_group               = 0,
+  $documentroot_mode                = 0640,
+  $run_mode                         = 'normal',
+  $run_uid                          = 'absent',
+  $run_gid                          = 'absent',
+  $allow_override                   = 'None',
+  $php_settings                     = {},
+  $php_options                      = {},
+  $do_includes                      = false,
+  $options                          = 'absent',
+  $additional_options               = 'absent',
+  $default_charset                  = 'absent',
+  $mod_security                     = false,
+  $mod_security_relevantonly        = true,
+  $mod_security_rules_to_disable    = [],
+  $mod_security_additional_options  = 'absent',
+  $ssl_mode                         = false,
+  $vhost_mode                       = 'template',
+  $template_partial                 = 'apache/vhosts/php_gallery2/partial.erb',
+  $vhost_source                     = 'absent',
+  $vhost_destination                = 'absent',
+  $htpasswd_file                    = 'absent',
+  $htpasswd_path                    = 'absent',
+  $manage_config                    = true,
+  $config_webwriteable              = false,
+  $manage_directories               = true,
+  $upload_dir                       = 'present'
 ){
-    $documentroot = $path ? {
-        'absent' => $::operatingsystem ? {
-            openbsd => "/var/www/htdocs/${name}/www",
-            default => "/var/www/vhosts/${name}/www"
-        },
-        default => "${path}/www"
+  $documentroot = $path ? {
+    'absent' => $::operatingsystem ? {
+      openbsd => "/var/www/htdocs/${name}/www",
+      default => "/var/www/vhosts/${name}/www"
+    },
+    default => "${path}/www"
+  }
+  $gdatadir = $path ? {
+    'absent' => $::operatingsystem ? {
+      openbsd => "/var/www/htdocs/${name}/g2data",
+      default => "/var/www/vhosts/${name}/g2data"
+    },
+    default => "${path}/g2data"
+  }
+  if ($upload_dir == 'present') or ($upload_dir == 'absent') {
+    $real_upload_dir = $::operatingsystem ? {
+      openbsd => "/var/www/htdocs/${name}/upload",
+      default => "/var/www/vhosts/${name}/upload"
     }
-    $gdatadir = $path ? {
-        'absent' => $::operatingsystem ? {
-            openbsd => "/var/www/htdocs/${name}/g2data",
-            default => "/var/www/vhosts/${name}/g2data"
-        },
-        default => "${path}/g2data"
+  } else {
+    $real_upload_dir = $upload_dir
+  }
+  $ensure_dir = $ensure ? {
+    'present' => directory,
+    default   => absent
+  }
+  file{
+    $gdatadir:
+      ensure  => $ensure_dir,
+      owner   => $documentroot_owner,
+      group   => $documentroot_group,
+      mode    => '0660';
+    $real_upload_dir:
+      owner   => $documentroot_owner,
+      group   => $documentroot_group,
+      mode    => '0660';
+  }
+  if ($ensure == 'absent') or ($upload_dir == 'absent') {
+    File[$real_upload_dir]{
+      ensure => absent,
+      purge => true,
+      force => true,
+      recurse => true
     }
-    if ($upload_dir == 'present') or ($upload_dir == 'absent') {
-      $real_upload_dir = $::operatingsystem ? {
-        openbsd => "/var/www/htdocs/${name}/upload",
-        default => "/var/www/vhosts/${name}/upload"
-      }
-    } else {
-      $real_upload_dir = $upload_dir
+  } else {
+    File[$real_upload_dir]{
+      ensure => directory
     }
-    file{
-      $gdatadir:
-        ensure => $ensure ? {
-          'present' => directory,
-          default => absent
-        },
-        owner => $documentroot_owner, group => $documentroot_group, mode => 0660;
-      $real_upload_dir:
-        owner => $documentroot_owner, group => $documentroot_group, mode => 0660;
-    }
-    if ($ensure == 'absent') or ($upload_dir == 'absent') {
-      File[$real_upload_dir]{
-        ensure => absent,
-        purge => true,
-        force => true,
-        recurse => true
-      }
-    } else {
-      File[$real_upload_dir]{
-        ensure => directory
-      }
-    }
+  }
 
-    $gallery_php_settings = {
-      safe_mode => 'Off',
-      output_buffering => 'Off',
-    }
+  $gallery_php_settings = {
+    safe_mode => 'Off',
+    output_buffering => 'Off',
+  }
 
-    # php upload_tmp_dir
-    case $php_settings[upload_tmp_dir] {
-      '',undef: {
-        $php_settings[upload_tmp_dir] = "/var/www/upload_tmp_dir/$name"
-      }
+  # php upload_tmp_dir
+  case $php_settings[upload_tmp_dir] {
+    '',undef: {
+      $php_settings[upload_tmp_dir] = "/var/www/upload_tmp_dir/${name}"
     }
-    # php session_save_path
-    case $php_settings['session.save_path'] {
-      '',undef: {
-        $php_settings['session.save_path'] = "/var/www/session.save_path/$name"
-      }
+  }
+  # php session_save_path
+  case $php_settings['session.save_path'] {
+    '',undef: {
+      $php_settings['session.save_path'] = "/var/www/session.save_path/${name}"
     }
+  }
 
-    if $upload_dir != 'absent' {
-      $gallery_php_settings[open_basedir] = "${documentroot}:${php_settings[upload_tmp_dir]}:${php_settings['session.save_path']}:${gdatadir}:${real_upload_dir}"
-    } else {
-      $gallery_php_settings[open_basedir] = "${documentroot}:${php_settings[upload_tmp_dir]}:${php_settings['session.save_path']}:${gdatadir}"
-    }
+  if $upload_dir != 'absent' {
+    $gallery_php_settings[open_basedir] = "${documentroot}:${php_settings[upload_tmp_dir]}:${php_settings['session.save_path']}:${gdatadir}:${real_upload_dir}"
+  } else {
+    $gallery_php_settings[open_basedir] = "${documentroot}:${php_settings[upload_tmp_dir]}:${php_settings['session.save_path']}:${gdatadir}"
+  }
 
-    $real_php_settings = merge($gallery_php_settings,$php_settings)
+  $real_php_settings = merge($gallery_php_settings,$php_settings)
 
-    # create vhost configuration file
-    ::apache::vhost::php::webapp{$name:
-        ensure => $ensure,
-        domain => $domain,
-        domainalias => $domainalias,
-        server_admin => $server_admin,
-        logmode => $logmode,
-        path => $path,
-        owner => $owner,
-        group => $group,
-        documentroot_owner => $documentroot_owner,
-        documentroot_group => $documentroot_group,
-        documentroot_mode => $documentroot_mode,
-        run_mode => $run_mode,
-        run_uid => $run_uid,
-        run_gid => $run_gid,
-        allow_override => $allow_override,
-        php_settings => $real_php_settings,
-        php_options => $php_options,
-        do_includes => $do_includes,
-        options => $options,
-        additional_options => $additional_options,
-        default_charset => $default_charset,
-        mod_security => $mod_security,
-        mod_security_relevantonly => $mod_security_relevantonly,
-        mod_security_rules_to_disable => $mod_security_rules_to_disable,
-        mod_security_additional_options => $mod_security_additional_options,
-        ssl_mode => $ssl_mode,
-        vhost_mode => $vhost_mode,
-        template_partial => $template_partial,
-        vhost_source => $vhost_source,
-        vhost_destination => $vhost_destination,
-        htpasswd_file => $htpasswd_file,
-        htpasswd_path => $htpasswd_path,
-        manage_directories => $manage_directories,
-        manage_config => $manage_config,
-        config_file => 'config.php',
-    }
+  # create vhost configuration file
+  ::apache::vhost::php::webapp{$name:
+    ensure                          => $ensure,
+    domain                          => $domain,
+    domainalias                     => $domainalias,
+    server_admin                    => $server_admin,
+    logmode                         => $logmode,
+    path                            => $path,
+    owner                           => $owner,
+    group                           => $group,
+    documentroot_owner              => $documentroot_owner,
+    documentroot_group              => $documentroot_group,
+    documentroot_mode               => $documentroot_mode,
+    run_mode                        => $run_mode,
+    run_uid                         => $run_uid,
+    run_gid                         => $run_gid,
+    allow_override                  => $allow_override,
+    php_settings                    => $real_php_settings,
+    php_options                     => $php_options,
+    do_includes                     => $do_includes,
+    options                         => $options,
+    additional_options              => $additional_options,
+    default_charset                 => $default_charset,
+    mod_security                    => $mod_security,
+    mod_security_relevantonly       => $mod_security_relevantonly,
+    mod_security_rules_to_disable   => $mod_security_rules_to_disable,
+    mod_security_additional_options => $mod_security_additional_options,
+    ssl_mode                        => $ssl_mode,
+    vhost_mode                      => $vhost_mode,
+    template_partial                => $template_partial,
+    vhost_source                    => $vhost_source,
+    vhost_destination               => $vhost_destination,
+    htpasswd_file                   => $htpasswd_file,
+    htpasswd_path                   => $htpasswd_path,
+    manage_directories              => $manage_directories,
+    manage_config                   => $manage_config,
+    config_file                     => 'config.php',
+  }
 }
 

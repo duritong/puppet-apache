@@ -25,41 +25,41 @@
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 define apache::vhost::php::joomla(
-    $ensure                           = present,
-    $domain                           = 'absent',
-    $domainalias                      = 'absent',
-    $server_admin                     = 'absent',
-    $logmode                          = 'default',
-    $path                             = 'absent',
-    $owner                            = root,
-    $group                            = apache,
-    $documentroot_owner               = apache,
-    $documentroot_group               = 0,
-    $documentroot_mode                = '0640',
-    $run_mode                         = 'normal',
-    $run_uid                          = 'absent',
-    $run_gid                          = 'absent',
-    $allow_override                   = 'None',
-    $php_settings                     = {},
-    $php_options                      = {},
-    $do_includes                      = false,
-    $options                          = 'absent',
-    $additional_options               = 'absent',
-    $default_charset                  = 'absent',
-    $mod_security                     = true,
-    $mod_security_relevantonly        = true,
-    $mod_security_rules_to_disable    = [],
-    $mod_security_additional_options  = 'absent',
-    $ssl_mode                         = false,
-    $vhost_mode                       = 'template',
-    $template_partial                 = 'apache/vhosts/php_joomla/partial.erb',
-    $vhost_source                     = 'absent',
-    $vhost_destination                = 'absent',
-    $htpasswd_file                    = 'absent',
-    $htpasswd_path                    = 'absent',
-    $manage_config                    = true,
-    $config_webwriteable              = false,
-    $manage_directories               = true
+  $ensure                           = present,
+  $domain                           = 'absent',
+  $domainalias                      = 'absent',
+  $server_admin                     = 'absent',
+  $logmode                          = 'default',
+  $path                             = 'absent',
+  $owner                            = root,
+  $group                            = apache,
+  $documentroot_owner               = apache,
+  $documentroot_group               = 0,
+  $documentroot_mode                = '0640',
+  $run_mode                         = 'normal',
+  $run_uid                          = 'absent',
+  $run_gid                          = 'absent',
+  $allow_override                   = 'None',
+  $php_settings                     = {},
+  $php_options                      = {},
+  $do_includes                      = false,
+  $options                          = 'absent',
+  $additional_options               = 'absent',
+  $default_charset                  = 'absent',
+  $mod_security                     = true,
+  $mod_security_relevantonly        = true,
+  $mod_security_rules_to_disable    = [],
+  $mod_security_additional_options  = 'absent',
+  $ssl_mode                         = false,
+  $vhost_mode                       = 'template',
+  $template_partial                 = 'apache/vhosts/php_joomla/partial.erb',
+  $vhost_source                     = 'absent',
+  $vhost_destination                = 'absent',
+  $htpasswd_file                    = 'absent',
+  $htpasswd_path                    = 'absent',
+  $manage_config                    = true,
+  $config_webwriteable              = false,
+  $manage_directories               = true
 ){
   include ::apache::include::joomla
 
@@ -79,19 +79,20 @@ define apache::vhost::php::joomla(
       },
       default => ''
     }
-    $real_mod_security_additional_options = "# http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
-        # Exceptions for Joomla Root Directory
-        <LocationMatch \"^/\">
-            SecRuleRemoveById 950013
-        </LocationMatch>
+    $real_mod_security_additional_options = "
+    # http://optics.csufresno.edu/~kriehn/fedora/fedora_files/f9/howto/modsecurity.html
+    # Exceptions for Joomla Root Directory
+    <LocationMatch \"^/\">
+        SecRuleRemoveById 950013
+    </LocationMatch>
 
-        # Exceptions for Joomla Administration Panel
-        SecRule REQUEST_FILENAME \"/administrator/index2.php\" \"${id_str}allow,phase:1,nolog,ctl:ruleEngine=Off\"
+    # Exceptions for Joomla Administration Panel
+    SecRule REQUEST_FILENAME \"/administrator/index2.php\" \"${id_str}allow,phase:1,nolog,ctl:ruleEngine=Off\"
 
-        # Exceptions for Joomla Component Expose
-        <LocationMatch \"^/components/com_expose/expose/manager/amfphp/gateway.php\">
-            SecRuleRemoveById 960010
-        </LocationMatch>
+    # Exceptions for Joomla Component Expose
+    <LocationMatch \"^/components/com_expose/expose/manager/amfphp/gateway.php\">
+        SecRuleRemoveById 960010
+    </LocationMatch>
 "
   } else {
     $real_mod_security_additional_options = $mod_security_additional_options
