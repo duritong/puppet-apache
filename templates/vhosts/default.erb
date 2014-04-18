@@ -11,12 +11,12 @@ vhost_parts.each do |vhost_part| -%>
 
 <%= scope.function_template(['apache/vhosts/partials/logs.erb']) %>
 
-<% if run_mode.to_s =~ /(proxy\-|static\-)?itk/ -%>
+<% if @run_mode.to_s =~ /(proxy\-|static\-)?itk/ -%>
   <IfModule mpm_itk_module>
     AssignUserId <%= "#{@run_uid} #{@run_gid}" %>
   </IfModule>
 
-<% elsif run_mode.to_s == 'fcgid' -%>
+<% elsif @run_mode.to_s == 'fcgid' -%>
   <IfModule mod_fcgid.c>
     SuexecUserGroup <%= "#{@run_uid} #{@run_gid}" %>
     FcgidMaxRequestsPerProcess 5000
