@@ -66,7 +66,6 @@ define apache::vhost::php::gallery2(
   $manage_config                    = true,
   $config_webwriteable              = false,
   $manage_directories               = true,
-  $upload_dir                       = 'present'
 ){
   $documentroot = $path ? {
     'absent' => $::operatingsystem ? {
@@ -75,73 +74,27 @@ define apache::vhost::php::gallery2(
     },
     default => "${path}/www"
   }
-  $gdatadir = $path ? {
-    'absent' => $::operatingsystem ? {
-      openbsd => "/var/www/htdocs/${name}/g2data",
-      default => "/var/www/vhosts/${name}/g2data"
-    },
-    default => "${path}/g2data"
-  }
-  if ($upload_dir == 'present') or ($upload_dir == 'absent') {
-    $real_upload_dir = $::operatingsystem ? {
-      openbsd => "/var/www/htdocs/${name}/upload",
-      default => "/var/www/vhosts/${name}/upload"
-    }
-  } else {
-    $real_upload_dir = $upload_dir
-  }
-  $ensure_dir = $ensure ? {
-    'present' => directory,
-    default   => absent
-  }
-  file{
-    $gdatadir:
-      ensure  => $ensure_dir,
-      owner   => $documentroot_owner,
-      group   => $documentroot_group,
-      mode    => '0660';
-    $real_upload_dir:
-      owner   => $documentroot_owner,
-      group   => $documentroot_group,
-      mode    => '0660';
-  }
-  if ($ensure == 'absent') or ($upload_dir == 'absent') {
-    File[$real_upload_dir]{
-      ensure => absent,
-      purge => true,
-      force => true,
-      recurse => true
-    }
-  } else {
-    File[$real_upload_dir]{
-      ensure => directory
+  $upload_dir = "/var/www/vhosts/${name}/data/upload"
+  $gdata_dir = "/var/www/vhosts/${name}/data/gdata"
+  if $ensure != 'absent' {
+    file{
+      $gdata_dir:
+        ensure  => 'directory',
+        owner   => $documentroot_owner,
+        group   => $documentroot_group,
+        mode    => '0660';
+      $upload_dir:
+        ensure  => 'directory',
+        owner   => $documentroot_owner,
+        group   => $documentroot_group,
+        mode    => '0660';
     }
   }
 
   $gallery_php_settings = {
-    safe_mode => 'Off',
+    safe_mode        => 'Off',
     output_buffering => 'Off',
   }
-
-  # php upload_tmp_dir
-  case $php_settings[upload_tmp_dir] {
-    '',undef: {
-      $php_settings[upload_tmp_dir] = "/var/www/upload_tmp_dir/${name}"
-    }
-  }
-  # php session_save_path
-  case $php_settings['session.save_path'] {
-    '',undef: {
-      $php_settings['session.save_path'] = "/var/www/session.save_path/${name}"
-    }
-  }
-
-  if $upload_dir != 'absent' {
-    $gallery_php_settings[open_basedir] = "${documentroot}:${php_settings[upload_tmp_dir]}:${php_settings['session.save_path']}:${gdatadir}:${real_upload_dir}"
-  } else {
-    $gallery_php_settings[open_basedir] = "${documentroot}:${php_settings[upload_tmp_dir]}:${php_settings['session.save_path']}:${gdatadir}"
-  }
-
   $real_php_settings = merge($gallery_php_settings,$php_settings)
 
   # create vhost configuration file

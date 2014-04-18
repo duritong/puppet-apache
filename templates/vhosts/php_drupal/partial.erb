@@ -1,4 +1,4 @@
-  <Directory "<%= documentroot %>/">
+  <Directory "<%= @documentroot %>/">
 <%= scope.function_template(['apache/vhosts/partials/std_override_options.erb']) %>
 
 <%= scope.function_template(['apache/vhosts/partials/authentication.erb']) %>
@@ -18,7 +18,7 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
   </Directory>
-  <Directory "<%= documentroot %>/files/">
+  <Directory "<%= @documentroot %>/files/">
     SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006
     Options None
     Options +FollowSymLinks

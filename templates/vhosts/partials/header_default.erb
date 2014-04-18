@@ -2,19 +2,19 @@
 <% if vhost_part == :ssl -%>
   Include include.d/ssl_defaults.inc
 <% end -%>
-  ServerName <%= servername %>
-<% unless serveralias.empty? || (serveralias == 'absent') -%>
-  ServerAlias <%= Array(serveralias).join(' ') %>
+  ServerName <%= @servername %>
+<% unless @serveralias.empty? || (@serveralias == 'absent') -%>
+  ServerAlias <%= Array(@serveralias).join(' ') %>
 <% end -%>
-<% unless server_admin.empty? || (server_admin == 'absent') -%>
-  ServerAdmin <%= server_admin %>
+<% unless @server_admin.empty? || (@server_admin == 'absent') -%>
+  ServerAdmin <%= @server_admin %>
 <% end -%>
-<% unless documentroot == 'really_absent' -%>
-  DocumentRoot <%= documentroot %>/
+<% unless @documentroot == 'really_absent' -%>
+  DocumentRoot <%= @documentroot %>/
 <% end -%>
-<% if default_charset != 'absent' -%>
-  AddDefaultCharset <%= default_charset %>
+<% if @default_charset != 'absent' -%>
+  AddDefaultCharset <%= @default_charset %>
 <% end -%>
-<% if passing_extension != 'absent' -%>
-  DirectoryIndex index.htm index.html index.<%= passing_extension %>
+<% if @passing_extension != 'absent' -%>
+  DirectoryIndex index.htm index.html index.<%= @passing_extension %>
 <% end -%>

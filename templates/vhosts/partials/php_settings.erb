@@ -1,6 +1,6 @@
-<% if run_mode != 'fcgid'
-  php_settings.reject{|k,v| v == :undef }.keys.sort.each do |key|
-    dvalue = php_settings[key].to_s.downcase
+<% if @run_mode != 'fcgid'
+  @php_settings.reject{|k,v| (v == :undef) || v.nil? }.keys.sort.each do |key|
+    dvalue = @php_settings[key].to_s.downcase
     munged_value = if dvalue == 'true'
        'on'
       elsif dvalue == 'false'
@@ -8,7 +8,7 @@
       elsif ['on','off'].include?(dvalue)
         dvalue
       else
-        php_settings[key]
+        @php_settings[key]
       end
 
        if ['on','off' ].include?(munged_value) -%>

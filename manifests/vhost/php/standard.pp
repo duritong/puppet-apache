@@ -116,19 +116,15 @@ define apache::vhost::php::standard(
     $pear_path = ''
   }
 
-
-  $std_php_settings = {
-    engine              =>  'On',
-    upload_tmp_dir      => "/var/www/upload_tmp_dir/${name}",
-    'session.save_path' => "/var/www/session.save_path/${name}",
-    open_basedir        => "${smarty_path}${pear_path}${documentroot}:${real_path}/data:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}",
-    safe_mode           => 'On'
-  }
   if $logmode != 'nologs' {
-    $std_php_settings[error_log] = "${logdir}/php_error_log"
+    $php_error_log = "${logdir}/php_error_log"
+  } else {
+    $php_error_log = undef
   }
   if $run_mode == 'fcgid' {
-    $std_php_settings[safe_mode_gid] = 'On'
+    $safe_mode_gid = 'On'
+  } else {
+    $safe_mode_gid = undef
   }
 
   if has_key($php_settings,'safe_mode_exec_dir') {
@@ -148,7 +144,7 @@ define apache::vhost::php::standard(
     purge   => true,
   }
   if has_key($php_options,'safe_mode_exec_bins') {
-    $std_php_settings[safe_mode_exec_dir] = $php_safe_mode_exec_dir
+    $std_php_settings_safe_mode_exec_dir = $php_safe_mode_exec_dir
     $ensure_exec = $ensure ? {
       'present'  => directory,
       default    => 'absent',
@@ -165,19 +161,32 @@ define apache::vhost::php::standard(
         ensure  => $ensure,
         path    => $php_safe_mode_exec_dir;
     }
-  }else{
+  } else {
+    $std_php_settings_safe_mode_exec_dir = undef
     File[$php_safe_mode_exec_dir]{
       ensure => absent,
     }
   }
 
-  if !has_key($php_settings,'default_charset') {
-    if $default_charset != 'absent' {
-      $std_php_settings[default_charset] =  $default_charset ? {
-        'On'    => 'iso-8859-1',
-        default => $default_charset
-      }
+  if !has_key($php_settings,'default_charset') and ($default_charset != 'absent') {
+    $std_php_settings_default_charset =  $default_charset ? {
+      'On'    => 'iso-8859-1',
+      default => $default_charset
     }
+  } else {
+    $std_php_settings_default_charset = undef
+  }
+
+  $std_php_settings = {
+    engine              => 'On',
+    upload_tmp_dir      => "/var/www/upload_tmp_dir/${name}",
+    'session.save_path' => "/var/www/session.save_path/${name}",
+    open_basedir        => "${smarty_path}${pear_path}${documentroot}:${real_path}/data:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}",
+    safe_mode           => 'On',
+    error_log           => $php_error_log,
+    safe_mode_gid       => $safe_mode_gid,
+    safe_mode_exec_dir  => $std_php_settings_safe_mode_exec_dir,
+    default_charset     => $std_php_settings_default_charset,
   }
 
   $real_php_settings = merge($std_php_settings,$php_settings)

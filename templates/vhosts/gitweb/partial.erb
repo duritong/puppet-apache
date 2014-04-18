@@ -1,8 +1,8 @@
-  SetEnv GITWEB_CONFIG <%= gitweb_config %>
+  SetEnv GITWEB_CONFIG <%= @gitweb_config %>
   DirectoryIndex gitweb.cgi
-  <Directory "<%= documentroot %>/">
-<% if options.to_s != 'absent' || do_includes.to_s == 'true'-%>
-    Options <% unless options.to_s == 'absent' -%><%= options %><% end -%><% if do_includes.to_s == 'true' && !options.include?('+Includes') -%> +Includes<% end -%><% unless options.include?('+ExecCGI') -%> +ExecCGI<% end -%>
+  <Directory "<%= @documentroot %>/">
+<% if @options.to_s != 'absent' || @do_includes.to_s == 'true'-%>
+    Options <% unless @options.to_s == 'absent' -%><%= @options %><% end -%><% if @do_includes.to_s == 'true' && !@options.include?('+Includes') -%> +Includes<% end -%><% unless @options.include?('+ExecCGI') -%> +ExecCGI<% end -%>
 <% end -%>
 
     AddHandler cgi-script .cgi

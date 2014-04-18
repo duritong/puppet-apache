@@ -1,4 +1,4 @@
-<% if run_mode == 'fcgid' -%>
+<% if @run_mode == 'fcgid' -%>
   RewriteEngine On
   RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
   RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-d

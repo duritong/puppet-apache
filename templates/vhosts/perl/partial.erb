@@ -1,15 +1,15 @@
-  <Directory "<%= documentroot %>/">
+  <Directory "<%= @documentroot %>/">
 <%= scope.function_template(['apache/vhosts/partials/std_override_options.erb']) %>
 
 <%= scope.function_template(['apache/vhosts/partials/authentication.erb']) %>
   </Directory>
 
-<% unless htpasswd_file.to_s == 'absent' -%>
-  <Directory "<%= cgi_binpath %>/">
+<% unless @htpasswd_file.to_s == 'absent' -%>
+  <Directory "<%= @cgi_binpath %>/">
     AuthType Basic
-    AuthName "Access fuer <%= servername %>"
-    AuthUserFile <%= real_htpasswd_path %>
+    AuthName "Access fuer <%= @servername %>"
+    AuthUserFile <%= @real_htpasswd_path %>
     require valid-user
   </Directory>
 <% end -%>
- ScriptAlias /cgi-bin/ <%= cgi_binpath %>/
+ ScriptAlias /cgi-bin/ <%= @cgi_binpath %>/
