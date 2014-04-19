@@ -23,7 +23,6 @@
     AllowOverride <%= @allow_override %>
 <%   if @options.to_s != 'absent' || @do_includes.to_s == 'true' -%>
     Options <% unless @options.to_s == 'absent' -%><%= @options %><% end -%><% if @do_includes.to_s == 'true' && !@options.include?('+Includes') -%> +Includes<% end -%>
-
 <%   end -%>
 <%= scope.function_template(['apache/vhosts/partials/authentication.erb']) %>
   </Directory>
