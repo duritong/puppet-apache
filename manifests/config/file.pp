@@ -32,9 +32,21 @@ define apache::config::file(
         group   => 0,
         mode    => '0644';
     }
-    if $ensure == 'present' {
-      case $content {
-        'absent': {
+
+    case $ensure {
+      'absent', 'purged': {
+        # We want to avoid all stuff related to source and content
+      }
+      'link': {
+        if $target != false {
+          File["apache_${name}"] {
+            target => $target,
+          }
+        }
+      }
+      default: {
+        case $content {
+          'absent': {
             $real_source = $source ? {
                 'absent' => [
                     "puppet:///modules/site_apache/${confdir}/${::fqdn}/${name}",
@@ -49,7 +61,7 @@ define apache::config::file(
                 default => $source
             }
             File["apache_${name}"]{
-                source => $real_source,
+              source => $real_source,
             }
         }
         default: {
@@ -78,6 +90,7 @@ define apache::config::file(
                     }
                 }
             }
+          }
         }
       }
     }

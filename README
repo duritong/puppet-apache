@@ -166,7 +166,6 @@ apache::vhost { "$domain":
                    vhost_source => 'modules/site_configs/vhosts.d/${name}.conf" 
 }
 
-
 There are multiple other additional configurables that you can pass to each
 vhost definition:
 

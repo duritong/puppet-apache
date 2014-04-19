@@ -182,11 +182,18 @@ define apache::vhost::php::standard(
     upload_tmp_dir      => "/var/www/upload_tmp_dir/${name}",
     'session.save_path' => "/var/www/session.save_path/${name}",
     open_basedir        => "${smarty_path}${pear_path}${documentroot}:${real_path}/data:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}",
-    safe_mode           => 'On',
+    safe_mode           => $::operatingsystem ? {
+      debian => undef,
+      default => 'On',
+    },
     error_log           => $php_error_log,
     safe_mode_gid       => $safe_mode_gid,
     safe_mode_exec_dir  => $std_php_settings_safe_mode_exec_dir,
     default_charset     => $std_php_settings_default_charset,
+    open_basedir        => has_key($php_options,'additional_open_basedir') ? {
+      true => "${smarty_path}${pear_path}${documentroot}:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}:${php_options[additional_open_basedir]}",
+      false => "${smarty_path}${pear_path}${documentroot}:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}",
+    },
   }
 
   $real_php_settings = merge($std_php_settings,$php_settings)
