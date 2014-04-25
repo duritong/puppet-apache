@@ -127,7 +127,7 @@ define apache::vhost::php::standard(
     $safe_mode_gid = undef
   }
 
-  if has_key($php_settings,'safe_mode_exec_dir') {
+  if ('safe_mode_exec_dir' in $php_settings) {
     $php_safe_mode_exec_dir = $php_settings[safe_mode_exec_dir]
   } else {
     $php_safe_mode_exec_dir =  $path ? {
@@ -143,7 +143,7 @@ define apache::vhost::php::standard(
     force   => true,
     purge   => true,
   }
-  if has_key($php_options,'safe_mode_exec_bins') {
+  if ('safe_mode_exec_bins' in $php_settings) {
     $std_php_settings_safe_mode_exec_dir = $php_safe_mode_exec_dir
     $ensure_exec = $ensure ? {
       'present'  => directory,
@@ -168,13 +168,19 @@ define apache::vhost::php::standard(
     }
   }
 
-  if !has_key($php_settings,'default_charset') and ($default_charset != 'absent') {
+  if !('default_charset' in $php_settings) and ($default_charset != 'absent') {
     $std_php_settings_default_charset =  $default_charset ? {
       'On'    => 'iso-8859-1',
       default => $default_charset
     }
   } else {
     $std_php_settings_default_charset = undef
+  }
+
+  if ('additional_open_basedir' in $php_options) {
+    $the_open_basedir = "${smarty_path}${pear_path}${documentroot}:${real_path}/data:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}:${php_options[additional_open_basedir]}"
+  } else {
+    $the_open_basedir = "${smarty_path}${pear_path}${documentroot}:${real_path}/data:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}"
   }
 
   $std_php_settings = {
@@ -189,10 +195,7 @@ define apache::vhost::php::standard(
     safe_mode_gid       => $safe_mode_gid,
     safe_mode_exec_dir  => $std_php_settings_safe_mode_exec_dir,
     default_charset     => $std_php_settings_default_charset,
-    open_basedir        => has_key($php_options,'additional_open_basedir') ? {
-      true => "${smarty_path}${pear_path}${documentroot}:${real_path}/data:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}:${php_options[additional_open_basedir]}",
-      false => "${smarty_path}${pear_path}${documentroot}:${real_path}/data:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}",
-    },
+    open_basedir        => $the_open_basedir,
   }
 
   $real_php_settings = merge($std_php_settings,$php_settings)

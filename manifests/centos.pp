@@ -40,7 +40,6 @@ class apache::centos inherits apache::package {
         [ '/var/www/vhosts/[^/]*/www(/.*)?',
           '/var/www/vhosts/[^/]*/non_public(/.*)?',
           '/var/www/vhosts/[^/]*/data(/.*)?',
-          '/var/www/vhosts/[^/]*/g2data(/.*)?',
           '/var/www/vhosts/[^/]*/upload(/.*)?' ]:
           require => Package['apache'],
           setype  => $seltype_rw;
