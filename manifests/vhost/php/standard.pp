@@ -143,7 +143,7 @@ define apache::vhost::php::standard(
     force   => true,
     purge   => true,
   }
-  if ('safe_mode_exec_bins' in $php_settings) {
+  if ('safe_mode_exec_bins' in $php_options) {
     $std_php_settings_safe_mode_exec_dir = $php_safe_mode_exec_dir
     $ensure_exec = $ensure ? {
       'present'  => directory,
