@@ -4,7 +4,7 @@
 <% end -%>
   ServerName <%= @servername %>
 <% unless @serveralias.empty? || (@serveralias == 'absent') -%>
-  ServerAlias <%= Array(@serveralias).join(' ') %>
+  ServerAlias <%= Array(@serveralias).sort.join(' ') %>
 <% end -%>
 <% unless @server_admin.empty? || (@server_admin == 'absent') -%>
   ServerAdmin <%= @server_admin %>
