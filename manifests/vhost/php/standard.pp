@@ -46,6 +46,7 @@ define apache::vhost::php::standard(
   $allow_override                   = 'None',
   $php_settings                     = {},
   $php_options                      = {},
+  $php_installation                 = 'system',
   $do_includes                      = false,
   $options                          = 'absent',
   $additional_options               = 'absent',
@@ -61,7 +62,7 @@ define apache::vhost::php::standard(
   $vhost_source                     = 'absent',
   $vhost_destination                = 'absent',
   $htpasswd_file                    = 'absent',
-  $htpasswd_path                    = 'absent'
+  $htpasswd_path                    = 'absent',
 ){
 
   if $manage_webdir {
@@ -188,8 +189,11 @@ define apache::vhost::php::standard(
     upload_tmp_dir      => "/var/www/upload_tmp_dir/${name}",
     'session.save_path' => "/var/www/session.save_path/${name}",
     safe_mode           => $::operatingsystem ? {
-      debian => undef,
-      default => 'On',
+      debian  => undef,
+      default => $php_installation ? {
+        'system'  => 'On',
+        default   => undef,
+      }
     },
     error_log           => $php_error_log,
     safe_mode_gid       => $safe_mode_gid,
@@ -218,6 +222,13 @@ define apache::vhost::php::standard(
           owner            => $run_uid,
           group            => $run_gid,
           notify           => Service['apache'],
+        }
+        if $php_installation == 'scl54' {
+          require php::scl::php54
+          Mod_fcgid::Starter[$name]{
+            binary          => '/opt/rh/php54/root/usr/bin/php-cgi',
+            additional_cmds => 'source /opt/rh/php54/enable',
+          }
         }
       }
       default: { include ::php }
