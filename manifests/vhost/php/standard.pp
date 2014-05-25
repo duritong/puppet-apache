@@ -212,7 +212,7 @@ define apache::vhost::php::standard(
         include apache::include::mod_fcgid
 
         mod_fcgid::starter {$name:
-          php_tmp_dir      => $real_php_settings[php_tmp_dir],
+          tmp_dir          => $real_php_settings[php_tmp_dir],
           cgi_type         => 'php',
           cgi_type_options => delete($real_php_settings, php_tmp_dir),
           owner            => $run_uid,
