@@ -122,11 +122,6 @@ define apache::vhost::php::standard(
   } else {
     $php_error_log = undef
   }
-  if $run_mode == 'fcgid' {
-    $safe_mode_gid = 'On'
-  } else {
-    $safe_mode_gid = undef
-  }
 
   if ('safe_mode_exec_dir' in $php_settings) {
     $php_safe_mode_exec_dir = $php_settings[safe_mode_exec_dir]
@@ -182,6 +177,18 @@ define apache::vhost::php::standard(
     $the_open_basedir = "${smarty_path}${pear_path}${documentroot}:${real_path}/data:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}:${php_options[additional_open_basedir]}"
   } else {
     $the_open_basedir = "${smarty_path}${pear_path}${documentroot}:${real_path}/data:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}"
+  }
+
+  if $run_mode == 'fcgid' {
+    $safe_mode_gid = $::operatingsystem ? {
+      debian  => undef,
+      default => $php_installation ? {
+        'system'  => 'On',
+        default   => undef,
+      }
+    }
+  } else {
+    $safe_mode_gid = undef
   }
 
   $std_php_settings = {
