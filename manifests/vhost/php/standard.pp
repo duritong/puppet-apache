@@ -191,18 +191,19 @@ define apache::vhost::php::standard(
     $safe_mode_gid = undef
   }
 
+  $safe_mode = $::operatingsystem ? {
+    debian  => undef,
+    default => $php_installation ? {
+      'system'  => 'On',
+      default   => undef,
+    }
+  }
   $std_php_settings = {
     engine              => 'On',
     upload_tmp_dir      => "/var/www/upload_tmp_dir/${name}",
     'session.save_path' => "/var/www/session.save_path/${name}",
-    safe_mode           => $::operatingsystem ? {
-      debian  => undef,
-      default => $php_installation ? {
-        'system'  => 'On',
-        default   => undef,
-      }
-    },
     error_log           => $php_error_log,
+    safe_mode           => $safe_mode,
     safe_mode_gid       => $safe_mode_gid,
     safe_mode_exec_dir  => $std_php_settings_safe_mode_exec_dir,
     default_charset     => $std_php_settings_default_charset,
