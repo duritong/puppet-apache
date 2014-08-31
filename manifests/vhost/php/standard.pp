@@ -238,6 +238,12 @@ define apache::vhost::php::standard(
             binary          => '/opt/rh/php54/root/usr/bin/php-cgi',
             additional_cmds => 'source /opt/rh/php54/enable',
           }
+        } elsif $php_installation == 'scl55' {
+          require php::scl::php55
+          Mod_fcgid::Starter[$name]{
+            binary          => '/opt/rh/php55/root/usr/bin/php-cgi',
+            additional_cmds => 'source /opt/rh/php55/enable',
+          }
         }
       }
       default: { include ::php }
