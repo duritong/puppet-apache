@@ -231,7 +231,6 @@ define apache::vhost::php::standard(
           owner            => $run_uid,
           group            => $run_gid,
           notify           => Service['apache'],
-          rc               => '/etc',
         }
         if $php_installation == 'scl54' {
           require php::scl::php54
