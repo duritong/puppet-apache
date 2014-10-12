@@ -70,7 +70,7 @@ define apache::vhost::php::wordpress(
     default => "${path}/www"
   }
   $modsec_rules = ["960010", "950018"]
-  $real_mod_security_rules_to_disable = array_union($mod_security_rules_to_disable,$modsec_rules)
+  $real_mod_security_rules_to_disable = union($mod_security_rules_to_disable,$modsec_rules)
 
   # create vhost configuration file
   apache::vhost::php::webapp{$name:

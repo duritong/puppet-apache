@@ -72,7 +72,7 @@ define apache::vhost::php::silverstripe(
     default => "${path}/www"
   }
   $modsec_rules = ['960010']
-  $real_mod_security_rules_to_disable = array_union($mod_security_rules_to_disable,$modsec_rules)
+  $real_mod_security_rules_to_disable = union($mod_security_rules_to_disable,$modsec_rules)
 
   # create vhost configuration file
   ::apache::vhost::php::webapp{$name:

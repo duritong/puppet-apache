@@ -14,11 +14,11 @@
 
 # manage a simple apache
 class apache(
-  $cluster_node = '',
+  $cluster_node     = '',
   $manage_shorewall = false,
-  $manage_munin = false,
-  $no_default_site = false,
-  $ssl = false
+  $manage_munin     = false,
+  $no_default_site  = false,
+  $ssl              = false
 ) {
   case $::operatingsystem {
     centos: { include apache::centos }
