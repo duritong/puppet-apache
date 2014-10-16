@@ -11,7 +11,7 @@ SSLEngine on
 #   SSL Protocol support:
 # List the enable protocol levels with which clients will be able to
 # connect.  Disable SSLv2 access by default:
-SSLProtocol -all +SSLv3 +TLSv1
+SSLProtocol All -SSLv2 -SSLv3
 
 #   SSL Cipher Suite:
 # List the ciphers that the client is permitted to negotiate.
