@@ -32,6 +32,7 @@
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 define apache::vhost::php::gallery2(
   $ensure                           = present,
+  $configuration                    = {},
   $domain                           = 'absent',
   $domainalias                      = 'absent',
   $server_admin                     = 'absent',
@@ -100,6 +101,7 @@ define apache::vhost::php::gallery2(
   # create vhost configuration file
   ::apache::vhost::php::webapp{$name:
     ensure                          => $ensure,
+    configuration                   => $configuration,
     domain                          => $domain,
     domainalias                     => $domainalias,
     server_admin                    => $server_admin,

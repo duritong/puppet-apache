@@ -26,6 +26,7 @@
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 define apache::vhost::php::standard(
   $ensure                           = present,
+  $configuration                    = {},
   $domain                           = 'absent',
   $domainalias                      = 'absent',
   $server_admin                     = 'absent',
@@ -266,6 +267,7 @@ define apache::vhost::php::standard(
   # create vhost configuration file
   ::apache::vhost{$name:
     ensure                          => $ensure,
+    configuration                   => $configuration,
     path                            => $path,
     path_is_webdir                  => $path_is_webdir,
     vhost_mode                      => $vhost_mode,

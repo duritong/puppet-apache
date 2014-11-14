@@ -14,6 +14,7 @@
 #
 define apache::vhost::static(
     $ensure                           = present,
+    $configuration                    = {},
     $domain                           = 'absent',
     $domainalias                      = 'absent',
     $server_admin                     = 'absent',
@@ -58,6 +59,7 @@ define apache::vhost::static(
     # create vhost configuration file
     ::apache::vhost{$name:
         ensure                          => $ensure,
+        configuration                   => $configuration,
         path                            => $path,
         template_partial                => $template_partial,
         vhost_mode                      => $vhost_mode,

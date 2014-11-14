@@ -6,6 +6,7 @@
 #
 define apache::vhost::gitweb(
     $ensure = present,
+    $configuration = {},
     $domain = 'absent',
     $logmode = 'default',
     $domainalias = 'absent',
@@ -28,6 +29,7 @@ define apache::vhost::gitweb(
     # create vhost configuration file
     ::apache::vhost{$name:
         ensure => $ensure,
+        configuration => $configuration,
         path => '/var/www/git',
         path_is_webdir => true,
         logpath => $::operatingsystem ? {

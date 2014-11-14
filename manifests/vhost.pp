@@ -30,6 +30,7 @@
 #
 define apache::vhost(
     $ensure                           = present,
+    $configuration                    = {},
     $path                             = 'absent',
     $path_is_webdir                   = false,
     $logpath                          = 'absent',
@@ -72,6 +73,7 @@ define apache::vhost(
         'file': {
             apache::vhost::file{$name:
                 ensure            => $ensure,
+                configuration     => $configuration,
                 vhost_source      => $vhost_source,
                 vhost_destination => $vhost_destination,
                 do_includes       => $do_includes,
@@ -85,6 +87,7 @@ define apache::vhost(
         'template': {
             apache::vhost::template{$name:
                 ensure                          => $ensure,
+                configuration                   => $configuration,
                 path                            => $path,
                 path_is_webdir                  => $path_is_webdir,
                 logpath                         => $logpath,

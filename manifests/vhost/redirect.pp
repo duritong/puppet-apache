@@ -21,6 +21,7 @@
 #
 define apache::vhost::redirect(
     $ensure = present,
+    $configuration = {},
     $domain = 'absent',
     $domainalias = 'absent',
     $target_url,
@@ -32,6 +33,7 @@ define apache::vhost::redirect(
     # we use the options field as the target_url
     ::apache::vhost::template{$name:
         ensure => $ensure,
+        configuration => $configuration,
         template_partial => 'apache/vhosts/redirect/partial.erb',
         domain => $domain,
         path => 'really_absent',

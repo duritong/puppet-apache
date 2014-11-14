@@ -1,0 +1,5 @@
+  SSLCertificateFile <%= configuration['ssl_certificate_file'] || scope.lookupvar('apache::default_ssl_certificate_file') %>
+  SSLCertificateKeyFile <%= configuration['ssl_certificate_key_file'] || scope.lookupvar('apache::default_ssl_certificate_key_file') %>
+<% if configuration['ssl_certificate_chain_file'] || scope.lookupvar('apache::default_ssl_certificate_chain_file') != 'absent' -%>
+  SSLCertificateChainFile <%= configuration['ssl_certificate_chain_file'] || scope.lookupvar('apache::default_ssl_certificate_chain_file') %>
+<% end -%>

@@ -14,8 +14,8 @@
     TransferLog logs/ssl_access_log
     LogLevel warn
 
-    SSLCertificateFile /etc/pki/tls/certs/localhost.crt
-    SSLCertificateKeyFile /etc/pki/tls/private/localhost.key
+<%= scope.function_templatewlv(['apache/vhosts/partials/ssl.erb',
+                                {'configuration' => {}}]) %>
 </VirtualHost>
 
 # vim: ts=4 filetype=apache

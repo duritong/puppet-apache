@@ -25,6 +25,7 @@
 #
 define apache::vhost::webdav(
     $ensure                           = present,
+    $configuration                    = {},
     $domain                           = 'absent',
     $domainalias                      = 'absent',
     $server_admin                     = 'absent',
@@ -93,6 +94,7 @@ define apache::vhost::webdav(
   # create vhost configuration file
   ::apache::vhost{$name:
     ensure                          => $ensure,
+    configuration                   => $configuration,
     path                            => $path,
     path_is_webdir                  => $path_is_webdir,
     logpath                         => $logpath,

@@ -27,6 +27,7 @@
 #
 define apache::vhost::modperl(
     $ensure = present,
+    $configuration = configuration,
     $domain = 'absent',
     $domainalias = 'absent',
     $server_admin = 'absent',
@@ -120,6 +121,7 @@ define apache::vhost::modperl(
     # create vhost configuration file
     ::apache::vhost{$name:
         ensure => $ensure,
+        configuration => $configuration,
         path => $path,
         logmode => $logmode,
         vhost_mode => $vhost_mode,

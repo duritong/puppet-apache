@@ -40,6 +40,7 @@
 #
 define apache::vhost::file(
     $ensure             = present,
+    $configuration      = {},
     $vhost_source       = 'absent',
     $vhost_destination  = 'absent',
     $content            = 'absent',

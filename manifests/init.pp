@@ -14,11 +14,15 @@
 
 # manage a simple apache
 class apache(
-  $cluster_node     = '',
-  $manage_shorewall = false,
-  $manage_munin     = false,
-  $no_default_site  = false,
-  $ssl              = false
+  $cluster_node                       = '',
+  $manage_shorewall                   = false,
+  $manage_munin                       = false,
+  $no_default_site                    = false,
+  $ssl                                = false,
+  $default_ssl_certificate_file       = absent,
+  $default_ssl_certificate_key_file   = absent,
+  $default_ssl_certificate_chain_file = absent,
+  $ssl_cipher_suite                   = "${certs::ssl_config::ciphers}"
 ) {
   case $::operatingsystem {
     centos: { include apache::centos }

@@ -1,6 +1,8 @@
   Include include.d/defaults.inc
 <% if vhost_part == :ssl -%>
   Include include.d/ssl_defaults.inc
+<%= scope.function_templatewlv(['apache/vhosts/partials/ssl.erb',
+                                {'configuration' => configuration}]) %>
 <% end -%>
   ServerName <%= @servername %>
 <% unless @serveralias.empty? || (@serveralias == 'absent') -%>
