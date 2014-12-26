@@ -9,7 +9,7 @@ vhost_parts.each do |vhost_part| -%>
 
 <%= scope.function_templatewlv(['apache/vhosts/partials/header_default.erb',
                                 {'vhost_part'    => vhost_part,
-                                 'configuration' => configuration,}]) %>
+                                 'configuration' => @configuration,}]) %>
 
 <%= scope.function_template(['apache/vhosts/partials/logs.erb']) %>
 
