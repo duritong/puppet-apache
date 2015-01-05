@@ -22,7 +22,7 @@ class apache(
   $default_ssl_certificate_file       = absent,
   $default_ssl_certificate_key_file   = absent,
   $default_ssl_certificate_chain_file = absent,
-  $ssl_cipher_suite                   = $certs::ssl_config::ciphers
+  $ssl_cipher_suite                   = $certs::ssl_config::ciphers_http
 ) {
   case $::operatingsystem {
     centos: { include apache::centos }
