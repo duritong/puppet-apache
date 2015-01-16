@@ -65,12 +65,12 @@ define apache::vhost::php::wordpress(
 
   $documentroot = $path ? {
     'absent' => $::operatingsystem ? {
-        openbsd => "/var/www/htdocs/${name}/www",
-        default => "/var/www/vhosts/${name}/www"
+        'openbsd' => "/var/www/htdocs/${name}/www",
+        default   => "/var/www/vhosts/${name}/www"
     },
     default => "${path}/www"
   }
-  $modsec_rules = ["960010", "950018"]
+  $modsec_rules = ['960010', '950018']
   $real_mod_security_rules_to_disable = union($mod_security_rules_to_disable,$modsec_rules)
 
   # create vhost configuration file
