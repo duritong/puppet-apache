@@ -40,7 +40,7 @@ define apache::vhost::php::wordpress(
   $run_mode                         = 'normal',
   $run_uid                          = 'absent',
   $run_gid                          = 'absent',
-  $allow_override                   = 'FileInfo',
+  $allow_override                   = 'FileInfo Indexes',
   $php_settings                     = {},
   $php_options                      = {},
   $do_includes                      = false,
