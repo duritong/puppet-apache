@@ -1,21 +1,25 @@
-# run_mode: controls in which mode the vhost should be run, there are different setups
-#           possible:
-#   - normal: (*default*) run vhost with the current active worker (default: prefork) don't
-#             setup anything special
-#   - itk: run vhost with the mpm_itk module (Incompatibility: cannot be used in combination
-#          with 'proxy-itk' & 'static-itk' mode)
-#   - proxy-itk: run vhost with a dual prefork/itk setup, where prefork just proxies all the
-#                requests for the itk setup, that listens only on the loobpack device.
-#                (Incompatibility: cannot be used in combination with the itk setup.)
-#   - static-itk: run vhost with a dual prefork/itk setup, where prefork serves all the static
-#                 content and proxies the dynamic calls to the itk setup, that listens only on
-#                 the loobpack device (Incompatibility: cannot be used in combination with
+# run_mode: controls in which mode the vhost should be run, there are different
+#           setups #           possible:
+#   - normal: (*default*) run vhost with the current active worker
+#             (default: prefork) don't setup anything special
+#   - itk: run vhost with the mpm_itk module (Incompatibility: cannot be used in
+#          combination with 'proxy-itk' & 'static-itk' mode)
+#   - proxy-itk: run vhost with a dual prefork/itk setup, where prefork just
+#                proxies all the requests for the itk setup, that listens only
+#                on the loobpack device.
+#                (Incompatibility: cannot be used in combination with the itk
+#                 setup.)
+#   - static-itk: run vhost with a dual prefork/itk setup, where prefork serves
+#                 all the static content and proxies the dynamic calls to the
+#                 itk setup, that listens only on the loobpack device
+#                 (Incompatibility: cannot be used in combination with
 #                 'itk' mode)
 #
 # run_uid: the uid the vhost should run as with the itk module
 # run_gid: the gid the vhost should run as with the itk module
 #
-# mod_security: Whether we use mod_security or not (will include mod_security module)
+# mod_security: Whether we use mod_security or not (will include mod_security
+#               module)
 #    - false: don't activate mod_security
 #    - true: (*default*) activate mod_security
 #
@@ -71,7 +75,8 @@ define apache::vhost::php::wordpress(
     default => "${path}/www"
   }
   $modsec_rules = ['960010', '950018']
-  $real_mod_security_rules_to_disable = union($mod_security_rules_to_disable,$modsec_rules)
+  $real_mod_security_rules_to_disable = union($mod_security_rules_to_disable,
+                                                $modsec_rules)
 
   # create vhost configuration file
   apache::vhost::php::webapp{$name:
@@ -109,7 +114,7 @@ define apache::vhost::php::wordpress(
     htpasswd_file                   => $htpasswd_file,
     htpasswd_path                   => $htpasswd_path,
     manage_directories              => $manage_directories,
-    managed_directories             => "${documentroot}/wp-content",
+    managed_directories             => [ "${documentroot}/wp-content/uploads",],
     manage_config                   => $manage_config,
     config_webwriteable             => $config_webwriteable,
     config_file                     => 'wp-config.php',
