@@ -4,6 +4,9 @@ class apache::base {
     'vhosts_dir':
       ensure  => directory,
       path    => '/etc/apache2/vhosts.d',
+      purge   => true,
+      recurse => true,
+      force   => true,
       owner   => root,
       group   => 0,
       mode    => '0644';
@@ -16,18 +19,27 @@ class apache::base {
     'include_dir':
       ensure  => directory,
       path    => '/etc/apache2/include.d',
+      purge   => true,
+      recurse => true,
+      force   => true,
       owner   => root,
       group   => 0,
       mode    => '0644';
     'modules_dir':
       ensure  => directory,
       path    => '/etc/apache2/modules.d',
+      purge   => true,
+      recurse => true,
+      force   => true,
       owner   => root,
       group   => 0,
       mode    => '0644';
     'htpasswd_dir':
       ensure  => directory,
       path    => '/var/www/htpasswds',
+      purge   => true,
+      recurse => true,
+      force   => true,
       owner   => root,
       group   => 'apache',
       mode    => '0640';
