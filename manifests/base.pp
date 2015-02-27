@@ -7,6 +7,7 @@ class apache::base {
       purge   => true,
       recurse => true,
       force   => true,
+      notify  => Service['apache'],
       owner   => root,
       group   => 0,
       mode    => '0644';
@@ -22,6 +23,7 @@ class apache::base {
       purge   => true,
       recurse => true,
       force   => true,
+      notify  => Service['apache'],
       owner   => root,
       group   => 0,
       mode    => '0644';
@@ -31,6 +33,7 @@ class apache::base {
       purge   => true,
       recurse => true,
       force   => true,
+      notify  => Service['apache'],
       owner   => root,
       group   => 0,
       mode    => '0644';
@@ -40,6 +43,7 @@ class apache::base {
       purge   => true,
       recurse => true,
       force   => true,
+      notify  => Service['apache'],
       owner   => root,
       group   => 'apache',
       mode    => '0640';
