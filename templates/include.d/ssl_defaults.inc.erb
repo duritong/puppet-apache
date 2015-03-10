@@ -76,6 +76,3 @@ SSLHonorCipherOrder on
 SetEnvIf User-Agent ".*MSIE.*" \
          nokeepalive ssl-unclean-shutdown \
          downgrade-1.0 force-response-1.0
-
-# set STS Header
-Header add Strict-Transport-Security "max-age=15768000"
