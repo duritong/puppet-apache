@@ -1,15 +1,16 @@
 # create webdir
 define apache::vhost::webdir(
-  $ensure = present,
-  $path = 'absent',
-  $owner = root,
-  $group = apache,
-  $mode = 0640,
-  $run_mode = 'normal',
-  $manage_docroot = true,
-  $documentroot_owner = root,
-  $documentroot_group = apache,
-  $documentroot_mode = 0640,
+  $ensure               = present,
+  $path                 = 'absent',
+  $owner                = root,
+  $group                = apache,
+  $mode                 = 0640,
+  $run_mode             = 'normal',
+  $manage_docroot       = true,
+  $datadir              = true,
+  $documentroot_owner   = root,
+  $documentroot_group   = apache,
+  $documentroot_mode    = 0640,
   $documentroot_recurse = false
 ){
   $real_path = $path ? {
@@ -68,6 +69,11 @@ define apache::vhost::webdir(
   }
   case $ensure {
     absent: {
+      exec{"cleanup_webdir_${real_path}":
+        command => "rm -rf ${real_path}",
+        onlyif  => "test -d  ${real_path}",
+        before  => File[$real_path],
+      }
       file{$real_path:
         ensure  => absent,
         purge   => true,
@@ -103,6 +109,14 @@ define apache::vhost::webdir(
           owner   => $real_documentroot_owner,
           group   => $real_documentroot_group,
           mode    => $documentroot_mode;
+        }
+      }
+      if $datadir {
+        file{"${real_path}/data":
+          ensure  => directory,
+          owner   => $real_documentroot_owner,
+          group   => $real_documentroot_group,
+          mode    => '0640';
         }
       }
       case $::operatingsystem {

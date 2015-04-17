@@ -21,6 +21,7 @@
 #
 define apache::vhost::proxy(
     $ensure = present,
+    $configuration = {},
     $domain = 'absent',
     $domainalias = 'absent',
     $htpasswd_file = 'absent',
@@ -38,6 +39,7 @@ define apache::vhost::proxy(
     # we use the options field as the target_url
     ::apache::vhost::template{$name:
         ensure => $ensure,
+        configuration => $configuration,
         template_partial => 'apache/vhosts/proxy/partial.erb',
         domain => $domain,
         path => 'really_absent',

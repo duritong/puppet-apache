@@ -42,6 +42,7 @@
 #
 define apache::vhost::template(
     $ensure                           = present,
+    $configuration                    = {},
     $path                             = 'absent',
     $path_is_webdir                   = false,
     $logpath                          = 'absent',
@@ -133,6 +134,7 @@ define apache::vhost::template(
     }
 
     apache::vhost::file{$name:
+        configuration => $configuration,
         ensure        => $ensure,
         do_includes   => $do_includes,
         run_mode      => $run_mode,

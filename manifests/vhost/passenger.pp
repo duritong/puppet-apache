@@ -14,6 +14,7 @@
 #
 define apache::vhost::passenger(
     $ensure = present,
+    $configuration = {},
     $domain = 'absent',
     $domainalias = 'absent',
     $server_admin = 'absent',
@@ -105,6 +106,7 @@ define apache::vhost::passenger(
     # create vhost configuration file
     ::apache::vhost{$name:
         ensure => $ensure,
+        configuration => $configuration,
         path => "${real_path}/www/public",
         path_is_webdir => true,
         template_partial => $template_partial,

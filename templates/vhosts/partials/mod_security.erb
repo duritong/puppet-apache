@@ -1,27 +1,27 @@
   <IfModule mod_security2.c>
-<% if mod_security.to_s == 'true' then -%>
+<% if @mod_security.to_s == 'true' -%>
     SecRuleEngine On
-<% if mod_security_relevantonly.to_s == 'true' then -%>
+<%   if @mod_security_relevantonly.to_s == 'true' -%>
     SecAuditEngine RelevantOnly
-<% else -%>
+<%   else -%>
     SecAuditEngine On
-<% end -%>
+<%   end -%>
 <% else -%>
     SecRuleEngine Off
     SecAuditEngine Off
 <% end -%>
     SecAuditLogType Concurrent
-    SecAuditLogStorageDir <%= logdir %>/
-    SecAuditLog <%= logdir %>/mod_security_audit.log
-    SecDebugLog <%= logdir %>/mod_security_debug.log
-<% unless mod_security_rules_to_disable.to_a.empty? -%>
+    SecAuditLogStorageDir <%= @logdir %>/
+    SecAuditLog <%= @logdir %>/mod_security_audit.log
+    SecDebugLog <%= @logdir %>/mod_security_debug.log
+<% unless (disabled_rules=Array(@mod_security_rules_to_disable)).empty? -%>
 
-<% mod_security_rules_to_disable.to_a.each do |rule| -%>
+<%    disabled_rules.each do |rule| -%>
     SecRuleRemoveById "<%= rule %>"
+<%   end -%>
 <% end -%>
-<% end -%>
-<% unless mod_security_additional_options.to_s == 'absent' -%>
+<% unless (s=@mod_security_additional_options).to_s == 'absent' -%>
 
-    <%= mod_security_additional_options %>
+    <%= s %>
 <% end -%>
   </IfModule>

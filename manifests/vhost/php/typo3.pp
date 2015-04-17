@@ -25,123 +25,126 @@
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 define apache::vhost::php::typo3(
-    $ensure = present,
-    $domain = 'absent',
-    $domainalias = 'absent',
-    $server_admin = 'absent',
-    $logmode = 'default',
-    $path = 'absent',
-    $owner = root,
-    $group = apache,
-    $documentroot_owner = apache,
-    $documentroot_group = 0,
-    $documentroot_mode = 0640,
-    $run_mode = 'normal',
-    $run_uid = 'absent',
-    $run_gid = 'absent',
-    $allow_override = 'None',
-    $php_settings = {},
-    $php_options = {},
-    $do_includes = false,
-    $options = 'absent',
-    $additional_options = 'absent',
-    $default_charset = 'absent',
-    $mod_security = true,
-    $mod_security_relevantonly = true,
-    $mod_security_rules_to_disable = [],
-    $mod_security_additional_options = 'absent',
-    $ssl_mode = false,
-    $vhost_mode = 'template',
-    $template_partial = 'apache/vhosts/php_typo3/partial.erb',
-    $vhost_source = 'absent',
-    $vhost_destination = 'absent',
-    $htpasswd_file = 'absent',
-    $htpasswd_path = 'absent',
-    $manage_config = true,
-    $config_webwriteable = false,
-    $manage_directories = true
+  $ensure                           = present,
+  $configuration                    = {},
+  $domain                           = 'absent',
+  $domainalias                      = 'absent',
+  $server_admin                     = 'absent',
+  $logmode                          = 'default',
+  $path                             = 'absent',
+  $owner                            = root,
+  $group                            = apache,
+  $documentroot_owner               = apache,
+  $documentroot_group               = 0,
+  $documentroot_mode                = '0640',
+  $run_mode                         = 'normal',
+  $run_uid                          = 'absent',
+  $run_gid                          = 'absent',
+  $allow_override                   = 'None',
+  $php_settings                     = {},
+  $php_options                      = {},
+  $do_includes                      = false,
+  $options                          = 'absent',
+  $additional_options               = 'absent',
+  $default_charset                  = 'absent',
+  $mod_security                     = true,
+  $mod_security_relevantonly        = true,
+  $mod_security_rules_to_disable    = [],
+  $mod_security_additional_options  = 'absent',
+  $ssl_mode                         = false,
+  $vhost_mode                       = 'template',
+  $template_partial                 = 'apache/vhosts/php_typo3/partial.erb',
+  $vhost_source                     = 'absent',
+  $vhost_destination                = 'absent',
+  $htpasswd_file                    = 'absent',
+  $htpasswd_path                    = 'absent',
+  $manage_config                    = true,
+  $config_webwriteable              = false,
+  $manage_directories               = true,
 ){
-    $documentroot = $path ? {
-        'absent' => $::operatingsystem ? {
-            openbsd => "/var/www/htdocs/${name}/www",
-            default => "/var/www/vhosts/${name}/www"
-        },
-        default => "${path}/www"
-    }
+  $documentroot = $path ? {
+    'absent' => $::operatingsystem ? {
+        openbsd => "/var/www/htdocs/${name}/www",
+        default => "/var/www/vhosts/${name}/www"
+    },
+    default => "${path}/www"
+  }
 
-    $modsec_rules = ["960010"]
-    $real_mod_security_rules_to_disable = array_union($mod_security_rules_to_disable,$modsec_rules)
-    if $mod_security_additional_options == 'absent' {
-      $real_mod_security_additional_options = '<Location "/typo3">
-          SecRuleEngine Off
-          SecAuditEngine Off
+  $modsec_rules = ['960010']
+  $real_mod_security_rules_to_disable = union($mod_security_rules_to_disable,$modsec_rules)
+  if $mod_security_additional_options == 'absent' {
+  $real_mod_security_additional_options = '
+    <Location "/typo3">
+      SecRuleEngine Off
+      SecAuditEngine Off
     </Location>
 '
-    } else {
-      $real_mod_security_additional_options = $mod_security_additional_options
-    }
+  } else {
+    $real_mod_security_additional_options = $mod_security_additional_options
+  }
 
-    $typo3_php_settings = {
-      # turn allow_url_fopen on for the extension manager fetch
-      allow_url_fopen => 'On'
-    }
-    $real_php_settings = merge($typo3_php_settings,$php_settings)
+  $typo3_php_settings = {
+    # turn allow_url_fopen on for the extension manager fetch
+    allow_url_fopen => 'On'
+  }
+  $real_php_settings = merge($typo3_php_settings,$php_settings)
 
-    # create vhost configuration file
-    ::apache::vhost::php::webapp{$name:
-        ensure => $ensure,
-        domain => $domain,
-        domainalias => $domainalias,
-        server_admin => $server_admin,
-        logmode => $logmode,
-        path => $path,
-        owner => $owner,
-        group => $group,
-        documentroot_owner => $documentroot_owner,
-        documentroot_group => $documentroot_group,
-        documentroot_mode => $documentroot_mode,
-        run_mode => $run_mode,
-        run_uid => $run_uid,
-        run_gid => $run_gid,
-        allow_override => $allow_override,
-        php_settings => $real_php_settings,
-        php_options => $php_options,
-        do_includes => $do_includes,
-        options => $options,
-        additional_options => $additional_options,
-        default_charset => $default_charset,
-        mod_security => $mod_security,
-        mod_security_relevantonly => $mod_security_relevantonly,
-        mod_security_rules_to_disable => $real_mod_security_rules_to_disable,
-        mod_security_additional_options => $real_mod_security_additional_options,
-        ssl_mode => $ssl_mode,
-        vhost_mode => $vhost_mode,
-        template_partial => $template_partial,
-        vhost_source => $vhost_source,
-        vhost_destination => $vhost_destination,
-        htpasswd_file => $htpasswd_file,
-        htpasswd_path => $htpasswd_path,
-        manage_directories => $manage_directories,
-        managed_directories =>  [ "${documentroot}/typo3temp",
-                                  "${documentroot}/typo3temp/pics",
-                                  "${documentroot}/typo3temp/temp",
-                                  "${documentroot}/typo3temp/llxml",
-                                  "${documentroot}/typo3temp/cs",
-                                  "${documentroot}/typo3temp/GB",
-                                  "${documentroot}/typo3temp/locks",
-                                  "${documentroot}/typo3conf",
-                                  "${documentroot}/typo3conf/ext",
-                                  "${documentroot}/typo3conf/l10n",
-                                  # "${documentroot}/typo3/ext/", # only needed for ext manager installing global extensions
-                                  "${documentroot}/uploads",
-                                  "${documentroot}/uploads/pics",
-                                  "${documentroot}/uploads/media",
-                                  "${documentroot}/uploads/tf",
-                                  "${documentroot}/fileadmin",
-                                  "${documentroot}/fileadmin/_temp_"
-                                ],
-        manage_config => $manage_config,
-    }
+  # create vhost configuration file
+  ::apache::vhost::php::webapp{$name:
+    ensure                          => $ensure,
+    configuration                   => $configuration,
+    domain                          => $domain,
+    domainalias                     => $domainalias,
+    server_admin                    => $server_admin,
+    logmode                         => $logmode,
+    path                            => $path,
+    owner                           => $owner,
+    group                           => $group,
+    documentroot_owner              => $documentroot_owner,
+    documentroot_group              => $documentroot_group,
+    documentroot_mode               => $documentroot_mode,
+    run_mode                        => $run_mode,
+    run_uid                         => $run_uid,
+    run_gid                         => $run_gid,
+    allow_override                  => $allow_override,
+    php_settings                    => $real_php_settings,
+    php_options                     => $php_options,
+    do_includes                     => $do_includes,
+    options                         => $options,
+    additional_options              => $additional_options,
+    default_charset                 => $default_charset,
+    mod_security                    => $mod_security,
+    mod_security_relevantonly       => $mod_security_relevantonly,
+    mod_security_rules_to_disable   => $real_mod_security_rules_to_disable,
+    mod_security_additional_options => $real_mod_security_additional_options,
+    ssl_mode                        => $ssl_mode,
+    vhost_mode                      => $vhost_mode,
+    template_partial                => $template_partial,
+    vhost_source                    => $vhost_source,
+    vhost_destination               => $vhost_destination,
+    htpasswd_file                   => $htpasswd_file,
+    htpasswd_path                   => $htpasswd_path,
+    manage_directories              => $manage_directories,
+    managed_directories             =>  [ "${documentroot}/typo3temp",
+                                          "${documentroot}/typo3temp/pics",
+                                          "${documentroot}/typo3temp/temp",
+                                          "${documentroot}/typo3temp/llxml",
+                                          "${documentroot}/typo3temp/cs",
+                                          "${documentroot}/typo3temp/GB",
+                                          "${documentroot}/typo3temp/locks",
+                                          "${documentroot}/typo3conf",
+                                          "${documentroot}/typo3conf/ext",
+                                          "${documentroot}/typo3conf/l10n",
+                                          # "${documentroot}/typo3/ext/", # only needed for ext manager installing global extensions
+                                          "${documentroot}/uploads",
+                                          "${documentroot}/uploads/pics",
+                                          "${documentroot}/uploads/media",
+                                          "${documentroot}/uploads/tf",
+                                          "${documentroot}/fileadmin",
+                                          "${documentroot}/fileadmin/_temp_"
+                                        ],
+    manage_config                   => $manage_config,
+  }
 
 }
 

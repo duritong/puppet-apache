@@ -4,6 +4,10 @@ class apache::base {
     'vhosts_dir':
       ensure  => directory,
       path    => '/etc/apache2/vhosts.d',
+      purge   => true,
+      recurse => true,
+      force   => true,
+      notify  => Service['apache'],
       owner   => root,
       group   => 0,
       mode    => '0644';
@@ -16,18 +20,30 @@ class apache::base {
     'include_dir':
       ensure  => directory,
       path    => '/etc/apache2/include.d',
+      purge   => true,
+      recurse => true,
+      force   => true,
+      notify  => Service['apache'],
       owner   => root,
       group   => 0,
       mode    => '0644';
     'modules_dir':
       ensure  => directory,
       path    => '/etc/apache2/modules.d',
+      purge   => true,
+      recurse => true,
+      force   => true,
+      notify  => Service['apache'],
       owner   => root,
       group   => 0,
       mode    => '0644';
     'htpasswd_dir':
       ensure  => directory,
       path    => '/var/www/htpasswds',
+      purge   => true,
+      recurse => true,
+      force   => true,
+      notify  => Service['apache'],
       owner   => root,
       group   => 'apache',
       mode    => '0640';
@@ -43,20 +59,17 @@ class apache::base {
       owner   => root,
       group   => 0,
       mode    => '0644';
-  }
-  anchor{'apache::basic_dirs::ready':
-    require => File['vhosts_dir','config_dir','include_dir','modules_dir','htpasswd_dir','web_dir','default_apache_index']
-  }
+  } -> anchor{'apache::basic_dirs::ready': }
 
-    apache::config::include{ 'defaults.inc': }
-    apache::config::global{ 'git.conf': }
-    if !$apache::no_default_site {
-      apache::vhost::file { '0-default': }
-    }
+  apache::config::include{ 'defaults.inc': }
+  apache::config::global{ 'git.conf': }
+  if !$apache::no_default_site {
+    apache::vhost::file { '0-default': }
+  }
 
   service{'apache':
-    ensure  => running,
-    name    => 'apache2',
-    enable  => true,
+    ensure => running,
+    name   => 'apache2',
+    enable => true,
   }
 }

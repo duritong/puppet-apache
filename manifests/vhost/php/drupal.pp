@@ -32,109 +32,113 @@
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 #
 define apache::vhost::php::drupal(
-    $ensure = present,
-    $domain = 'absent',
-    $domainalias = 'absent',
-    $server_admin = 'absent',
-    $logmode = 'default',
-    $path = 'absent',
-    $owner = root,
-    $group = apache,
-    $documentroot_owner = apache,
-    $documentroot_group = 0,
-    $documentroot_mode = 0640,
-    $run_mode = 'normal',
-    $run_uid = 'absent',
-    $run_gid = 'absent',
-    $allow_override = 'None',
-    $php_settings = {},
-    $php_options = {},
-    $do_includes = false,
-    $options = 'absent',
-    $additional_options = 'absent',
-    $default_charset = 'absent',
-    $mod_security = true,
-    $mod_security_relevantonly = true,
-    $mod_security_rules_to_disable = [],
-    $mod_security_additional_options = 'absent',
-    $ssl_mode = false,
-    $vhost_mode = 'template',
-    $template_partial = 'apache/vhosts/php_drupal/partial.erb',
-    $vhost_source = 'absent',
-    $vhost_destination = 'absent',
-    $htpasswd_file = 'absent',
-    $htpasswd_path = 'absent',
-    $manage_directories = true,
-    $config_webwriteable = false,
-    $manage_config = true,
-    $manage_cron = true
+  $ensure                           = present,
+  $configuration                    = {},
+  $domain                           = 'absent',
+  $domainalias                      = 'absent',
+  $server_admin                     = 'absent',
+  $logmode                          = 'default',
+  $path                             = 'absent',
+  $owner                            = root,
+  $group                            = apache,
+  $documentroot_owner               = apache,
+  $documentroot_group               = 0,
+  $documentroot_mode                = '0640',
+  $run_mode                         = 'normal',
+  $run_uid                          = 'absent',
+  $run_gid                          = 'absent',
+  $allow_override                   = 'None',
+  $php_settings                     = {},
+  $php_options                      = {},
+  $do_includes                      = false,
+  $options                          = 'absent',
+  $additional_options               = 'absent',
+  $default_charset                  = 'absent',
+  $mod_security                     = true,
+  $mod_security_relevantonly        = true,
+  $mod_security_rules_to_disable    = [],
+  $mod_security_additional_options  = 'absent',
+  $ssl_mode                         = false,
+  $vhost_mode                       = 'template',
+  $template_partial                 = 'apache/vhosts/php_drupal/partial.erb',
+  $vhost_source                     = 'absent',
+  $vhost_destination                = 'absent',
+  $htpasswd_file                    = 'absent',
+  $htpasswd_path                    = 'absent',
+  $manage_directories               = true,
+  $config_webwriteable              = false,
+  $manage_config                    = true,
+  $manage_cron                      = true
 ){
-    $documentroot = $path ? {
-        'absent' => $::operatingsystem ? {
-            openbsd => "/var/www/htdocs/${name}/www",
-            default => "/var/www/vhosts/${name}/www"
-        },
-        default => "${path}/www"
+  $documentroot = $path ? {
+      'absent' => $::operatingsystem ? {
+          openbsd => "/var/www/htdocs/${name}/www",
+          default => "/var/www/vhosts/${name}/www"
+      },
+      default => "${path}/www"
+  }
+
+  if $manage_cron {
+    if $domain == 'absent' {
+      $real_domain = $name
+    } else {
+      $real_domain = $domain
     }
 
-    if $manage_cron {
-      if $domain == 'absent' {
-        $real_domain = $name
-      } else {
-        $real_domain = $domain
-      }
-
-      file{"/etc/cron.d/drupal_cron_${name}":
-        content => "0   *   *   *   *   apache wget -O - -q -t 1 http://${real_domain}/cron.php\n",
-        owner => root, group => 0, mode => 0644;
-      }
+    file{"/etc/cron.d/drupal_cron_${name}":
+      content => "0   *   *   *   *   apache wget -O - -q -t 1 http://${real_domain}/cron.php\n",
+      owner   => root,
+      group   => 0,
+      mode    => '0644';
     }
+  }
 
-    $std_drupal_php_settings = {
-      magic_quotes_gpc                => 0,
-      register_globals                => 0,
-      'session.auto_start'            => 0,
-      'mbstring.http_input'           => 'pass',
-      'mbstring.http_output'          => 'pass',
-      'mbstring.encoding_translation' => 0,
-    }
+  $std_drupal_php_settings = {
+    magic_quotes_gpc                => 0,
+    register_globals                => 0,
+    'session.auto_start'            => 0,
+    'mbstring.http_input'           => 'pass',
+    'mbstring.http_output'          => 'pass',
+    'mbstring.encoding_translation' => 0,
+  }
 
-    # create vhost configuration file
-    ::apache::vhost::php::webapp{$name:
-        ensure => $ensure,
-        domain => $domain,
-        domainalias => $domainalias,
-        server_admin => $server_admin,
-        logmode => $logmode,
-        path => $path,
-        owner => $owner,
-        group => $group,
-        documentroot_owner => $documentroot_owner,
-        documentroot_group => $documentroot_group,
-        documentroot_mode => $documentroot_mode,
-        run_mode => $run_mode,
-        run_uid => $run_uid,
-        run_gid => $run_gid,
-        allow_override => $allow_override,
-        php_settings =>merge($std_drupal_php_settings, $php_settings),
-        php_options => $php_options,
-        do_includes => $do_includes,
-        options => $options,
-        additional_options => $additional_options,
-        default_charset => $default_charset,
-        mod_security => $mod_security,
-        mod_security_relevantonly => $mod_security_relevantonly,
-        mod_security_rules_to_disable => $mod_security_rules_to_disable,
-        mod_security_additional_options => $mod_security_additional_options,
-        ssl_mode => $ssl_mode,
-        vhost_mode => $vhost_mode,
-        template_partial => $template_partial,
-        vhost_source => $vhost_source,
-        vhost_destination => $vhost_destination,
-        htpasswd_file => $htpasswd_file,
-        htpasswd_path => $htpasswd_path,
-        manage_directories => false,
-        manage_config => false,
-    }
+  # create vhost configuration file
+  ::apache::vhost::php::webapp{$name:
+    ensure                          => $ensure,
+    configuration                   => $configuration,
+    domain                          => $domain,
+    domainalias                     => $domainalias,
+    server_admin                    => $server_admin,
+    logmode                         => $logmode,
+    path                            => $path,
+    owner                           => $owner,
+    group                           => $group,
+    documentroot_owner              => $documentroot_owner,
+    documentroot_group              => $documentroot_group,
+    documentroot_mode               => $documentroot_mode,
+    run_mode                        => $run_mode,
+    run_uid                         => $run_uid,
+    run_gid                         => $run_gid,
+    allow_override                  => $allow_override,
+    php_settings                    => merge($std_drupal_php_settings, $php_settings),
+    php_options                     => $php_options,
+    do_includes                     => $do_includes,
+    options                         => $options,
+    additional_options              => $additional_options,
+    default_charset                 => $default_charset,
+    mod_security                    => $mod_security,
+    mod_security_relevantonly       => $mod_security_relevantonly,
+    mod_security_rules_to_disable   => $mod_security_rules_to_disable,
+    mod_security_additional_options => $mod_security_additional_options,
+    ssl_mode                        => $ssl_mode,
+    vhost_mode                      => $vhost_mode,
+    template_partial                => $template_partial,
+    vhost_source                    => $vhost_source,
+    vhost_destination               => $vhost_destination,
+    htpasswd_file                   => $htpasswd_file,
+    htpasswd_path                   => $htpasswd_path,
+    manage_directories              => false,
+    manage_config                   => false,
+  }
 }
 

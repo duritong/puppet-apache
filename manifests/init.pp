@@ -3,7 +3,7 @@
 #
 # Copyright 2008, admin(at)immerda.ch
 # Copyright 2008, Puzzle ITC GmbH
-# Marcel Härry haerry+puppet(at)puzzle.ch
+# Marcel Haerry haerry+puppet(at)puzzle.ch
 # Simon Josi josi+puppet(at)puzzle.ch
 #
 # This program is free software; you can redistribute
@@ -14,11 +14,15 @@
 
 # manage a simple apache
 class apache(
-  $cluster_node = '',
-  $manage_shorewall = false,
-  $manage_munin = false,
-  $no_default_site = false,
-  $ssl = false
+  $cluster_node                       = '',
+  $manage_shorewall                   = false,
+  $manage_munin                       = false,
+  $no_default_site                    = false,
+  $ssl                                = false,
+  $default_ssl_certificate_file       = absent,
+  $default_ssl_certificate_key_file   = absent,
+  $default_ssl_certificate_chain_file = absent,
+  $ssl_cipher_suite                   = $certs::ssl_config::ciphers_http
 ) {
   case $::operatingsystem {
     centos: { include apache::centos }
