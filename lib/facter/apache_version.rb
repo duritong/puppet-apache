@@ -4,7 +4,7 @@ def parse_version(version_string)
   version = ""
   version_string.each_line do |line|
     if line.match(/^Server version/)
-      version = line.scan(/Apache\/(.*) /)
+      version = line.scan(/Apache\/(.*) /)[0][0]
     end
   end
   return version
