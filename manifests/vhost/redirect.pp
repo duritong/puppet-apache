@@ -29,11 +29,14 @@ define apache::vhost::redirect(
     $logmode = 'default',
     $ssl_mode = false
 ){
+    $new_config = merge($configuration,
+                        {target_url => $target_url})
+
     # create vhost configuration file
     # we use the options field as the target_url
     ::apache::vhost::template{$name:
         ensure => $ensure,
-        configuration => $configuration,
+        configuration => $new_config,
         template_partial => 'apache/vhosts/redirect/partial.erb',
         domain => $domain,
         path => 'really_absent',
@@ -49,7 +52,6 @@ define apache::vhost::redirect(
         allow_override => $allow_override,
         run_mode => 'normal',
         mod_security => false,
-        options => $target_url,
         ssl_mode => $ssl_mode,
     }
 }
