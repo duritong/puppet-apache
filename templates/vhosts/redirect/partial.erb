@@ -1,5 +1,5 @@
-<% if @configuration['target_scheme'] %>
+<% if @configuration['target_scheme'] -%>
   Redirect permanent / <%= @configuration['target_scheme'] %>://<%= @configuration['target_url'] %>
-<% else %>
+<% else -%>
   Redirect permanent / https://<%= @configuration['target_url'] %>
-<% end %>
+<% end -%>
