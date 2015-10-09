@@ -1,7 +1,8 @@
 define apache::module (
   $ensure = present, $source = '',
-  $destination = '', $module = '', $package_name = 'absent' )
-{
+  $destination = '', $module = '', $package_name = 'absent',
+  $conf_content = '', $conf_source = '',
+) {
 
   $real_module = $module ? {
     '' => $name,
@@ -23,7 +24,8 @@ define apache::module (
     }
     'debian','ubuntu': {
       apache::debian::module { "$real_module":
-        ensure => $ensure, package_name => $package_name
+        ensure => $ensure, package_name => $package_name,
+        conf_content => $conf_content, conf_source => $conf_source
       }
     }
     default: {
