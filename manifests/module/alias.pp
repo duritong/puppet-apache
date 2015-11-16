@@ -7,7 +7,7 @@ class apache::module::alias ( $ensure = present )
   # from 2.4, /etc/apache2/mods-enabled/alias.conf contains the "Require"
   # directive which needs "authz_core" mod enabled
 
-  if ( versioncmp($::apache_version, '2.4') >= 0 ) {
+  if ( guess_apache_version() == '2.4') {
     class { 'authz_core': ensure => $ensure }
   }
 
