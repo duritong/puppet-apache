@@ -10,15 +10,20 @@ module Puppet::Parser::Functions
     unknown = 'unknown'
 
     case lookupvar('operatingsystem')
+      when 'CentOS'
+        if release.to_i > 6
+          version = '2.4'
+        else
+          version = '2.2'
+        end
 
       when 'Debian'
-        case release
-          when /^7.*/
-            version = '2.2'
-          when /^8.*/
-            version = '2.4'
-          else
-            version = unknown
+        if release.to_i > 7
+          version = '2.4'
+        elsif release.to_i == 7
+          version = '2.2'
+        else
+          version = unknown
         end
 
       when 'Ubuntu'
