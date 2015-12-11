@@ -46,12 +46,16 @@ have to be deployed to fit this schema.
       source => "modules/site-apache/blah"
 
 
-Requirements:
+Requirements
+------------
 
  * puppet 2.7 or newer
- * stdlib
- * templatewlv
-
+ * stdlib module
+ * templatewlv module
+ * facter >= 2.2
+   because we check for $::operatingsystemmajrelease on multiple places.
+   In Debian wheezy, facter needs to get upgraded from wheezy-backports.
+   The facter version of Debian jessie is new enough.
 
 Usage
 =====
