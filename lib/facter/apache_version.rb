@@ -1,5 +1,4 @@
 # determine the version of apache installed
- 
 def parse_version(version_string)
   version = ""
   version_string.each_line do |line|
@@ -9,7 +8,7 @@ def parse_version(version_string)
   end
   return version
 end
- 
+
 Facter.add('apache_version') do
   setcode do
     case Facter.value('osfamily')
