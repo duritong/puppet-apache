@@ -1,6 +1,5 @@
 # basic defaults for ssl support
-class apache::ssl::base (
-) {
+class apache::ssl::base {
   apache::config::include {
     'ssl_defaults.inc':
       content => template('apache/include.d/ssl_defaults.inc.erb');
