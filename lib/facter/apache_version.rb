@@ -1,27 +1,18 @@
 # determine the version of apache installed
-def parse_version(version_string)
-  version = ""
-  version_string.each_line do |line|
-    if line.match(/^Server version/)
-      version = line.scan(/Apache\/(.*) /)[0][0]
-    end
-  end
-  return version
-end
-
 Facter.add('apache_version') do
+  confine :osfamily => ['Debian','RedHat']
+  def apache_exec
+    @apache_exec ||= ['/usr/sbin/httpd','/usr/sbin/apache2'].find{|e| File.exists?(e) }
+  end
+  confine do
+    apache_exec
+  end
   setcode do
-    case Facter.value('osfamily')
-    when /RedHat/
-      if File.exists?('/usr/sbin/httpd')
-        version = parse_version(%x(/usr/sbin/httpd -v))
+    if (s = Facter::Util::Resolution.exec("#{apache_exec} -v")) && \
+      (vl = s.split("\n").find{|l| l =~ /^Server version: Apache/ })
+      if m = vl.match(/^Server version: Apache\/([\d\.]+)/)
+         m[1]
       end
-    when /Debian/
-      if File.exists?('/usr/sbin/apache2')
-        version = parse_version(%x(/usr/sbin/apache2 -v))
-      end
-    else
-      version = 'undef'
     end
   end
 end
