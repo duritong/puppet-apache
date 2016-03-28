@@ -81,7 +81,7 @@ define apache::vhost::php::joomla(
   if $mod_security_additional_options == 'absent' {
     $id_str = $::operatingsystem ? {
       'CentOS'  => $::operatingsystemmajrelease ? {
-        5       => '',
+        '5'     => '',
         default => 'id:1199400,'
       },
       default => ''
