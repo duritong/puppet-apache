@@ -5,7 +5,7 @@ define apache::debian::module(
   $conf_source = '',
   $conf_content = '',
 ){
-  $modules_dir = "${apache::debian::config_dir}/mods"
+  $modules_dir = "${apache::config_dir}/mods"
 
   if ($package_name != 'absent') {
     package { $package_name:

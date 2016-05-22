@@ -25,11 +25,23 @@ class apache(
   $ssl_cipher_suite                   = $certs::ssl_config::ciphers_http
 ) {
   case $::operatingsystem {
-    centos: { include apache::centos }
-    gentoo: { include apache::gentoo }
-    debian,ubuntu: { include apache::debian }
-    openbsd: { include apache::openbsd }
-    default: { include apache::base }
+    'CentOS': {
+      $config_dir = '/etc/httpd'
+      include apache::centos
+    }
+    'Gentoo': {
+      $config_dir = '/etc/apache2'
+      include apache::gentoo
+    }
+    'Debian','Ubuntu': {
+      $config_dir = '/etc/apache2'
+      include apache::debian
+    }
+    'OpenBSD': {
+      $config_dir = '/var/www'
+      include apache::openbsd
+    }
+    default: { fail("Operatingsystem ${::operatingsystem} is not supported by this module") }
   }
   if $apache::manage_munin {
     include apache::status

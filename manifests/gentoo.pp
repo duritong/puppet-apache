@@ -1,7 +1,5 @@
 ### gentoo
 class apache::gentoo inherits apache::package {
-  $config_dir = '/etc/apache2'
-
   # needs module gentoo
   gentoo::etcconfd {
     'apache2':

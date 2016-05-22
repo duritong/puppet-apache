@@ -1,7 +1,5 @@
 ### centos
 class apache::centos inherits apache::package {
-  $config_dir = '/etc/httpd'
-
   Package['apache']{
     name => 'httpd',
   }
@@ -9,13 +7,13 @@ class apache::centos inherits apache::package {
     name    => 'httpd',
   }
   File['vhosts_dir']{
-    path => "${config_dir}/vhosts.d",
+    path => "${apache::config_dir}/vhosts.d",
   }
   File['config_dir']{
-    path => "${config_dir}/conf.d",
+    path => "${apache::config_dir}/conf.d",
   }
   File['include_dir']{
-    path => "${config_dir}/include.d",
+    path => "${apache::config_dir}/include.d",
   }
   File['web_dir']{
     path => '/var/www/vhosts',
@@ -60,7 +58,7 @@ class apache::centos inherits apache::package {
     }
   } else {
     File['modules_dir']{
-      path => "${config_dir}/modules.d",
+      path => "${apache::config_dir}/modules.d",
     }
     Service['apache']{
       restart => '/etc/init.d/httpd graceful',

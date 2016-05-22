@@ -54,12 +54,8 @@ define apache::vhost::file(
     $use_mod_macro      = false
 ){
     $vhosts_dir = $::operatingsystem ? {
-        centos  => "${apache::centos::config_dir}/vhosts.d",
-        gentoo  => "${apache::gentoo::config_dir}/vhosts.d",
-        debian  => "${apache::debian::config_dir}/sites-enabled",
-        ubuntu  => "${apache::ubuntu::config_dir}/sites-enabled",
-        openbsd => "${apache::openbsd::config_dir}/vhosts.d",
-        default => '/etc/apache2/vhosts.d',
+        /^(Debian|Ubuntu)$/ => "${apache::config_dir}/sites-enabled",
+        default             => "${apache::config_dir}/vhosts.d",
     }
     $real_vhost_destination = $vhost_destination ? {
         'absent'  => "${vhosts_dir}/${name}.conf",

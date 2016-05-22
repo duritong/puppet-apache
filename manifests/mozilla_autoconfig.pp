@@ -10,7 +10,7 @@
 # derived from that.
 # You can however still fine tune things from it.
 class apache::mozilla_autoconfig(
-  $provider,
+  $provider          = $::domain,
   $display_name      = undef,
   $shortname         = undef,
   $imap_server       = undef,

@@ -1,23 +1,21 @@
 ### openbsd
 class apache::openbsd inherits apache::base {
-  $config_dir = '/var/www'
-
-  File[vhosts_dir]{
-    path => "${config_dir}/vhosts.d",
+  File['vhosts_dir']{
+    path => "${apache::config_dir}/vhosts.d",
   }
-  File[modules_dir]{
-    path => "${config_dir}/conf/modules",
+  File['modules_dir']{
+    path => "${apache::config_dir}/conf/modules",
   }
-  File[config_dir]{
-    path => "${config_dir}/conf.d",
+  File['config_dir']{
+    path => "${apache::config_dir}/conf.d",
   }
-  File[include_dir]{
-    path => "${config_dir}/include.d",
+  File['include_dir']{
+    path => "${apache::config_dir}/include.d",
   }
   File['htpasswd_dir']{
     group => www,
   }
-  File[web_dir]{
+  File['web_dir']{
     group => daemon,
   }
   file_line{'enable_apache_on_boot':
@@ -25,7 +23,7 @@ class apache::openbsd inherits apache::base {
     line => 'httpd flags=""',
   }
   file{'apache_main_config':
-    path    => "${config_dir}/conf/httpd.conf",
+    path    => "${apache::config_dir}/conf/httpd.conf",
     source  => ["puppet:///modules/site_apache/config/OpenBSD/${::fqdn}/httpd.conf",
                 "puppet:///modules/site_apache/config/OpenBSD/${apache::cluster_node}/httpd.conf",
                 'puppet:///modules/site_apache/config/OpenBSD//httpd.conf',
@@ -35,7 +33,7 @@ class apache::openbsd inherits apache::base {
     group   => 0,
     mode    => '0644';
   }
-  File[default_apache_index] {
+  File['default_apache_index'] {
     path => '/var/www/htdocs/default/www/index.html',
   }
   file{'/opt/bin/restart_apache.sh':

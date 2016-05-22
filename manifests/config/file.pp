@@ -13,14 +13,11 @@ define apache::config::file(
     'global': { $confdir = 'conf.d' }
     default: { fail("Wrong config file type specified for ${name}") }
   }
+  include ::apache
   $real_destination = $destination ? {
     'absent'  => $::operatingsystem ? {
-      centos    => "${apache::centos::config_dir}/${confdir}/${name}",
-      gentoo    => "${apache::gentoo::config_dir}/${name}",
-      debian    => "${apache::debian::config_dir}/${confdir}/${name}",
-      ubuntu    => "${apache::ubuntu::config_dir}/${confdir}/${name}",
-      openbsd   => "${apache::openbsd::config_dir}/${confdir}/${name}",
-      default   => "/etc/apache2/${confdir}/${name}",
+      'Gentoo'                           => "${apache::config_dir}/${name}",
+      /^(CentOS|Debian|Ubuntu|OpenBSD)$/ => "${apache::config_dir}/${confdir}/${name}",
     },
     default => $destination
   }
