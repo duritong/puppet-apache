@@ -1,28 +1,33 @@
 require File.expand_path(File.join(File.dirname(__FILE__),'../spec_helper'))
 
 describe 'apache', :type => 'class' do
+  let(:default_facts) {
+    { :operatingsystem => 'CentOS', }
+  }
+  let(:facts){ default_facts }
+  let(:pre_condition){'Exec{path => "/bin"}'}
   describe 'with standard' do
-    #puppet-rspec bug
-    #it { should compile.with_all_deps }
+    it { should compile.with_all_deps }
 
     it { should contain_class('apache::base') }
     it { should_not contain_class('apache::status') }
     it { should_not contain_class('shorewall::rules::http') }
     it { should_not contain_class('apache::ssl') }
-    context 'on centos' do
+    context 'on Debian' do
       let(:facts) {
         {
-          :operatingsystem => 'CentOS',
+          :operatingsystem => 'Debian',
         }
       }
-      it { should contain_class('apache::centos') }
+      it { should compile.with_all_deps }
+      it { should contain_class('apache::debian') }
     end
   end
   describe 'with params' do
     let(:facts) {
-      {
+      default_facts.merge({
         :concat_basedir => '/var/lib/puppet/concat'
-      }
+      })
     }
     let(:params){
       {
@@ -32,8 +37,7 @@ describe 'apache', :type => 'class' do
         :ssl              => true,
       }
     }
-    #puppet-rspec bug
-    #it { should compile.with_all_deps }
+    it { should compile.with_all_deps }
 
     it { should contain_class('apache::base') }
     it { should_not contain_class('apache::status') }

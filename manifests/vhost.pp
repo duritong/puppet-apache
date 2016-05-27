@@ -14,15 +14,7 @@
 #           possible:
 #   - normal: (*default*) run vhost with the current active worker (default: prefork) don't
 #             setup anything special
-#   - itk: run vhost with the mpm_itk module (Incompatibility: cannot be used in combination
-#          with 'proxy-itk' & 'static-itk' mode)
-#   - proxy-itk: run vhost with a dual prefork/itk setup, where prefork just proxies all the
-#                requests for the itk setup, that listens only on the loobpack device.
-#                (Incompatibility: cannot be used in combination with the itk setup.)
-#   - static-itk: run vhost with a dual prefork/itk setup, where prefork serves all the static
-#                 content and proxies the dynamic calls to the itk setup, that listens only on
-#                 the loobpack device (Incompatibility: cannot be used in combination with
-#                 'itk' mode)
+#   - fcgid: run vhost with the fcgid and suexec module
 #
 # mod_security: Whether we use mod_security or not (will include mod_security module)
 #    - false: (*default*) don't activate mod_security

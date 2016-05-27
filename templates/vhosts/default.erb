@@ -13,12 +13,7 @@ vhost_parts.each do |vhost_part| -%>
 
 <%= scope.function_template(['apache/vhosts/partials/logs.erb']) %>
 
-<% if @run_mode.to_s =~ /(proxy\-|static\-)?itk/ -%>
-  <IfModule mpm_itk_module>
-    AssignUserId <%= "#{@run_uid} #{@run_gid}" %>
-  </IfModule>
-
-<% elsif @run_mode.to_s == 'fcgid' -%>
+<% if @run_mode.to_s == 'fcgid' -%>
   <IfModule mod_fcgid.c>
     SuexecUserGroup <%= "#{@run_uid} #{@run_gid}" %>
     FcgidMaxRequestsPerProcess 5000
@@ -34,9 +29,7 @@ vhost_parts.each do |vhost_part| -%>
   RewriteRule (.*) https://%{SERVER_NAME}$1 [R=permanent,L]
 <% end -%>
 <%= scope.function_templatewlv([@template_partial, {'vhost_part' => vhost_part } ]) %>
-<% unless @template_partial == 'apache/vhosts/itk_plus/partial.erb' -%>
 <%= scope.function_template(['apache/vhosts/partials/mod_security.erb']) %>
-<% end -%>
 <% unless @additional_options.to_s == 'absent' -%>
   <%= @additional_options %>
 <% end -%>

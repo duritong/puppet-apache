@@ -1,10 +1,10 @@
 ### centos
-class apache::centos inherits apache::package {
+class apache::centos inherits apache::base {
   Package['apache']{
     name => 'httpd',
   }
   Service['apache']{
-    name    => 'httpd',
+    name => 'httpd',
   }
   File['vhosts_dir']{
     path => "${apache::config_dir}/vhosts.d",

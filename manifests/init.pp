@@ -27,30 +27,16 @@ class apache(
   case $::operatingsystem {
     'CentOS': {
       $config_dir = '/etc/httpd'
-      include apache::centos
-    }
-    'Gentoo': {
-      $config_dir = '/etc/apache2'
-      include apache::gentoo
+      include ::apache::centos
     }
     'Debian','Ubuntu': {
       $config_dir = '/etc/apache2'
-      include apache::debian
-    }
-    'OpenBSD': {
-      $config_dir = '/var/www'
-      include apache::openbsd
+      include ::apache::debian
     }
     default: { fail("Operatingsystem ${::operatingsystem} is not supported by this module") }
   }
-  if $apache::manage_munin {
-    include apache::status
-  }
-  if $apache::manage_shorewall {
-    include shorewall::rules::http
-  }
-  if $ssl {
-    include apache::ssl
-  }
+  if $apache::manage_munin { include ::apache::status }
+  if $apache::manage_shorewall { include ::shorewall::rules::http }
+  if $ssl { include ::apache::ssl }
 }
 

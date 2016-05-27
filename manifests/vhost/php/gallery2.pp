@@ -2,18 +2,10 @@
 #           possible:
 #   - normal: (*default*) run vhost with the current active worker (default: prefork) don't
 #             setup anything special
-#   - itk: run vhost with the mpm_itk module (Incompatibility: cannot be used in combination
-#          with 'proxy-itk' & 'static-itk' mode)
-#   - proxy-itk: run vhost with a dual prefork/itk setup, where prefork just proxies all the
-#                requests for the itk setup, that listens only on the loobpack device.
-#                (Incompatibility: cannot be used in combination with the itk setup.)
-#   - static-itk: run vhost with a dual prefork/itk setup, where prefork serves all the static
-#                 content and proxies the dynamic calls to the itk setup, that listens only on
-#                 the loobpack device (Incompatibility: cannot be used in combination with
-#                 'itk' mode)
+#   - fcgid: run vhost with the suexec & fcgid
 #
-# run_uid: the uid the vhost should run as with the itk module
-# run_gid: the gid the vhost should run as with the itk module
+# run_uid: the uid the vhost should run as with the suexec module
+# run_gid: the gid the vhost should run as with the suexec module
 #
 # mod_security: Whether we use mod_security or not (will include mod_security module)
 #    - false: (*defaul*) don't activate mod_security
@@ -42,7 +34,7 @@ define apache::vhost::php::gallery2(
   $group                            = apache,
   $documentroot_owner               = apache,
   $documentroot_group               = 0,
-  $documentroot_mode                = 0640,
+  $documentroot_mode                = '0640',
   $run_mode                         = 'normal',
   $run_uid                          = 'absent',
   $run_gid                          = 'absent',
@@ -69,11 +61,8 @@ define apache::vhost::php::gallery2(
   $manage_directories               = true,
 ){
   $documentroot = $path ? {
-    'absent' => $::operatingsystem ? {
-      openbsd => "/var/www/htdocs/${name}/www",
-      default => "/var/www/vhosts/${name}/www"
-    },
-    default => "${path}/www"
+    'absent' => "/var/www/vhosts/${name}/www",
+    default  => "${path}/www",
   }
   $upload_dir = "/var/www/vhosts/${name}/data/upload"
   $gdata_dir = "/var/www/vhosts/${name}/data/gdata"

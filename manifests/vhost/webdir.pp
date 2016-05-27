@@ -1,4 +1,4 @@
-# create webdir
+# manage webdir
 define apache::vhost::webdir(
   $ensure               = present,
   $path                 = 'absent',
@@ -10,19 +10,16 @@ define apache::vhost::webdir(
   $datadir              = true,
   $documentroot_owner   = root,
   $documentroot_group   = apache,
-  $documentroot_mode    = 0640,
+  $documentroot_mode    = '0640',
   $documentroot_recurse = false
 ){
   $real_path = $path ? {
-    'absent' => $::operatingsystem ? {
-      openbsd => "/var/www/htdocs/${name}",
-      default => "/var/www/vhosts/${name}"
-    },
-    default => $path
+    'absent' => "/var/www/vhosts/${name}",
+    default  => $path,
   }
 
-  if (($run_mode =~ /^(static\-|proxy\-)?itk$/) or $run_mode == 'fcgid') and ($mode == '0640'){
-    $real_mode = 0644
+  if ($run_mode == 'fcgid') and ($mode == '0640'){
+    $real_mode = '0644'
   } else {
     $real_mode = $mode
   }
@@ -32,18 +29,16 @@ define apache::vhost::webdir(
 
   if $owner == 'apache' {
     $real_owner = $::operatingsystem ? {
-      openbsd => 'www',
-      debian  => 'www-data',
-      default => $owner
+      'Debian' => 'www-data',
+      default  => $owner
     }
   } else {
       $real_owner = $owner
   }
   if $group == 'apache' {
     $real_group = $::operatingsystem ? {
-      openbsd => 'www',
-      debian  => 'www-data',
-      default => $group
+      'Debian' => 'www-data',
+      default  => $group
     }
   } else {
     $real_group = $group
@@ -51,18 +46,16 @@ define apache::vhost::webdir(
 
   if $documentroot_owner == 'apache' {
     $real_documentroot_owner = $::operatingsystem ? {
-      openbsd => 'www',
-      debian  => 'www-data',
-      default => $documentroot_owner
+      'Debian' => 'www-data',
+      default  => $documentroot_owner
     }
   } else {
     $real_documentroot_owner = $documentroot_owner
   }
   if $documentroot_group == 'apache' {
     $real_documentroot_group = $::operatingsystem ? {
-      openbsd => 'www',
-      debian  => 'www-data',
-      default => $documentroot_group
+      'Debian' => 'www-data',
+      default  => $documentroot_group
     }
   } else {
     $real_documentroot_group = $documentroot_group

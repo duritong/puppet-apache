@@ -1,11 +1,11 @@
 # deploy apache configuration file
 # by default we assume it's a global configuration file
 define apache::config::file(
-  $ensure     = present,
-  $target     = false,
-  $type       = 'global',
-  $source     = 'absent',
-  $content    = 'absent',
+  $ensure      = present,
+  $target      = false,
+  $type        = 'global',
+  $source      = 'absent',
+  $content     = 'absent',
   $destination = 'absent'
 ){
   case $type {
@@ -15,15 +15,13 @@ define apache::config::file(
   }
   include ::apache
   $real_destination = $destination ? {
-    'absent'  => $::operatingsystem ? {
-      'Gentoo'                           => "${apache::config_dir}/${name}",
-      /^(CentOS|Debian|Ubuntu|OpenBSD)$/ => "${apache::config_dir}/${confdir}/${name}",
-    },
-    default => $destination
+    'absent' => "${apache::config_dir}/${confdir}/${name}",
+    default  => $destination,
   }
   file{"apache_${name}":
     ensure  => $ensure,
     path    => $real_destination,
+    require => Package[apache],
     notify  => Service[apache],
     owner   => root,
     group   => 0,
@@ -88,15 +86,6 @@ define apache::config::file(
             }
           }
         }
-      }
-    }
-  }
-
-  case $::operatingsystem {
-    openbsd: { info("no package dependency on ${::operatingsystem} for ${name}") }
-    default: {
-      File["apache_${name}"]{
-        require => Package[apache],
       }
     }
   }

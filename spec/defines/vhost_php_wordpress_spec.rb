@@ -14,7 +14,7 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
     it { should contain_apache__vhost__php__webapp('example.com').with(
       :mod_security_rules_to_disable  => ["960010", "950018"],
       :manage_directories             => true,
-      :managed_directories            => '/var/www/vhosts/example.com/www/wp-content',
+      :managed_directories            => '/var/www/vhosts/example.com/www/wp-content/uploads',
       :template_partial               => 'apache/vhosts/php_wordpress/partial.erb',
       :manage_config                  => true,
       :config_webwriteable            => false,
@@ -36,7 +36,7 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
 
 
   <Directory \"/var/www/vhosts/example.com/www/\">
-    AllowOverride FileInfo
+    AllowOverride FileInfo Indexes
 
     php_admin_flag engine on
     php_admin_value error_log /var/www/vhosts/example.com/logs/php_error_log
@@ -64,7 +64,7 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
     CookieExpires 30
     CookieName 359422a82c97336dc082622faf72013a8e857bfd
   </Location>
-  RewriteRule ^/wordpress-login-576a63fdc98202e7c7283713f2ddfee334bf13ee.php /wp-login.php [NE]
+  RewriteRule ^/wordpress-login-576a63fdc98202e7c7283713f2ddfee334bf13ee.php /wp-login.php? [NE]
 
 
   <IfModule mod_security2.c>
@@ -99,7 +99,7 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
       :template_partial               => 'apache/vhosts/php_wordpress/partial.erb',
       :mod_security_rules_to_disable  => ["960010", "950018"],
       :manage_directories             => true,
-      :managed_directories            => '/var/www/vhosts/example.com/www/wp-content',
+      :managed_directories            => '/var/www/vhosts/example.com/www/wp-content/uploads',
       :manage_config                  => true,
       :config_webwriteable            => false,
       :config_file                    => 'wp-config.php',
@@ -127,7 +127,7 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
   </IfModule>
 
   <Directory \"/var/www/vhosts/example.com/www/\">
-    AllowOverride FileInfo
+    AllowOverride FileInfo Indexes
     Options  +ExecCGI
 
 
@@ -149,7 +149,7 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
     CookieExpires 30
     CookieName 359422a82c97336dc082622faf72013a8e857bfd
   </Location>
-  RewriteRule ^/wordpress-login-576a63fdc98202e7c7283713f2ddfee334bf13ee.php /wp-login.php [NE]
+  RewriteRule ^/wordpress-login-576a63fdc98202e7c7283713f2ddfee334bf13ee.php /wp-login.php? [NE]
 
 
   <IfModule mod_security2.c>

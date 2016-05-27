@@ -114,6 +114,7 @@ describe 'apache::vhost::template', :type => 'define' do
 
   Include include.d/defaults.inc
   Include include.d/ssl_defaults.inc
+
   ServerName example.com
   DocumentRoot /var/www/vhosts/example.com/www/
 
@@ -208,6 +209,7 @@ describe 'apache::vhost::template', :type => 'define' do
 
   Include include.d/defaults.inc
   Include include.d/ssl_defaults.inc
+
   ServerName example.com
   DocumentRoot /var/www/vhosts/example.com/www/
 
@@ -266,12 +268,13 @@ describe 'apache::vhost::template', :type => 'define' do
 
   Include include.d/defaults.inc
   Include include.d/ssl_defaults.inc
+
   ServerName example.com
   DocumentRoot /var/www/vhosts/example.com/www/
 
 
   ErrorLog /dev/null
-  CustomLog /dev/null
+  CustomLog /dev/null %%
 
 
 

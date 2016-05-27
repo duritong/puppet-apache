@@ -500,7 +500,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 
 
   ErrorLog /dev/null
-  CustomLog /dev/null
+  CustomLog /dev/null %%
 
 
 

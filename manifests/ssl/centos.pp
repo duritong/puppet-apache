@@ -3,7 +3,7 @@ class apache::ssl::centos inherits apache::ssl::base {
   package{'mod_ssl':
     ensure  => present,
     require => Package['apache'],
-    before  => Service['httpd'],
+    before  => Service['apache'],
   } -> apache::config::global{
     'ssl.conf':;
     '00-listen-ssl.conf':

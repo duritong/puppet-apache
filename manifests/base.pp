@@ -1,6 +1,8 @@
 # setup base apache class
 class apache::base {
-  file{
+  package { 'apache':
+    ensure => present,
+  } -> file{
     'vhosts_dir':
       ensure  => directory,
       path    => '/etc/apache2/vhosts.d',
@@ -69,7 +71,6 @@ class apache::base {
 
   service{'apache':
     ensure => running,
-    name   => 'apache2',
     enable => true,
   }
 }

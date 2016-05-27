@@ -139,6 +139,7 @@ describe 'apache::vhost', :type => 'define' do
 
   Include include.d/defaults.inc
   Include include.d/ssl_defaults.inc
+
   ServerName example.com
   DocumentRoot /var/www/vhosts/example.com/www/
 
@@ -196,7 +197,7 @@ describe 'apache::vhost', :type => 'define' do
         :vhost_mode     => 'foo',
       }
     }
-    it { expect { should compile }.to raise_error(Puppet::Error, /No such vhost_mode: foo defined for example.com\./)
+    it { expect { should compile }.to raise_error(/No such vhost_mode: foo defined for example.com\./)
     }
   end
 end

@@ -2,18 +2,10 @@
 #           possible:
 #   - normal: (*default*) run vhost with the current active worker (default: prefork) don't
 #             setup anything special
-#   - itk: run vhost with the mpm_itk module (Incompatibility: cannot be used in combination
-#          with 'proxy-itk' & 'static-itk' mode)
-#   - proxy-itk: run vhost with a dual prefork/itk setup, where prefork just proxies all the
-#                requests for the itk setup, that listens only on the loobpack device.
-#                (Incompatibility: cannot be used in combination with the itk setup.)
-#   - static-itk: run vhost with a dual prefork/itk setup, where prefork serves all the static
-#                 content and proxies the dynamic calls to the itk setup, that listens only on
-#                 the loobpack device (Incompatibility: cannot be used in combination with
-#                 'itk' mode)
+#   - fcgid run vhost with the fcgid module and suexec
 #
-# run_uid: the uid the vhost should run as with the itk module
-# run_gid: the gid the vhost should run as with the itk module
+# run_uid: the uid the vhost should run as with the suexec module
+# run_gid: the gid the vhost should run as with the suexec module
 #
 # mod_security: Whether we use mod_security or not (will include mod_security module)
 #    - false: don't activate mod_security
@@ -25,39 +17,39 @@
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 define apache::vhost::php::mediawiki(
-  $ensure = present,
-  $configuration = {},
-  $domain = 'absent',
-  $domainalias = 'absent',
-  $server_admin = 'absent',
-  $logmode = 'default',
-  $path = 'absent',
-  $manage_docroot = true,
-  $owner = root,
-  $group = apache,
-  $documentroot_owner = apache,
-  $documentroot_group = 0,
-  $documentroot_mode = 0640,
-  $run_mode = 'normal',
-  $run_uid = 'absent',
-  $run_gid = 'absent',
-  $allow_override = 'FileInfo Limit',
-  $php_settings = {},
-  $php_options = {},
-  $options = 'absent',
-  $additional_options = 'absent',
-  $default_charset = 'absent',
-  $mod_security = true,
-  $mod_security_relevantonly = true,
-  $mod_security_rules_to_disable = [],
+  $ensure                          = present,
+  $configuration                   = {},
+  $domain                          = 'absent',
+  $domainalias                     = 'absent',
+  $server_admin                    = 'absent',
+  $logmode                         = 'default',
+  $path                            = 'absent',
+  $manage_docroot                  = true,
+  $owner                           = root,
+  $group                           = apache,
+  $documentroot_owner              = apache,
+  $documentroot_group              = 0,
+  $documentroot_mode               = '0640',
+  $run_mode                        = 'normal',
+  $run_uid                         = 'absent',
+  $run_gid                         = 'absent',
+  $allow_override                  = 'FileInfo Limit',
+  $php_settings                    = {},
+  $php_options                     = {},
+  $options                         = 'absent',
+  $additional_options              = 'absent',
+  $default_charset                 = 'absent',
+  $mod_security                    = true,
+  $mod_security_relevantonly       = true,
+  $mod_security_rules_to_disable   = [],
   $mod_security_additional_options = 'absent',
-  $ssl_mode = false,
-  $vhost_mode = 'template',
-  $template_partial = 'apache/vhosts/php_mediawiki/partial.erb',
-  $vhost_source = 'absent',
-  $vhost_destination = 'absent',
-  $htpasswd_file = 'absent',
-  $htpasswd_path = 'absent'
+  $ssl_mode                        = false,
+  $vhost_mode                      = 'template',
+  $template_partial                = 'apache/vhosts/php_mediawiki/partial.erb',
+  $vhost_source                    = 'absent',
+  $vhost_destination               = 'absent',
+  $htpasswd_file                   = 'absent',
+  $htpasswd_path                   = 'absent'
 ){
 
   $mediawiki_php_settings = {

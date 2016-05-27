@@ -4,7 +4,9 @@ describe 'apache::vhost::file', :type => 'define' do
   let(:title){ 'example.com' }
   let(:facts){
     {
-      :fqdn => 'apache.example.com',
+      :operatingsystem => 'Debian',
+      :operatingsystemmajrelease => '7',
+      :fqdn            => 'apache.example.com',
     }
   }
   let(:pre_condition) {
@@ -15,13 +17,13 @@ describe 'apache::vhost::file', :type => 'define' do
       :ensure  => 'present',
       :source  => [ "puppet:///modules/site_apache/vhosts.d/apache.example.com/example.com.conf",
                   "puppet:///modules/site_apache/vhosts.d//example.com.conf",
-                  "puppet:///modules/site_apache/vhosts.d/./example.com.conf",
-                  "puppet:///modules/site_apache/vhosts.d//example.com.conf",
+                  "puppet:///modules/site_apache/vhosts.d/Debian.7/example.com.conf",
+                  "puppet:///modules/site_apache/vhosts.d/Debian/example.com.conf",
                   "puppet:///modules/site_apache/vhosts.d/example.com.conf",
-                  "puppet:///modules/apache/vhosts.d/./example.com.conf",
-                  "puppet:///modules/apache/vhosts.d//example.com.conf",
+                  "puppet:///modules/apache/vhosts.d/Debian.7/example.com.conf",
+                  "puppet:///modules/apache/vhosts.d/Debian/example.com.conf",
                   "puppet:///modules/apache/vhosts.d/example.com.conf" ],
-      :path    => '/etc/apache2/vhosts.d/example.com.conf',
+      :path    => '/etc/apache2/sites-enabled/example.com.conf',
       :require => 'File[vhosts_dir]',
       :notify  => 'Service[apache]',
       :owner   => 'root',
@@ -32,8 +34,6 @@ describe 'apache::vhost::file', :type => 'define' do
     it { should_not contain_class('apache::includes') }
     it { should_not contain_class('apache::mod_macro') }
     it { should_not contain_class('apache::noiplog') }
-    it { should_not contain_class('apache::itk::lock') }
-    it { should_not contain_class('mod_security::itk_plus') }
     it { should_not contain_class('mod_security') }
   end
   context 'on centos' do
@@ -65,8 +65,6 @@ describe 'apache::vhost::file', :type => 'define' do
     it { should_not contain_class('apache::includes') }
     it { should_not contain_class('apache::mod_macro') }
     it { should_not contain_class('apache::noiplog') }
-    it { should_not contain_class('apache::itk::lock') }
-    it { should_not contain_class('mod_security::itk_plus') }
     it { should_not contain_class('mod_security') }
     context 'with params' do
       let(:params) {
@@ -101,8 +99,6 @@ describe 'apache::vhost::file', :type => 'define' do
       it { should contain_class('apache::includes') }
       it { should contain_class('apache::mod_macro') }
       it { should contain_class('apache::noiplog') }
-      it { should_not contain_class('apache::itk::lock') }
-      it { should_not contain_class('mod_security::itk_plus') }
       it { should contain_class('mod_security') }
     end
     context 'with content' do

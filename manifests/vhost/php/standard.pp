@@ -2,18 +2,10 @@
 #           possible:
 #   - normal: (*default*) run vhost with the current active worker (default: prefork) don't
 #             setup anything special
-#   - itk: run vhost with the mpm_itk module (Incompatibility: cannot be used in combination
-#          with 'proxy-itk' & 'static-itk' mode)
-#   - proxy-itk: run vhost with a dual prefork/itk setup, where prefork just proxies all the
-#                requests for the itk setup, that listens only on the loobpack device.
-#                (Incompatibility: cannot be used in combination with the itk setup.)
-#   - static-itk: run vhost with a dual prefork/itk setup, where prefork serves all the static
-#                 content and proxies the dynamic calls to the itk setup, that listens only on
-#                 the loobpack device (Incompatibility: cannot be used in combination with
-#                 'itk' mode)
+#   - fcgid run vhost with the fcgid module and suexec
 #
-# run_uid: the uid the vhost should run as with the itk module
-# run_gid: the gid the vhost should run as with the itk module
+# run_uid: the uid the vhost should run as with the suexec module
+# run_gid: the gid the vhost should run as with the suexec module
 #
 # mod_security: Whether we use mod_security or not (will include mod_security module)
 #    - false: don't activate mod_security
@@ -41,7 +33,7 @@ define apache::vhost::php::standard(
   $group                            = apache,
   $documentroot_owner               = apache,
   $documentroot_group               = 0,
-  $documentroot_mode                = 0640,
+  $documentroot_mode                = '0640',
   $run_mode                         = 'normal',
   $run_uid                          = 'absent',
   $run_gid                          = 'absent',
@@ -83,11 +75,8 @@ define apache::vhost::php::standard(
   }
 
   $real_path = $path ? {
-    'absent' => $::operatingsystem ? {
-      openbsd => "/var/www/htdocs/${name}",
-      default => "/var/www/vhosts/${name}"
-    },
-    default   => $path
+    'absent' => "/var/www/vhosts/${name}",
+    default  => $path,
   }
 
   if $path_is_webdir {
@@ -96,24 +85,24 @@ define apache::vhost::php::standard(
     $documentroot = "${real_path}/www"
   }
   $logdir = $logpath ? {
-    'absent'  => "${real_path}/logs",
-    default   => $logpath
+    'absent' => "${real_path}/logs",
+    default  => $logpath
   }
 
   $std_php_options = {
-    smarty  => false,
-    pear    => false,
+    smarty => false,
+    pear   => false,
   }
   $real_php_options = merge($std_php_options,$php_options)
 
-  if $real_php_options[smarty] {
+  if $real_php_options['smarty'] {
     include php::extensions::smarty
     $smarty_path = '/usr/share/php/Smarty/:'
   } else {
     $smarty_path = ''
   }
 
-  if $real_php_options[pear] {
+  if $real_php_options['pear'] {
     $pear_path = '/usr/share/pear/:'
   } else {
     $pear_path = ''
@@ -126,14 +115,11 @@ define apache::vhost::php::standard(
   }
 
   if ('safe_mode_exec_dir' in $php_settings) {
-    $php_safe_mode_exec_dir = $php_settings[safe_mode_exec_dir]
+    $php_safe_mode_exec_dir = $php_settings['safe_mode_exec_dir']
   } else {
     $php_safe_mode_exec_dir =  $path ? {
-      'absent' => $::operatingsystem ? {
-        openbsd => "/var/www/htdocs/${name}/bin",
-        default => "/var/www/vhosts/${name}/bin"
-      },
-      default   => "${path}/bin"
+      'absent' => "/var/www/vhosts/${name}/bin",
+      default   => "${path}/bin",
     }
   }
   file{$php_safe_mode_exec_dir:
@@ -153,7 +139,7 @@ define apache::vhost::php::standard(
       group  => $documentroot_group,
       mode   => '0750',
     }
-    $php_safe_mode_exec_bins_subst = regsubst($php_options[safe_mode_exec_bins],'(.+)',"${name}@\\1")
+    $php_safe_mode_exec_bins_subst = regsubst($php_options['safe_mode_exec_bins'],'(.+)',"${name}@\\1")
     apache::vhost::php::safe_mode_bin{
       $php_safe_mode_exec_bins_subst:
         ensure  => $ensure,
@@ -183,10 +169,10 @@ define apache::vhost::php::standard(
 
   if $run_mode == 'fcgid' {
     $safe_mode_gid = $::operatingsystem ? {
-      debian  => undef,
-      default => $php_installation ? {
-        'system'  => 'On',
-        default   => undef,
+      'Debian' => undef,
+      default  => $php_installation ? {
+        'system' => 'On',
+        default  => undef,
       }
     }
   } else {
@@ -194,10 +180,10 @@ define apache::vhost::php::standard(
   }
 
   $safe_mode = $::operatingsystem ? {
-    debian  => undef,
-    default => $php_installation ? {
-      'system'  => 'On',
-      default   => undef,
+    'Debian' => undef,
+    default  => $php_installation ? {
+      'system' => 'On',
+      default  => undef,
     }
   }
   $std_php_settings = {
@@ -216,32 +202,28 @@ define apache::vhost::php::standard(
 
   if $ensure != 'absent' {
     case $run_mode {
-      'proxy-itk','static-itk': {
-        include ::php::itk_plus
-      }
-      'itk': { include ::php::itk }
       'fcgid': {
         include ::mod_fcgid
         include ::php::mod_fcgid
-        include apache::include::mod_fcgid
+        include ::apache::include::mod_fcgid
 
         mod_fcgid::starter {$name:
-          tmp_dir          => $real_php_settings[php_tmp_dir],
+          tmp_dir          => $real_php_settings['php_tmp_dir'],
           cgi_type         => 'php',
-          cgi_type_options => delete($real_php_settings, php_tmp_dir),
+          cgi_type_options => delete($real_php_settings, 'php_tmp_dir'),
           owner            => $run_uid,
           group            => $run_gid,
           notify           => Service['apache'],
         }
         if $php_installation == 'scl54' {
-          require php::scl::php54
+          require ::php::scl::php54
           Mod_fcgid::Starter[$name]{
             binary          => '/opt/rh/php54/root/usr/bin/php-cgi',
             additional_cmds => 'source /opt/rh/php54/enable',
             rc              => '/opt/rh/php54/root/etc',
           }
         } elsif $php_installation == 'scl55' {
-          require php::scl::php55
+          require ::php::scl::php55
           Mod_fcgid::Starter[$name]{
             binary          => '/opt/rh/php55/root/usr/bin/php-cgi',
             additional_cmds => 'source /opt/rh/php55/enable',
@@ -255,7 +237,7 @@ define apache::vhost::php::standard(
 
   ::apache::vhost::phpdirs{$name:
     ensure                => $ensure,
-    php_upload_tmp_dir    => $real_php_settings[upload_tmp_dir],
+    php_upload_tmp_dir    => $real_php_settings['upload_tmp_dir'],
     php_session_save_path => $real_php_settings['session.save_path'],
     documentroot_owner    => $documentroot_owner,
     documentroot_group    => $documentroot_group,

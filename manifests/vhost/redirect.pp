@@ -20,39 +20,38 @@
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 #
 define apache::vhost::redirect(
-    $ensure = present,
-    $configuration = {},
-    $domain = 'absent',
-    $domainalias = 'absent',
-    $target_url,
-    $server_admin = 'absent',
-    $logmode = 'default',
-    $ssl_mode = false
+  $target_url,
+  $ensure        = present,
+  $configuration = {},
+  $domain        = 'absent',
+  $domainalias   = 'absent',
+  $server_admin  = 'absent',
+  $logmode       = 'default',
+  $ssl_mode      = false
 ){
-    $new_config = merge($configuration,
-                        {target_url => $target_url})
+  $new_config = merge($configuration,
+                      {target_url => $target_url})
 
-    # create vhost configuration file
-    # we use the options field as the target_url
-    ::apache::vhost::template{$name:
-        ensure => $ensure,
-        configuration => $new_config,
-        template_partial => 'apache/vhosts/redirect/partial.erb',
-        domain => $domain,
-        path => 'really_absent',
-        path_is_webdir => true,
-        domainalias => $domainalias,
-        server_admin => $server_admin,
-        logpath => $::operatingsystem ? {
-          openbsd => '/var/www/logs',
-          centos => '/var/log/httpd',
-          default => '/var/log/apache2'
-        },
-        logmode => $logmode,
-        allow_override => $allow_override,
-        run_mode => 'normal',
-        mod_security => false,
-        ssl_mode => $ssl_mode,
-    }
+  $logpath = $::operatingsystem ? {
+    'CentOS' => '/var/log/httpd',
+    default  => '/var/log/apache2'
+  }
+  # create vhost configuration file
+  # we use the options field as the target_url
+  ::apache::vhost::template{$name:
+    ensure           => $ensure,
+    configuration    => $new_config,
+    template_partial => 'apache/vhosts/redirect/partial.erb',
+    domain           => $domain,
+    path             => 'really_absent',
+    path_is_webdir   => true,
+    domainalias      => $domainalias,
+    server_admin     => $server_admin,
+    logpath          => $logpath,
+    logmode          => $logmode,
+    run_mode         => 'normal',
+    mod_security     => false,
+    ssl_mode         => $ssl_mode,
+  }
 }
 
