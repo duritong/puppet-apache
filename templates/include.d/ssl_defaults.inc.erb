@@ -10,7 +10,7 @@ SSLProtocol All -SSLv2 -SSLv3
 #   SSL Cipher Suite:
 # List the ciphers that the client is permitted to negotiate.
 # See the mod_ssl documentation for a complete list.
-SSLCipherSuite "<%= scope.lookupvar('apache::ssl_cipher_suite') %>"
+SSLCipherSuite "<%= scope.lookupvar('apache:real_:ssl_cipher_suite') %>"
 
 SSLHonorCipherOrder on
 

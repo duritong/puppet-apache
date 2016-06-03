@@ -22,8 +22,15 @@ class apache(
   $default_ssl_certificate_file       = absent,
   $default_ssl_certificate_key_file   = absent,
   $default_ssl_certificate_chain_file = absent,
-  $ssl_cipher_suite                   = $certs::ssl_config::ciphers_http
+  $ssl_cipher_suite                   = undef,
 ) {
+
+  if $ssl_cipher_suite {
+    $real_ssl_cipher_suite = $ssl_cipher_suite
+  } else {
+    include ::certs::ssl_config
+    $real_ssl_cipher_suite = $certs::ssl_config::ciphers_http
+  }
   case $::operatingsystem {
     'CentOS': {
       $config_dir = '/etc/httpd'
