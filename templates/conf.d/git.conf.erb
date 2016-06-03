@@ -1,0 +1,11 @@
+# deny access to git repository folders
+<DirectoryMatch .*\.git/.*>
+<%
+  if scope.function_guess_apache_version([]) == '2.4'
+    deny_statement = 'Require all denied'
+  else
+    deny_statement = 'Order allow,deny
+    Deny From All'
+  end
+-%>    <%= deny_statement %>
+</DirectoryMatch>

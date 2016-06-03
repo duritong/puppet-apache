@@ -4,7 +4,13 @@
 <%= scope.function_template(['apache/vhosts/partials/php_settings.erb']) %>
     # Protect files and directories from prying eyes.
     <FilesMatch "\.(engine|inc|info|install|module|profile|po|sh|.*sql|theme|tpl(\.php)?|xtmpl)$|^(code-style\.pl|Entries.*|Repository|Root|Tag|Template)$">
-      Order allow,deny
+<%
+  if scope.function_guess_apache_version([]) == '2.4'
+    deny_statement = 'Require all denied'
+  else
+    deny_statement = 'Deny From All'
+  end
+-%>    <%= deny_statement %>
     </FilesMatch>
 
     # Customized error messages.

@@ -64,7 +64,9 @@ class apache::base {
   } -> anchor{'apache::basic_dirs::ready': }
 
   apache::config::include{ 'defaults.inc': }
-  apache::config::global{ 'git.conf': }
+  apache::config::global{ 'git.conf':
+    content => template('apache/conf.d/git.conf.erb')
+  }
   if !$apache::no_default_site {
     apache::vhost::file { '0-default': }
   }

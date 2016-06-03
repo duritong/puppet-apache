@@ -19,12 +19,18 @@
   # Deny various directories that
   # shouldn't be webaccessible
   <Directory "<%= @documentroot %>/tmp/">
-    Deny From All
+<%
+  if scope.function_guess_apache_version([]) == '2.4'
+    deny_statement = 'Require all denied'
+  else
+    deny_statement = 'Deny From All'
+  end
+-%>    <%= deny_statement %>
   </Directory>
   <Directory "<%= @documentroot %>/logs/">
-    Deny From All
+    <%= deny_statement %>
   </Directory>
   <Directory "<%= @documentroot %>/cli/">
-    Deny From All
+    <%= deny_statement %>
   </Directory>
 

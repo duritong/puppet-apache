@@ -1,8 +1,13 @@
 # silverstripe .htaccess
 <Files *.ss>
-  Order deny,allow
-  Deny from all
-  #Allow from 127.0.0.1
+<%
+  if scope.function_guess_apache_version([]) == '2.4'
+    deny_statement = 'Require all denied'
+  else
+    deny_statement = 'Order deny,allow
+  Deny from all'
+  end
+-%>    <%= deny_statement %>
 </Files>
 
 <IfModule mod_rewrite.c>

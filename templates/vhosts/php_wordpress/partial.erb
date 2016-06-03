@@ -2,7 +2,13 @@
 
   # fixes: http://git.zx2c4.com/w3-total-fail/tree/w3-total-fail.sh
   <Directory "<%= @documentroot %>/wp-content/w3tc/dbcache">
-    Deny From All
+<%
+  if scope.function_guess_apache_version([]) == '2.4'
+    deny_statement = 'Require all denied'
+  else
+    deny_statement = 'Deny From All'
+  end
+-%>    <%= deny_statement %>
   </Directory>
 
   # simple wp-login brute force protection
