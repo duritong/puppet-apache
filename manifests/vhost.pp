@@ -55,8 +55,6 @@ define apache::vhost(
     $mod_security_rules_to_disable    = [],
     $mod_security_additional_options  = 'absent',
     $use_mod_macro                    = false,
-    $ldap_auth                        = false,
-    $ldap_user                        = 'any',
     $passing_extension                = 'absent',
     $gempath                          = 'absent'
 ) {
@@ -103,8 +101,6 @@ define apache::vhost(
                 ssl_mode                        => $ssl_mode,
                 htpasswd_file                   => $htpasswd_file,
                 htpasswd_path                   => $htpasswd_path,
-                ldap_auth                       => $ldap_auth,
-                ldap_user                       => $ldap_user,
                 mod_security                    => $mod_security,
                 mod_security_relevantonly       => $mod_security_relevantonly,
                 mod_security_rules_to_disable   => $mod_security_rules_to_disable,

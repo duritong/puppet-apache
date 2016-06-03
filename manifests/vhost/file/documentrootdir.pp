@@ -1,24 +1,20 @@
+# manage a documentrootdir
 define apache::vhost::file::documentrootdir(
-      $ensure = directory,
-      $documentroot,
-      $filename,
-      $thedomain,
-      $owner = 'root',
-      $group = '0',
-      $mode = 440
+  $documentroot,
+  $filename,
+  $thedomain,
+  $owner         = 'root',
+  $group         = '0',
+  $mode          = '0440',
 ){
-  file{"$documentroot/$filename":
-    require => Apache::Vhost::Webdir["$thedomain"],
-    owner => $owner, group => $group, mode => $mode;
-  }
-  if $ensure != 'absent' {
-    File["$documentroot/$filename"]{
-      ensure => directory,
-    }
-  } else {
-    File["$documentroot/$filename"]{
-      ensure => $ensure,
-    }
+  $path = "${documentroot}/${filename}"
+  file{
+    $path:
+      ensure  => directory,
+      require => Apache::Vhost::Webdir[$thedomain],
+      owner   => $owner,
+      group   => $group,
+      mode    => $mode;
   }
 }
 

@@ -53,7 +53,6 @@ define apache::vhost::proxy(
     server_admin                    => $server_admin,
     logpath                         => $logpath,
     logmode                         => $logmode,
-    allow_override                  => $allow_override,
     run_mode                        => 'normal',
     mod_security                    => $mod_security,
     mod_security_relevantonly       => $mod_security_relevantonly,

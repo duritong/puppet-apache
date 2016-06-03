@@ -62,15 +62,15 @@ define apache::vhost::php::standard(
   if $manage_webdir {
     # create webdir
     ::apache::vhost::webdir{$name:
-      ensure              => $ensure,
-      path                => $path,
-      owner               => $owner,
-      group               => $group,
-      run_mode            => $run_mode,
-      manage_docroot      => $manage_docroot,
-      documentroot_owner  => $documentroot_owner,
-      documentroot_group  => $documentroot_group,
-      documentroot_mode   => $documentroot_mode,
+      ensure             => $ensure,
+      path               => $path,
+      owner              => $owner,
+      group              => $group,
+      run_mode           => $run_mode,
+      manage_docroot     => $manage_docroot,
+      documentroot_owner => $documentroot_owner,
+      documentroot_group => $documentroot_group,
+      documentroot_mode  => $documentroot_mode,
     }
   }
 
@@ -114,44 +114,6 @@ define apache::vhost::php::standard(
     $php_error_log = undef
   }
 
-  if ('safe_mode_exec_dir' in $php_settings) {
-    $php_safe_mode_exec_dir = $php_settings['safe_mode_exec_dir']
-  } else {
-    $php_safe_mode_exec_dir =  $path ? {
-      'absent' => "/var/www/vhosts/${name}/bin",
-      default   => "${path}/bin",
-    }
-  }
-  file{$php_safe_mode_exec_dir:
-    recurse => true,
-    force   => true,
-    purge   => true,
-  }
-  if ('safe_mode_exec_bins' in $php_options) {
-    $std_php_settings_safe_mode_exec_dir = $php_safe_mode_exec_dir
-    $ensure_exec = $ensure ? {
-      'present'  => directory,
-      default    => 'absent',
-    }
-    File[$php_safe_mode_exec_dir]{
-      ensure => $ensure_exec,
-      owner  => $documentroot_owner,
-      group  => $documentroot_group,
-      mode   => '0750',
-    }
-    $php_safe_mode_exec_bins_subst = regsubst($php_options['safe_mode_exec_bins'],'(.+)',"${name}@\\1")
-    apache::vhost::php::safe_mode_bin{
-      $php_safe_mode_exec_bins_subst:
-        ensure  => $ensure,
-        path    => $php_safe_mode_exec_dir;
-    }
-  } else {
-    $std_php_settings_safe_mode_exec_dir = undef
-    File[$php_safe_mode_exec_dir]{
-      ensure => absent,
-    }
-  }
-
   if !('default_charset' in $php_settings) and ($default_charset != 'absent') {
     $std_php_settings_default_charset =  $default_charset ? {
       'On'    => 'iso-8859-1',
@@ -167,25 +129,58 @@ define apache::vhost::php::standard(
     $the_open_basedir = "${smarty_path}${pear_path}${documentroot}:${real_path}/data:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}"
   }
 
-  if $run_mode == 'fcgid' {
-    $safe_mode_gid = $::operatingsystem ? {
-      'Debian' => undef,
-      default  => $php_installation ? {
-        'system' => 'On',
-        default  => undef,
+  # safe mode is (finally) gone on most systems
+  if $php_installation == 'system' and $::operatingsystem == 'CentOS' and versioncmp($::operatingsystemmajrelease,'7') < 0 {
+    if ('safe_mode_exec_dir' in $php_settings) {
+      $php_safe_mode_exec_dir = $php_settings['safe_mode_exec_dir']
+    } else {
+      $php_safe_mode_exec_dir =  $path ? {
+        'absent' => "/var/www/vhosts/${name}/bin",
+        default   => "${path}/bin",
       }
     }
+    file{$php_safe_mode_exec_dir:
+      recurse => true,
+      force   => true,
+      purge   => true,
+    }
+    if ('safe_mode_exec_bins' in $php_options) {
+      $std_php_settings_safe_mode_exec_dir = $php_safe_mode_exec_dir
+      $ensure_exec = $ensure ? {
+        'present'  => directory,
+        default    => 'absent',
+      }
+      File[$php_safe_mode_exec_dir]{
+        ensure => $ensure_exec,
+        owner  => $documentroot_owner,
+        group  => $documentroot_group,
+        mode   => '0750',
+      }
+      $php_safe_mode_exec_bins_subst = regsubst($php_options['safe_mode_exec_bins'],'(.+)',"${name}@\\1")
+      apache::vhost::php::safe_mode_bin{
+        $php_safe_mode_exec_bins_subst:
+          ensure  => $ensure,
+          path    => $php_safe_mode_exec_dir;
+      }
+    } else {
+      $std_php_settings_safe_mode_exec_dir = undef
+      File[$php_safe_mode_exec_dir]{
+        ensure => absent,
+      }
+    }
+
+    $safe_mode = 'On'
+    if $run_mode == 'fcgid' {
+      $safe_mode_gid = 'On'
+    } else {
+      $safe_mode_gid = undef
+    }
   } else {
+    $safe_mode = undef
     $safe_mode_gid = undef
+    $std_php_settings_safe_mode_exec_dir = undef
   }
 
-  $safe_mode = $::operatingsystem ? {
-    'Debian' => undef,
-    default  => $php_installation ? {
-      'system' => 'On',
-      default  => undef,
-    }
-  }
   $std_php_settings = {
     engine              => 'On',
     upload_tmp_dir      => "/var/www/upload_tmp_dir/${name}",
@@ -215,19 +210,15 @@ define apache::vhost::php::standard(
           group            => $run_gid,
           notify           => Service['apache'],
         }
-        if $php_installation == 'scl54' {
-          require ::php::scl::php54
+        if $php_installation =~ /^scl/ {
+          $inst = regsubst($php_installation,'^scl','php')
+          require "::php::scl::${inst}"
+          $basedir = getvar("php::scl::${inst}::basedir")
+          $etcdir = getvar("php::scl::${inst}::etcdir")
           Mod_fcgid::Starter[$name]{
-            binary          => '/opt/rh/php54/root/usr/bin/php-cgi',
-            additional_cmds => 'source /opt/rh/php54/enable',
-            rc              => '/opt/rh/php54/root/etc',
-          }
-        } elsif $php_installation == 'scl55' {
-          require ::php::scl::php55
-          Mod_fcgid::Starter[$name]{
-            binary          => '/opt/rh/php55/root/usr/bin/php-cgi',
-            additional_cmds => 'source /opt/rh/php55/enable',
-            rc              => '/opt/rh/php55/root/etc',
+            binary          => "${basedir}/root/usr/bin/php-cgi",
+            additional_cmds => "source ${basedir}/enable",
+            rc              => $etcdir,
           }
         }
       }

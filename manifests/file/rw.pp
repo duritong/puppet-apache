@@ -9,5 +9,14 @@ define apache::file::rw(
     group => $group,
     mode  => $mode,
   }
+  if str2bool($::selinux) {
+    $seltype_rw = $::operatingsystemmajrelease ? {
+      '5'     => 'httpd_sys_script_rw_t',
+      default => 'httpd_sys_rw_content_t'
+    }
+    Apache::File[$name]{
+      seltype => $seltype_rw,
+    }
+  }
 }
 

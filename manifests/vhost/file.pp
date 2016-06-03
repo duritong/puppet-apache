@@ -46,6 +46,7 @@ define apache::vhost::file(
     $htpasswd_path      = 'absent',
     $use_mod_macro      = false
 ){
+  include ::apache
   $vhosts_dir = $::operatingsystem ? {
     /^(Debian|Ubuntu)$/ => "${apache::config_dir}/sites-enabled",
     default             => "${apache::config_dir}/vhosts.d",
@@ -74,6 +75,7 @@ define apache::vhost::file(
       include ::apache::noiplog
     }
     if $mod_security { include ::mod_security }
+    if $ssl_mode { include ::apache::ssl }
 
     case $content {
       'absent': {

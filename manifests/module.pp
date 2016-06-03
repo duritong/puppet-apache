@@ -1,3 +1,4 @@
+# manage an apache module
 define apache::module (
   $ensure       = present,
   $source       = '',
@@ -13,7 +14,7 @@ define apache::module (
     default => $module,
   }
 
-  case $operatingsystem {
+  case $::operatingsystem {
     'CentOS': {
       apache::centos::module{$real_module:
         ensure      => $ensure,

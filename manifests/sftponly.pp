@@ -1,5 +1,6 @@
+# whatever is needed for sftponly support
 class apache::sftponly {
-  case $::operatingsystem {
-    centos: { include apache::sftponly::centos }
+  if $::operatingsystem == 'CentOS' {
+    include apache::sftponly::centos
   }
 }

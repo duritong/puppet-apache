@@ -4,7 +4,7 @@ define apache::vhost::webdir(
   $path                 = 'absent',
   $owner                = root,
   $group                = apache,
-  $mode                 = 0640,
+  $mode                 = '0640',
   $run_mode             = 'normal',
   $manage_docroot       = true,
   $datadir              = true,
@@ -112,10 +112,24 @@ define apache::vhost::webdir(
           mode    => '0640';
         }
       }
-      case $::operatingsystem {
-        centos: { include apache::logrotate::centos::vhosts }
-        default: { #nothing
+      if str2bool($::selinux) {
+        $seltype_rw = $::operatingsystemmajrelease ? {
+          '5'     => 'httpd_sys_script_rw_t',
+          default => 'httpd_sys_rw_content_t'
         }
+        if $datadir {
+          File["${real_path}/data"]{
+            seltype => $seltype_rw,
+          }
+        }
+        if $manage_docroot {
+          File[$documentroot]{
+            seltype => $seltype_rw,
+          }
+        }
+      }
+      if $::operatingsystem == 'CentOS' {
+        include ::apache::logrotate::centos::vhosts
       }
     }
   }

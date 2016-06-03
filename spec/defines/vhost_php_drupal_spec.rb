@@ -57,7 +57,6 @@ describe 'apache::vhost::php::drupal', :type => 'define' do
     php_admin_value mbstring.http_output pass
     php_admin_value open_basedir /var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/upload_tmp_dir/example.com:/var/www/session.save_path/example.com
     php_admin_value register_globals 0
-    php_admin_flag safe_mode on
     php_admin_value session.auto_start 0
     php_admin_value session.save_path /var/www/session.save_path/example.com
     php_admin_value upload_tmp_dir /var/www/upload_tmp_dir/example.com

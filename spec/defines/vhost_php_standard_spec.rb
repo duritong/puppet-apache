@@ -2,13 +2,14 @@ require File.expand_path(File.join(File.dirname(__FILE__),'../spec_helper'))
 
 describe 'apache::vhost::php::standard', :type => 'define' do
   let(:title){ 'example.com' }
-  let(:facts){
+  let(:default_facts){
     {
       :fqdn => 'apache.example.com',
       :operatingsystem            => 'CentOS',
       :operatingsystemmajrelease  => '7',
     }
   }
+  let(:facts){ default_facts }
   describe 'with standard' do
     # only test variables that are tuned
     it { should contain_apache__vhost__webdir('example.com') }
@@ -33,12 +34,6 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     )}
 
     it { should have_apache__vhost__php__safe_mode_bin_resource_count(0) }
-    it { should contain_file('/var/www/vhosts/example.com/bin').with(
-      :ensure  => 'absent',
-      :recurse => true,
-      :force   => true,
-      :purge   => true,
-    )}
     # go deeper in the catalog and test the produced template
     it { should contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
@@ -60,7 +55,6 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     php_admin_flag engine on
     php_admin_value error_log /var/www/vhosts/example.com/logs/php_error_log
     php_admin_value open_basedir /var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/upload_tmp_dir/example.com:/var/www/session.save_path/example.com
-    php_admin_flag safe_mode on
     php_admin_value session.save_path /var/www/session.save_path/example.com
     php_admin_value upload_tmp_dir /var/www/upload_tmp_dir/example.com
 
@@ -80,7 +74,17 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 "
 )}
   end
+  describe 'on EL6' do
+    let(:facts){
+      default_facts.merge(:operatingsystemmajrelease => '6')
+    }
+    # go deeper in the catalog and test the produced template for the main difference
+    it { should contain_apache__vhost__file('example.com').with_content(/php_admin_flag safe_mode on/) }
+  end
   describe 'with standard and params' do
+    let(:facts){
+      default_facts.merge(:operatingsystemmajrelease => '6')
+    }
     let(:params) {
       {
         :php_settings => {
@@ -153,8 +157,8 @@ describe 'apache::vhost::php::standard', :type => 'define' do
         "upload_tmp_dir"    =>"/var/www/upload_tmp_dir/example.com",
         "session.save_path" =>"/var/www/session.save_path/example.com",
         "error_log"         =>"/var/www/vhosts/example.com/logs/php_error_log",
-        "safe_mode"         =>"On",
-        "safe_mode_gid"     =>"On",
+        "safe_mode"         =>:undef,
+        "safe_mode_gid"     =>:undef,
         "safe_mode_exec_dir"=>:undef,
         "default_charset"   =>:undef,
         "open_basedir"      =>"/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/upload_tmp_dir/example.com:/var/www/session.save_path/example.com"
@@ -176,12 +180,6 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     )}
 
     it { should have_apache__vhost__php__safe_mode_bin_resource_count(0) }
-    it { should contain_file('/var/www/vhosts/example.com/bin').with(
-      :ensure  => 'absent',
-      :recurse => true,
-      :force   => true,
-      :purge   => true,
-    )}
     # go deeper in the catalog and test the produced template
     it { should contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
@@ -276,12 +274,6 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     )}
 
     it { should have_apache__vhost__php__safe_mode_bin_resource_count(0) }
-    it { should contain_file('/var/www/vhosts/example.com/bin').with(
-      :ensure  => 'absent',
-      :recurse => true,
-      :force   => true,
-      :purge   => true,
-    )}
     # go deeper in the catalog and test the produced template
     it { should contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
@@ -376,12 +368,6 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     )}
 
     it { should have_apache__vhost__php__safe_mode_bin_resource_count(0) }
-    it { should contain_file('/var/www/vhosts/example.com/bin').with(
-      :ensure  => 'absent',
-      :recurse => true,
-      :force   => true,
-      :purge   => true,
-    )}
     # go deeper in the catalog and test the produced template
     it { should contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
@@ -425,6 +411,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 )}
   end
   describe 'with mod_fcgid and params' do
+    let(:facts){default_facts.merge(:operatingsystemmajrelease => '6')}
     let(:params){
       {
         :run_mode     => 'fcgid',

@@ -17,6 +17,7 @@
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 define apache::vhost::php::webapp(
+  $template_partial,
   $ensure                           = present,
   $configuration                    = {},
   $domain                           = 'absent',
@@ -48,7 +49,6 @@ define apache::vhost::php::webapp(
   $mod_security_additional_options  = 'absent',
   $ssl_mode                         = false,
   $vhost_mode                       = 'template',
-  $template_partial,
   $vhost_source                     = 'absent',
   $vhost_destination                = 'absent',
   $htpasswd_file                    = 'absent',
@@ -76,11 +76,11 @@ define apache::vhost::php::webapp(
       }
       $documentroot = "${real_path}/www"
       ::apache::vhost::file::documentrootfile{"configurationfile_${name}":
-        documentroot  => $documentroot,
-        filename      => $config_file,
-        thedomain     => $name,
-        owner         => $documentroot_owner,
-        group         => $documentroot_group,
+        documentroot => $documentroot,
+        filename     => $config_file,
+        thedomain    => $name,
+        owner        => $documentroot_owner,
+        group        => $documentroot_group,
       }
       if $config_webwriteable {
         Apache::Vhost::File::Documentrootfile["configurationfile_${name}"]{

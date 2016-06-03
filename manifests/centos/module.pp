@@ -1,6 +1,7 @@
+# deploy a module
 define apache::centos::module(
-  $ensure = present,
-  $source = '',
+  $ensure      = present,
+  $source      = '',
   $destination = ''
 ){
   $modules_dir = "${apache::config_dir}/modules.d"
@@ -16,17 +17,17 @@ define apache::centos::module(
       "puppet:///modules/apache/modules.d/${::operatingsystem}/${name}.so",
       "puppet:///modules/apache/modules.d/${name}.so"
     ],
-    default => "puppet:///$source",
+    default => "puppet:///${source}",
   }
   file{"modules_${name}.conf":
-      ensure  => $ensure,
-      path    => $real_destination,
-      source  => $real_source,
-      require => [ File['modules_dir'], Package['apache'] ],
-      notify  => Service['apache'],
-      owner   => root,
-      group   => 0,
-      mode    => 0755;
+    ensure  => $ensure,
+    path    => $real_destination,
+    source  => $real_source,
+    require => [ File['modules_dir'], Package['apache'] ],
+    notify  => Service['apache'],
+    owner   => root,
+    group   => 0,
+    mode    => '0755';
   }
 }
 

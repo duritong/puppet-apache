@@ -65,6 +65,10 @@ define apache::vhost::php::wordpress(
   $real_mod_security_rules_to_disable = union($mod_security_rules_to_disable,
                                                 $modsec_rules)
 
+  if $ensure != 'absent' {
+    include ::apache::module::usertrack
+  }
+
   # create vhost configuration file
   apache::vhost::php::webapp{$name:
     ensure                          => $ensure,

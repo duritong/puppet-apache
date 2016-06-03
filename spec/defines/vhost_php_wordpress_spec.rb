@@ -2,13 +2,14 @@ require File.expand_path(File.join(File.dirname(__FILE__),'../spec_helper'))
 
 describe 'apache::vhost::php::wordpress', :type => 'define' do
   let(:title){ 'example.com' }
-  let(:facts){
+  let(:default_facts){
     {
       :fqdn => 'apache.example.com',
       :operatingsystem            => 'CentOS',
       :operatingsystemmajrelease  => '7',
     }
   }
+  let(:facts){ default_facts }
   describe 'with standard' do
     # only test the differences from the default
     it { should contain_apache__vhost__php__webapp('example.com').with(
@@ -41,7 +42,6 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
     php_admin_flag engine on
     php_admin_value error_log /var/www/vhosts/example.com/logs/php_error_log
     php_admin_value open_basedir /var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/upload_tmp_dir/example.com:/var/www/session.save_path/example.com
-    php_admin_flag safe_mode on
     php_admin_value session.save_path /var/www/session.save_path/example.com
     php_admin_value upload_tmp_dir /var/www/upload_tmp_dir/example.com
 

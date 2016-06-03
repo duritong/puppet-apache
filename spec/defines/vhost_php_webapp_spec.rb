@@ -41,7 +41,6 @@ describe 'apache::vhost::php::webapp', :type => 'define' do
     php_admin_flag engine on
     php_admin_value error_log /var/www/vhosts/example.com/logs/php_error_log
     php_admin_value open_basedir /var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/upload_tmp_dir/example.com:/var/www/session.save_path/example.com
-    php_admin_flag safe_mode on
     php_admin_value session.save_path /var/www/session.save_path/example.com
     php_admin_value upload_tmp_dir /var/www/upload_tmp_dir/example.com
 
@@ -167,7 +166,6 @@ describe 'apache::vhost::php::webapp', :type => 'define' do
     php_admin_flag engine on
     php_admin_value error_log /var/www/vhosts/example.com/logs/php_error_log
     php_admin_value open_basedir /var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/upload_tmp_dir/example.com:/var/www/session.save_path/example.com
-    php_admin_flag safe_mode on
     php_admin_value session.save_path /var/www/session.save_path/example.com
     php_admin_value upload_tmp_dir /var/www/upload_tmp_dir/example.com
 
@@ -237,7 +235,6 @@ describe 'apache::vhost::php::webapp', :type => 'define' do
     php_admin_flag engine on
     php_admin_value error_log /var/www/vhosts/example.com/logs/php_error_log
     php_admin_value open_basedir /var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/upload_tmp_dir/example.com:/var/www/session.save_path/example.com
-    php_admin_flag safe_mode on
     php_admin_value session.save_path /var/www/session.save_path/example.com
     php_admin_value upload_tmp_dir /var/www/upload_tmp_dir/example.com
 

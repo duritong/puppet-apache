@@ -48,13 +48,15 @@ class apache::centos inherits apache::base {
     }
     file_line{
       'mpm_prefork':
-        line  => 'LoadModule mpm_prefork_module modules/mod_mpm_prefork.so',
-        match => 'mpm_prefork_module',
-        path  => '/etc/httpd/conf.modules.d/00-mpm.conf';
+        path    => '/etc/httpd/conf.modules.d/00-mpm.conf',
+        line    => 'LoadModule mpm_prefork_module modules/mod_mpm_prefork.so',
+        match   => 'mpm_prefork_module',
+        require => Package['apache'];
       'mpm_event':
-        line  => '#LoadModule mpm_event_module modules/mod_mpm_event.so',
-        match => 'mpm_event_module',
-        path  => '/etc/httpd/conf.modules.d/00-mpm.conf';
+        path    => '/etc/httpd/conf.modules.d/00-mpm.conf',
+        line    => '#LoadModule mpm_event_module modules/mod_mpm_event.so',
+        match   => 'mpm_event_module',
+        require => Package['apache'];
     }
   } else {
     File['modules_dir']{
