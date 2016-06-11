@@ -1,7 +1,7 @@
   <Proxy *>
 <%
   if scope.function_guess_apache_version([]) == '2.4'
-    deny_statement = 'Require all denied'
+    deny_statement = 'Require all granted'
   else
     deny_statement = 'Order deny,allow
     Allow from all'
