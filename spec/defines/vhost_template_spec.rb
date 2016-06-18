@@ -297,4 +297,70 @@ describe 'apache::vhost::template', :type => 'define' do
 "
 )}
   end
+
+  describe 'with params IV' do
+    let(:params){
+      {
+        :do_includes    => false,
+        :ssl_mode       => 'only',
+        :logmode        => 'nologs',
+        :mod_security   => true,
+        :htpasswd_file  => 'absent',
+        :configuration  => {
+          'ssl_certificate_file' => '/tmp/cert',
+          'ssl_certificate_key_file' => '/tmp/key',
+          'ssl_certificate_chain_file' => '/tmp/chain',
+          'hsts' => true,
+        }
+      }
+    }
+    it { should contain_apache__vhost__file('example.com').with(
+      :ensure         => 'present',
+      :do_includes    => false,
+      :run_mode       => 'normal',
+      :ssl_mode       => 'only',
+      :logmode        => 'nologs',
+      :mod_security   => true,
+      :htpasswd_file  => 'absent',
+      :htpasswd_path  => 'absent',
+      :use_mod_macro  => false,
+    )}
+    it { should contain_apache__vhost__file('example.com').with_content(
+"<VirtualHost *:443 >
+
+  Include include.d/defaults.inc
+  Include include.d/ssl_defaults.inc
+  SSLCertificateFile /tmp/cert
+  SSLCertificateKeyFile /tmp/key
+  SSLCertificateChainFile /tmp/chain
+  Header add Strict-Transport-Security \"max-age=15768000\"
+
+  ServerName example.com
+  DocumentRoot /var/www/vhosts/example.com/www/
+
+
+  ErrorLog /dev/null
+  CustomLog /dev/null %%
+
+
+
+  <Directory \"/var/www/vhosts/example.com/www/\">
+    AllowOverride None
+
+
+  </Directory>
+
+  <IfModule mod_security2.c>
+    SecRuleEngine On
+    SecAuditEngine RelevantOnly
+    SecAuditLogType Concurrent
+    SecAuditLogStorageDir /var/www/vhosts/example.com/logs/
+    SecAuditLog /var/www/vhosts/example.com/logs/mod_security_audit.log
+    SecDebugLog /var/www/vhosts/example.com/logs/mod_security_debug.log
+  </IfModule>
+
+</VirtualHost>
+"
+)}
+  end
 end
