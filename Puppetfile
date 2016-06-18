@@ -2,6 +2,7 @@
 
 forge 'https://forgeapi.puppetlabs.com'
 
+mod 'augeas', :git => 'https://git-ipuppet.immerda.ch/module-augeas'
 mod 'shorewall', :git => 'https://git-ipuppet.immerda.ch/module-shorewall'
 mod 'templatewlv', :git => 'https://git-ipuppet.immerda.ch/module-templatewlv'
 mod 'mod_security', :git => 'https://git-ipuppet.immerda.ch/module-mod_security'
@@ -14,5 +15,5 @@ mod 'scl', :git => 'https://git-ipuppet.immerda.ch/module-scl'
 mod 'yum', :git => 'https://git-ipuppet.immerda.ch/module-yum'
 mod 'certs', :git => 'https://git-ipuppet.immerda.ch/module-certs'
 mod 'puppetlabs-stdlib'
-mod 'puppetlabs-concat'
+mod 'puppetlabs-concat', '~> 1.2.5'
 #mod 'munin', :git => 'https://git-ipuppet.immerda.ch/module-munin'

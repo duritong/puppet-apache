@@ -63,7 +63,7 @@ describe 'apache::vhost::php::drupal', :type => 'define' do
 
     # Protect files and directories from prying eyes.
     <FilesMatch \"\\.(engine|inc|info|install|module|profile|po|sh|.*sql|theme|tpl(\\.php)?|xtmpl)$|^(code-style\\.pl|Entries.*|Repository|Root|Tag|Template)$\">
-      Order allow,deny
+      Deny From All
     </FilesMatch>
 
     # Customized error messages.
@@ -153,7 +153,7 @@ describe 'apache::vhost::php::drupal', :type => 'define' do
 
     # Protect files and directories from prying eyes.
     <FilesMatch \"\\.(engine|inc|info|install|module|profile|po|sh|.*sql|theme|tpl(\\.php)?|xtmpl)$|^(code-style\\.pl|Entries.*|Repository|Root|Tag|Template)$\">
-      Order allow,deny
+      Deny From All
     </FilesMatch>
 
     # Customized error messages.
