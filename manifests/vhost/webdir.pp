@@ -69,8 +69,6 @@ define apache::vhost::webdir(
       }
       file{$real_path:
         ensure  => absent,
-        purge   => true,
-        recurse => true,
         force   => true;
       }
     }
