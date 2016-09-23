@@ -9,20 +9,20 @@ describe 'apache', :type => 'class' do
   let(:facts){ default_facts }
   let(:pre_condition){'Exec{path => "/bin"}' }
   describe 'with standard' do
-    it { should compile.with_all_deps }
+    it { is_expected.to compile.with_all_deps }
 
-    it { should contain_class('apache::base') }
-    it { should_not contain_class('apache::status') }
-    it { should_not contain_class('shorewall::rules::http') }
-    it { should_not contain_class('apache::ssl') }
+    it { is_expected.to contain_class('apache::base') }
+    it { is_expected.to_not contain_class('apache::status') }
+    it { is_expected.to_not contain_class('shorewall::rules::http') }
+    it { is_expected.to_not contain_class('apache::ssl') }
     context 'on Debian' do
       let(:facts) {
         {
           :operatingsystem => 'Debian',
         }
       }
-      it { should compile.with_all_deps }
-      it { should contain_class('apache::debian') }
+      it { is_expected.to compile.with_all_deps }
+      it { is_expected.to contain_class('apache::debian') }
     end
   end
   describe 'with params' do
@@ -42,11 +42,11 @@ describe 'apache', :type => 'class' do
         :ssl              => true,
       }
     }
-    it { should compile.with_all_deps }
+    it { is_expected.to compile.with_all_deps }
 
-    it { should contain_class('apache::base') }
-    it { should_not contain_class('apache::status') }
-    it { should contain_class('shorewall::rules::http') }
-    it { should contain_class('apache::ssl') }
+    it { is_expected.to contain_class('apache::base') }
+    it { is_expected.to_not contain_class('apache::status') }
+    it { is_expected.to contain_class('shorewall::rules::http') }
+    it { is_expected.to contain_class('apache::ssl') }
   end
 end

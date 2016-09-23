@@ -13,7 +13,7 @@ describe 'apache::vhost::file', :type => 'define' do
     'include apache'
   }
   describe 'with standard' do
-    it { should contain_file('example.com.conf').with(
+    it { is_expected.to contain_file('example.com.conf').with(
       :ensure  => 'present',
       :source  => [ "puppet:///modules/site_apache/vhosts.d/apache.example.com/example.com.conf",
                   "puppet:///modules/site_apache/vhosts.d//example.com.conf",
@@ -30,11 +30,11 @@ describe 'apache::vhost::file', :type => 'define' do
       :group   => 0,
       :mode    => '0644',
     )}
-    it { should_not contain_file('/var/www/htpasswds/example.com') }
-    it { should_not contain_class('apache::includes') }
-    it { should_not contain_class('apache::mod_macro') }
-    it { should_not contain_class('apache::noiplog') }
-    it { should_not contain_class('mod_security') }
+    it { is_expected.to_not contain_file('/var/www/htpasswds/example.com') }
+    it { is_expected.to_not contain_class('apache::includes') }
+    it { is_expected.to_not contain_class('apache::mod_macro') }
+    it { is_expected.to_not contain_class('apache::noiplog') }
+    it { is_expected.to_not contain_class('mod_security') }
   end
   context 'on centos' do
     let(:facts){
@@ -44,7 +44,7 @@ describe 'apache::vhost::file', :type => 'define' do
         :operatingsystemmajrelease  => '7',
       }
     }
-    it { should contain_file('example.com.conf').with(
+    it { is_expected.to contain_file('example.com.conf').with(
       :ensure  => 'present',
       :source  => [ "puppet:///modules/site_apache/vhosts.d/apache.example.com/example.com.conf",
                   "puppet:///modules/site_apache/vhosts.d//example.com.conf",
@@ -61,11 +61,11 @@ describe 'apache::vhost::file', :type => 'define' do
       :group   => 0,
       :mode    => '0644',
     )}
-    it { should_not contain_file('/var/www/htpasswds/example.com') }
-    it { should_not contain_class('apache::includes') }
-    it { should_not contain_class('apache::mod_macro') }
-    it { should_not contain_class('apache::noiplog') }
-    it { should_not contain_class('mod_security') }
+    it { is_expected.to_not contain_file('/var/www/htpasswds/example.com') }
+    it { is_expected.to_not contain_class('apache::includes') }
+    it { is_expected.to_not contain_class('apache::mod_macro') }
+    it { is_expected.to_not contain_class('apache::noiplog') }
+    it { is_expected.to_not contain_class('mod_security') }
     context 'with params' do
       let(:params) {
         {
@@ -78,7 +78,7 @@ describe 'apache::vhost::file', :type => 'define' do
           :logmode           => 'anonym',
         }
       }
-      it { should contain_file('example.com.conf').with(
+      it { is_expected.to contain_file('example.com.conf').with(
         :ensure  => 'present',
         :source  => 'puppet:///modules/my_module/example.com.conf',
         :path    => '/tmp/a/example.com.conf',
@@ -88,7 +88,7 @@ describe 'apache::vhost::file', :type => 'define' do
         :group   => 0,
         :mode    => '0644',
       )}
-      it { should contain_file('/var/www/htpasswds/example.com').with(
+      it { is_expected.to contain_file('/var/www/htpasswds/example.com').with(
         :source  => [ "puppet:///modules/site_apache/htpasswds/apache.example.com/example.com",
                       "puppet:///modules/site_apache/htpasswds//example.com",
                       "puppet:///modules/site_apache/htpasswds/example.com" ],
@@ -96,10 +96,10 @@ describe 'apache::vhost::file', :type => 'define' do
         :group   => 0,
         :mode    => '0644',
       )}
-      it { should contain_class('apache::includes') }
-      it { should contain_class('apache::mod_macro') }
-      it { should contain_class('apache::noiplog') }
-      it { should contain_class('mod_security') }
+      it { is_expected.to contain_class('apache::includes') }
+      it { is_expected.to contain_class('apache::mod_macro') }
+      it { is_expected.to contain_class('apache::noiplog') }
+      it { is_expected.to contain_class('mod_security') }
     end
     context 'with content' do
       let(:params) {
@@ -107,7 +107,7 @@ describe 'apache::vhost::file', :type => 'define' do
           :content => "<VirtualHost *:80>\n  Servername example.com\n</VirtualHost>"
         }
       }
-      it { should contain_file('example.com.conf').with(
+      it { is_expected.to contain_file('example.com.conf').with(
         :ensure  => 'present',
         :path    => '/etc/httpd/vhosts.d/example.com.conf',
         :require => 'File[vhosts_dir]',
@@ -116,12 +116,12 @@ describe 'apache::vhost::file', :type => 'define' do
         :group   => 0,
         :mode    => '0644',
       )}
-      it { should contain_file('example.com.conf').with_content(
+      it { is_expected.to contain_file('example.com.conf').with_content(
 "<VirtualHost *:80>
   Servername example.com
 </VirtualHost>"
       )}
-      it { should_not contain_file('/var/www/htpasswds/example.com') }
+      it { is_expected.to_not contain_file('/var/www/htpasswds/example.com') }
     end
   end
 end

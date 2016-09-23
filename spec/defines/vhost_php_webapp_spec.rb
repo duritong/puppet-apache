@@ -17,11 +17,11 @@ describe 'apache::vhost::php::webapp', :type => 'define' do
       }
     }
     # only test variables that are tuned
-    it { should have_apache__file__rw_resource_count(0) }
-    it { should_not contain_apache__vhost__file__documentrootfile('configurationfile_example.com') }
-    it { should contain_apache__vhost__php__standard('example.com') }
+    it { is_expected.to have_apache__file__rw_resource_count(0) }
+    it { is_expected.to_not contain_apache__vhost__file__documentrootfile('configurationfile_example.com') }
+    it { is_expected.to contain_apache__vhost__php__standard('example.com') }
     # go deeper in the catalog and test the produced template
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc
@@ -71,11 +71,11 @@ describe 'apache::vhost::php::webapp', :type => 'define' do
       }
     }
     # only test variables that are tuned
-    it { should have_apache__file__rw_resource_count(0) }
-    it { should_not contain_apache__vhost__file__documentrootfile('configurationfile_example.com') }
-    it { should contain_apache__vhost__php__standard('example.com') }
+    it { is_expected.to have_apache__file__rw_resource_count(0) }
+    it { is_expected.to_not contain_apache__vhost__file__documentrootfile('configurationfile_example.com') }
+    it { is_expected.to contain_apache__vhost__php__standard('example.com') }
     # go deeper in the catalog and test the produced template
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc
@@ -127,16 +127,16 @@ describe 'apache::vhost::php::webapp', :type => 'define' do
         }
       }
       # only test variables that are tuned
-      it { should have_apache__file__rw_resource_count(2) }
-      it { should contain_apache__file__rw('/tmp/a').with(
+      it { is_expected.to have_apache__file__rw_resource_count(2) }
+      it { is_expected.to contain_apache__file__rw('/tmp/a').with(
         :owner => 'apache',
         :group => 0,
       )}
-      it { should contain_apache__file__rw('/tmp/b').with(
+      it { is_expected.to contain_apache__file__rw('/tmp/b').with(
         :owner => 'apache',
         :group => 0,
       )}
-      it { should contain_apache__vhost__file__documentrootfile('configurationfile_example.com').with(
+      it { is_expected.to contain_apache__vhost__file__documentrootfile('configurationfile_example.com').with(
         :documentroot => '/var/www/vhosts/example.com/www',
         :filename     => 'config.php',
         :thedomain    => 'example.com',
@@ -144,9 +144,9 @@ describe 'apache::vhost::php::webapp', :type => 'define' do
         :group        => 0,
         :mode         => '0440',
       ) }
-      it { should contain_apache__vhost__php__standard('example.com') }
+      it { is_expected.to contain_apache__vhost__php__standard('example.com') }
       # go deeper in the catalog and test the produced template
-      it { should contain_apache__vhost__file('example.com').with_content(
+      it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc
@@ -196,16 +196,16 @@ describe 'apache::vhost::php::webapp', :type => 'define' do
         }
       }
       # only test variables that are tuned
-      it { should have_apache__file__rw_resource_count(2) }
-      it { should contain_apache__file__rw('/tmp/a').with(
+      it { is_expected.to have_apache__file__rw_resource_count(2) }
+      it { is_expected.to contain_apache__file__rw('/tmp/a').with(
         :owner => 'apache',
         :group => 0,
       )}
-      it { should contain_apache__file__rw('/tmp/b').with(
+      it { is_expected.to contain_apache__file__rw('/tmp/b').with(
         :owner => 'apache',
         :group => 0,
       )}
-      it { should contain_apache__vhost__file__documentrootfile('configurationfile_example.com').with(
+      it { is_expected.to contain_apache__vhost__file__documentrootfile('configurationfile_example.com').with(
         :documentroot => '/var/www/vhosts/example.com/www',
         :filename     => 'config.php',
         :thedomain    => 'example.com',
@@ -213,9 +213,9 @@ describe 'apache::vhost::php::webapp', :type => 'define' do
         :group        => 0,
         :mode         => '0660',
       ) }
-      it { should contain_apache__vhost__php__standard('example.com') }
+      it { is_expected.to contain_apache__vhost__php__standard('example.com') }
       # go deeper in the catalog and test the produced template
-      it { should contain_apache__vhost__file('example.com').with_content(
+      it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc

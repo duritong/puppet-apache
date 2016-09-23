@@ -13,7 +13,7 @@ describe 'apache::vhost', :type => 'define' do
     'include apache'
   }
   describe 'with standard' do
-    it { should contain_apache__vhost__template('example.com').with(
+    it { is_expected.to contain_apache__vhost__template('example.com').with(
       :ensure         => 'present',
       :do_includes    => false,
       :run_mode       => 'normal',
@@ -25,7 +25,7 @@ describe 'apache::vhost', :type => 'define' do
       :use_mod_macro  => false,
     )}
     # go deeper in the catalog and the test the produced content from the template
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc
@@ -67,7 +67,7 @@ describe 'apache::vhost', :type => 'define' do
         :htpasswd_file  => true,
       }
     }
-    it { should contain_apache__vhost__template('example.com').with(
+    it { is_expected.to contain_apache__vhost__template('example.com').with(
       :ensure                           => 'present',
       :path                             => 'absent',
       :path_is_webdir                   => false,
@@ -100,7 +100,7 @@ describe 'apache::vhost', :type => 'define' do
       :gempath                          => 'absent',
     )}
     # go deeper in the catalog and the test the produced content from the template
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc
@@ -176,8 +176,8 @@ describe 'apache::vhost', :type => 'define' do
         :vhost_mode     => 'file',
       }
     }
-    it { should_not contain_apache__vhost__template('example.com') }
-    it { should contain_apache__vhost__file('example.com').with(
+    it { is_expected.to_not contain_apache__vhost__template('example.com') }
+    it { is_expected.to contain_apache__vhost__file('example.com').with(
       :ensure             => 'present',
       :vhost_source       => 'absent',
       :vhost_destination  => 'absent',
@@ -195,7 +195,7 @@ describe 'apache::vhost', :type => 'define' do
         :vhost_mode     => 'foo',
       }
     }
-    it { expect { should compile }.to raise_error(/No such vhost_mode: foo defined for example.com\./)
+    it { expect { is_expected.to compile }.to raise_error(/No such vhost_mode: foo defined for example.com\./)
     }
   end
 end

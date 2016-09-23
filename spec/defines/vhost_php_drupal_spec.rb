@@ -10,14 +10,14 @@ describe 'apache::vhost::php::drupal', :type => 'define' do
     }
   }
   describe 'with standard' do
-    it { should contain_file('/etc/cron.d/drupal_cron_example.com').with(
+    it { is_expected.to contain_file('/etc/cron.d/drupal_cron_example.com').with(
       :content => "0   *   *   *   *   apache wget -O - -q -t 1 http://example.com/cron.php\n",
       :owner   => 'root',
       :group   => 0,
       :mode    => '0644',
     )}
     # only test the differences from the default
-    it { should contain_apache__vhost__php__webapp('example.com').with(
+    it { is_expected.to contain_apache__vhost__php__webapp('example.com').with(
       :manage_directories => false,
       :template_partial   => 'apache/vhosts/php_drupal/partial.erb',
       :manage_config      => false,
@@ -31,7 +31,7 @@ describe 'apache::vhost::php::drupal', :type => 'define' do
       }
     )}
     # go deeper in the catalog and test the produced template
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc
@@ -101,14 +101,14 @@ describe 'apache::vhost::php::drupal', :type => 'define' do
         :run_gid  => 'bar',
       }
     }
-    it { should contain_file('/etc/cron.d/drupal_cron_example.com').with(
+    it { is_expected.to contain_file('/etc/cron.d/drupal_cron_example.com').with(
       :content => "0   *   *   *   *   apache wget -O - -q -t 1 http://example.com/cron.php\n",
       :owner   => 'root',
       :group   => 0,
       :mode    => '0644',
     )}
     # only test variables that are tuned
-    it { should contain_apache__vhost__php__webapp('example.com').with(
+    it { is_expected.to contain_apache__vhost__php__webapp('example.com').with(
       :run_mode                       => 'fcgid',
       :run_uid                        => 'foo',
       :run_gid                        => 'bar',
@@ -125,7 +125,7 @@ describe 'apache::vhost::php::drupal', :type => 'define' do
       },
     )}
     # go deeper in the catalog and test the produced template
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc

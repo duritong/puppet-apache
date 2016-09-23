@@ -10,9 +10,9 @@ describe 'apache::vhost::php::joomla', :type => 'define' do
     }
   }
   describe 'with standard' do
-    it { should contain_class('apache::include::joomla') }
+    it { is_expected.to contain_class('apache::include::joomla') }
     # only test the differences from the default
-    it { should contain_apache__vhost__php__webapp('example.com').with(
+    it { is_expected.to contain_apache__vhost__php__webapp('example.com').with(
       :template_partial               => 'apache/vhosts/php_joomla/partial.erb',
       :php_settings                   => {
         'allow_url_fopen'   => 'on',
@@ -55,7 +55,7 @@ describe 'apache::vhost::php::joomla', :type => 'define' do
 "
     )}
     # go deeper in the catalog and test the produced template
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc
@@ -145,9 +145,9 @@ describe 'apache::vhost::php::joomla', :type => 'define' do
         :run_gid  => 'bar',
       }
     }
-    it { should contain_class('apache::include::joomla') }
+    it { is_expected.to contain_class('apache::include::joomla') }
     # only test the differences from the default
-    it { should contain_apache__vhost__php__webapp('example.com').with(
+    it { is_expected.to contain_apache__vhost__php__webapp('example.com').with(
       :run_mode                       => 'fcgid',
       :run_uid                        => 'foo',
       :run_gid                        => 'bar',
@@ -193,7 +193,7 @@ describe 'apache::vhost::php::joomla', :type => 'define' do
 "
     )}
     # go deeper in the catalog and test the produced template
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc

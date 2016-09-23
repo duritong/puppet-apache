@@ -14,12 +14,12 @@ describe 'apache::vhost::static', :type => 'define' do
   }
   describe 'with standard' do
     # only test the relevant options
-    it { should contain_apache__vhost__webdir('example.com').with(
+    it { is_expected.to contain_apache__vhost__webdir('example.com').with(
       :datadir  => false,
     )}
-    it { should contain_apache__vhost('example.com') }
+    it { is_expected.to contain_apache__vhost('example.com') }
     # go deeper in the catalog and test the produced template
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc

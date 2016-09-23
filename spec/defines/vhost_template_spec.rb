@@ -13,7 +13,7 @@ describe 'apache::vhost::template', :type => 'define' do
     'include apache'
   }
   describe 'with standard' do
-    it { should contain_apache__vhost__file('example.com').with(
+    it { is_expected.to contain_apache__vhost__file('example.com').with(
       :ensure         => 'present',
       :do_includes    => false,
       :run_mode       => 'normal',
@@ -24,7 +24,7 @@ describe 'apache::vhost::template', :type => 'define' do
       :htpasswd_path  => 'absent',
       :use_mod_macro  => false,
     )}
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc
@@ -66,7 +66,7 @@ describe 'apache::vhost::template', :type => 'define' do
         :htpasswd_file  => true,
       }
     }
-    it { should contain_apache__vhost__file('example.com').with(
+    it { is_expected.to contain_apache__vhost__file('example.com').with(
       :ensure         => 'present',
       :do_includes    => true,
       :run_mode       => 'normal',
@@ -77,7 +77,7 @@ describe 'apache::vhost::template', :type => 'define' do
       :htpasswd_path  => 'absent',
       :use_mod_macro  => false,
     )}
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc
@@ -157,7 +157,7 @@ describe 'apache::vhost::template', :type => 'define' do
         :htpasswd_file  => true,
       }
     }
-    it { should contain_apache__vhost__file('example.com').with(
+    it { is_expected.to contain_apache__vhost__file('example.com').with(
       :ensure         => 'present',
       :do_includes    => true,
       :run_mode       => 'normal',
@@ -168,7 +168,7 @@ describe 'apache::vhost::template', :type => 'define' do
       :htpasswd_path  => 'absent',
       :use_mod_macro  => false,
     )}
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc
@@ -252,7 +252,7 @@ describe 'apache::vhost::template', :type => 'define' do
         :htpasswd_file  => 'absent',
       }
     }
-    it { should contain_apache__vhost__file('example.com').with(
+    it { is_expected.to contain_apache__vhost__file('example.com').with(
       :ensure         => 'present',
       :do_includes    => false,
       :run_mode       => 'normal',
@@ -263,7 +263,7 @@ describe 'apache::vhost::template', :type => 'define' do
       :htpasswd_path  => 'absent',
       :use_mod_macro  => false,
     )}
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:443 >
 
   Include include.d/defaults.inc
@@ -314,7 +314,7 @@ describe 'apache::vhost::template', :type => 'define' do
         }
       }
     }
-    it { should contain_apache__vhost__file('example.com').with(
+    it { is_expected.to contain_apache__vhost__file('example.com').with(
       :ensure         => 'present',
       :do_includes    => false,
       :run_mode       => 'normal',
@@ -325,7 +325,7 @@ describe 'apache::vhost::template', :type => 'define' do
       :htpasswd_path  => 'absent',
       :use_mod_macro  => false,
     )}
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:443 >
 
   Include include.d/defaults.inc

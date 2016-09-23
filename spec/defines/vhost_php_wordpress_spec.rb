@@ -12,7 +12,7 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
   let(:facts){ default_facts }
   describe 'with standard' do
     # only test the differences from the default
-    it { should contain_apache__vhost__php__webapp('example.com').with(
+    it { is_expected.to contain_apache__vhost__php__webapp('example.com').with(
       :mod_security_rules_to_disable  => ["960010", "950018"],
       :manage_directories             => true,
       :managed_directories            => '/var/www/vhosts/example.com/www/wp-content/uploads',
@@ -22,7 +22,7 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
       :config_file                    => 'wp-config.php',
     )}
     # go deeper in the catalog and test the produced template
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc
@@ -92,7 +92,7 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
       }
     }
     # only test variables that are tuned
-    it { should contain_apache__vhost__php__webapp('example.com').with(
+    it { is_expected.to contain_apache__vhost__php__webapp('example.com').with(
       :run_mode                       => 'fcgid',
       :run_uid                        => 'foo',
       :run_gid                        => 'bar',
@@ -105,7 +105,7 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
       :config_file                    => 'wp-config.php',
     )}
     # go deeper in the catalog and test the produced template
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc

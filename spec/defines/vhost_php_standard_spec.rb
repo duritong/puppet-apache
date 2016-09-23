@@ -12,23 +12,23 @@ describe 'apache::vhost::php::standard', :type => 'define' do
   let(:facts){ default_facts }
   describe 'with standard' do
     # only test variables that are tuned
-    it { should contain_apache__vhost__webdir('example.com') }
-    it { should_not contain_class('mod_fcgid') }
-    it { should_not contain_class('php::mod_fcgid') }
-    it { should_not contain_class('apache::include::mod_fcgid') }
-    it { should_not contain_class('php::scl::php54') }
-    it { should_not contain_class('php::scl::php55') }
-    it { should_not contain_class('php::extensions::smarty') }
-    it { should contain_class('php') }
-    it { should_not contain_mod_fcgid__starter('example.com') }
+    it { is_expected.to contain_apache__vhost__webdir('example.com') }
+    it { is_expected.to_not contain_class('mod_fcgid') }
+    it { is_expected.to_not contain_class('php::mod_fcgid') }
+    it { is_expected.to_not contain_class('apache::include::mod_fcgid') }
+    it { is_expected.to_not contain_class('php::scl::php54') }
+    it { is_expected.to_not contain_class('php::scl::php55') }
+    it { is_expected.to_not contain_class('php::extensions::smarty') }
+    it { is_expected.to contain_class('php') }
+    it { is_expected.to_not contain_mod_fcgid__starter('example.com') }
 
     # only test variables that are tuned
-    it { should contain_apache__vhost__phpdirs('example.com').with(
+    it { is_expected.to contain_apache__vhost__phpdirs('example.com').with(
       :php_upload_tmp_dir     => '/var/www/upload_tmp_dir/example.com',
       :php_session_save_path  => '/var/www/session.save_path/example.com',
     )}
     # only test variables that are tuned
-    it { should contain_apache__vhost('example.com').with(
+    it { is_expected.to contain_apache__vhost('example.com').with(
       :template_partial  => 'apache/vhosts/php/partial.erb',
       :passing_extension => 'php'
     )}
@@ -43,9 +43,9 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with_content(/\/var\/www\/vhosts\/example.com\/logs\/php_error_log/) }
     it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with_content(/su apache apache/) }
 
-    it { should have_apache__vhost__php__safe_mode_bin_resource_count(0) }
+    it { is_expected.to have_apache__vhost__php__safe_mode_bin_resource_count(0) }
     # go deeper in the catalog and test the produced template
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc
@@ -89,7 +89,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
       default_facts.merge(:operatingsystemmajrelease => '6')
     }
     # go deeper in the catalog and test the produced template for the main difference
-    it { should contain_apache__vhost__file('example.com').with_content(/php_admin_flag safe_mode on/) }
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(/php_admin_flag safe_mode on/) }
   end
   describe 'with standard and params' do
     let(:facts){
@@ -113,7 +113,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     it { is_expected.to_not contain_file('/etc/logrotate.d/php_example.com').with_content(/su apache apache/) }
 
     # go deeper in the catalog and test the produced template
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc
@@ -162,14 +162,14 @@ describe 'apache::vhost::php::standard', :type => 'define' do
       }
     }
     # only test variables that are tuned
-    it { should contain_apache__vhost__webdir('example.com') }
-    it { should contain_class('mod_fcgid') }
-    it { should contain_class('php::mod_fcgid') }
-    it { should contain_class('apache::include::mod_fcgid') }
-    it { should_not contain_class('php::scl::php54') }
-    it { should_not contain_class('php::scl::php55') }
-    it { should_not contain_class('php::extensions::smarty') }
-    it { should contain_mod_fcgid__starter('example.com').with(
+    it { is_expected.to contain_apache__vhost__webdir('example.com') }
+    it { is_expected.to contain_class('mod_fcgid') }
+    it { is_expected.to contain_class('php::mod_fcgid') }
+    it { is_expected.to contain_class('apache::include::mod_fcgid') }
+    it { is_expected.to_not contain_class('php::scl::php54') }
+    it { is_expected.to_not contain_class('php::scl::php55') }
+    it { is_expected.to_not contain_class('php::extensions::smarty') }
+    it { is_expected.to contain_mod_fcgid__starter('example.com').with(
       :tmp_dir          => false,
       :cgi_type         => 'php',
       :cgi_type_options => {
@@ -199,19 +199,19 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with_content(/su foo bar/) }
 
     # only test variables that are tuned
-    it { should contain_apache__vhost__phpdirs('example.com').with(
+    it { is_expected.to contain_apache__vhost__phpdirs('example.com').with(
       :php_upload_tmp_dir     => '/var/www/upload_tmp_dir/example.com',
       :php_session_save_path  => '/var/www/session.save_path/example.com',
     )}
     # only test variables that are tuned
-    it { should contain_apache__vhost('example.com').with(
+    it { is_expected.to contain_apache__vhost('example.com').with(
       :template_partial  => 'apache/vhosts/php/partial.erb',
       :passing_extension => 'php'
     )}
 
-    it { should have_apache__vhost__php__safe_mode_bin_resource_count(0) }
+    it { is_expected.to have_apache__vhost__php__safe_mode_bin_resource_count(0) }
     # go deeper in the catalog and test the produced template
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc
@@ -263,14 +263,14 @@ describe 'apache::vhost::php::standard', :type => 'define' do
       }
     }
     # only test variables that are tuned
-    it { should contain_apache__vhost__webdir('example.com') }
-    it { should contain_class('mod_fcgid') }
-    it { should contain_class('php::mod_fcgid') }
-    it { should contain_class('apache::include::mod_fcgid') }
-    it { should contain_class('php::scl::php54') }
-    it { should_not contain_class('php::scl::php55') }
-    it { should_not contain_class('php::extensions::smarty') }
-    it { should contain_mod_fcgid__starter('example.com').with(
+    it { is_expected.to contain_apache__vhost__webdir('example.com') }
+    it { is_expected.to contain_class('mod_fcgid') }
+    it { is_expected.to contain_class('php::mod_fcgid') }
+    it { is_expected.to contain_class('apache::include::mod_fcgid') }
+    it { is_expected.to contain_class('php::scl::php54') }
+    it { is_expected.to_not contain_class('php::scl::php55') }
+    it { is_expected.to_not contain_class('php::extensions::smarty') }
+    it { is_expected.to contain_mod_fcgid__starter('example.com').with(
       :tmp_dir          => false,
       :cgi_type         => 'php',
       :cgi_type_options => {
@@ -293,19 +293,19 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     ) }
 
     # only test variables that are tuned
-    it { should contain_apache__vhost__phpdirs('example.com').with(
+    it { is_expected.to contain_apache__vhost__phpdirs('example.com').with(
       :php_upload_tmp_dir     => '/var/www/upload_tmp_dir/example.com',
       :php_session_save_path  => '/var/www/session.save_path/example.com',
     )}
     # only test variables that are tuned
-    it { should contain_apache__vhost('example.com').with(
+    it { is_expected.to contain_apache__vhost('example.com').with(
       :template_partial  => 'apache/vhosts/php/partial.erb',
       :passing_extension => 'php'
     )}
 
-    it { should have_apache__vhost__php__safe_mode_bin_resource_count(0) }
+    it { is_expected.to have_apache__vhost__php__safe_mode_bin_resource_count(0) }
     # go deeper in the catalog and test the produced template
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc
@@ -357,14 +357,14 @@ describe 'apache::vhost::php::standard', :type => 'define' do
       }
     }
     # only test variables that are tuned
-    it { should contain_apache__vhost__webdir('example.com') }
-    it { should contain_class('mod_fcgid') }
-    it { should contain_class('php::mod_fcgid') }
-    it { should contain_class('apache::include::mod_fcgid') }
-    it { should_not contain_class('php::scl::php54') }
-    it { should contain_class('php::scl::php55') }
-    it { should_not contain_class('php::extensions::smarty') }
-    it { should contain_mod_fcgid__starter('example.com').with(
+    it { is_expected.to contain_apache__vhost__webdir('example.com') }
+    it { is_expected.to contain_class('mod_fcgid') }
+    it { is_expected.to contain_class('php::mod_fcgid') }
+    it { is_expected.to contain_class('apache::include::mod_fcgid') }
+    it { is_expected.to_not contain_class('php::scl::php54') }
+    it { is_expected.to contain_class('php::scl::php55') }
+    it { is_expected.to_not contain_class('php::extensions::smarty') }
+    it { is_expected.to contain_mod_fcgid__starter('example.com').with(
       :tmp_dir          => false,
       :cgi_type         => 'php',
       :cgi_type_options => {
@@ -387,19 +387,19 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     ) }
 
     # only test variables that are tuned
-    it { should contain_apache__vhost__phpdirs('example.com').with(
+    it { is_expected.to contain_apache__vhost__phpdirs('example.com').with(
       :php_upload_tmp_dir     => '/var/www/upload_tmp_dir/example.com',
       :php_session_save_path  => '/var/www/session.save_path/example.com',
     )}
     # only test variables that are tuned
-    it { should contain_apache__vhost('example.com').with(
+    it { is_expected.to contain_apache__vhost('example.com').with(
       :template_partial  => 'apache/vhosts/php/partial.erb',
       :passing_extension => 'php'
     )}
 
-    it { should have_apache__vhost__php__safe_mode_bin_resource_count(0) }
+    it { is_expected.to have_apache__vhost__php__safe_mode_bin_resource_count(0) }
     # go deeper in the catalog and test the produced template
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc
@@ -456,14 +456,14 @@ describe 'apache::vhost::php::standard', :type => 'define' do
       }
     }
     # only test variables that are tuned
-    it { should contain_apache__vhost__webdir('example.com') }
-    it { should contain_class('mod_fcgid') }
-    it { should contain_class('php::mod_fcgid') }
-    it { should contain_class('apache::include::mod_fcgid') }
-    it { should_not contain_class('php::scl::php54') }
-    it { should_not contain_class('php::scl::php55') }
-    it { should contain_class('php::extensions::smarty') }
-    it { should contain_mod_fcgid__starter('example.com').with(
+    it { is_expected.to contain_apache__vhost__webdir('example.com') }
+    it { is_expected.to contain_class('mod_fcgid') }
+    it { is_expected.to contain_class('php::mod_fcgid') }
+    it { is_expected.to contain_class('apache::include::mod_fcgid') }
+    it { is_expected.to_not contain_class('php::scl::php54') }
+    it { is_expected.to_not contain_class('php::scl::php55') }
+    it { is_expected.to contain_class('php::extensions::smarty') }
+    it { is_expected.to contain_mod_fcgid__starter('example.com').with(
       :tmp_dir          => false,
       :cgi_type         => 'php',
       :cgi_type_options => {
@@ -481,26 +481,26 @@ describe 'apache::vhost::php::standard', :type => 'define' do
       :group            => 'bar',
       :notify           => 'Service[apache]',
     ) }
-    # with no log it should be absent
+    # with no log it is_expected.to be absent
     it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with_ensure('absent') }
 
     # only test variables that are tuned
-    it { should contain_apache__vhost__phpdirs('example.com').with(
+    it { is_expected.to contain_apache__vhost__phpdirs('example.com').with(
       :php_upload_tmp_dir     => '/var/www/upload_tmp_dir/example.com',
       :php_session_save_path  => '/var/www/session.save_path/example.com',
     )}
     # only test variables that are tuned
-    it { should contain_apache__vhost('example.com').with(
+    it { is_expected.to contain_apache__vhost('example.com').with(
       :template_partial  => 'apache/vhosts/php/partial.erb',
       :passing_extension => 'php'
     )}
 
-    it { should have_apache__vhost__php__safe_mode_bin_resource_count(1) }
-    it { should contain_apache__vhost__php__safe_mode_bin('example.com@/usr/bin/cat').with(
+    it { is_expected.to have_apache__vhost__php__safe_mode_bin_resource_count(1) }
+    it { is_expected.to contain_apache__vhost__php__safe_mode_bin('example.com@/usr/bin/cat').with(
       :ensure => 'present',
       :path   => '/var/www/vhosts/example.com/bin',
     )}
-    it { should contain_file('/var/www/vhosts/example.com/bin').with(
+    it { is_expected.to contain_file('/var/www/vhosts/example.com/bin').with(
       :ensure  => 'directory',
       :owner   => 'apache',
       :group   => '0',
@@ -509,7 +509,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
       :purge   => true,
     )}
     # go deeper in the catalog and test the produced template
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc

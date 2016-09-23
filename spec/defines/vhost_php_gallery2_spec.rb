@@ -11,7 +11,7 @@ describe 'apache::vhost::php::gallery2', :type => 'define' do
   }
   describe 'with standard' do
     # only test the differences from the default
-    it { should contain_apache__vhost__php__webapp('example.com').with(
+    it { is_expected.to contain_apache__vhost__php__webapp('example.com').with(
       :manage_directories             => true,
       :template_partial               => 'apache/vhosts/php_gallery2/partial.erb',
       :php_settings                   => {
@@ -22,20 +22,20 @@ describe 'apache::vhost::php::gallery2', :type => 'define' do
       :config_webwriteable            => false,
       :config_file                    => 'config.php',
     )}
-    it { should contain_file('/var/www/vhosts/example.com/data/upload').with(
+    it { is_expected.to contain_file('/var/www/vhosts/example.com/data/upload').with(
       :ensure => 'directory',
       :owner  => 'apache',
       :group  => 0,
       :mode   => '0660',
     )}
-    it { should contain_file('/var/www/vhosts/example.com/data/gdata').with(
+    it { is_expected.to contain_file('/var/www/vhosts/example.com/data/gdata').with(
       :ensure => 'directory',
       :owner  => 'apache',
       :group  => 0,
       :mode   => '0660',
     )}
     # go deeper in the catalog and test the produced template
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc
@@ -94,7 +94,7 @@ describe 'apache::vhost::php::gallery2', :type => 'define' do
       }
     }
     # only test variables that are tuned
-    it { should contain_apache__vhost__php__webapp('example.com').with(
+    it { is_expected.to contain_apache__vhost__php__webapp('example.com').with(
       :run_mode                       => 'fcgid',
       :run_uid                        => 'foo',
       :run_gid                        => 'bar',
@@ -109,7 +109,7 @@ describe 'apache::vhost::php::gallery2', :type => 'define' do
       :config_file                    => 'config.php',
     )}
     # go deeper in the catalog and test the produced template
-    it { should contain_apache__vhost__file('example.com').with_content(
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
 
   Include include.d/defaults.inc
