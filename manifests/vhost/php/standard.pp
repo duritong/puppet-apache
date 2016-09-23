@@ -195,6 +195,21 @@ define apache::vhost::php::standard(
 
   $real_php_settings = merge($std_php_settings,$php_settings)
 
+  file{"/etc/logrotate.d/php_${name}": }
+  if $real_php_settings['error_log'] and $ensure != 'absent' {
+    File["/etc/logrotate.d/php_${name}"]{
+      content => template('apache/utils/php_logrotate.erb'),
+      owner   => root,
+      group   => 0,
+      mode    => 0644,
+      require => File[$logdir],
+    }
+  } else {
+    File["/etc/logrotate.d/php_${name}"]{
+      ensure => absent,
+    }
+  }
+
   if $ensure != 'absent' {
     case $run_mode {
       'fcgid': {

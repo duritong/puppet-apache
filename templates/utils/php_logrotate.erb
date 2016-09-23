@@ -1,0 +1,22 @@
+<%
+  if @run_mode == 'normal'
+    user = 'apache'
+    group = 'apache'
+  else
+    user = @run_uid
+    group = @run_gid
+  end
+-%>
+<%= @real_php_settings['error_log'] %> {
+  daily
+  dateext
+  missingok
+  rotate 7
+  compress
+  copytruncate
+  notifempty
+  create 640 <%= user %> <%= group %>
+<% if scope['::operatingsystemmajrelease'].to_i > 6 -%>
+  su <%= user %> <%= group %>
+<% end -%>
+}

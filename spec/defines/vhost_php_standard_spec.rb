@@ -33,6 +33,16 @@ describe 'apache::vhost::php::standard', :type => 'define' do
       :passing_extension => 'php'
     )}
 
+    it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with(
+      :content => /create 640 apache apache/,
+      :owner   => 'root',
+      :group   => 0,
+      :mode    => '0644',
+      :require => 'File[/var/www/vhosts/example.com/logs]',
+    )}
+    it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with_content(/\/var\/www\/vhosts\/example.com\/logs\/php_error_log/) }
+    it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with_content(/su apache apache/) }
+
     it { should have_apache__vhost__php__safe_mode_bin_resource_count(0) }
     # go deeper in the catalog and test the produced template
     it { should contain_apache__vhost__file('example.com').with_content(
@@ -92,6 +102,16 @@ describe 'apache::vhost::php::standard', :type => 'define' do
         }
       }
     }
+    it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with(
+      :content => /create 640 apache apache/,
+      :owner   => 'root',
+      :group   => 0,
+      :mode    => '0644',
+      :require => 'File[/var/www/vhosts/example.com/logs]',
+    )}
+    it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with_content(/\/var\/www\/vhosts\/example.com\/logs\/php_error_log/) }
+    it { is_expected.to_not contain_file('/etc/logrotate.d/php_example.com').with_content(/su apache apache/) }
+
     # go deeper in the catalog and test the produced template
     it { should contain_apache__vhost__file('example.com').with_content(
 "<VirtualHost *:80 >
@@ -167,6 +187,16 @@ describe 'apache::vhost::php::standard', :type => 'define' do
       :group            => 'bar',
       :notify           => 'Service[apache]',
     ) }
+
+    it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with(
+      :content => /create 640 foo bar/,
+      :owner   => 'root',
+      :group   => 0,
+      :mode    => '0644',
+      :require => 'File[/var/www/vhosts/example.com/logs]',
+    )}
+    it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with_content(/\/var\/www\/vhosts\/example.com\/logs\/php_error_log/) }
+    it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with_content(/su foo bar/) }
 
     # only test variables that are tuned
     it { should contain_apache__vhost__phpdirs('example.com').with(
@@ -451,6 +481,8 @@ describe 'apache::vhost::php::standard', :type => 'define' do
       :group            => 'bar',
       :notify           => 'Service[apache]',
     ) }
+    # with no log it should be absent
+    it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with_ensure('absent') }
 
     # only test variables that are tuned
     it { should contain_apache__vhost__phpdirs('example.com').with(
@@ -517,5 +549,42 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 </VirtualHost>
 "
 )}
+  end
+  describe 'with absent' do
+    let(:facts){default_facts.merge(:operatingsystemmajrelease => '6')}
+    let(:params){
+      {
+        :ensure       => 'absent',
+        :run_mode     => 'fcgid',
+        :run_uid      => 'foo',
+        :run_gid      => 'bar',
+        :logmode      => 'nologs',
+        :php_options  => {
+          'smarty'              => true,
+          'pear'                => true,
+          'safe_mode_exec_bins' => ['/usr/bin/cat'],
+        }
+      }
+    }
+    # only test variables that are tuned
+    it { is_expected.to contain_apache__vhost__webdir('example.com').with_ensure('absent') }
+    it { is_expected.to_not contain_class('mod_fcgid') }
+    it { is_expected.to_not contain_class('php::mod_fcgid') }
+    it { is_expected.to_not contain_class('apache::include::mod_fcgid') }
+    it { is_expected.to_not contain_class('php::scl::php54') }
+    it { is_expected.to_not contain_class('php::scl::php55') }
+    it { is_expected.to contain_class('php::extensions::smarty') }
+    it { is_expected.to_not contain_mod_fcgid__starter('example.com') }
+    it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with_ensure('absent') }
+
+    # only test variables that are tuned
+    it { is_expected.to contain_apache__vhost__phpdirs('example.com').with_ensure('absent') }
+    # only test variables that are tuned
+    it { is_expected.to contain_apache__vhost('example.com').with_ensure('absent') }
+
+    it { is_expected.to have_apache__vhost__php__safe_mode_bin_resource_count(1) }
+    it { is_expected.to contain_apache__vhost__php__safe_mode_bin('example.com@/usr/bin/cat').with_ensure('absent') }
+    it { is_expected.to contain_file('/var/www/vhosts/example.com/bin').with_ensure('absent') }
+    it { is_expected.to contain_apache__vhost__file('example.com').with_ensure('absent') }
   end
 end
