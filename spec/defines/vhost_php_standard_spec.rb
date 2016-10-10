@@ -40,7 +40,9 @@ describe 'apache::vhost::php::standard', :type => 'define' do
       :owner   => 'root',
       :group   => 0,
       :mode    => '0644',
-      :require => 'File[/var/www/vhosts/example.com/logs]',
+    )}
+    it { is_expected.to contain_file('/var/www/vhosts/example.com/logs').with(
+      :before => ['Service[apache]','File[/etc/logrotate.d/php_example.com]', ],
     )}
     it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with_content(/\/var\/www\/vhosts\/example.com\/logs\/php_error_log/) }
     it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with_content(/su apache apache/) }
@@ -111,7 +113,9 @@ describe 'apache::vhost::php::standard', :type => 'define' do
       :owner   => 'root',
       :group   => 0,
       :mode    => '0644',
-      :require => 'File[/var/www/vhosts/example.com/logs]',
+    )}
+    it { is_expected.to contain_file('/var/www/vhosts/example.com/logs').with(
+      :before => ['Service[apache]','File[/etc/logrotate.d/php_example.com]', ],
     )}
     it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with_content(/\/var\/www\/vhosts\/example.com\/logs\/php_error_log/) }
     it { is_expected.to_not contain_file('/etc/logrotate.d/php_example.com').with_content(/su apache apache/) }
@@ -198,7 +202,9 @@ describe 'apache::vhost::php::standard', :type => 'define' do
       :owner   => 'root',
       :group   => 0,
       :mode    => '0644',
-      :require => 'File[/var/www/vhosts/example.com/logs]',
+    )}
+    it { is_expected.to contain_file('/var/www/vhosts/example.com/logs').with(
+      :before => ['Service[apache]','File[/etc/logrotate.d/php_example.com]', ],
     )}
     it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with_content(/\/var\/www\/vhosts\/example.com\/logs\/php_error_log/) }
     it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with_content(/su foo bar/) }
@@ -453,11 +459,11 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     let(:facts){default_facts.merge(:operatingsystemmajrelease => '6')}
     let(:params){
       {
-        :run_mode     => 'fcgid',
-        :run_uid      => 'foo',
-        :run_gid      => 'bar',
-        :logmode      => 'nologs',
-        :php_options  => {
+        :run_mode      => 'fcgid',
+        :run_uid       => 'foo',
+        :run_gid       => 'bar',
+        :logmode       => 'nologs',
+        :php_options   => {
           'smarty'              => true,
           'pear'                => true,
           'safe_mode_exec_bins' => ['/usr/bin/cat'],
@@ -530,6 +536,116 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 
   ErrorLog /dev/null
   CustomLog /dev/null %%
+
+
+
+  <IfModule mod_fcgid.c>
+    SuexecUserGroup foo bar
+    FcgidMaxRequestsPerProcess 5000
+    FCGIWrapper /var/www/mod_fcgid-starters/example.com/example.com-starter .php
+    AddHandler fcgid-script .php
+  </IfModule>
+
+  <Directory \"/var/www/vhosts/example.com/www/\">
+    AllowOverride None
+    Options  +ExecCGI
+
+
+  </Directory>
+
+  <IfModule mod_security2.c>
+    SecRuleEngine On
+    SecAuditEngine RelevantOnly
+    SecAuditLogType Concurrent
+    SecAuditLogStorageDir /var/www/vhosts/example.com/logs/
+    SecAuditLog /var/www/vhosts/example.com/logs/mod_security_audit.log
+    SecDebugLog /var/www/vhosts/example.com/logs/mod_security_debug.log
+  </IfModule>
+
+</VirtualHost>
+"
+)}
+  end
+  describe 'with mod_fcgid and params II' do
+    let(:facts){default_facts.merge(:operatingsystemmajrelease => '6')}
+    let(:params){
+      {
+        :run_mode      => 'fcgid',
+        :run_uid       => 'foo',
+        :run_gid       => 'bar',
+        :manage_webdir => false,
+        :php_options   => {
+          'smarty'              => true,
+          'pear'                => true,
+          'safe_mode_exec_bins' => ['/usr/bin/cat'],
+        }
+      }
+    }
+    # only test variables that are tuned
+    it { is_expected.to compile.with_all_deps }
+    it { is_expected.to_not contain_apache__vhost__webdir('example.com') }
+    it { is_expected.to contain_class('mod_fcgid') }
+    it { is_expected.to contain_class('php::mod_fcgid') }
+    it { is_expected.to contain_class('apache::include::mod_fcgid') }
+    it { is_expected.to_not contain_class('php::scl::php54') }
+    it { is_expected.to_not contain_class('php::scl::php55') }
+    it { is_expected.to contain_class('php::extensions::smarty') }
+    it { is_expected.to contain_mod_fcgid__starter('example.com').with(
+      :tmp_dir          => false,
+      :cgi_type         => 'php',
+      :cgi_type_options => {
+        "engine"            =>"On",
+        "upload_tmp_dir"    =>"/var/www/upload_tmp_dir/example.com",
+        "session.save_path" =>"/var/www/session.save_path/example.com",
+        "error_log"         =>"/var/www/vhosts/example.com/logs/php_error_log",
+        "safe_mode"         =>"On",
+        "safe_mode_gid"     =>"On",
+        "safe_mode_exec_dir"=>"/var/www/vhosts/example.com/bin",
+        "default_charset"   =>:undef,
+        "open_basedir"      =>"/usr/share/php/Smarty/:/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/upload_tmp_dir/example.com:/var/www/session.save_path/example.com"
+      },
+      :owner            => 'foo',
+      :group            => 'bar',
+      :notify           => 'Service[apache]',
+    ) }
+    # with no log it is_expected.to be absent
+    it { is_expected.to contain_file('/etc/logrotate.d/php_example.com') }
+
+    # only test variables that are tuned
+    it { is_expected.to contain_apache__vhost__phpdirs('example.com').with(
+      :ensure => 'present',
+    )}
+    # only test variables that are tuned
+    it { is_expected.to contain_apache__vhost('example.com').with(
+      :template_partial  => 'apache/vhosts/php/partial.erb',
+      :passing_extension => 'php'
+    )}
+
+    it { is_expected.to have_apache__vhost__php__safe_mode_bin_resource_count(1) }
+    it { is_expected.to contain_apache__vhost__php__safe_mode_bin('example.com@/usr/bin/cat').with(
+      :ensure => 'present',
+      :path   => '/var/www/vhosts/example.com/bin',
+    )}
+    it { is_expected.to contain_file('/var/www/vhosts/example.com/bin').with(
+      :ensure  => 'directory',
+      :owner   => 'apache',
+      :group   => '0',
+      :recurse => true,
+      :force   => true,
+      :purge   => true,
+    )}
+    # go deeper in the catalog and test the produced template
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
+"<VirtualHost *:80 >
+
+  Include include.d/defaults.inc
+  ServerName example.com
+  DocumentRoot /var/www/vhosts/example.com/www/
+  DirectoryIndex index.htm index.html index.php
+
+
+  ErrorLog /var/www/vhosts/example.com/logs/error_log
+  CustomLog /var/www/vhosts/example.com/logs/access_log combined
 
 
 

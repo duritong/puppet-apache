@@ -204,7 +204,9 @@ define apache::vhost::php::standard(
       owner   => root,
       group   => 0,
       mode    => 0644,
-      require => File[$logdir],
+    }
+    if $manage_webdir {
+      File[$logdir] -> File["/etc/logrotate.d/php_${name}"]
     }
   } else {
     File["/etc/logrotate.d/php_${name}"]{
