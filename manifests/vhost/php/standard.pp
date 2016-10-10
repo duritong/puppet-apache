@@ -96,7 +96,9 @@ define apache::vhost::php::standard(
   $real_php_options = merge($std_php_options,$php_options)
 
   if $real_php_options['smarty'] {
-    include php::extensions::smarty
+    if $ensure != 'absent' {
+      include php::extensions::smarty
+    }
     $smarty_path = '/usr/share/php/Smarty/:'
   } else {
     $smarty_path = ''
@@ -159,8 +161,8 @@ define apache::vhost::php::standard(
       $php_safe_mode_exec_bins_subst = regsubst($php_options['safe_mode_exec_bins'],'(.+)',"${name}@\\1")
       apache::vhost::php::safe_mode_bin{
         $php_safe_mode_exec_bins_subst:
-          ensure  => $ensure,
-          path    => $php_safe_mode_exec_dir;
+          ensure => $ensure,
+          path   => $php_safe_mode_exec_dir;
       }
     } else {
       $std_php_settings_safe_mode_exec_dir = undef

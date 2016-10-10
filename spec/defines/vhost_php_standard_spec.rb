@@ -10,8 +10,10 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     }
   }
   let(:facts){ default_facts }
+  let(:pre_condition){ 'Exec{ path => "/bin" }' }
   describe 'with standard' do
     # only test variables that are tuned
+    it { is_expected.to compile.with_all_deps }
     it { is_expected.to contain_apache__vhost__webdir('example.com') }
     it { is_expected.to_not contain_class('mod_fcgid') }
     it { is_expected.to_not contain_class('php::mod_fcgid') }
@@ -88,6 +90,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     let(:facts){
       default_facts.merge(:operatingsystemmajrelease => '6')
     }
+    it { is_expected.to compile.with_all_deps }
     # go deeper in the catalog and test the produced template for the main difference
     it { is_expected.to contain_apache__vhost__file('example.com').with_content(/php_admin_flag safe_mode on/) }
   end
@@ -102,6 +105,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
         }
       }
     }
+    it { is_expected.to compile.with_all_deps }
     it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with(
       :content => /create 640 apache apache/,
       :owner   => 'root',
@@ -162,6 +166,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
       }
     }
     # only test variables that are tuned
+    it { is_expected.to compile.with_all_deps }
     it { is_expected.to contain_apache__vhost__webdir('example.com') }
     it { is_expected.to contain_class('mod_fcgid') }
     it { is_expected.to contain_class('php::mod_fcgid') }
@@ -253,7 +258,8 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 )}
   end
   describe 'with mod_fcgid scl 5.4' do
-    let(:pre_condition){ 'include yum::prerequisites' }
+    let(:pre_condition){ 'Exec{ path => "/bin" }
+                         include yum::prerequisites' }
     let(:params){
       {
         :run_mode         => 'fcgid',
@@ -263,6 +269,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
       }
     }
     # only test variables that are tuned
+    it { is_expected.to compile.with_all_deps }
     it { is_expected.to contain_apache__vhost__webdir('example.com') }
     it { is_expected.to contain_class('mod_fcgid') }
     it { is_expected.to contain_class('php::mod_fcgid') }
@@ -347,7 +354,8 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 )}
   end
   describe 'with mod_fcgid with scl55' do
-    let(:pre_condition){ 'include yum::prerequisites' }
+    let(:pre_condition){ 'Exec{ path => "/bin" }
+                         include yum::prerequisites' }
     let(:params){
       {
         :run_mode         => 'fcgid',
@@ -357,6 +365,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
       }
     }
     # only test variables that are tuned
+    it { is_expected.to compile.with_all_deps }
     it { is_expected.to contain_apache__vhost__webdir('example.com') }
     it { is_expected.to contain_class('mod_fcgid') }
     it { is_expected.to contain_class('php::mod_fcgid') }
@@ -456,6 +465,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
       }
     }
     # only test variables that are tuned
+    it { is_expected.to compile.with_all_deps }
     it { is_expected.to contain_apache__vhost__webdir('example.com') }
     it { is_expected.to contain_class('mod_fcgid') }
     it { is_expected.to contain_class('php::mod_fcgid') }
@@ -567,13 +577,14 @@ describe 'apache::vhost::php::standard', :type => 'define' do
       }
     }
     # only test variables that are tuned
+    it { is_expected.to compile.with_all_deps }
     it { is_expected.to contain_apache__vhost__webdir('example.com').with_ensure('absent') }
     it { is_expected.to_not contain_class('mod_fcgid') }
     it { is_expected.to_not contain_class('php::mod_fcgid') }
     it { is_expected.to_not contain_class('apache::include::mod_fcgid') }
     it { is_expected.to_not contain_class('php::scl::php54') }
     it { is_expected.to_not contain_class('php::scl::php55') }
-    it { is_expected.to contain_class('php::extensions::smarty') }
+    it { is_expected.to_not contain_class('php::extensions::smarty') }
     it { is_expected.to_not contain_mod_fcgid__starter('example.com') }
     it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with_ensure('absent') }
 
