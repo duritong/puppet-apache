@@ -198,7 +198,7 @@ define apache::vhost::php::standard(
   $real_php_settings = merge($std_php_settings,$php_settings)
 
   file{"/etc/logrotate.d/php_${name}": }
-  if $real_php_settings['error_log'] and $ensure != 'absent' {
+  if $real_php_settings['error_log'] and ($ensure != 'absent') and !($logdir in ['/var/log/httpd','/var/log/apache2']) {
     File["/etc/logrotate.d/php_${name}"]{
       content => template('apache/utils/php_logrotate.erb'),
       owner   => root,
