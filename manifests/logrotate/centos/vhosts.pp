@@ -13,6 +13,7 @@ class apache::logrotate::centos::vhosts inherits apache::logrotate::centos {
       context => '/files/etc/logrotate.d/httpd/rule/',
       incl    => '/etc/logrotate.d/httpd',
       lens    => 'Logrotate.lns',
+      require => Package['apache'],
       changes => [
         'set su/owner root',
         'set su/group root',
