@@ -203,7 +203,7 @@ define apache::vhost::php::standard(
       content => template('apache/utils/php_logrotate.erb'),
       owner   => root,
       group   => 0,
-      mode    => 0644,
+      mode    => '0644',
     }
     if $manage_webdir {
       File[$logdir] -> File["/etc/logrotate.d/php_${name}"]
