@@ -62,8 +62,8 @@ define apache::vhost::webdir(
         before  => File[$real_path],
       }
       file{$real_path:
-        ensure  => absent,
-        force   => true;
+        ensure => absent,
+        force  => true;
       }
     }
     default: {
@@ -98,10 +98,10 @@ define apache::vhost::webdir(
       }
       if $datadir {
         file{"${real_path}/data":
-          ensure  => directory,
-          owner   => $real_documentroot_owner,
-          group   => $real_documentroot_group,
-          mode    => '0640';
+          ensure => directory,
+          owner  => $real_documentroot_owner,
+          group  => $real_documentroot_group,
+          mode   => '0640';
         }
       }
       if str2bool($::selinux) {
