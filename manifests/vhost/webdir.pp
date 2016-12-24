@@ -18,12 +18,6 @@ define apache::vhost::webdir(
     default  => $path,
   }
 
-  if ($run_mode == 'fcgid') and ($mode == '0640'){
-    $real_mode = '0644'
-  } else {
-    $real_mode = $mode
-  }
-
   $documentroot = "${real_path}/www"
   $logdir = "${real_path}/logs"
 
@@ -79,7 +73,7 @@ define apache::vhost::webdir(
           require => Anchor['apache::basic_dirs::ready'],
           owner   => $real_owner,
           group   => $real_group,
-          mode    => $real_mode;
+          mode    => $mode;
         $logdir:
           ensure  => directory,
           before  => Service['apache'],
