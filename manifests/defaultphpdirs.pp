@@ -23,9 +23,8 @@ class apache::defaultphpdirs {
       selinux::fcontext{
         [ '/var/www/upload_tmp_dir/.+(/.*)?',
           '/var/www/session.save_path/.+(/.*)?' ]:
-          require => Package['apache'],
-          setype  => $seltype_rw,
-          before  => File['/var/www/upload_tmp_dir','/var/www/session.save_path'];
+          before => Package['apache'],
+          setype => $seltype_rw,
       }
     }
 }

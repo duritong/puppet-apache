@@ -35,11 +35,11 @@ class apache::centos inherits apache::base {
         '/var/www/vhosts/[^/]*/non_public(/.*)?',
         '/var/www/vhosts/[^/]*/data(/.*)?',
         '/var/www/vhosts/[^/]*/upload(/.*)?' ]:
-        require => Package['apache'],
-        setype  => $seltype_rw;
+        before => Package['apache'],
+        setype => $seltype_rw;
       '/var/www/vhosts/[^/]*/logs(/.*)?':
-        require => Package['apache'],
-        setype  => 'httpd_log_t';
+        before => Package['apache'],
+        setype => 'httpd_log_t';
     }
   }
   if versioncmp($::operatingsystemmajrelease,'6') > 0 {
