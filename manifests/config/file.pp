@@ -25,7 +25,7 @@ define apache::config::file(
     notify  => Service[apache],
     owner   => root,
     group   => 0,
-    mode    => '0644';
+    mode    => '0640';
   }
 
   case $ensure {

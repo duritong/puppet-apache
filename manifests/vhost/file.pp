@@ -62,7 +62,7 @@ define apache::vhost::file(
     notify  => Service[apache],
     owner   => root,
     group   => 0,
-    mode    => '0644';
+    mode    => '0640';
   }
   if $ensure != 'absent' {
     if $do_includes {
