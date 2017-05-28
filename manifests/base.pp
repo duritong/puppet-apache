@@ -12,13 +12,13 @@ class apache::base {
       notify  => Service['apache'],
       owner   => root,
       group   => 0,
-      mode    => '0644';
+      mode    => '0640';
     'config_dir':
       ensure  => directory,
       path    => '/etc/apache2/conf.d',
       owner   => root,
       group   => 0,
-      mode    => '0644';
+      mode    => '0640';
     'include_dir':
       ensure  => directory,
       path    => '/etc/apache2/include.d',
@@ -28,7 +28,7 @@ class apache::base {
       notify  => Service['apache'],
       owner   => root,
       group   => 0,
-      mode    => '0644';
+      mode    => '0640';
     'modules_dir':
       ensure  => directory,
       path    => '/etc/apache2/modules.d',
@@ -38,7 +38,7 @@ class apache::base {
       notify  => Service['apache'],
       owner   => root,
       group   => 0,
-      mode    => '0644';
+      mode    => '0640';
     'htpasswd_dir':
       ensure  => directory,
       path    => '/var/www/htpasswds',
