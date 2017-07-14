@@ -45,15 +45,10 @@ define apache::vhost::passenger(
   $vhost_destination               = 'absent',
   $htpasswd_file                   = 'absent',
   $htpasswd_path                   = 'absent',
-  $passenger_ree                   = false,
-  $passenger_app                   = 'rails'
+  $passenger_app                   = 'rails',
 ){
 
-  if $passenger_ree {
-    include ::passenger::ree::apache
-  } else {
-    include ::passenger::apache
-  }
+  include ::passenger::apache
 
   if $manage_webdir {
     # create webdir
