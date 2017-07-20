@@ -48,7 +48,9 @@ define apache::vhost::passenger(
   $passenger_app                   = 'rails',
 ){
 
-  include ::passenger::apache
+  if versioncmp($::operatingsystemmajrelease,'5') > 0 {
+    include ::passenger::apache
+  }
 
   if $manage_webdir {
     # create webdir
