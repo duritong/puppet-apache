@@ -61,7 +61,8 @@ define apache::vhost::php::wordpress(
     'absent' => "/var/www/vhosts/${name}/www",
     default  => "${path}/www",
   }
-  $modsec_rules = ['960010', '950018']
+  # 200003 : broken multipart upload boundaries
+  $modsec_rules = ['960010', '950018', '200003']
   $real_mod_security_rules_to_disable = union($mod_security_rules_to_disable,
                                                 $modsec_rules)
 
