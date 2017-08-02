@@ -5,7 +5,7 @@ class apache::base {
   } -> file{
     'vhosts_dir':
       ensure  => directory,
-      path    => '/etc/apache2/vhosts.d',
+      path    => $apache::vhosts_dir,
       purge   => true,
       recurse => true,
       force   => true,
@@ -15,13 +15,13 @@ class apache::base {
       mode    => '0640';
     'config_dir':
       ensure  => directory,
-      path    => '/etc/apache2/conf.d',
+      path    => $apache::confd_dir,
       owner   => root,
       group   => 0,
       mode    => '0640';
     'include_dir':
       ensure  => directory,
-      path    => '/etc/apache2/include.d',
+      path    => $apache::include_dir,
       purge   => true,
       recurse => true,
       force   => true,
@@ -31,7 +31,7 @@ class apache::base {
       mode    => '0640';
     'modules_dir':
       ensure  => directory,
-      path    => '/etc/apache2/modules.d',
+      path    => $apache::modules_dir,
       purge   => true,
       recurse => true,
       force   => true,
@@ -51,12 +51,12 @@ class apache::base {
       mode    => '0640';
     'web_dir':
       ensure  => directory,
-      path    => '/var/www',
+      path    => $apache::webdir,
       owner   => root,
       group   => 0,
       mode    => '0644';
     'default_apache_index':
-      path    => '/var/www/localhost/htdocs/index.html',
+      path    => $apache::default_apache_index,
       content => template('apache/default/default_index.erb'),
       owner   => root,
       group   => 0,

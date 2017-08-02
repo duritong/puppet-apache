@@ -6,21 +6,6 @@ class apache::centos inherits apache::base {
   Service['apache']{
     name => 'httpd',
   }
-  File['vhosts_dir']{
-    path => "${apache::config_dir}/vhosts.d",
-  }
-  File['config_dir']{
-    path => "${apache::config_dir}/conf.d",
-  }
-  File['include_dir']{
-    path => "${apache::config_dir}/include.d",
-  }
-  File['web_dir']{
-    path => '/var/www/vhosts',
-  }
-  File['default_apache_index']{
-    path => '/var/www/html/index.html',
-  }
 
   if str2bool($::selinux) {
     Selinux::Fcontext{

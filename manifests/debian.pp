@@ -3,18 +3,8 @@ class apache::debian inherits apache::base {
   Package['apache'] {
     name => 'apache2',
   }
-  File['vhosts_dir'] {
-    path => "${apache::config_dir}/sites-enabled",
-  }
-  File['modules_dir'] {
-    path => "${apache::config_dir}/mods-enabled",
-  }
   File['htpasswd_dir'] {
-    path   => '/var/www/htpasswds',
     group  => 'www-data',
-  }
-  File['default_apache_index'] {
-    path => '/var/www/index.html',
   }
   file { 'apache_main_config':
     path    => "${apache::config_dir}/apache2.conf",

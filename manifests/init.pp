@@ -33,11 +33,23 @@ class apache(
   }
   case $::operatingsystem {
     'CentOS': {
-      $config_dir = '/etc/httpd'
+      $config_dir  = '/etc/httpd'
+      $vhosts_dir  = "${apache::config_dir}/vhosts.d"
+      $confd_dir   = "${apache::config_dir}/conf.d"
+      $include_dir = "${apache::config_dir}/include.d"
+      $modules_dir =  "${apache::config_dir}/modules.d"
+      $webdir      = "/var/www/vhosts"
+      $default_apache_index = '/var/www/html/index.html'
       include ::apache::centos
     }
     'Debian','Ubuntu': {
       $config_dir = '/etc/apache2'
+      $vhosts_dir = "${apache::config_dir}/sites-enabled"
+      $modules_dir = "${apache::config_dir}/mods-enabled"
+      $confd_dir   = "${apache::config_dir}/conf.d"
+      $include_dir = "${apache::config_dir}/include.d"
+      $default_apache_index = '/var/www/index.html'
+
       include ::apache::debian
     }
     default: { fail("Operatingsystem ${::operatingsystem} is not supported by this module") }
