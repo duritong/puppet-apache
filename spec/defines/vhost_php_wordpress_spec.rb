@@ -13,7 +13,7 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
   describe 'with standard' do
     # only test the differences from the default
     it { is_expected.to contain_apache__vhost__php__webapp('example.com').with(
-      :mod_security_rules_to_disable  => ["960010", "950018"],
+      :mod_security_rules_to_disable  => ["960010", "950018","200003"],
       :manage_directories             => true,
       :managed_directories            => '/var/www/vhosts/example.com/www/wp-content/uploads',
       :template_partial               => 'apache/vhosts/php_wordpress/partial.erb',
@@ -77,6 +77,7 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
 
     SecRuleRemoveById \"960010\"
     SecRuleRemoveById \"950018\"
+    SecRuleRemoveById \"200003\"
   </IfModule>
 
 </VirtualHost>
@@ -97,7 +98,7 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
       :run_uid                        => 'foo',
       :run_gid                        => 'bar',
       :template_partial               => 'apache/vhosts/php_wordpress/partial.erb',
-      :mod_security_rules_to_disable  => ["960010", "950018"],
+      :mod_security_rules_to_disable  => ["960010", "950018", "200003"],
       :manage_directories             => true,
       :managed_directories            => '/var/www/vhosts/example.com/www/wp-content/uploads',
       :manage_config                  => true,
@@ -162,6 +163,7 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
 
     SecRuleRemoveById \"960010\"
     SecRuleRemoveById \"950018\"
+    SecRuleRemoveById \"200003\"
   </IfModule>
 
 </VirtualHost>

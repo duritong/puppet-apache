@@ -28,7 +28,7 @@ describe 'apache::vhost::file', :type => 'define' do
       :notify  => 'Service[apache]',
       :owner   => 'root',
       :group   => 0,
-      :mode    => '0644',
+      :mode    => '0640',
     )}
     it { is_expected.to_not contain_file('/var/www/htpasswds/example.com') }
     it { is_expected.to_not contain_class('apache::includes') }
@@ -59,7 +59,7 @@ describe 'apache::vhost::file', :type => 'define' do
       :notify  => 'Service[apache]',
       :owner   => 'root',
       :group   => 0,
-      :mode    => '0644',
+      :mode    => '0640',
     )}
     it { is_expected.to_not contain_file('/var/www/htpasswds/example.com') }
     it { is_expected.to_not contain_class('apache::includes') }
@@ -86,7 +86,7 @@ describe 'apache::vhost::file', :type => 'define' do
         :notify  => 'Service[apache]',
         :owner   => 'root',
         :group   => 0,
-        :mode    => '0644',
+        :mode    => '0640',
       )}
       it { is_expected.to contain_file('/var/www/htpasswds/example.com').with(
         :source  => [ "puppet:///modules/site_apache/htpasswds/apache.example.com/example.com",
@@ -114,7 +114,7 @@ describe 'apache::vhost::file', :type => 'define' do
         :notify  => 'Service[apache]',
         :owner   => 'root',
         :group   => 0,
-        :mode    => '0644',
+        :mode    => '0640',
       )}
       it { is_expected.to contain_file('example.com.conf').with_content(
 "<VirtualHost *:80>

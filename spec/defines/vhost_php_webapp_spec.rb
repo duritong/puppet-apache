@@ -17,7 +17,7 @@ describe 'apache::vhost::php::webapp', :type => 'define' do
       }
     }
     # only test variables that are tuned
-    it { is_expected.to have_apache__file__rw_resource_count(0) }
+    it { is_expected.to have_apache__vhost__managed_directory_resource_count(0) }
     it { is_expected.to_not contain_apache__vhost__file__documentrootfile('configurationfile_example.com') }
     it { is_expected.to contain_apache__vhost__php__standard('example.com') }
     # go deeper in the catalog and test the produced template
@@ -71,7 +71,7 @@ describe 'apache::vhost::php::webapp', :type => 'define' do
       }
     }
     # only test variables that are tuned
-    it { is_expected.to have_apache__file__rw_resource_count(0) }
+    it { is_expected.to have_apache__vhost__managed_directory_resource_count(0) }
     it { is_expected.to_not contain_apache__vhost__file__documentrootfile('configurationfile_example.com') }
     it { is_expected.to contain_apache__vhost__php__standard('example.com') }
     # go deeper in the catalog and test the produced template
@@ -127,12 +127,12 @@ describe 'apache::vhost::php::webapp', :type => 'define' do
         }
       }
       # only test variables that are tuned
-      it { is_expected.to have_apache__file__rw_resource_count(2) }
-      it { is_expected.to contain_apache__file__rw('/tmp/a').with(
+      it { is_expected.to have_apache__vhost__managed_directory_resource_count(2) }
+      it { is_expected.to contain_apache__vhost__managed_directory('/tmp/a').with(
         :owner => 'apache',
         :group => 0,
       )}
-      it { is_expected.to contain_apache__file__rw('/tmp/b').with(
+      it { is_expected.to contain_apache__vhost__managed_directory('/tmp/b').with(
         :owner => 'apache',
         :group => 0,
       )}
@@ -196,12 +196,12 @@ describe 'apache::vhost::php::webapp', :type => 'define' do
         }
       }
       # only test variables that are tuned
-      it { is_expected.to have_apache__file__rw_resource_count(2) }
-      it { is_expected.to contain_apache__file__rw('/tmp/a').with(
+      it { is_expected.to have_apache__vhost__managed_directory_resource_count(2) }
+      it { is_expected.to contain_apache__vhost__managed_directory('/tmp/a').with(
         :owner => 'apache',
         :group => 0,
       )}
-      it { is_expected.to contain_apache__file__rw('/tmp/b').with(
+      it { is_expected.to contain_apache__vhost__managed_directory('/tmp/b').with(
         :owner => 'apache',
         :group => 0,
       )}
