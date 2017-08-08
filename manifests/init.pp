@@ -43,11 +43,12 @@ class apache(
       include ::apache::centos
     }
     'Debian','Ubuntu': {
-      $config_dir = '/etc/apache2'
-      $vhosts_dir = "${apache::config_dir}/sites-enabled"
+      $config_dir  = '/etc/apache2'
+      $vhosts_dir  = "${apache::config_dir}/sites-enabled"
       $modules_dir = "${apache::config_dir}/mods-enabled"
       $confd_dir   = "${apache::config_dir}/conf.d"
       $include_dir = "${apache::config_dir}/include.d"
+      $webdir      = '/var/www'
       $default_apache_index = '/var/www/index.html'
 
       include ::apache::debian
