@@ -463,6 +463,11 @@ describe 'apache::vhost::php::standard', :type => 'define' do
         :run_uid       => 'foo',
         :run_gid       => 'bar',
         :logmode       => 'nologs',
+        :configuration => {
+          'fcgid_options' => {
+            'FcgidMaxProcessesPerClass' => 24,
+          },
+        },
         :php_options   => {
           'smarty'              => true,
           'pear'                => true,
@@ -544,6 +549,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     FcgidMaxRequestsPerProcess 5000
     FCGIWrapper /var/www/mod_fcgid-starters/example.com/example.com-starter .php
     AddHandler fcgid-script .php
+    FcgidMaxProcessesPerClass 24
   </IfModule>
 
   <Directory \"/var/www/vhosts/example.com/www/\">

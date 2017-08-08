@@ -19,6 +19,12 @@ vhost_parts.each do |vhost_part| -%>
     FcgidMaxRequestsPerProcess 5000
     FCGIWrapper /var/www/mod_fcgid-starters/<%= @name %>/<%= @name %>-starter .<%= @passing_extension %>
     AddHandler fcgid-script .<%= @passing_extension %>
+<% if @configuration.is_a?(Hash) && @configuration['fcgid_options'].is_a?(Hash)
+  @configuration['fcgid_options'].keys.sort.each do |option|
+-%>
+    <%= option %> <%= @configuration['fcgid_options'][option] %>
+<% end
+  end -%>
   </IfModule>
 
 <% end -%>
