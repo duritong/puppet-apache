@@ -5,6 +5,11 @@
 <% end -%>
 <% if (chain_file = configuration['ssl_certificate_chain_file'] || scope.lookupvar('apache::default_ssl_certificate_chain_file')) != 'absent' -%>  SSLCertificateChainFile <%= chain_file %>
 <% end -%>
+<% ['ssl_ca_certificate_file','ssl_ca_revocation_file', 'ssl_verify_client', 'ssl_verify_depth', 'ssl_options' ].each do |option|
+  if configuration.include?(option) -%>
+<%= option.split('_').collect(&:capitalize).join('') %> <%= configuration[option] %>
+<% end
+end -%>
 <% if configuration['hsts'] -%>
   Header add Strict-Transport-Security "max-age=<%= (configuration['hsts'].is_a?(Hash) && configuration['hsts']['age'] || 15768000) %>"
 <% end -%>
