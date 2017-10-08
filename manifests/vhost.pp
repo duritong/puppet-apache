@@ -63,6 +63,7 @@ define apache::vhost(
         'file': {
             apache::vhost::file{$name:
                 ensure            => $ensure,
+                content           => $content,
                 configuration     => $configuration,
                 vhost_source      => $vhost_source,
                 vhost_destination => $vhost_destination,
