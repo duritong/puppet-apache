@@ -16,5 +16,8 @@
 <%     else -%>
     php_admin_value <%= key %> <%= munged_value %>
 <%     end -%>
-<%   end -%>
-<% end -%>
+<%   end
+  (@php_options['additional_envs']||{}).keys.sort.each do |k| -%>
+    SetEnv <%= k.upcase %> '<%= @php_options['additional_envs'][k] %>'
+<% end
+end -%>
