@@ -4,9 +4,13 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
   let(:title){ 'example.com' }
   let(:default_facts){
     {
-      :fqdn => 'apache.example.com',
+      :fqdn                       => 'apache.example.com',
+      :os => {
+        'family' => 'RedHat'
+      },
       :operatingsystem            => 'CentOS',
       :operatingsystemmajrelease  => '7',
+      :selinux                    => true,
     }
   }
   let(:facts){ default_facts }
@@ -15,7 +19,7 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
     it { is_expected.to contain_apache__vhost__php__webapp('example.com').with(
       :mod_security_rules_to_disable  => ["960010", "950018","200003"],
       :manage_directories             => true,
-      :managed_directories            => '/var/www/vhosts/example.com/www/wp-content/uploads',
+      :managed_directories            => ['/var/www/vhosts/example.com/www/wp-content/uploads'],
       :template_partial               => 'apache/vhosts/php_wordpress/partial.erb',
       :manage_config                  => true,
       :config_webwriteable            => false,
@@ -41,9 +45,9 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
 
     php_admin_flag engine on
     php_admin_value error_log /var/www/vhosts/example.com/logs/php_error_log
-    php_admin_value open_basedir /var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/upload_tmp_dir/example.com:/var/www/session.save_path/example.com
-    php_admin_value session.save_path /var/www/session.save_path/example.com
-    php_admin_value upload_tmp_dir /var/www/upload_tmp_dir/example.com
+    php_admin_value open_basedir /usr/share/php/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp
+    php_admin_value session.save_path /var/www/vhosts/example.com/tmp/sessions
+    php_admin_value upload_tmp_dir /var/www/vhosts/example.com/tmp/uploads
 
 
   </Directory>
@@ -57,14 +61,14 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
   # simple wp-login brute force protection
   # http://www.frameloss.org/2013/04/26/even-easier-brute-force-login-protection-for-wordpress/
   RewriteEngine On
-  RewriteCond %{HTTP_COOKIE} !359422a82c97336dc082622faf72013a8e857bfd
-  RewriteRule ^/wp-login.php /wordpress-login-576a63fdc98202e7c7283713f2ddfee334bf13ee.php [R,L]
-  <Location /wordpress-login-576a63fdc98202e7c7283713f2ddfee334bf13ee.php>
+  RewriteCond %{HTTP_COOKIE} !40561c33fd7d6b5f858ca10c8bb39211284e7d42
+  RewriteRule ^/wp-login.php /wordpress-login-de51a1ff42b11773ac438c2704ff390feb1ab64c.php [R,L]
+  <Location /wordpress-login-de51a1ff42b11773ac438c2704ff390feb1ab64c.php>
     CookieTracking on
     CookieExpires 30
-    CookieName 359422a82c97336dc082622faf72013a8e857bfd
+    CookieName 40561c33fd7d6b5f858ca10c8bb39211284e7d42
   </Location>
-  RewriteRule ^/wordpress-login-576a63fdc98202e7c7283713f2ddfee334bf13ee.php /wp-login.php? [NE]
+  RewriteRule ^/wordpress-login-de51a1ff42b11773ac438c2704ff390feb1ab64c.php /wp-login.php? [NE]
 
 
   <IfModule mod_security2.c>
@@ -100,7 +104,7 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
       :template_partial               => 'apache/vhosts/php_wordpress/partial.erb',
       :mod_security_rules_to_disable  => ["960010", "950018", "200003"],
       :manage_directories             => true,
-      :managed_directories            => '/var/www/vhosts/example.com/www/wp-content/uploads',
+      :managed_directories            => ['/var/www/vhosts/example.com/www/wp-content/uploads'],
       :manage_config                  => true,
       :config_webwriteable            => false,
       :config_file                    => 'wp-config.php',
@@ -143,14 +147,14 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
   # simple wp-login brute force protection
   # http://www.frameloss.org/2013/04/26/even-easier-brute-force-login-protection-for-wordpress/
   RewriteEngine On
-  RewriteCond %{HTTP_COOKIE} !359422a82c97336dc082622faf72013a8e857bfd
-  RewriteRule ^/wp-login.php /wordpress-login-576a63fdc98202e7c7283713f2ddfee334bf13ee.php [R,L]
-  <Location /wordpress-login-576a63fdc98202e7c7283713f2ddfee334bf13ee.php>
+  RewriteCond %{HTTP_COOKIE} !40561c33fd7d6b5f858ca10c8bb39211284e7d42
+  RewriteRule ^/wp-login.php /wordpress-login-de51a1ff42b11773ac438c2704ff390feb1ab64c.php [R,L]
+  <Location /wordpress-login-de51a1ff42b11773ac438c2704ff390feb1ab64c.php>
     CookieTracking on
     CookieExpires 30
-    CookieName 359422a82c97336dc082622faf72013a8e857bfd
+    CookieName 40561c33fd7d6b5f858ca10c8bb39211284e7d42
   </Location>
-  RewriteRule ^/wordpress-login-576a63fdc98202e7c7283713f2ddfee334bf13ee.php /wp-login.php? [NE]
+  RewriteRule ^/wordpress-login-de51a1ff42b11773ac438c2704ff390feb1ab64c.php /wp-login.php? [NE]
 
 
   <IfModule mod_security2.c>

@@ -4,9 +4,13 @@ describe 'apache::vhost::php::webapp', :type => 'define' do
   let(:title){ 'example.com' }
   let(:facts){
     {
-      :fqdn => 'apache.example.com',
+      :fqdn                       => 'apache.example.com',
+      :os                         => {
+        'family' => 'RedHat',
+      },
       :operatingsystem            => 'CentOS',
       :operatingsystemmajrelease  => '7',
+      :selinux                    => true,
     }
   }
   describe 'with standard' do
@@ -40,9 +44,9 @@ describe 'apache::vhost::php::webapp', :type => 'define' do
 
     php_admin_flag engine on
     php_admin_value error_log /var/www/vhosts/example.com/logs/php_error_log
-    php_admin_value open_basedir /var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/upload_tmp_dir/example.com:/var/www/session.save_path/example.com
-    php_admin_value session.save_path /var/www/session.save_path/example.com
-    php_admin_value upload_tmp_dir /var/www/upload_tmp_dir/example.com
+    php_admin_value open_basedir /usr/share/php/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp
+    php_admin_value session.save_path /var/www/vhosts/example.com/tmp/sessions
+    php_admin_value upload_tmp_dir /var/www/vhosts/example.com/tmp/uploads
 
 
   </Directory>
@@ -165,9 +169,9 @@ describe 'apache::vhost::php::webapp', :type => 'define' do
 
     php_admin_flag engine on
     php_admin_value error_log /var/www/vhosts/example.com/logs/php_error_log
-    php_admin_value open_basedir /var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/upload_tmp_dir/example.com:/var/www/session.save_path/example.com
-    php_admin_value session.save_path /var/www/session.save_path/example.com
-    php_admin_value upload_tmp_dir /var/www/upload_tmp_dir/example.com
+    php_admin_value open_basedir /usr/share/php/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp
+    php_admin_value session.save_path /var/www/vhosts/example.com/tmp/sessions
+    php_admin_value upload_tmp_dir /var/www/vhosts/example.com/tmp/uploads
 
 
   </Directory>
@@ -234,9 +238,9 @@ describe 'apache::vhost::php::webapp', :type => 'define' do
 
     php_admin_flag engine on
     php_admin_value error_log /var/www/vhosts/example.com/logs/php_error_log
-    php_admin_value open_basedir /var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/upload_tmp_dir/example.com:/var/www/session.save_path/example.com
-    php_admin_value session.save_path /var/www/session.save_path/example.com
-    php_admin_value upload_tmp_dir /var/www/upload_tmp_dir/example.com
+    php_admin_value open_basedir /usr/share/php/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp
+    php_admin_value session.save_path /var/www/vhosts/example.com/tmp/sessions
+    php_admin_value upload_tmp_dir /var/www/vhosts/example.com/tmp/uploads
 
 
   </Directory>

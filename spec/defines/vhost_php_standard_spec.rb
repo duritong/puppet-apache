@@ -5,8 +5,13 @@ describe 'apache::vhost::php::standard', :type => 'define' do
   let(:default_facts){
     {
       :fqdn => 'apache.example.com',
+      :os                         => {
+        'family' => 'RedHat',
+      },
+      :selinux                    => true,
       :operatingsystem            => 'CentOS',
       :operatingsystemmajrelease  => '7',
+      :selinux                    => true,
     }
   }
   let(:facts){ default_facts }
@@ -20,14 +25,12 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     it { is_expected.to_not contain_class('apache::include::mod_fcgid') }
     it { is_expected.to_not contain_class('php::scl::php54') }
     it { is_expected.to_not contain_class('php::scl::php55') }
-    it { is_expected.to_not contain_class('php::extensions::smarty') }
     it { is_expected.to contain_class('php') }
     it { is_expected.to_not contain_mod_fcgid__starter('example.com') }
 
     # only test variables that are tuned
     it { is_expected.to contain_apache__vhost__phpdirs('example.com').with(
-      :php_upload_tmp_dir     => '/var/www/upload_tmp_dir/example.com',
-      :php_session_save_path  => '/var/www/session.save_path/example.com',
+      :path => '/var/www/vhosts/example.com/tmp',
     )}
     # only test variables that are tuned
     it { is_expected.to contain_apache__vhost('example.com').with(
@@ -68,9 +71,9 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 
     php_admin_flag engine on
     php_admin_value error_log /var/www/vhosts/example.com/logs/php_error_log
-    php_admin_value open_basedir /var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/upload_tmp_dir/example.com:/var/www/session.save_path/example.com
-    php_admin_value session.save_path /var/www/session.save_path/example.com
-    php_admin_value upload_tmp_dir /var/www/upload_tmp_dir/example.com
+    php_admin_value open_basedir /usr/share/php/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp
+    php_admin_value session.save_path /var/www/vhosts/example.com/tmp/sessions
+    php_admin_value upload_tmp_dir /var/www/vhosts/example.com/tmp/uploads
 
 
   </Directory>
@@ -140,10 +143,10 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 
     php_admin_flag engine on
     php_admin_value error_log /var/www/vhosts/example.com/logs/php_error_log
-    php_admin_value open_basedir /var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/upload_tmp_dir/example.com:/var/www/session.save_path/example.com
+    php_admin_value open_basedir /usr/share/php/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp
     php_admin_flag safe_mode off
-    php_admin_value session.save_path /var/www/session.save_path/example.com
-    php_admin_value upload_tmp_dir /var/www/upload_tmp_dir/example.com
+    php_admin_value session.save_path /var/www/vhosts/example.com/tmp/sessions
+    php_admin_value upload_tmp_dir /var/www/vhosts/example.com/tmp/uploads
 
 
   </Directory>
@@ -177,20 +180,19 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     it { is_expected.to contain_class('apache::include::mod_fcgid') }
     it { is_expected.to_not contain_class('php::scl::php54') }
     it { is_expected.to_not contain_class('php::scl::php55') }
-    it { is_expected.to_not contain_class('php::extensions::smarty') }
     it { is_expected.to contain_mod_fcgid__starter('example.com').with(
-      :tmp_dir          => false,
+      :tmp_dir          => '/var/www/vhosts/example.com/tmp/tmp',
       :cgi_type         => 'php',
       :cgi_type_options => {
         "engine"            =>"On",
-        "upload_tmp_dir"    =>"/var/www/upload_tmp_dir/example.com",
-        "session.save_path" =>"/var/www/session.save_path/example.com",
+        "upload_tmp_dir"    =>"/var/www/vhosts/example.com/tmp/uploads",
+        "session.save_path" =>"/var/www/vhosts/example.com/tmp/sessions",
         "error_log"         =>"/var/www/vhosts/example.com/logs/php_error_log",
         "safe_mode"         =>:undef,
         "safe_mode_gid"     =>:undef,
         "safe_mode_exec_dir"=>:undef,
         "default_charset"   =>:undef,
-        "open_basedir"      =>"/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/upload_tmp_dir/example.com:/var/www/session.save_path/example.com"
+        "open_basedir"      =>"/usr/share/php/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp",
       },
       :owner            => 'foo',
       :group            => 'bar',
@@ -211,8 +213,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 
     # only test variables that are tuned
     it { is_expected.to contain_apache__vhost__phpdirs('example.com').with(
-      :php_upload_tmp_dir     => '/var/www/upload_tmp_dir/example.com',
-      :php_session_save_path  => '/var/www/session.save_path/example.com',
+      :path => '/var/www/vhosts/example.com/tmp',
     )}
     # only test variables that are tuned
     it { is_expected.to contain_apache__vhost('example.com').with(
@@ -282,20 +283,19 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     it { is_expected.to contain_class('apache::include::mod_fcgid') }
     it { is_expected.to contain_class('php::scl::php54') }
     it { is_expected.to_not contain_class('php::scl::php55') }
-    it { is_expected.to_not contain_class('php::extensions::smarty') }
     it { is_expected.to contain_mod_fcgid__starter('example.com').with(
-      :tmp_dir          => false,
+      :tmp_dir          => "/var/www/vhosts/example.com/tmp/tmp",
       :cgi_type         => 'php',
       :cgi_type_options => {
         "engine"            =>"On",
-        "upload_tmp_dir"    =>"/var/www/upload_tmp_dir/example.com",
-        "session.save_path" =>"/var/www/session.save_path/example.com",
+        "upload_tmp_dir"    =>"/var/www/vhosts/example.com/tmp/uploads",
+        "session.save_path" =>"/var/www/vhosts/example.com/tmp/sessions",
         "error_log"         =>"/var/www/vhosts/example.com/logs/php_error_log",
         "safe_mode"         =>:undef,
         "safe_mode_gid"     =>:undef,
         "safe_mode_exec_dir"=>:undef,
         "default_charset"   =>:undef,
-        "open_basedir"      =>"/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/upload_tmp_dir/example.com:/var/www/session.save_path/example.com"
+        "open_basedir"      =>"/usr/share/php/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp"
       },
       :binary           => '/opt/rh/php54/root/usr/bin/php-cgi',
       :additional_cmds  => 'source /opt/rh/php54/enable',
@@ -307,8 +307,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 
     # only test variables that are tuned
     it { is_expected.to contain_apache__vhost__phpdirs('example.com').with(
-      :php_upload_tmp_dir     => '/var/www/upload_tmp_dir/example.com',
-      :php_session_save_path  => '/var/www/session.save_path/example.com',
+      :path => '/var/www/vhosts/example.com/tmp',
     )}
     # only test variables that are tuned
     it { is_expected.to contain_apache__vhost('example.com').with(
@@ -378,20 +377,19 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     it { is_expected.to contain_class('apache::include::mod_fcgid') }
     it { is_expected.to_not contain_class('php::scl::php54') }
     it { is_expected.to contain_class('php::scl::php55') }
-    it { is_expected.to_not contain_class('php::extensions::smarty') }
     it { is_expected.to contain_mod_fcgid__starter('example.com').with(
-      :tmp_dir          => false,
+      :tmp_dir          => '/var/www/vhosts/example.com/tmp/tmp',
       :cgi_type         => 'php',
       :cgi_type_options => {
         "engine"            =>"On",
-        "upload_tmp_dir"    =>"/var/www/upload_tmp_dir/example.com",
-        "session.save_path" =>"/var/www/session.save_path/example.com",
+        "upload_tmp_dir"    =>"/var/www/vhosts/example.com/tmp/uploads",
+        "session.save_path" =>"/var/www/vhosts/example.com/tmp/sessions",
         "error_log"         =>"/var/www/vhosts/example.com/logs/php_error_log",
         "safe_mode"         =>:undef,
         "safe_mode_gid"     =>:undef,
         "safe_mode_exec_dir"=>:undef,
         "default_charset"   =>:undef,
-        "open_basedir"      =>"/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/upload_tmp_dir/example.com:/var/www/session.save_path/example.com"
+        "open_basedir"      =>"/usr/share/php/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp",
       },
       :binary           => '/opt/rh/php55/root/usr/bin/php-cgi',
       :additional_cmds  => 'source /opt/rh/php55/enable',
@@ -403,8 +401,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 
     # only test variables that are tuned
     it { is_expected.to contain_apache__vhost__phpdirs('example.com').with(
-      :php_upload_tmp_dir     => '/var/www/upload_tmp_dir/example.com',
-      :php_session_save_path  => '/var/www/session.save_path/example.com',
+      :path     => '/var/www/vhosts/example.com/tmp',
     )}
     # only test variables that are tuned
     it { is_expected.to contain_apache__vhost('example.com').with(
@@ -469,8 +466,6 @@ describe 'apache::vhost::php::standard', :type => 'define' do
           },
         },
         :php_options   => {
-          'smarty'              => true,
-          'pear'                => true,
           'safe_mode_exec_bins' => ['/usr/bin/cat'],
         }
       }
@@ -483,20 +478,19 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     it { is_expected.to contain_class('apache::include::mod_fcgid') }
     it { is_expected.to_not contain_class('php::scl::php54') }
     it { is_expected.to_not contain_class('php::scl::php55') }
-    it { is_expected.to contain_class('php::extensions::smarty') }
     it { is_expected.to contain_mod_fcgid__starter('example.com').with(
-      :tmp_dir          => false,
+      :tmp_dir          => "/var/www/vhosts/example.com/tmp/tmp",
       :cgi_type         => 'php',
       :cgi_type_options => {
         "engine"            =>"On",
-        "upload_tmp_dir"    =>"/var/www/upload_tmp_dir/example.com",
-        "session.save_path" =>"/var/www/session.save_path/example.com",
+        "upload_tmp_dir"    =>"/var/www/vhosts/example.com/tmp/uploads",
+        "session.save_path" =>"/var/www/vhosts/example.com/tmp/sessions",
         "error_log"         =>:undef,
         "safe_mode"         =>"On",
         "safe_mode_gid"     =>"On",
         "safe_mode_exec_dir"=>"/var/www/vhosts/example.com/bin",
         "default_charset"   =>:undef,
-        "open_basedir"      =>"/usr/share/php/Smarty/:/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/upload_tmp_dir/example.com:/var/www/session.save_path/example.com"
+        "open_basedir"      =>"/usr/share/php/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp"
       },
       :owner            => 'foo',
       :group            => 'bar',
@@ -507,8 +501,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 
     # only test variables that are tuned
     it { is_expected.to contain_apache__vhost__phpdirs('example.com').with(
-      :php_upload_tmp_dir     => '/var/www/upload_tmp_dir/example.com',
-      :php_session_save_path  => '/var/www/session.save_path/example.com',
+      :path => '/var/www/vhosts/example.com/tmp',
     )}
     # only test variables that are tuned
     it { is_expected.to contain_apache__vhost('example.com').with(
@@ -581,7 +574,6 @@ describe 'apache::vhost::php::standard', :type => 'define' do
         :run_gid       => 'bar',
         :manage_webdir => false,
         :php_options   => {
-          'smarty'              => true,
           'pear'                => true,
           'safe_mode_exec_bins' => ['/usr/bin/cat'],
         }
@@ -595,20 +587,19 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     it { is_expected.to contain_class('apache::include::mod_fcgid') }
     it { is_expected.to_not contain_class('php::scl::php54') }
     it { is_expected.to_not contain_class('php::scl::php55') }
-    it { is_expected.to contain_class('php::extensions::smarty') }
     it { is_expected.to contain_mod_fcgid__starter('example.com').with(
-      :tmp_dir          => false,
+      :tmp_dir          => '/var/www/vhosts/example.com/tmp/tmp',
       :cgi_type         => 'php',
       :cgi_type_options => {
         "engine"            =>"On",
-        "upload_tmp_dir"    =>"/var/www/upload_tmp_dir/example.com",
-        "session.save_path" =>"/var/www/session.save_path/example.com",
+        "upload_tmp_dir"    =>"/var/www/vhosts/example.com/tmp/uploads",
+        "session.save_path" =>"/var/www/vhosts/example.com/tmp/sessions",
         "error_log"         =>"/var/www/vhosts/example.com/logs/php_error_log",
         "safe_mode"         =>"On",
         "safe_mode_gid"     =>"On",
         "safe_mode_exec_dir"=>"/var/www/vhosts/example.com/bin",
         "default_charset"   =>:undef,
-        "open_basedir"      =>"/usr/share/php/Smarty/:/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/upload_tmp_dir/example.com:/var/www/session.save_path/example.com"
+        "open_basedir"      =>"/usr/share/php/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp",
       },
       :owner            => 'foo',
       :group            => 'bar',
@@ -692,7 +683,6 @@ describe 'apache::vhost::php::standard', :type => 'define' do
         :run_gid      => 'bar',
         :logmode      => 'nologs',
         :php_options  => {
-          'smarty'              => true,
           'pear'                => true,
           'safe_mode_exec_bins' => ['/usr/bin/cat'],
         }
@@ -706,7 +696,6 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     it { is_expected.to_not contain_class('apache::include::mod_fcgid') }
     it { is_expected.to_not contain_class('php::scl::php54') }
     it { is_expected.to_not contain_class('php::scl::php55') }
-    it { is_expected.to_not contain_class('php::extensions::smarty') }
     it { is_expected.to_not contain_mod_fcgid__starter('example.com') }
     it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with_ensure('absent') }
 

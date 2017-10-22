@@ -17,7 +17,7 @@ class apache::centos inherits apache::base {
     }
     selinux::fcontext{
       [ '/var/www/vhosts/[^/]*/www(/.*)?',
-        '/var/www/vhosts/[^/]*/non_public(/.*)?',
+        '/var/www/vhosts/[^/]*/tmp(/.*)?',
         '/var/www/vhosts/[^/]*/data(/.*)?',
         '/var/www/vhosts/[^/]*/upload(/.*)?' ]:
         before => Package['apache'],

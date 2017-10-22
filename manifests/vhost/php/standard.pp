@@ -81,33 +81,21 @@ define apache::vhost::php::standard(
 
   if $path_is_webdir {
     $documentroot = $real_path
+    include apache::defaultphpdirs
+    $php_sysroot = "${apache::defaultphpdirs::dir}/${name}"
   } else {
     $documentroot = "${real_path}/www"
+    $php_sysroot = "${real_path}/tmp"
   }
   $logdir = $logpath ? {
     'absent' => "${real_path}/logs",
     default  => $logpath
   }
 
-  $std_php_options = {
-    smarty => false,
-    pear   => false,
-  }
-  $real_php_options = merge($std_php_options,$php_options)
-
-  if $real_php_options['smarty'] {
-    if $ensure != 'absent' {
-      include php::extensions::smarty
-    }
-    $smarty_path = '/usr/share/php/Smarty/:'
+  if $facts['os']['family'] == 'RedHat' {
+    $sys_libs = '/usr/share/php/:'
   } else {
-    $smarty_path = ''
-  }
-
-  if $real_php_options['pear'] {
-    $pear_path = '/usr/share/pear/:'
-  } else {
-    $pear_path = ''
+    $sys_libs = ''
   }
 
   if $logmode != 'nologs' {
@@ -125,10 +113,20 @@ define apache::vhost::php::standard(
     $std_php_settings_default_charset = undef
   }
 
+  ::apache::vhost::phpdirs{$name:
+    path               => $php_sysroot,
+    ensure             => $ensure,
+    documentroot_owner => $documentroot_owner,
+    documentroot_group => $documentroot_group,
+    documentroot_mode  => $documentroot_mode,
+    run_mode           => $run_mode,
+    run_uid            => $run_uid,
+  }
+
   if ('additional_open_basedir' in $php_options) {
-    $the_open_basedir = "${smarty_path}${pear_path}${documentroot}:${real_path}/data:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}:${php_options[additional_open_basedir]}"
+    $the_open_basedir = "${sys_libs}${documentroot}:${real_path}/data:${php_sysroot}:${php_options[additional_open_basedir]}"
   } else {
-    $the_open_basedir = "${smarty_path}${pear_path}${documentroot}:${real_path}/data:/var/www/upload_tmp_dir/${name}:/var/www/session.save_path/${name}"
+    $the_open_basedir = "${sys_libs}${documentroot}:${real_path}/data:${php_sysroot}"
   }
 
   # safe mode is (finally) gone on most systems
@@ -185,8 +183,8 @@ define apache::vhost::php::standard(
 
   $std_php_settings = {
     engine              => 'On',
-    upload_tmp_dir      => "/var/www/upload_tmp_dir/${name}",
-    'session.save_path' => "/var/www/session.save_path/${name}",
+    upload_tmp_dir      => "${php_sysroot}/uploads",
+    'session.save_path' => "${php_sysroot}/sessions",
     error_log           => $php_error_log,
     safe_mode           => $safe_mode,
     safe_mode_gid       => $safe_mode_gid,
@@ -222,9 +220,10 @@ define apache::vhost::php::standard(
         include ::apache::include::mod_fcgid
 
         mod_fcgid::starter {$name:
-          tmp_dir          => $real_php_settings['php_tmp_dir'],
+          tmp_dir          => "${php_sysroot}/tmp",
           cgi_type         => 'php',
-          cgi_type_options => delete($real_php_settings, 'php_tmp_dir'),
+          cgi_type_options => $real_php_settings,
+          additional_envs  => $php_options['additional_envs'],
           owner            => $run_uid,
           group            => $run_gid,
           notify           => Service['apache'],
@@ -243,17 +242,6 @@ define apache::vhost::php::standard(
       }
       default: { include ::php }
     }
-  }
-
-  ::apache::vhost::phpdirs{$name:
-    ensure                => $ensure,
-    php_upload_tmp_dir    => $real_php_settings['upload_tmp_dir'],
-    php_session_save_path => $real_php_settings['session.save_path'],
-    documentroot_owner    => $documentroot_owner,
-    documentroot_group    => $documentroot_group,
-    documentroot_mode     => $documentroot_mode,
-    run_mode              => $run_mode,
-    run_uid               => $run_uid,
   }
 
   # create vhost configuration file
@@ -281,7 +269,7 @@ define apache::vhost::php::standard(
     additional_options              => $additional_options,
     default_charset                 => $default_charset,
     php_settings                    => $real_php_settings,
-    php_options                     => $real_php_options,
+    php_options                     => $php_options,
     ssl_mode                        => $ssl_mode,
     htpasswd_file                   => $htpasswd_file,
     htpasswd_path                   => $htpasswd_path,

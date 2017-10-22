@@ -7,6 +7,10 @@ describe 'apache::vhost::php::drupal', :type => 'define' do
       :fqdn => 'apache.example.com',
       :operatingsystem            => 'CentOS',
       :operatingsystemmajrelease  => '7',
+      :os                         => {
+        'family' => 'RedHat',
+      },
+      :selinux                    => true,
     }
   }
   describe 'with standard' do
@@ -55,11 +59,11 @@ describe 'apache::vhost::php::drupal', :type => 'define' do
     php_admin_value mbstring.encoding_translation 0
     php_admin_value mbstring.http_input pass
     php_admin_value mbstring.http_output pass
-    php_admin_value open_basedir /var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/upload_tmp_dir/example.com:/var/www/session.save_path/example.com
+    php_admin_value open_basedir /usr/share/php/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp
     php_admin_value register_globals 0
     php_admin_value session.auto_start 0
-    php_admin_value session.save_path /var/www/session.save_path/example.com
-    php_admin_value upload_tmp_dir /var/www/upload_tmp_dir/example.com
+    php_admin_value session.save_path /var/www/vhosts/example.com/tmp/sessions
+    php_admin_value upload_tmp_dir /var/www/vhosts/example.com/tmp/uploads
 
     # Protect files and directories from prying eyes.
     <FilesMatch \"\\.(engine|inc|info|install|module|profile|po|sh|.*sql|theme|tpl(\\.php)?|xtmpl)$|^(code-style\\.pl|Entries.*|Repository|Root|Tag|Template)$\">

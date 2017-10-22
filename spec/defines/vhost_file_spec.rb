@@ -6,7 +6,12 @@ describe 'apache::vhost::file', :type => 'define' do
     {
       :operatingsystem => 'Debian',
       :operatingsystemmajrelease => '7',
+      :lsbdistcodename => 'Lenny',
       :fqdn            => 'apache.example.com',
+      :os                         => {
+        'family' => 'RedHat',
+      },
+      :selinux                    => true,
     }
   }
   let(:pre_condition) {
@@ -42,6 +47,10 @@ describe 'apache::vhost::file', :type => 'define' do
         :fqdn                       => 'apache.example.com',
         :operatingsystem            => 'CentOS',
         :operatingsystemmajrelease  => '7',
+        :os                         => {
+          'family' => 'RedHat',
+        },
+        :selinux                    => true,
       }
     }
     it { is_expected.to contain_file('example.com.conf').with(

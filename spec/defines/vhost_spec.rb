@@ -4,9 +4,10 @@ describe 'apache::vhost', :type => 'define' do
   let(:title){ 'example.com' }
   let(:facts){
     {
-      :fqdn => 'apache.example.com',
+      :fqdn                       => 'apache.example.com',
       :operatingsystem            => 'CentOS',
       :operatingsystemmajrelease  => '7',
+      :selinux                    => true,
     }
   }
   let(:pre_condition) {
