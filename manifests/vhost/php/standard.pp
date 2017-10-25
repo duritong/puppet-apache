@@ -81,7 +81,7 @@ define apache::vhost::php::standard(
 
   if $path_is_webdir {
     $documentroot = $real_path
-    include apache::defaultphpdirs
+    include ::apache::defaultphpdirs
     $php_sysroot = "${apache::defaultphpdirs::dir}/${name}"
   } else {
     $documentroot = "${real_path}/www"
@@ -122,8 +122,8 @@ define apache::vhost::php::standard(
   }
 
   ::apache::vhost::phpdirs{$name:
-    path               => $php_sysroot,
     ensure             => $ensure,
+    path               => $php_sysroot,
     documentroot_owner => $documentroot_owner,
     documentroot_group => $documentroot_group,
     documentroot_mode  => $documentroot_mode,
