@@ -93,9 +93,17 @@ define apache::vhost::php::standard(
   }
 
   if $facts['os']['family'] == 'RedHat' {
-    $sys_libs = '/usr/share/php/:'
+    $lib_dirs = ['/usr/share/php/','/usr/share/pear/']
+    if $php_installation == 'system' {
+      $sys_libs = $lib_dirs
+    } else {
+      $php_inst_class = regsubst($php_installation,'^scl','php')
+      require "::php::scl::${php_inst_class}"
+      $php_basedir = getvar("php::scl::${php_inst_class}::basedir")
+      $sys_libs = prefix($lib_dirs,"${php_basedir}/root")
+    }
   } else {
-    $sys_libs = ''
+    $sys_libs = []
   }
 
   if $logmode != 'nologs' {
@@ -123,10 +131,11 @@ define apache::vhost::php::standard(
     run_uid            => $run_uid,
   }
 
+  $sys_libs_str = join($sys_libs,':')
   if ('additional_open_basedir' in $php_options) {
-    $the_open_basedir = "${sys_libs}${documentroot}:${real_path}/data:${php_sysroot}:${php_options[additional_open_basedir]}"
+    $the_open_basedir = "${sys_libs_str}${documentroot}:${real_path}/data:${php_sysroot}:${php_options[additional_open_basedir]}"
   } else {
-    $the_open_basedir = "${sys_libs}${documentroot}:${real_path}/data:${php_sysroot}"
+    $the_open_basedir = "${sys_libs_str}${documentroot}:${real_path}/data:${php_sysroot}"
   }
 
   # safe mode is (finally) gone on most systems
@@ -229,14 +238,11 @@ define apache::vhost::php::standard(
           notify           => Service['apache'],
         }
         if $php_installation =~ /^scl/ {
-          $inst = regsubst($php_installation,'^scl','php')
-          require "::php::scl::${inst}"
-          $basedir = getvar("php::scl::${inst}::basedir")
-          $etcdir = getvar("php::scl::${inst}::etcdir")
+          $php_etcdir = getvar("php::scl::${php_inst_class}::etcdir")
           Mod_fcgid::Starter[$name]{
-            binary          => "${basedir}/root/usr/bin/php-cgi",
-            additional_cmds => "source ${basedir}/enable",
-            rc              => $etcdir,
+            binary          => "${php_basedir}/root/usr/bin/php-cgi",
+            additional_cmds => "source ${php_basedir}/enable",
+            rc              => $php_etcdir,
           }
         }
       }
