@@ -103,7 +103,7 @@ define apache::vhost::php::standard(
       $sys_libs_tmp = prefix($lib_dirs,"${php_basedir}/root")
     }
     # add an empty element, so get an extra :
-    $sys_libs = $sys_libs + ''
+    $sys_libs = $sys_libs_tmp + ''
   } else {
     $sys_libs = []
   }
