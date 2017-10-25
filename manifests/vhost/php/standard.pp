@@ -95,13 +95,15 @@ define apache::vhost::php::standard(
   if $facts['os']['family'] == 'RedHat' {
     $lib_dirs = ['/usr/share/php/','/usr/share/pear/']
     if $php_installation == 'system' {
-      $sys_libs = $lib_dirs
+      $sys_libs_tmp = $lib_dirs
     } else {
       $php_inst_class = regsubst($php_installation,'^scl','php')
       require "::php::scl::${php_inst_class}"
       $php_basedir = getvar("php::scl::${php_inst_class}::basedir")
-      $sys_libs = prefix($lib_dirs,"${php_basedir}/root")
+      $sys_libs_tmp = prefix($lib_dirs,"${php_basedir}/root")
     }
+    # add an empty element, so get an extra :
+    $sys_libs = $sys_libs + ''
   } else {
     $sys_libs = []
   }
