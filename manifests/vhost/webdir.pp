@@ -59,11 +59,10 @@ define apache::vhost::webdir(
       exec{"cleanup_webdir_${real_path}":
         command => "rm -rf ${real_path}",
         onlyif  => "test -d  ${real_path}",
-        before  => File[$real_path],
-      }
-      file{$real_path:
-        ensure => absent,
-        force  => true;
+        require => Service['apache'],
+      } -> file{$real_path:
+        ensure  => absent,
+        force   => true,
       }
     }
     default: {
