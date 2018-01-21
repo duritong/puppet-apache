@@ -33,7 +33,7 @@ define apache::vhost::php::wordpress(
   $run_mode                         = 'normal',
   $run_uid                          = 'absent',
   $run_gid                          = 'absent',
-  $allow_override                   = 'FileInfo Indexes',
+  $allow_override                   = 'FileInfo Indexes Options=Indexes',
   $php_settings                     = {},
   $php_options                      = {},
   $php_installation                 = 'system',
