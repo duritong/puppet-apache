@@ -1,6 +1,6 @@
   <Directory "<%= @documentroot %>/">
-<%= scope.function_template(['apache/vhosts/partials/std_override_options.erb']) %>
-<%= scope.function_template(['apache/vhosts/partials/authentication.erb']) %>
+<%= scope.call_function('template',['apache/vhosts/partials/std_override_options.erb']) %>
+<%= scope.call_function('template',['apache/vhosts/partials/authentication.erb']) %>
   </Directory>
 
 <% unless @htpasswd_file.to_s == 'absent' -%>

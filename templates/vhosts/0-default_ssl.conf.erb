@@ -14,7 +14,7 @@
     TransferLog logs/ssl_access_log
     LogLevel warn
 
-<%= scope.function_templatewlv(['apache/vhosts/partials/ssl.erb',
+<%= scope.call_function('templatewlv',['apache/vhosts/partials/ssl.erb',
                                 {'configuration' => {}}]) %>
 </VirtualHost>
 

@@ -1,9 +1,9 @@
-<%= scope.function_template(['apache/vhosts/php/partial.erb']) %>
+<%= scope.call_function('template',['apache/vhosts/php/partial.erb']) %>
 
   # fixes: http://git.zx2c4.com/w3-total-fail/tree/w3-total-fail.sh
   <Directory "<%= @documentroot %>/wp-content/w3tc/dbcache">
 <%
-  if scope.function_guess_apache_version([]) == '2.4'
+  if scope.call_function('guess_apache_version',[]) == '2.4'
     deny_statement = 'Require all denied'
   else
     deny_statement = 'Deny From All'
@@ -14,8 +14,8 @@
   # simple wp-login brute force protection
   # http://www.frameloss.org/2013/04/26/even-easier-brute-force-login-protection-for-wordpress/
   RewriteEngine On
-  RewriteCond %{HTTP_COOKIE} !<%= cookie = scope.function_sha1([scope.function_fqdn_rand([9999999999999,@name]).to_s + "cookie"]) %>
-  RewriteRule ^/wp-login.php /wordpress-login-<%= tmpuri = scope.function_sha1([scope.function_fqdn_rand([9999999999999,@name]).to_s + "wp-login"]) %>.php [R,L]
+  RewriteCond %{HTTP_COOKIE} !<%= cookie = scope.call_function('sha1',[scope.call_function('fqdn_rand',[9999999999999,@name]).to_s + "cookie"]) %>
+  RewriteRule ^/wp-login.php /wordpress-login-<%= tmpuri = scope.call_function('sha1',[scope.call_function('fqdn_rand',[9999999999999,@name]).to_s + "wp-login"]) %>.php [R,L]
   <Location /wordpress-login-<%= tmpuri %>.php>
     CookieTracking on
     CookieExpires 30

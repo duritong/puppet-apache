@@ -1,7 +1,7 @@
   <Directory "<%= @documentroot %>/">
-<%= scope.function_template(['apache/vhosts/partials/std_override_options.erb']) %>
-<%= scope.function_template(['apache/vhosts/partials/php_settings.erb']) %> 
-<%= scope.function_template(['apache/vhosts/partials/authentication.erb']) %>
+<%= scope.call_function('template',['apache/vhosts/partials/std_override_options.erb']) %>
+<%= scope.call_function('template',['apache/vhosts/partials/php_settings.erb']) %> 
+<%= scope.call_function('template',['apache/vhosts/partials/authentication.erb']) %>
 
     Include include.d/joomla.inc
   </Directory>
@@ -20,7 +20,7 @@
   # shouldn't be webaccessible
   <Directory "<%= @documentroot %>/tmp/">
 <%
-  if scope.function_guess_apache_version([]) == '2.4'
+  if scope.call_function('guess_apache_version',[]) == '2.4'
     deny_statement = 'Require all denied'
   else
     deny_statement = 'Deny From All'

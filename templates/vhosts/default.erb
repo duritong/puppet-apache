@@ -7,11 +7,11 @@ end
 vhost_parts.each do |vhost_part| -%>
 <VirtualHost *:<%= vhost_part == :ssl ? '443' : '80' %> >
 
-<%= scope.function_templatewlv(['apache/vhosts/partials/header_default.erb',
+<%= scope.call_function('templatewlv',['apache/vhosts/partials/header_default.erb',
                                 {'vhost_part'    => vhost_part,
                                  'configuration' => @configuration,}]) %>
 
-<%= scope.function_template(['apache/vhosts/partials/logs.erb']) %>
+<%= scope.call_function('template',['apache/vhosts/partials/logs.erb']) %>
 
 <% if @run_mode.to_s == 'fcgid' -%>
   <IfModule mod_fcgid.c>
@@ -34,8 +34,8 @@ vhost_parts.each do |vhost_part| -%>
   RewriteCond %{HTTP:X-Forwarded-Proto} !=https
   RewriteRule (.*) https://%{SERVER_NAME}$1 [R=permanent,L]
 <% end -%>
-<%= scope.function_templatewlv([@template_partial, {'vhost_part' => vhost_part } ]) %>
-<%= scope.function_template(['apache/vhosts/partials/mod_security.erb']) %>
+<%= scope.call_function('templatewlv',[@template_partial, {'vhost_part' => vhost_part } ]) %>
+<%= scope.call_function('template',['apache/vhosts/partials/mod_security.erb']) %>
 <% unless @additional_options.to_s == 'absent' -%>
   <%= @additional_options %>
 <% end -%>

@@ -1,4 +1,4 @@
-<%= scope.function_template(['apache/vhosts/php/partial.erb']) %>
+<%= scope.call_function('template',['apache/vhosts/php/partial.erb']) %>
   <Directory "<%= @documentroot %>/typo3/">
     RewriteEngine on
 

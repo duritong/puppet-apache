@@ -12,5 +12,5 @@
     RewriteEngine on
     RewriteRule ^[a-zA-Z0-9_-]+.git/?(\?.)?$ /gitweb.cgi%{REQUESTURI} [L,PT]
 
-<%= scope.function_template(['apache/vhosts/partials/authentication.erb']) %>
+<%= scope.call_function('template',['apache/vhosts/partials/authentication.erb']) %>
   </Directory>
