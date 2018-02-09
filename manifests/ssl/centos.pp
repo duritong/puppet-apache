@@ -7,6 +7,6 @@ class apache::ssl::centos inherits apache::ssl::base {
   } -> apache::config::global{
     'ssl.conf':;
     '00-listen-ssl.conf':
-      ensure => absent;
+      content => template('apache/conf/ssl_listen.erb');
   }
 }

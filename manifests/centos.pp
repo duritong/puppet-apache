@@ -74,14 +74,25 @@ class apache::centos inherits apache::base {
   }
   exec{
     'adjust_listen':
-      command => 'sed -i  "s/^#Listen 80/Listen 80/g" /etc/httpd/conf/httpd.conf',
-      unless  => 'grep -qE \'^Listen 80\' /etc/httpd/conf/httpd.conf',
       require => Package['apache'],
       notify  => Service['apache'];
-  }
-
-  apache::config::global{'00-listen.conf':
-    ensure => absent,
+  } -> apache::config::global{'00-listen.conf': }
+  if $apache::http_listen {
+    Exec['adjust_listen']{
+        command => 'sed -i  "s/^Listen 80/#Listen 80/g" /etc/httpd/conf/httpd.conf',
+        onlyif  => 'grep -qE \'^Listen 80\' /etc/httpd/conf/httpd.conf',
+    }
+    Apache::Config::Global['00-listen.conf']
+      content => template('apache/conf/listen.erb'),
+    }
+  } else {
+    Exec['adjust_listen']{
+      command => 'sed -i  "s/^#Listen 80/Listen 80/g" /etc/httpd/conf/httpd.conf',
+      unless  => 'grep -qE \'^Listen 80\' /etc/httpd/conf/httpd.conf',
+    }
+    Apache::Config::Global['00-listen.conf']{
+      ensure => absent,
+    }
   }
 
   include apache::logrotate::centos
