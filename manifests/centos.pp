@@ -82,7 +82,7 @@ class apache::centos inherits apache::base {
         command => 'sed -i  "s/^Listen 80/#Listen 80/g" /etc/httpd/conf/httpd.conf',
         onlyif  => 'grep -qE \'^Listen 80\' /etc/httpd/conf/httpd.conf',
     }
-    Apache::Config::Global['00-listen.conf']
+    Apache::Config::Global['00-listen.conf']{
       content => template('apache/conf/listen.erb'),
     }
   } else {
