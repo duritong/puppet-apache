@@ -204,14 +204,7 @@ define apache::vhost::php::standard(
     open_basedir        => $the_open_basedir,
   }
 
-  $real_php_settings_1 = merge($std_php_settings,$php_settings)
-
-  if $php_installation == 'scl56' {
-    # Disable igbinary.compact_strings, which we saw corrupting the heap
-    $real_php_settings = merge($real_php_settings_1, {"igbinary.compact_strings" => "Off"})
-  } else {
-    $real_php_settings = $real_php_settings_1
-  }
+  $real_php_settings = merge($std_php_settings,$php_settings)
 
   file{"/etc/logrotate.d/php_${name}": }
   if $real_php_settings['error_log'] and ($ensure != 'absent') and !($logdir in ['/var/log/httpd','/var/log/apache2']) {
