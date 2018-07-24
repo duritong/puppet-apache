@@ -45,7 +45,6 @@ define apache::vhost::passenger(
   $vhost_destination               = 'absent',
   $htpasswd_file                   = 'absent',
   $htpasswd_path                   = 'absent',
-  $passenger_app                   = 'rails',
 ){
 
   if versioncmp($::operatingsystemmajrelease,'5') > 0 {
@@ -83,28 +82,17 @@ define apache::vhost::passenger(
       group  => $run_gid,
       mode   => '0640';
   }
-  if $passenger_app == 'rails' {
-    file{
-      "${real_path}/www/config":
-        ensure => directory,
-        owner  => $documentroot_owner,
-        group  => $run_gid,
-        mode   => '0640';
-      "${real_path}/www/config/environment.rb":
-        ensure => present,
-        owner  => $run_uid,
-        group  => $run_gid,
-        mode   => '0640';
-    }
-  } else {
-    #rack based
-    file{
-      "${real_path}/www/config.ru":
-        ensure => present,
-        owner  => $run_uid,
-        group  => $run_gid,
-        mode   => '0640';
-    }
+  file{
+    "${real_path}/www/config":
+      ensure => directory,
+      owner  => $documentroot_owner,
+      group  => $run_gid,
+      mode   => '0640';
+    "${real_path}/www/config.ru":
+      ensure => present,
+      owner  => $run_uid,
+      group  => $run_gid,
+      mode   => '0640';
   }
 
   # create vhost configuration file
