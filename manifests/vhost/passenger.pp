@@ -70,30 +70,6 @@ define apache::vhost::passenger(
     'absent'=> "/var/www/vhosts/${name}",
     default => $path,
   }
-  file{
-    ["${real_path}/www/tmp", "${real_path}/www/log"]:
-      ensure => directory,
-      owner  => $documentroot_owner,
-      group  => $run_gid,
-      mode   => '0660';
-    ["${real_path}/www/public", "${real_path}/gems"]:
-      ensure => directory,
-      owner  => $documentroot_owner,
-      group  => $run_gid,
-      mode   => '0640';
-  }
-  file{
-    "${real_path}/www/config":
-      ensure => directory,
-      owner  => $documentroot_owner,
-      group  => $run_gid,
-      mode   => '0640';
-    "${real_path}/www/config.ru":
-      ensure => present,
-      owner  => $run_uid,
-      group  => $run_gid,
-      mode   => '0640';
-  }
 
   # create vhost configuration file
   ::apache::vhost{$name:
@@ -127,5 +103,31 @@ define apache::vhost::passenger(
     mod_security_additional_options => $mod_security_additional_options,
     gempath                         => "${real_path}/gems"
   }
-}
 
+  if $ensure != 'absent' {
+    file{
+      ["${real_path}/www/tmp", "${real_path}/www/log"]:
+        ensure => directory,
+        owner  => $documentroot_owner,
+        group  => $run_gid,
+        mode   => '0660';
+      ["${real_path}/www/public", "${real_path}/gems"]:
+        ensure => directory,
+        owner  => $documentroot_owner,
+        group  => $run_gid,
+        mode   => '0640';
+    }
+    file{
+      "${real_path}/www/config":
+        ensure => directory,
+        owner  => $documentroot_owner,
+        group  => $run_gid,
+        mode   => '0640';
+      "${real_path}/www/config.ru":
+        ensure => present,
+        owner  => $run_uid,
+        group  => $run_gid,
+        mode   => '0640';
+    }
+  }
+}
