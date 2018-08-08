@@ -3,5 +3,9 @@
     AllowOverride <%= @allow_override %>
     Options <%- unless @options.to_s == 'absent' -%><%= @options %><%- end -%><%- unless !@options.to_s.include?('MultiViews') -%>-MultiViews<%- end -%>
 
-<%= scope.call_function('template',['apache/vhosts/partials/authentication.erb']) %>
   </Directory>
+<% unless @htpasswd_file.to_s == 'absent' -%>
+  <Location />
+<%= scope.call_function('template',['apache/vhosts/partials/authentication.erb']) %>
+  </Location>
+<% end -%>
