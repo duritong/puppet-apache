@@ -103,7 +103,7 @@ define apache::vhost::file(
       }
     }
   }
-  if ($htpasswd_file != 'absent') and ($htpasswd_file != 'nodeploy') {
+  if $htpasswd_file and ($htpasswd_file != 'absent') and ($htpasswd_file != 'nodeploy') {
     $real_htpasswd_path = $htpasswd_path ? {
       'absent' => "/var/www/htpasswds/${name}",
       default  => $htpasswd_path,
