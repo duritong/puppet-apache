@@ -1,4 +1,4 @@
-<% unless @htpasswd_file.to_s == 'absent' -%>
+<% if @htpasswd_file && @htpasswd_file.to_s != 'absent' -%>
     AuthType Basic
     AuthName "Access fuer <%= @servername %>"
     AuthUserFile <%= @real_htpasswd_path %>
