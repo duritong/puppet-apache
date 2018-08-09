@@ -22,7 +22,8 @@ class apache::centos inherits apache::base {
         '/var/www/vhosts/[^/]*/upload(/.*)?' ]:
         before => Package['apache'],
         setype => $seltype_rw;
-      '/var/www/vhosts/[^/]*/logs(/.*)?':
+      [ '/var/www/vhosts/[^/]*/logs(/.*)?',
+        '/var/www/vhosts/[^/]*/www/log(/.*)?' ]:
         before => Package['apache'],
         setype => 'httpd_log_t';
       '/var/www/vhosts/[^/]*/www/vendor/.*\.so[^/]*':
