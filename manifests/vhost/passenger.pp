@@ -116,8 +116,7 @@ define apache::vhost::passenger(
         owner  => $documentroot_owner,
         group  => $run_gid,
         mode   => '0640';
-    }
-    file{
+    } -> file{
       "${real_path}/www/config":
         ensure => directory,
         owner  => $documentroot_owner,
@@ -128,6 +127,13 @@ define apache::vhost::passenger(
         owner  => $run_uid,
         group  => $run_gid,
         mode   => '0640';
+    } -> file{
+      "${real_path}/www/log/production.log":
+        ensure => present,
+        owner  => $run_uid,
+        group  => $run_gid,
+        mode   => '0660',
+        before => Service['apache'],
     }
   }
 }
