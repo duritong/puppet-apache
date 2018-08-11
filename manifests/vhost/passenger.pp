@@ -101,7 +101,7 @@ define apache::vhost::passenger(
     mod_security_relevantonly       => $mod_security_relevantonly,
     mod_security_rules_to_disable   => $mod_security_rules_to_disable,
     mod_security_additional_options => $mod_security_additional_options,
-    gempath                         => "${real_path}/gems"
+    gempath                         => "${real_path}/gems",
   }
 
   if $ensure != 'absent' {
@@ -123,13 +123,13 @@ define apache::vhost::passenger(
         group  => $run_gid,
         mode   => '0640';
       "${real_path}/www/config.ru":
-        ensure => present,
+        ensure => file,
         owner  => $run_uid,
         group  => $run_gid,
         mode   => '0640';
     } -> file{
       "${real_path}/www/log/production.log":
-        ensure => present,
+        ensure => file,
         owner  => $run_uid,
         group  => $run_gid,
         mode   => '0660',
