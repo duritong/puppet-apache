@@ -32,6 +32,9 @@ class apache::centos inherits apache::base {
     }
   }
   if versioncmp($::operatingsystemmajrelease,'6') > 0 {
+    Exec['reload_apache'] {
+      command => 'systemctl reload httpd',
+    }
     File['modules_dir']{
       ensure => absent,
     }
@@ -48,6 +51,9 @@ class apache::centos inherits apache::base {
         require => Package['apache'];
     }
   } else {
+    Exec['reload_apache'] {
+      command => 'service httpd reload',
+    }
     File['modules_dir']{
       path => "${apache::config_dir}/modules.d",
     }

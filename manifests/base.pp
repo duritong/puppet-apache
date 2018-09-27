@@ -74,5 +74,8 @@ class apache::base {
   service{'apache':
     ensure => running,
     enable => true,
+  } -> exec{'reload_apache':
+    refreshonly => true,
+    command     => 'systemctl reload apache',
   }
 }
