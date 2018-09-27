@@ -14,11 +14,11 @@ class apache::base {
       group   => 0,
       mode    => '0640';
     'config_dir':
-      ensure  => directory,
-      path    => $apache::confd_dir,
-      owner   => root,
-      group   => 0,
-      mode    => '0640';
+      ensure => directory,
+      path   => $apache::confd_dir,
+      owner  => root,
+      group  => 0,
+      mode   => '0640';
     'include_dir':
       ensure  => directory,
       path    => $apache::include_dir,
@@ -50,11 +50,11 @@ class apache::base {
       group   => 'apache',
       mode    => '0640';
     'web_dir':
-      ensure  => directory,
-      path    => $apache::webdir,
-      owner   => root,
-      group   => 0,
-      mode    => '0644';
+      ensure => directory,
+      path   => $apache::webdir,
+      owner  => root,
+      group  => 0,
+      mode   => '0644';
     'default_apache_index':
       path    => $apache::default_apache_index,
       content => template('apache/default/default_index.erb'),
@@ -65,7 +65,7 @@ class apache::base {
 
   apache::config::include{ 'defaults.inc': }
   apache::config::global{ 'git.conf':
-    content => template('apache/conf.d/git.conf.erb')
+    content => template('apache/conf.d/git.conf.erb'),
   }
   if !$apache::no_default_site {
     apache::vhost::file { '0-default': }

@@ -71,10 +71,8 @@ class apache::centos inherits apache::base {
       group   => 0,
       mode    => '0644';
     }
-  }
 
-  # this is for later fixes
-  if versioncmp($::operatingsystemmajrelease,'7') < 0 {
+    # this is for later fixes
     exec{'adjust_pidfile':
       command => 'sed -i  "s/^#PidFile \(.*\)/PidFile \1/g" /etc/httpd/conf/httpd.conf',
       unless  => 'grep -qE \'^PidFile \' /etc/httpd/conf/httpd.conf',
@@ -82,6 +80,7 @@ class apache::centos inherits apache::base {
       notify  => Service['apache'];
     }
   }
+
   exec{
     'adjust_listen':
       require => Package['apache'],
@@ -105,7 +104,7 @@ class apache::centos inherits apache::base {
     }
   }
 
-  include apache::logrotate::centos
+  include ::apache::logrotate::centos
 
   apache::config::global{ 'welcome.conf': }
   apache::config::global{ 'vhosts.conf': }
