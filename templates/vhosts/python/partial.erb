@@ -1,0 +1,6 @@
+  Alias /static/ <%= @real_path %>/data/static/
+  WSGIScriptAlias / <%= @real_path %>/data/wsgi.py
+<% if vhost_part == :normal -%>
+  WSGIDaemonProcess <%= @name %> python-home=<%= @real_path %>/virtualenv python-path=<%= @real_path %>/data user=<%= @name %> group=<%= @name %> display-name='%{GROUP}' lang='en_US.UTF-8' locale='en_US.UTF-8' threads=5 queue-timeout=45 socket-timeout=60 connect-timeout=15 request-timeout=60 inactivity-timeout=0 startup-timeout=15 deadlock-timeout=60 graceful-timeout=15 eviction-timeout=0 restart-interval=0 shutdown-timeout=5 maximum-requests=0
+<% end -%>
+  WSGIProcessGroup <%= @name %>
