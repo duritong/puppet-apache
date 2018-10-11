@@ -80,7 +80,7 @@ describe 'apache::vhost::php::joomla', :type => 'define' do
     php_admin_flag allow_url_include off
     php_admin_flag engine on
     php_admin_value error_log /var/www/vhosts/example.com/logs/php_error_log
-    php_admin_value open_basedir /usr/share/php/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp
+    php_admin_value open_basedir /usr/share/php/:/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp
     php_admin_value session.save_path /var/www/vhosts/example.com/tmp/sessions
     php_admin_value upload_tmp_dir /var/www/vhosts/example.com/tmp/uploads
  
@@ -213,7 +213,7 @@ describe 'apache::vhost::php::joomla', :type => 'define' do
 
   <IfModule mod_fcgid.c>
     SuexecUserGroup foo bar
-    FcgidMaxRequestsPerProcess 5000
+    FcgidMaxRequestsPerProcess 4990
     FCGIWrapper /var/www/mod_fcgid-starters/example.com/example.com-starter .php
     AddHandler fcgid-script .php
   </IfModule>

@@ -71,7 +71,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 
     php_admin_flag engine on
     php_admin_value error_log /var/www/vhosts/example.com/logs/php_error_log
-    php_admin_value open_basedir /usr/share/php/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp
+    php_admin_value open_basedir /usr/share/php/:/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp
     php_admin_value session.save_path /var/www/vhosts/example.com/tmp/sessions
     php_admin_value upload_tmp_dir /var/www/vhosts/example.com/tmp/uploads
 
@@ -143,7 +143,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 
     php_admin_flag engine on
     php_admin_value error_log /var/www/vhosts/example.com/logs/php_error_log
-    php_admin_value open_basedir /usr/share/php/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp
+    php_admin_value open_basedir /usr/share/php/:/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp
     php_admin_flag safe_mode off
     php_admin_value session.save_path /var/www/vhosts/example.com/tmp/sessions
     php_admin_value upload_tmp_dir /var/www/vhosts/example.com/tmp/uploads
@@ -192,7 +192,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
         "safe_mode_gid"     =>:undef,
         "safe_mode_exec_dir"=>:undef,
         "default_charset"   =>:undef,
-        "open_basedir"      =>"/usr/share/php/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp",
+        "open_basedir"      =>"/usr/share/php/:/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp",
       },
       :owner            => 'foo',
       :group            => 'bar',
@@ -239,7 +239,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 
   <IfModule mod_fcgid.c>
     SuexecUserGroup foo bar
-    FcgidMaxRequestsPerProcess 5000
+    FcgidMaxRequestsPerProcess 4990
     FCGIWrapper /var/www/mod_fcgid-starters/example.com/example.com-starter .php
     AddHandler fcgid-script .php
   </IfModule>
@@ -287,15 +287,15 @@ describe 'apache::vhost::php::standard', :type => 'define' do
       :tmp_dir          => "/var/www/vhosts/example.com/tmp/tmp",
       :cgi_type         => 'php',
       :cgi_type_options => {
-        "engine"            =>"On",
-        "upload_tmp_dir"    =>"/var/www/vhosts/example.com/tmp/uploads",
-        "session.save_path" =>"/var/www/vhosts/example.com/tmp/sessions",
-        "error_log"         =>"/var/www/vhosts/example.com/logs/php_error_log",
-        "safe_mode"         =>:undef,
-        "safe_mode_gid"     =>:undef,
-        "safe_mode_exec_dir"=>:undef,
-        "default_charset"   =>:undef,
-        "open_basedir"      =>"/usr/share/php/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp"
+        "engine"            => "On",
+        "upload_tmp_dir"    => "/var/www/vhosts/example.com/tmp/uploads",
+        "session.save_path" => "/var/www/vhosts/example.com/tmp/sessions",
+        "error_log"         => "/var/www/vhosts/example.com/logs/php_error_log",
+        "safe_mode"         => :undef,
+        "safe_mode_gid"     => :undef,
+        "safe_mode_exec_dir"=> :undef,
+        "default_charset"   => :undef,
+        "open_basedir"      => "/opt/rh/php54/root/usr/share/php/:/opt/rh/php54/root/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp"
       },
       :binary           => '/opt/rh/php54/root/usr/bin/php-cgi',
       :additional_cmds  => 'source /opt/rh/php54/enable',
@@ -333,7 +333,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 
   <IfModule mod_fcgid.c>
     SuexecUserGroup foo bar
-    FcgidMaxRequestsPerProcess 5000
+    FcgidMaxRequestsPerProcess 4990
     FCGIWrapper /var/www/mod_fcgid-starters/example.com/example.com-starter .php
     AddHandler fcgid-script .php
   </IfModule>
@@ -381,15 +381,15 @@ describe 'apache::vhost::php::standard', :type => 'define' do
       :tmp_dir          => '/var/www/vhosts/example.com/tmp/tmp',
       :cgi_type         => 'php',
       :cgi_type_options => {
-        "engine"            =>"On",
-        "upload_tmp_dir"    =>"/var/www/vhosts/example.com/tmp/uploads",
-        "session.save_path" =>"/var/www/vhosts/example.com/tmp/sessions",
-        "error_log"         =>"/var/www/vhosts/example.com/logs/php_error_log",
-        "safe_mode"         =>:undef,
-        "safe_mode_gid"     =>:undef,
-        "safe_mode_exec_dir"=>:undef,
-        "default_charset"   =>:undef,
-        "open_basedir"      =>"/usr/share/php/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp",
+        "engine"            => "On",
+        "upload_tmp_dir"    => "/var/www/vhosts/example.com/tmp/uploads",
+        "session.save_path" => "/var/www/vhosts/example.com/tmp/sessions",
+        "error_log"         => "/var/www/vhosts/example.com/logs/php_error_log",
+        "safe_mode"         => :undef,
+        "safe_mode_gid"     => :undef,
+        "safe_mode_exec_dir"=> :undef,
+        "default_charset"   => :undef,
+        "open_basedir"      => "/opt/rh/php55/root/usr/share/php/:/opt/rh/php55/root/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp",
       },
       :binary           => '/opt/rh/php55/root/usr/bin/php-cgi',
       :additional_cmds  => 'source /opt/rh/php55/enable',
@@ -427,7 +427,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 
   <IfModule mod_fcgid.c>
     SuexecUserGroup foo bar
-    FcgidMaxRequestsPerProcess 5000
+    FcgidMaxRequestsPerProcess 4990
     FCGIWrapper /var/www/mod_fcgid-starters/example.com/example.com-starter .php
     AddHandler fcgid-script .php
   </IfModule>
@@ -490,7 +490,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
         "safe_mode_gid"     =>"On",
         "safe_mode_exec_dir"=>"/var/www/vhosts/example.com/bin",
         "default_charset"   =>:undef,
-        "open_basedir"      =>"/usr/share/php/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp"
+        "open_basedir"      =>"/usr/share/php/:/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp"
       },
       :owner            => 'foo',
       :group            => 'bar',
@@ -539,7 +539,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 
   <IfModule mod_fcgid.c>
     SuexecUserGroup foo bar
-    FcgidMaxRequestsPerProcess 5000
+    FcgidMaxRequestsPerProcess 4990
     FCGIWrapper /var/www/mod_fcgid-starters/example.com/example.com-starter .php
     AddHandler fcgid-script .php
     FcgidMaxProcessesPerClass 24
@@ -599,7 +599,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
         "safe_mode_gid"     =>"On",
         "safe_mode_exec_dir"=>"/var/www/vhosts/example.com/bin",
         "default_charset"   =>:undef,
-        "open_basedir"      =>"/usr/share/php/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp",
+        "open_basedir"      =>"/usr/share/php/:/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp",
       },
       :owner            => 'foo',
       :group            => 'bar',
@@ -648,7 +648,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 
   <IfModule mod_fcgid.c>
     SuexecUserGroup foo bar
-    FcgidMaxRequestsPerProcess 5000
+    FcgidMaxRequestsPerProcess 4990
     FCGIWrapper /var/www/mod_fcgid-starters/example.com/example.com-starter .php
     AddHandler fcgid-script .php
   </IfModule>

@@ -59,7 +59,7 @@ describe 'apache::vhost::php::drupal', :type => 'define' do
     php_admin_value mbstring.encoding_translation 0
     php_admin_value mbstring.http_input pass
     php_admin_value mbstring.http_output pass
-    php_admin_value open_basedir /usr/share/php/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp
+    php_admin_value open_basedir /usr/share/php/:/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp
     php_admin_value register_globals 0
     php_admin_value session.auto_start 0
     php_admin_value session.save_path /var/www/vhosts/example.com/tmp/sessions
@@ -145,7 +145,7 @@ describe 'apache::vhost::php::drupal', :type => 'define' do
 
   <IfModule mod_fcgid.c>
     SuexecUserGroup foo bar
-    FcgidMaxRequestsPerProcess 5000
+    FcgidMaxRequestsPerProcess 4990
     FCGIWrapper /var/www/mod_fcgid-starters/example.com/example.com-starter .php
     AddHandler fcgid-script .php
   </IfModule>
