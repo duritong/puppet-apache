@@ -1,4 +1,4 @@
-<% if @run_mode != 'fcgid'
+<% unless ['fcgid','fpm'].include?(@run_mode)
   @php_settings.reject{|k,v| (v == :undef) || v.nil? }.keys.sort.each do |key|
     dvalue = @php_settings[key].to_s.downcase
     munged_value = if dvalue == 'true'

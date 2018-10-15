@@ -27,8 +27,18 @@ vhost_parts.each do |vhost_part| -%>
   end -%>
   </IfModule>
 
-<% end -%>
-<% if @ssl_mode == 'force' && vhost_part == :normal -%>
+<% elsif @run_mode.to_s == 'fpm' -%>
+  <Proxy "unix:/run/fpm-<%= @name %>-socket/0.socket|fcgi://fpm-<%= @name %>-0">
+    ProxySet timeout=<%= @php_settings['max_execution_time'] || 300 %>
+  </Proxy>
+
+  # Redirect to the proxy
+  <FilesMatch \.php$>
+    SetHandler proxy:fcgi://fpm-<%= @name %>-0
+  </FilesMatch>
+
+<% end
+if @ssl_mode == 'force' && vhost_part == :normal -%>
   RewriteEngine On
   RewriteCond %{HTTPS} !=on
   RewriteCond %{HTTP:X-Forwarded-Proto} !=https

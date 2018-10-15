@@ -53,6 +53,7 @@ describe 'apache::vhost::php::drupal', :type => 'define' do
     AllowOverride None
 
 
+    php_admin_value apc.mmap_file_mask /var/www/vhosts/example.com/tmp/apc.XXXXXX
     php_admin_flag engine on
     php_admin_value error_log /var/www/vhosts/example.com/logs/php_error_log
     php_admin_value magic_quotes_gpc 0

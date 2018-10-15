@@ -42,6 +42,7 @@ describe 'apache::vhost::php::webapp', :type => 'define' do
   <Directory \"/var/www/vhosts/example.com/www/\">
     AllowOverride None
 
+    php_admin_value apc.mmap_file_mask /var/www/vhosts/example.com/tmp/apc.XXXXXX
     php_admin_flag engine on
     php_admin_value error_log /var/www/vhosts/example.com/logs/php_error_log
     php_admin_value open_basedir /usr/share/php/:/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp
@@ -167,6 +168,7 @@ describe 'apache::vhost::php::webapp', :type => 'define' do
   <Directory \"/var/www/vhosts/example.com/www/\">
     AllowOverride None
 
+    php_admin_value apc.mmap_file_mask /var/www/vhosts/example.com/tmp/apc.XXXXXX
     php_admin_flag engine on
     php_admin_value error_log /var/www/vhosts/example.com/logs/php_error_log
     php_admin_value open_basedir /usr/share/php/:/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp
@@ -236,6 +238,7 @@ describe 'apache::vhost::php::webapp', :type => 'define' do
   <Directory \"/var/www/vhosts/example.com/www/\">
     AllowOverride None
 
+    php_admin_value apc.mmap_file_mask /var/www/vhosts/example.com/tmp/apc.XXXXXX
     php_admin_flag engine on
     php_admin_value error_log /var/www/vhosts/example.com/logs/php_error_log
     php_admin_value open_basedir /usr/share/php/:/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp

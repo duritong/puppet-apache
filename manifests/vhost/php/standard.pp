@@ -83,9 +83,19 @@ define apache::vhost::php::standard(
     $documentroot = $real_path
     include ::apache::defaultphpdirs
     $php_sysroot = "${apache::defaultphpdirs::dir}/${name}"
+    if 'fpm_writable_dirs' in $configuration {
+      $fpm_writable_dirs = $configuration['fpm_writable_dirs'] + [ $php_sysroot ]
+    } else {
+      $fpm_writable_dirs = [ $php_sysroot ]
+    }
   } else {
     $documentroot = "${real_path}/www"
     $php_sysroot = "${real_path}/tmp"
+    if 'fpm_writable_dirs' in $configuration {
+      $fpm_writable_dirs = $configuration['fpm_writable_dirs']
+    } else {
+      $fpm_writable_dirs = []
+    }
   }
   $logdir = $logpath ? {
     'absent' => "${real_path}/logs",
@@ -96,10 +106,12 @@ define apache::vhost::php::standard(
     $lib_dirs = ['/usr/share/php/','/usr/share/pear/']
     if $php_installation == 'system' {
       $sys_libs_tmp = $lib_dirs
+      $php_inst_class = undef
     } else {
       $php_inst_class = regsubst($php_installation,'^scl','php')
       require "::php::scl::${php_inst_class}"
       $php_basedir = getvar("php::scl::${php_inst_class}::basedir")
+      $php_etcdir = getvar("php::scl::${php_inst_class}::etcdir")
       $sys_libs_tmp = prefix($lib_dirs,"${php_basedir}/root")
     }
     # add an empty element, so get an extra :
@@ -193,35 +205,27 @@ define apache::vhost::php::standard(
   }
 
   $std_php_settings = {
-    engine              => 'On',
-    upload_tmp_dir      => "${php_sysroot}/uploads",
-    'session.save_path' => "${php_sysroot}/sessions",
-    error_log           => $php_error_log,
-    safe_mode           => $safe_mode,
-    safe_mode_gid       => $safe_mode_gid,
-    safe_mode_exec_dir  => $std_php_settings_safe_mode_exec_dir,
-    default_charset     => $std_php_settings_default_charset,
-    open_basedir        => $the_open_basedir,
+    engine               => 'On',
+    upload_tmp_dir       => "${php_sysroot}/uploads",
+    'session.save_path'  => "${php_sysroot}/sessions",
+    error_log            => $php_error_log,
+    safe_mode            => $safe_mode,
+    safe_mode_gid        => $safe_mode_gid,
+    safe_mode_exec_dir   => $std_php_settings_safe_mode_exec_dir,
+    default_charset      => $std_php_settings_default_charset,
+    open_basedir         => $the_open_basedir,
+    'apc.mmap_file_mask' => "${php_sysroot}/apc.XXXXXX",
   }
 
-  $real_php_settings = merge($std_php_settings,$php_settings)
-
-  file{"/etc/logrotate.d/php_${name}": }
-  if $real_php_settings['error_log'] and ($ensure != 'absent') and !($logdir in ['/var/log/httpd','/var/log/apache2']) {
-    File["/etc/logrotate.d/php_${name}"]{
-      content => template('apache/utils/php_logrotate.erb'),
-      owner   => root,
-      group   => 0,
-      mode    => '0644',
-    }
-    if $manage_webdir {
-      File[$logdir] -> File["/etc/logrotate.d/php_${name}"]
+  if ($php_installation =~ /^scl/) and ($php_installation !~ /^scl5/) {
+    $php_inst_settings = {
+      'sp.configuration_file' => "${php_etcdir}/php.d/snuffleupagus-*.rules,${php_etcdir}/snuffleupagus.d/base.rules",
     }
   } else {
-    File["/etc/logrotate.d/php_${name}"]{
-      ensure => absent,
-    }
+    $php_inst_settings = {}
   }
+
+  $real_php_settings = $php_inst_settings + $std_php_settings + $php_settings
 
   if $ensure != 'absent' {
     case $run_mode {
@@ -240,7 +244,6 @@ define apache::vhost::php::standard(
           notify           => Service['apache'],
         }
         if $php_installation =~ /^scl/ {
-          $php_etcdir = getvar("php::scl::${php_inst_class}::etcdir")
           Mod_fcgid::Starter[$name]{
             binary          => "${php_basedir}/root/usr/bin/php-cgi",
             additional_cmds => "source ${php_basedir}/enable",
@@ -249,6 +252,62 @@ define apache::vhost::php::standard(
         }
       }
       default: { include ::php }
+    }
+  }
+
+  if $run_mode == 'fpm' {
+    if $logdir == '/var/log/httpd' {
+      $fpm_logdir = "/var/log/fpm-${name}"
+      file{
+        $fpm_logdir:
+          owner  => $run_uid,
+          group  => $run_gid,
+          mode   => '0640',
+          before => Php::Fpm[$name],
+      }
+      if $ensure == 'present' {
+        File[$fpm_logdir]{
+          ensure => directory
+        }
+      } else {
+        File[$fpm_logdir]{
+          ensure => 'absent'
+        }
+      }
+      $fpm_php_settings = $real_php_settings + { error_log => "$fpm_logdir/php_error_log" }
+    } else {
+      $fpm_logdir = $logdir
+      $fpm_php_settings = $real_php_settings
+    }
+    php::fpm{
+      $name:
+        ensure          => $ensure,
+        php_inst_class  => $php_inst_class,
+        workdir         => $real_path,
+        logdir          => $fpm_logdir,
+        tmpdir          => "${php_sysroot}/tmp",
+        run_user        => $run_uid,
+        run_group       => $run_gid,
+        additional_envs => $php_options['additional_envs'],
+        php_settings    => $fpm_php_settings,
+        writable_dirs   => $fpm_writable_dirs,
+    }
+  }
+
+  file{"/etc/logrotate.d/php_${name}": }
+  if $real_php_settings['error_log'] and ($ensure != 'absent') and !($logdir in ['/var/log/httpd','/var/log/apache2']) {
+    File["/etc/logrotate.d/php_${name}"]{
+      content => template('apache/utils/php_logrotate.erb'),
+      owner   => root,
+      group   => 0,
+      mode    => '0644',
+    }
+    if $manage_webdir {
+      File[$logdir] -> File["/etc/logrotate.d/php_${name}"]
+    }
+  } else {
+    File["/etc/logrotate.d/php_${name}"]{
+      ensure => absent,
     }
   }
 

@@ -9,8 +9,8 @@ define apache::vhost::phpdirs(
   $run_uid            = 'absent',
 ){
   $owner = $run_mode ? {
-    'fcgid' => $run_uid,
-    default => $documentroot_owner
+    /^(fcgid|fpm)$/ => $run_uid,
+    default         => $documentroot_owner,
   }
   file{$path: }
   if $ensure == 'present' {
