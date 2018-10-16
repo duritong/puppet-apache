@@ -1,9 +1,3 @@
-# run_mode: controls in which mode the vhost should be run, there are different setups
-#           possible:
-#   - normal: (*default*) run vhost with the current active worker (default: prefork) don't
-#             setup anything special
-#   - fcgid run vhost with the fcgid module and suexec
-#
 # run_uid: the uid the vhost should run as with the suexec module
 # run_gid: the gid the vhost should run as with the suexec module
 #
@@ -34,7 +28,6 @@ define apache::vhost::wsgi(
   $documentroot_owner               = apache,
   $documentroot_group               = 0,
   $documentroot_mode                = '0640',
-  $run_mode                         = 'normal',
   $run_uid                          = 'absent',
   $run_gid                          = 'absent',
   $allow_override                   = 'None',
@@ -68,7 +61,6 @@ define apache::vhost::wsgi(
       path               => $path,
       owner              => $owner,
       group              => $group,
-      run_mode           => $run_mode,
       manage_docroot     => $manage_docroot,
       documentroot_owner => $documentroot_owner,
       documentroot_group => $documentroot_group,
@@ -110,7 +102,6 @@ define apache::vhost::wsgi(
     logmode                         => $logmode,
     logpath                         => $logpath,
     logprefix                       => $logprefix,
-    run_mode                        => $run_mode,
     run_uid                         => $run_uid,
     run_gid                         => $run_gid,
     allow_override                  => $allow_override,
@@ -132,9 +123,8 @@ define apache::vhost::wsgi(
       ["${real_path}/virtualenv"]:
         ensure => directory,
         owner  => $documentroot_owner,
-        group  => $run_gid,
+        group  => $group,
         mode   => '0660';
     }
   }
 }
-
