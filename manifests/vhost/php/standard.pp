@@ -219,7 +219,16 @@ define apache::vhost::php::standard(
 
   if ($php_installation =~ /^scl/) and ($php_installation !~ /^scl5/) {
     $php_inst_settings = {
-      'sp.configuration_file' => "${php_etcdir}/php.d/snuffleupagus-*.rules,${php_etcdir}/snuffleupagus.d/base.rules",
+      'sp.configuration_file' => "${php_etcdir}/php.d/snuffleupagus-*.rules,${php_etcdir}/snuffleupagus.d/base.rules,${php_etcdir}/snuffleupagus.d/${name}.rules",
+    }
+    if $ensure != 'absent' {
+      file{
+        "${php_etcdir}/snuffleupagus.d/${name}.rules":
+          content => template('apache/vhosts/php/snuffleupagus.erb'),
+          owner   => root,
+          group   => $run_gid,
+          mode    => '0640',
+      }
     }
   } else {
     $php_inst_settings = {}
@@ -274,7 +283,7 @@ define apache::vhost::php::standard(
           ensure => 'absent'
         }
       }
-      $fpm_php_settings = $real_php_settings + { error_log => "$fpm_logdir/php_error_log" }
+      $fpm_php_settings = $real_php_settings + { error_log => "${fpm_logdir}/php_error_log" }
     } else {
       $fpm_logdir = $logdir
       $fpm_php_settings = $real_php_settings

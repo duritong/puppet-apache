@@ -1,6 +1,11 @@
 require File.expand_path(File.join(File.dirname(__FILE__),'../spec_helper'))
 
 describe 'apache::vhost::php::standard', :type => 'define' do
+  before(:each) do
+    Puppet::Parser::Functions.newfunction(:trocla, :type => :rvalue) { |args|
+        'expected value'
+    }
+  end
   let(:title){ 'example.com' }
   let(:default_facts){
     {
@@ -485,7 +490,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
       :additional_envs => {},
       :php_settings    => {
         "apc.mmap_file_mask"    => "/var/www/vhosts/example.com/tmp/apc.XXXXXX",
-        "sp.configuration_file" => "/etc/opt/remi/php72/php.d/snuffleupagus-*.rules,/etc/opt/remi/php72/snuffleupagus.d/base.rules",
+        "sp.configuration_file" => "/etc/opt/remi/php72/php.d/snuffleupagus-*.rules,/etc/opt/remi/php72/snuffleupagus.d/base.rules,/etc/opt/remi/php72/snuffleupagus.d/example.com.rules",
         "engine"                => "On",
         "upload_tmp_dir"        => "/var/www/vhosts/example.com/tmp/uploads",
         "session.save_path"     => "/var/www/vhosts/example.com/tmp/sessions",
