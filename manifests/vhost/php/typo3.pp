@@ -40,7 +40,7 @@ define apache::vhost::php::typo3(
   $options                          = 'absent',
   $additional_options               = 'absent',
   $default_charset                  = 'absent',
-  $mod_security                     = true,
+  $mod_security                     = false,
   $mod_security_relevantonly        = true,
   $mod_security_rules_to_disable    = [],
   $mod_security_additional_options  = 'absent',

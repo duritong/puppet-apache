@@ -114,8 +114,8 @@ describe 'apache::vhost::php::joomla', :type => 'define' do
 
 
   <IfModule mod_security2.c>
-    SecRuleEngine On
-    SecAuditEngine RelevantOnly
+    SecRuleEngine Off
+    SecAuditEngine Off
     SecAuditLogType Concurrent
     SecAuditLogStorageDir /var/www/vhosts/example.com/logs/
     SecAuditLog /var/www/vhosts/example.com/logs/mod_security_audit.log
@@ -252,8 +252,8 @@ describe 'apache::vhost::php::joomla', :type => 'define' do
 
 
   <IfModule mod_security2.c>
-    SecRuleEngine On
-    SecAuditEngine RelevantOnly
+    SecRuleEngine Off
+    SecAuditEngine Off
     SecAuditLogType Concurrent
     SecAuditLogStorageDir /var/www/vhosts/example.com/logs/
     SecAuditLog /var/www/vhosts/example.com/logs/mod_security_audit.log
