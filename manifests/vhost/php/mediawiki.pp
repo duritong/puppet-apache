@@ -52,9 +52,26 @@ define apache::vhost::php::mediawiki(
   $htpasswd_file                   = 'absent',
   $htpasswd_path                   = 'absent'
 ){
+  $documentroot = $path ? {
+    'absent' => "/var/www/vhosts/${name}/www",
+    default  => "${path}/www",
+  }
 
   $mediawiki_php_settings = {
     safe_mode => false,
+  }
+  if ('additional_envs' in $php_options) {
+    $mediawiki_php_options = {
+      additional_envs => $php_options['additional_envs'] + {
+        MW_INSTALL_PATH => $documentroot,
+      },
+    }
+  } else {
+    $mediawiki_php_options = {
+      additional_envs => {
+        MW_INSTALL_PATH => $documentroot,
+      },
+    }
   }
 
   # create vhost configuration file
@@ -76,8 +93,8 @@ define apache::vhost::php::mediawiki(
     run_uid                         => $run_uid,
     run_gid                         => $run_gid,
     allow_override                  => $allow_override,
-    php_settings                    => merge($mediawiki_php_settings,$php_settings),
-    php_options                     => $php_options,
+    php_settings                    => $mediawiki_php_settings + $php_settings,
+    php_options                     => $mediawiki_php_options + $php_options,
     php_installation                => $php_installation,
     options                         => $options,
     additional_options              => $additional_options,
