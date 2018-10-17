@@ -36,7 +36,7 @@ define apache::vhost::php::mediawiki(
   $allow_override                  = 'FileInfo Limit',
   $php_settings                    = {},
   $php_options                     = {},
-  $php_installation                = 'scl56',
+  $php_installation                = 'scl72',
   $options                         = 'absent',
   $additional_options              = 'absent',
   $default_charset                 = 'absent',
