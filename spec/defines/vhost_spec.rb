@@ -20,7 +20,7 @@ describe 'apache::vhost', :type => 'define' do
       :run_mode       => 'normal',
       :ssl_mode       => false,
       :logmode        => 'default',
-      :mod_security   => true,
+      :mod_security   => false,
       :htpasswd_file  => 'absent',
       :htpasswd_path  => 'absent',
       :use_mod_macro  => false,
@@ -46,8 +46,8 @@ describe 'apache::vhost', :type => 'define' do
   </Directory>
 
   <IfModule mod_security2.c>
-    SecRuleEngine On
-    SecAuditEngine RelevantOnly
+    SecRuleEngine Off
+    SecAuditEngine Off
     SecAuditLogType Concurrent
     SecAuditLogStorageDir /var/www/vhosts/example.com/logs/
     SecAuditLog /var/www/vhosts/example.com/logs/mod_security_audit.log
@@ -184,7 +184,7 @@ describe 'apache::vhost', :type => 'define' do
       :vhost_destination  => 'absent',
       :do_includes        => false,
       :run_mode       => 'normal',
-      :mod_security   => true,
+      :mod_security   => false,
       :htpasswd_file  => 'absent',
       :htpasswd_path  => 'absent',
       :use_mod_macro  => false,

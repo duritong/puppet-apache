@@ -57,7 +57,7 @@ define apache::vhost::template(
   $template_partial                = 'apache/vhosts/static/partial.erb',
   $template_vars                   = {},
   $ssl_mode                        = false,
-  $mod_security                    = true,
+  $mod_security                    = false,
   $mod_security_relevantonly       = true,
   $mod_security_rules_to_disable   = [],
   $mod_security_additional_options = 'absent',

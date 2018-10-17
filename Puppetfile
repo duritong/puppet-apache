@@ -2,6 +2,9 @@
 
 forge 'https://forgeapi.puppetlabs.com'
 
+exclusion 'puppetlabs-stdlib'
+
+mod 'stdlib', :git => 'https://git-ipuppet.immerda.ch/module-stdlib'
 mod 'augeas', :git => 'https://git-ipuppet.immerda.ch/module-augeas'
 mod 'augeasproviders_core', :git => 'https://git-ipuppet.immerda.ch/module-augeasproviders_core'
 mod 'shorewall', :git => 'https://git-ipuppet.immerda.ch/module-shorewall'
@@ -17,7 +20,8 @@ mod 'yum', :git => 'https://git-ipuppet.immerda.ch/module-yum'
 mod 'selinux', :git => 'https://git-ipuppet.immerda.ch/module-selinux'
 mod 'certs', :git => 'https://git-ipuppet.immerda.ch/module-certs'
 mod 'systemd', :git => 'https://git-ipuppet.immerda.ch/module-systemd'
-mod 'puppetlabs-stdlib'
-mod 'puppetlabs-augeas_core'
-mod 'puppetlabs-concat', '~> 1.2.5'
+mod 'concat', :git => 'https://git-ipuppet.immerda.ch/module-concat'
 #mod 'munin', :git => 'https://git-ipuppet.immerda.ch/module-munin'
+
+mod 'puppetlabs-augeas_core'
+
