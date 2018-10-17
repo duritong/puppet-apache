@@ -63,13 +63,13 @@ define apache::vhost::php::mediawiki(
   if ('additional_envs' in $php_options) {
     $mediawiki_php_options = {
       additional_envs => $php_options['additional_envs'] + {
-        MW_INSTALL_PATH => $documentroot,
+        'MW_INSTALL_PATH' => $documentroot,
       },
     }
   } else {
     $mediawiki_php_options = {
       additional_envs => {
-        MW_INSTALL_PATH => $documentroot,
+        'MW_INSTALL_PATH' => $documentroot,
       },
     }
   }
