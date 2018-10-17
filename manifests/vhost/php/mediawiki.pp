@@ -57,6 +57,10 @@ define apache::vhost::php::mediawiki(
     safe_mode => false,
   }
 
+  $mediawiki_php_options = {
+    additional_open_basedir => '/usr/bin/git'
+  }
+
   # create vhost configuration file
   ::apache::vhost::php::webapp{$name:
     ensure                          => $ensure,
@@ -76,8 +80,8 @@ define apache::vhost::php::mediawiki(
     run_uid                         => $run_uid,
     run_gid                         => $run_gid,
     allow_override                  => $allow_override,
-    php_settings                    => merge($mediawiki_php_settings,$php_settings),
-    php_options                     => $php_options,
+    php_settings                    => $mediawiki_php_settings + $php_settings,
+    php_options                     => $mediawiki_php_options + $php_options,
     php_installation                => $php_installation,
     options                         => $options,
     additional_options              => $additional_options,
