@@ -6,7 +6,10 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
     {
       :fqdn                       => 'apache.example.com',
       :os => {
-        'family' => 'RedHat'
+        'family' => 'RedHat',
+        'release' => {
+          'major' => '7',
+        },
       },
       :operatingsystem            => 'CentOS',
       :operatingsystemmajrelease  => '7',

@@ -8,6 +8,11 @@ describe 'apache::vhost::static', :type => 'define' do
       :operatingsystem            => 'CentOS',
       :operatingsystemmajrelease  => '7',
       :selinux                    =>  true,
+      :os => {
+        'release' => {
+          'major' => '7',
+        },
+      },
     }
   }
   let(:pre_condition) {

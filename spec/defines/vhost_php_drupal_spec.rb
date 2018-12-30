@@ -9,6 +9,9 @@ describe 'apache::vhost::php::drupal', :type => 'define' do
       :operatingsystemmajrelease  => '7',
       :os                         => {
         'family' => 'RedHat',
+        'release' => {
+          'major' => '7',
+        },
       },
       :selinux                    => true,
     }

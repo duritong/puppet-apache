@@ -561,6 +561,101 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 "
 )}
   end
+  describe 'with fpm with scl73' do
+    let(:pre_condition){ 'Exec{ path => "/bin" }
+                         include yum::prerequisites' }
+    let(:params){
+      {
+        :run_mode         => 'fpm',
+        :run_uid          => 'foo',
+        :run_gid          => 'bar',
+        :php_installation => 'scl73',
+      }
+    }
+    # only test variables that are tuned
+    it { is_expected.to compile.with_all_deps }
+    it { is_expected.to contain_apache__vhost__webdir('example.com') }
+    it { is_expected.to contain_php__fpm('example.com').with(
+      :php_inst_class  => 'php73',
+      :tmpdir          => '/var/www/vhosts/example.com/tmp/tmp',
+      :logdir          => '/var/www/vhosts/example.com/logs',
+      :workdir         => '/var/www/vhosts/example.com',
+      :run_user        => 'foo',
+      :run_group       => 'bar',
+      :additional_envs => {},
+      :php_settings    => {
+        "apc.mmap_file_mask"    => "/var/www/vhosts/example.com/tmp/apc.XXXXXX",
+        "sp.configuration_file" => "/etc/opt/remi/php73/php.d/snuffleupagus-*.rules,/etc/opt/remi/php73/snuffleupagus.d/base.rules,/etc/opt/remi/php73/snuffleupagus.d/example.com.rules",
+        "engine"                => "On",
+        "upload_tmp_dir"        => "/var/www/vhosts/example.com/tmp/uploads",
+        "session.save_path"     => "/var/www/vhosts/example.com/tmp/sessions",
+        "error_log"             => "/var/www/vhosts/example.com/logs/php_error_log",
+        "safe_mode"             => nil,
+        "safe_mode_gid"         => nil,
+        "safe_mode_exec_dir"    => nil,
+        "default_charset"       => nil,
+        "open_basedir"          => "/opt/remi/php73/root/usr/share/php/:/opt/remi/php73/root/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp",
+      },
+    ) }
+    it { is_expected.to_not contain_class('apache::include::mod_fcgid') }
+    it { is_expected.to_not contain_class('php::scl::php54') }
+    it { is_expected.to contain_class('php::scl::php73') }
+
+    # only test variables that are tuned
+    it { is_expected.to contain_apache__vhost__phpdirs('example.com').with(
+      :path     => '/var/www/vhosts/example.com/tmp',
+    )}
+    # only test variables that are tuned
+    it { is_expected.to contain_apache__vhost('example.com').with(
+      :template_partial  => 'apache/vhosts/php/partial.erb',
+      :passing_extension => 'php'
+    )}
+
+    it { is_expected.to have_apache__vhost__php__safe_mode_bin_resource_count(0) }
+    # go deeper in the catalog and test the produced template
+    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
+"<VirtualHost *:80 >
+
+  Include include.d/defaults.inc
+  ServerName example.com
+  DocumentRoot /var/www/vhosts/example.com/www/
+  DirectoryIndex index.htm index.html index.php
+
+
+  ErrorLog /var/www/vhosts/example.com/logs/error_log
+  CustomLog /var/www/vhosts/example.com/logs/access_log combined
+
+
+
+  <Proxy \"unix:/run/fpm-example.com-socket/0.socket|fcgi://fpm-example.com-0\">
+    ProxySet timeout=300
+  </Proxy>
+
+  # Redirect to the proxy
+  <FilesMatch \\.php$>
+    SetHandler proxy:fcgi://fpm-example.com-0
+  </FilesMatch>
+
+  <Directory \"/var/www/vhosts/example.com/www/\">
+    AllowOverride None
+
+
+
+  </Directory>
+
+  <IfModule mod_security2.c>
+    SecRuleEngine Off
+    SecAuditEngine Off
+    SecAuditLogType Concurrent
+    SecAuditLogStorageDir /var/www/vhosts/example.com/logs/
+    SecAuditLog /var/www/vhosts/example.com/logs/mod_security_audit.log
+    SecDebugLog /var/www/vhosts/example.com/logs/mod_security_debug.log
+  </IfModule>
+
+</VirtualHost>
+"
+)}
+  end
   describe 'with mod_fcgid and params' do
     let(:facts){default_facts.merge(:operatingsystemmajrelease => '6')}
     let(:params){

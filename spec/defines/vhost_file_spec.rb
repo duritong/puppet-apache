@@ -10,6 +10,9 @@ describe 'apache::vhost::file', :type => 'define' do
       :fqdn            => 'apache.example.com',
       :os                         => {
         'family' => 'RedHat',
+        'release' => {
+          'major' => '7',
+        },
       },
       :selinux                    => true,
     }
@@ -49,6 +52,9 @@ describe 'apache::vhost::file', :type => 'define' do
         :operatingsystemmajrelease  => '7',
         :os                         => {
           'family' => 'RedHat',
+          'release' => {
+            'major' => '7',
+          },
         },
         :selinux                    => true,
       }
