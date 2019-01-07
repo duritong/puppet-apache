@@ -269,10 +269,11 @@ define apache::vhost::php::standard(
       $fpm_logdir = "/var/log/fpm-${name}"
       file{
         $fpm_logdir:
-          owner  => $run_uid,
-          group  => $run_gid,
-          mode   => '0640',
-          before => Php::Fpm[$name],
+          owner   => $run_uid,
+          group   => $run_gid,
+          mode    => '0640',
+          seltype => 'httpd_log_t',
+          before  => Php::Fpm[$name],
       }
       if $ensure == 'present' {
         File[$fpm_logdir]{

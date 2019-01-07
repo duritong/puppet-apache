@@ -23,6 +23,7 @@ class apache::centos inherits apache::base {
         before => Package['apache'],
         setype => $seltype_rw;
       [ '/var/www/vhosts/[^/]*/logs(/.*)?',
+        '/var/log/fpm-.*(/.*)?',
         '/var/www/vhosts/[^/]*/www/log(/.*)?' ]:
         before => Package['apache'],
         setype => 'httpd_log_t';
