@@ -222,12 +222,14 @@ define apache::vhost::php::standard(
       'sp.configuration_file' => "${php_etcdir}/php.d/snuffleupagus-*.rules,${php_etcdir}/snuffleupagus.d/base.rules,${php_etcdir}/snuffleupagus.d/${name}.rules",
     }
     if $ensure != 'absent' {
-      file{
-        "${php_etcdir}/snuffleupagus.d/${name}.rules":
-          content => template('apache/vhosts/php/snuffleupagus.erb'),
-          owner   => root,
-          group   => $run_gid,
-          mode    => '0640',
+      $sp_global_secret_key = trocla("php_${name}_sp.global.secret_key",'plain',{'length' => 64,'charset' => 'alphanumeric' })
+      $def_rules = { '005-sp.global.secret_key' => "sp.global.secret_key(\"${sp_global_secret_key}\");" }
+      php::snuffleupagus{
+        $name:
+          etcdir       => $php_etcdir,
+          rules        => $def_rules + pick($php_options['snuffleupagus_rules'],{}),
+          ignore_rules => pick($php_options['snuffleupagus_ignore_rules'],[]),
+          group        => $run_gid,
       }
     }
   } else {
