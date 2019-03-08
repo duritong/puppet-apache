@@ -40,7 +40,7 @@ class apache(
       $confd_dir   = "${apache::config_dir}/conf.d"
       $include_dir = "${apache::config_dir}/include.d"
       $modules_dir =  "${apache::config_dir}/modules.d"
-      $webdir      = "/var/www/vhosts"
+      $webdir      = '/var/www/vhosts'
       $default_apache_index = '/var/www/html/index.html'
       include ::apache::centos
     }
