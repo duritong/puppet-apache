@@ -1,0 +1,26 @@
+    Require valid-user
+    AuthType "Mellon"
+    MellonEnable "auth"
+
+    # MellonVariable is used to select the name of the cookie which
+    # mod_auth_mellon should use to remember the session id. If you
+    # want to have different sites running on the same host, then
+    # you will have to choose a different name for the cookie for each
+    # site.
+    MellonVariable "c-<%= @name %>"
+
+    MellonSecureCookie On
+    #MellonCookieSameSite strict
+
+    MellonUser "NAME_ID"
+    MellonSessionDump Off
+    MellonSamlResponseDump Off
+
+    MellonSessionLength 86400
+
+    MellonIdPMetadataFile /etc/httpd/mellon/idp-metadata-<%= @name %>.xml
+
+    MellonSPPrivateKeyFile /etc/httpd/mellon/<%= @name %>.key
+    MellonSPCertFile /etc/httpd/mellon/<%= @name %>.crt
+
+    MellonIdPCAFile /etc/httpd/mellon/<%= @name %>-ca.crt

@@ -102,6 +102,12 @@ define apache::vhost::file(
         }
       }
     }
+    if 'auth_mellon' in $configuration {
+      apache::module::auth_mellon::entity{
+        $name:
+          * => $configuration['auth_mellon']
+      }
+    }
   }
   if $htpasswd_file and ($htpasswd_file != 'absent') and ($htpasswd_file != 'nodeploy') {
     $real_htpasswd_path = $htpasswd_path ? {

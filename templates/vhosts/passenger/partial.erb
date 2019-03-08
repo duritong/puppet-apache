@@ -4,7 +4,7 @@
     Options <%- unless @options.to_s == 'absent' -%><%= @options %><%- end -%><%- unless !@options.to_s.include?('MultiViews') -%>-MultiViews<%- end -%>
 
   </Directory>
-<% if @htpasswd_file && @htpasswd_file.to_s != 'absent' -%>
+<% if (@htpasswd_file && @htpasswd_file.to_s != 'absent') || @configuration['auth_mellon'] -%>
   <Location />
 <%= scope.call_function('template',['apache/vhosts/partials/authentication.erb']) %>
   </Location>
