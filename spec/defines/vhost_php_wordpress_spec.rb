@@ -66,6 +66,8 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
   # http://www.frameloss.org/2013/04/26/even-easier-brute-force-login-protection-for-wordpress/
   RewriteEngine On
   RewriteCond %{HTTP_COOKIE} !40561c33fd7d6b5f858ca10c8bb39211284e7d42
+  RewriteCond %{QUERY_STRING} !(?:^|&)action=rp(?:$|&) [NC]
+  RewriteCond %{QUERY_STRING} !(?:^|&)action=resetpass(?:$|&) [NC]
   RewriteRule ^/wp-login.php /wordpress-login-de51a1ff42b11773ac438c2704ff390feb1ab64c.php [R,L]
   <Location /wordpress-login-de51a1ff42b11773ac438c2704ff390feb1ab64c.php>
     CookieTracking on
@@ -152,6 +154,8 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
   # http://www.frameloss.org/2013/04/26/even-easier-brute-force-login-protection-for-wordpress/
   RewriteEngine On
   RewriteCond %{HTTP_COOKIE} !40561c33fd7d6b5f858ca10c8bb39211284e7d42
+  RewriteCond %{QUERY_STRING} !(?:^|&)action=rp(?:$|&) [NC]
+  RewriteCond %{QUERY_STRING} !(?:^|&)action=resetpass(?:$|&) [NC]
   RewriteRule ^/wp-login.php /wordpress-login-de51a1ff42b11773ac438c2704ff390feb1ab64c.php [R,L]
   <Location /wordpress-login-de51a1ff42b11773ac438c2704ff390feb1ab64c.php>
     CookieTracking on
