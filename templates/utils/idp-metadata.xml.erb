@@ -1,4 +1,4 @@
-<EntityDescriptor ID="<%= @entitiy_id || @name %>" xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="<%= @login_url %>">
+<EntityDescriptor ID="<%= @entitiy_id || @name %>" xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="<%= @login_url %>/saml">
   <IDPSSODescriptor WantAuthnRequestsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
 <% Array(@signing_certs).each do |cert| -%>
     <KeyDescriptor use="signing">
@@ -13,7 +13,7 @@
 <% end -%>
     <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:emailAddress</NameIDFormat>
     <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</NameIDFormat>
-    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="<%= @login_url %>"/>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="<%= @login_url %>/saml_post/"/>
     <saml:Attribute NameFormat="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress" Name="" FriendlyName="email"></saml:Attribute>
   </IDPSSODescriptor>
 </EntityDescriptor>
