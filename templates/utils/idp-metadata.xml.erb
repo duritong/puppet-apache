@@ -1,4 +1,4 @@
-<EntityDescriptor ID="<%= @entitiy_id || @name %>" xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID=<%= @login_url %>">
+<EntityDescriptor ID="<%= @entitiy_id || @name %>" xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="<%= @login_url %>">
   <IDPSSODescriptor WantAuthnRequestsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
 <% Array(@signing_certs).each do |cert| -%>
     <KeyDescriptor use="signing">
