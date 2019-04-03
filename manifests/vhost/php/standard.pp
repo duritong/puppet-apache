@@ -291,6 +291,11 @@ define apache::vhost::php::standard(
       $fpm_logdir = $logdir
       $fpm_php_settings = $real_php_settings
     }
+    if 'fpm_settings' in $configuration {
+      $fpm_settings = $configuration['fpm_settings']
+    } else {
+      $fpm_settings = {}
+    }
     php::fpm{
       $name:
         ensure          => $ensure,
@@ -301,6 +306,7 @@ define apache::vhost::php::standard(
         run_user        => $run_uid,
         run_group       => $run_gid,
         additional_envs => $php_options['additional_envs'],
+        fpm_settings    => $fpm_settings,
         php_settings    => $fpm_php_settings,
         writable_dirs   => $fpm_writable_dirs,
     }
