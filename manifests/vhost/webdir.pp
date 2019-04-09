@@ -61,8 +61,8 @@ define apache::vhost::webdir(
         onlyif  => "test -d  ${real_path}",
         require => Service['apache'],
       } -> file{$real_path:
-        ensure  => absent,
-        force   => true,
+        ensure => absent,
+        force  => true,
       }
     }
     default: {
@@ -74,16 +74,16 @@ define apache::vhost::webdir(
           group   => $real_group,
           mode    => $mode;
         $logdir:
-          ensure  => directory,
-          before  => Service['apache'],
-          owner   => $real_documentroot_owner,
-          group   => $real_documentroot_group,
-          mode    => '0660';
+          ensure => directory,
+          before => Service['apache'],
+          owner  => $real_documentroot_owner,
+          group  => $real_documentroot_group,
+          mode   => '0660';
         "${real_path}/private":
-          ensure  => directory,
-          owner   => $real_documentroot_owner,
-          group   => $real_documentroot_group,
-          mode    => '0600';
+          ensure => directory,
+          owner  => $real_documentroot_owner,
+          group  => $real_documentroot_group,
+          mode   => '0600';
       }
       if $manage_docroot {
         file{$documentroot:

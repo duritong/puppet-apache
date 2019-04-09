@@ -417,7 +417,7 @@ cert2
     )}
 
     {
-      '/etc/httpd/mellon/example.com-idp-metadata.xml' => '<EntityDescriptor ID="example.com" xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID=https://login.example.com">
+      '/etc/httpd/mellon/example.com-idp-metadata.xml' => '<EntityDescriptor ID="example.com" xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="https://login.example.com/saml">
   <IDPSSODescriptor WantAuthnRequestsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
     <KeyDescriptor use="signing">
       <KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
@@ -439,7 +439,7 @@ cert2
     </KeyDescriptor>
     <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:emailAddress</NameIDFormat>
     <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</NameIDFormat>
-    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://login.example.com"/>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://login.example.com/saml_post/"/>
     <saml:Attribute NameFormat="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress" Name="" FriendlyName="email"></saml:Attribute>
   </IDPSSODescriptor>
 </EntityDescriptor>
@@ -585,7 +585,7 @@ cert2
       :mode   => '0640',
       :notify => 'Service[apache]',
     )}
-    it { is_expected.to contain_file('/etc/httpd/mellon/example.com-idp-metadata.xml').with_content('<EntityDescriptor ID="example.com" xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID=https://login.example.com">
+    it { is_expected.to contain_file('/etc/httpd/mellon/example.com-idp-metadata.xml').with_content('<EntityDescriptor ID="example.com" xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="https://login.example.com/saml">
   <IDPSSODescriptor WantAuthnRequestsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
     <KeyDescriptor use="signing">
       <KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
@@ -607,7 +607,7 @@ cert2
     </KeyDescriptor>
     <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:emailAddress</NameIDFormat>
     <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</NameIDFormat>
-    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://login.example.com"/>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://login.example.com/saml_post/"/>
     <saml:Attribute NameFormat="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress" Name="" FriendlyName="email"></saml:Attribute>
   </IDPSSODescriptor>
 </EntityDescriptor>
