@@ -18,7 +18,7 @@
 
     MellonSessionLength 86400
 
-    MellonIdPMetadataFile /etc/httpd/mellon/idp-metadata-<%= @name %>.xml
+    MellonIdPMetadataFile /etc/httpd/mellon/<%= @name %>-idp-metadata.xml
 
     MellonSPPrivateKeyFile /etc/httpd/mellon/<%= @name %>.key
     MellonSPCertFile /etc/httpd/mellon/<%= @name %>.crt
