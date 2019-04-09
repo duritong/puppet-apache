@@ -52,7 +52,7 @@ define apache::vhost::wsgi(
   $htpasswd_path                    = 'absent',
 ){
 
-  require "::python::scl36::wsgi"
+  require ::python::scl36::wsgi
 
   if $manage_webdir {
     # create webdir
