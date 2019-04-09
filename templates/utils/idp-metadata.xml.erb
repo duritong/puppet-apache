@@ -1,6 +1,11 @@
 <EntityDescriptor ID="<%= @entitiy_id || @name %>" xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="<%= @login_url %>/saml">
   <IDPSSODescriptor WantAuthnRequestsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
-<% Array(@signing_certs).each do |cert| -%>
+<% Array(@signing_certs).each do |cert|
+  # allow passing as paths so we read them out here
+  if cert =~ /^\//
+    cert = File.read(cert)
+  end
+    -%>
     <KeyDescriptor use="signing">
       <KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
         <X509Data>
