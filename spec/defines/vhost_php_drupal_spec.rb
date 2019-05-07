@@ -55,7 +55,6 @@ describe 'apache::vhost::php::drupal', :type => 'define' do
   <Directory \"/var/www/vhosts/example.com/www/\">
     AllowOverride None
 
-
     php_admin_value apc.mmap_file_mask /var/www/vhosts/example.com/tmp/apc.XXXXXX
     php_admin_flag engine on
     php_admin_value error_log /var/www/vhosts/example.com/logs/php_error_log
@@ -81,6 +80,7 @@ describe 'apache::vhost::php::drupal', :type => 'define' do
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
+
   </Directory>
   <Directory \"/var/www/vhosts/example.com/www/files/\">
     SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006
@@ -158,7 +158,6 @@ describe 'apache::vhost::php::drupal', :type => 'define' do
     AllowOverride None
     Options  +ExecCGI
 
-
     # Protect files and directories from prying eyes.
     <FilesMatch \"\\.(engine|inc|info|install|module|profile|po|sh|.*sql|theme|tpl(\\.php)?|xtmpl)$|^(code-style\\.pl|Entries.*|Repository|Root|Tag|Template)$\">
       Deny From All
@@ -171,6 +170,7 @@ describe 'apache::vhost::php::drupal', :type => 'define' do
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
+
   </Directory>
   <Directory \"/var/www/vhosts/example.com/www/files/\">
     SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006

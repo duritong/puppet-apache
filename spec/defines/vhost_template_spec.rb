@@ -510,12 +510,13 @@ cert2
 
     MellonSessionLength 86400
 
-    MellonIdPMetadataFile /etc/httpd/mellon/idp-metadata-example.com.xml
+    MellonIdPMetadataFile /etc/httpd/mellon/example.com-idp-metadata.xml
 
     MellonSPPrivateKeyFile /etc/httpd/mellon/example.com.key
     MellonSPCertFile /etc/httpd/mellon/example.com.crt
 
     MellonIdPCAFile /etc/httpd/mellon/example.com-ca.crt
+
 
   </Directory>
 
@@ -679,12 +680,13 @@ cert2
 
     MellonSessionLength 86400
 
-    MellonIdPMetadataFile /etc/httpd/mellon/idp-metadata-example.com.xml
+    MellonIdPMetadataFile /etc/httpd/mellon/example.com-idp-metadata.xml
 
     MellonSPPrivateKeyFile /etc/httpd/mellon/example.com.key
     MellonSPCertFile /etc/httpd/mellon/example.com.crt
 
     MellonIdPCAFile /etc/httpd/mellon/example.com-ca.crt
+
 
   </Directory>
 

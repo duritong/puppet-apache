@@ -11,6 +11,7 @@
     RewriteCond %{QUERY_STRING} subView=core\.UserLogin
     RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [NE,R,L]
 <% if @configuration['authenticated_location'] -%>
+<% if @configuration.key?('auth_mellon') -%><%= scope.call_function('template',['apache/vhosts/partials/auth_mellon_config.erb']) %><% end -%>
   </Directory>
 
   <Location <%= @configuration['authenticated_location'] %>>

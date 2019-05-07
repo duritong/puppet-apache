@@ -89,8 +89,8 @@ describe 'apache::vhost::php::joomla', :type => 'define' do
     php_admin_value upload_tmp_dir /var/www/vhosts/example.com/tmp/uploads
  
 
-
     Include include.d/joomla.inc
+
   </Directory>
 
   <Directory \"/var/www/vhosts/example.com/www/administrator/\">
@@ -227,8 +227,8 @@ describe 'apache::vhost::php::joomla', :type => 'define' do
     Options  +ExecCGI
  
 
-
     Include include.d/joomla.inc
+
   </Directory>
 
   <Directory \"/var/www/vhosts/example.com/www/administrator/\">

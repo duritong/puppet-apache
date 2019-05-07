@@ -9,6 +9,7 @@
 <%= scope.call_function('template',['apache/vhosts/partials/php_settings.erb']) %>
     Include include.d/silverstripe.inc
 <% if @configuration['authenticated_location'] -%>
+<% if @configuration.key?('auth_mellon') -%><%= scope.call_function('template',['apache/vhosts/partials/auth_mellon_config.erb']) %><% end -%>
   </Directory>
 
   <Location <%= @configuration['authenticated_location'] %>>

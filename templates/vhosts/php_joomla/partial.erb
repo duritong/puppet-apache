@@ -4,6 +4,7 @@
 
     Include include.d/joomla.inc
 <% if @configuration['authenticated_location'] -%>
+<% if @configuration.key?('auth_mellon') -%><%= scope.call_function('template',['apache/vhosts/partials/auth_mellon_config.erb']) %><% end -%>
   </Directory>
 
   <Location <%= @configuration['authenticated_location'] %>>
