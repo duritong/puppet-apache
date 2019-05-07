@@ -1,10 +1,18 @@
   <Directory "<%= @documentroot %>/">
 <%= scope.call_function('template',['apache/vhosts/partials/std_override_options.erb']) %>
 <%= scope.call_function('template',['apache/vhosts/partials/php_settings.erb']) %> 
-<%= scope.call_function('template',['apache/vhosts/partials/authentication.erb']) %>
 
     Include include.d/joomla.inc
+<% if @configuration['authenticated_location'] -%>
   </Directory>
+
+  <Location <%= @configuration['authenticated_location'] %>>
+<%= scope.call_function('template',['apache/vhosts/partials/authentication.erb']) %>
+  </Location>
+<% else -%>
+<%= scope.call_function('template',['apache/vhosts/partials/authentication.erb']) %>
+  </Directory>
+<% end -%>
 
   <Directory "<%= @documentroot %>/administrator/">
     RewriteEngine on

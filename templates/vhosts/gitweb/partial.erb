@@ -12,5 +12,13 @@
     RewriteEngine on
     RewriteRule ^[a-zA-Z0-9_-]+.git/?(\?.)?$ /gitweb.cgi%{REQUESTURI} [L,PT]
 
+<% if @configuration['authenticated_location'] -%>
+  </Directory>
+
+  <Location <%= @configuration['authenticated_location'] %>>
+<%= scope.call_function('template',['apache/vhosts/partials/authentication.erb']) %>
+  </Location>
+<% else -%>
 <%= scope.call_function('template',['apache/vhosts/partials/authentication.erb']) %>
   </Directory>
+<% end -%>
