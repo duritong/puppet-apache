@@ -8,8 +8,6 @@
   end
 -%>    <%= deny_statement %>
 
-<%= scope.call_function('template',['apache/vhosts/partials/authentication.erb']) %>
-
 <% if @configuration['authenticated_location'] -%>
 <% if @configuration.key?('auth_mellon') -%><%= scope.call_function('template',['apache/vhosts/partials/auth_mellon_config.erb']) %><% end -%>
   </Proxy>
