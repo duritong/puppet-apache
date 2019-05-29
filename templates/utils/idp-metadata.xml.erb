@@ -2,7 +2,7 @@
   <IDPSSODescriptor WantAuthnRequestsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
 <% Array(@signing_certs).each do |cert|
   # allow passing as paths so we read them out here
-  if cert =~ /^\//
+  if cert =~ /\A\//
     cert = File.read(cert)
   end
     -%>
