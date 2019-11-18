@@ -1,0 +1,18 @@
+  <Proxy *>
+    Require all granted
+
+<% if @configuration['authenticated_location'] -%>
+<% if @configuration.key?('auth_mellon') -%><%= scope.call_function('template',['apache/vhosts/partials/auth_mellon_config.erb']) %><% end -%>
+  </Proxy>
+
+  <Location <%= @configuration['authenticated_location'] %>>
+<%= scope.call_function('template',['apache/vhosts/partials/authentication.erb']) %>
+  </Location>
+<% else -%>
+<%= scope.call_function('template',['apache/vhosts/partials/authentication.erb']) %>
+  </Proxy>
+<% end -%>
+
+  ProxyRequests Off
+  ProxyPass        /   <%= @options %>/
+  ProxyPassReverse /   <%= @options %>/
