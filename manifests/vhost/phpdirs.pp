@@ -14,7 +14,15 @@ define apache::vhost::phpdirs(
   }
   file{$path: }
   if $ensure == 'present' {
-    file{["${path}/tmp", "${path}/sessions",
+    if !defined(File["${path}/tmp"]){
+      file{"${path}/tmp":
+        ensure => directory,
+        owner  => $owner,
+        group  => $documentroot_group,
+        mode   => $documentroot_mode,
+      }
+    }
+    file{["${path}/sessions",
       "${path}/uploads"]: }
     File[$path, "${path}/tmp", "${path}/sessions",
         "${path}/uploads"]{
