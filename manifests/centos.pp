@@ -33,6 +33,9 @@ class apache::centos inherits apache::base {
       '/var/www/vhosts/[^/]*/virtualenv/.*\.so[^/]*':
         before => Package['apache'],
         setype => 'httpd_sys_script_exec_t';
+      '/var/www/vhosts/[^/]+/tmp/run(/.*)?':
+        before => Package['apache'],
+        setype => 'httpd_var_run_t';
     }
   }
   if versioncmp($::operatingsystemmajrelease,'6') > 0 {
