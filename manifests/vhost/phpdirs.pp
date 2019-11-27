@@ -24,7 +24,7 @@ define apache::vhost::phpdirs(
     }
     file{["${path}/sessions",
       "${path}/uploads"]: }
-    File[$path, "${path}/tmp", "${path}/sessions",
+    File[$path, "${path}/sessions",
         "${path}/uploads"]{
       ensure => directory,
       owner  => $owner,
