@@ -1,5 +1,5 @@
   <Proxy *>
-<% unless (@htpasswd_file && @htpasswd_file.to_s == 'absent') && !@configuration.key?('auth_mellon') -%>
+<% if (@htpasswd_file && @htpasswd_file.to_s == 'absent') && !@configuration.key?('auth_mellon') -%>
     Require all granted
 
 <% end -%>
