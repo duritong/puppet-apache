@@ -1,6 +1,8 @@
   <Proxy *>
+<% unless (@htpasswd_file && @htpasswd_file.to_s == 'absent') && !@configuration.key?('auth_mellon') -%>
     Require all granted
 
+<% end -%>
 <% if @configuration['authenticated_location'] -%>
 <% if @configuration.key?('auth_mellon') -%><%= scope.call_function('template',['apache/vhosts/partials/auth_mellon_config.erb']) %><% end -%>
   </Proxy>
