@@ -32,8 +32,8 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     it { is_expected.to_not contain_class('mod_fcgid') }
     it { is_expected.to_not contain_class('php::mod_fcgid') }
     it { is_expected.to_not contain_class('apache::include::mod_fcgid') }
-    it { is_expected.to_not contain_class('php::scl::php54') }
-    it { is_expected.to_not contain_class('php::scl::php55') }
+    it { is_expected.to_not contain_class('php::scl::php73') }
+    it { is_expected.to_not contain_class('php::scl::php74') }
     it { is_expected.to contain_class('php') }
     it { is_expected.to_not contain_mod_fcgid__starter('example.com') }
 
@@ -189,8 +189,8 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     it { is_expected.to contain_class('mod_fcgid') }
     it { is_expected.to contain_class('php::mod_fcgid') }
     it { is_expected.to contain_class('apache::include::mod_fcgid') }
-    it { is_expected.to_not contain_class('php::scl::php54') }
-    it { is_expected.to_not contain_class('php::scl::php55') }
+    it { is_expected.to_not contain_class('php::scl::php72') }
+    it { is_expected.to_not contain_class('php::scl::php73') }
     it { is_expected.to contain_mod_fcgid__starter('example.com').with(
       :tmp_dir          => '/var/www/vhosts/example.com/tmp/tmp',
       :cgi_type         => 'php',
@@ -276,7 +276,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
 "
 )}
   end
-  describe 'with mod_fcgid scl 5.4' do
+  describe 'with mod_fcgid scl 5.6' do
     let(:pre_condition){ 'Exec{ path => "/bin" }
                          include yum::prerequisites' }
     let(:params){
@@ -284,7 +284,7 @@ describe 'apache::vhost::php::standard', :type => 'define' do
         :run_mode         => 'fcgid',
         :run_uid          => 'foo',
         :run_gid          => 'bar',
-        :php_installation => 'scl54',
+        :php_installation => 'scl56',
       }
     }
     # only test variables that are tuned
@@ -293,8 +293,8 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     it { is_expected.to contain_class('mod_fcgid') }
     it { is_expected.to contain_class('php::mod_fcgid') }
     it { is_expected.to contain_class('apache::include::mod_fcgid') }
-    it { is_expected.to contain_class('php::scl::php54') }
-    it { is_expected.to_not contain_class('php::scl::php55') }
+    it { is_expected.to contain_class('php::scl::php56') }
+    it { is_expected.to_not contain_class('php::scl::php74') }
     it { is_expected.to contain_mod_fcgid__starter('example.com').with(
       :tmp_dir          => "/var/www/vhosts/example.com/tmp/tmp",
       :cgi_type         => 'php',
@@ -308,11 +308,11 @@ describe 'apache::vhost::php::standard', :type => 'define' do
         "safe_mode_gid"      => nil,
         "safe_mode_exec_dir" => nil,
         "default_charset"    => nil,
-        "open_basedir"       => "/opt/rh/php54/root/usr/share/php/:/opt/rh/php54/root/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp"
+        "open_basedir"       => "/opt/remi/php56/root/usr/share/php/:/opt/remi/php56/root/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp"
       },
-      :binary           => '/opt/rh/php54/root/usr/bin/php-cgi',
-      :additional_cmds  => 'source /opt/rh/php54/enable',
-      :rc               => '/opt/rh/php54/root/etc',
+      :binary           => '/opt/remi/php56/root/usr/bin/php-cgi',
+      :additional_cmds  => 'source /opt/remi/php56/enable',
+      :rc               => '/etc/opt/remi/php56',
       :owner            => 'foo',
       :group            => 'bar',
       :notify           => 'Service[apache]',
@@ -321,101 +321,6 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     # only test variables that are tuned
     it { is_expected.to contain_apache__vhost__phpdirs('example.com').with(
       :path => '/var/www/vhosts/example.com/tmp',
-    )}
-    # only test variables that are tuned
-    it { is_expected.to contain_apache__vhost('example.com').with(
-      :template_partial  => 'apache/vhosts/php/partial.erb',
-      :passing_extension => 'php'
-    )}
-
-    it { is_expected.to have_apache__vhost__php__safe_mode_bin_resource_count(0) }
-    # go deeper in the catalog and test the produced template
-    it { is_expected.to contain_apache__vhost__file('example.com').with_content(
-"<VirtualHost *:80 >
-
-  Include include.d/defaults.inc
-  ServerName example.com
-  DocumentRoot /var/www/vhosts/example.com/www/
-  DirectoryIndex index.htm index.html index.php
-
-
-  ErrorLog /var/www/vhosts/example.com/logs/error_log
-  CustomLog /var/www/vhosts/example.com/logs/access_log combined
-
-
-
-  <IfModule mod_fcgid.c>
-    SuexecUserGroup foo bar
-    FcgidMaxRequestsPerProcess 4990
-    FCGIWrapper /var/www/mod_fcgid-starters/example.com/example.com-starter .php
-    AddHandler fcgid-script .php
-  </IfModule>
-
-  <Directory \"/var/www/vhosts/example.com/www/\">
-    AllowOverride None
-    Options  +ExecCGI
-
-
-  </Directory>
-
-  <IfModule mod_security2.c>
-    SecRuleEngine Off
-    SecAuditEngine Off
-    SecAuditLogType Concurrent
-    SecAuditLogStorageDir /var/www/vhosts/example.com/logs/
-    SecAuditLog /var/www/vhosts/example.com/logs/mod_security_audit.log
-    SecDebugLog /var/www/vhosts/example.com/logs/mod_security_debug.log
-  </IfModule>
-
-</VirtualHost>
-"
-)}
-  end
-  describe 'with mod_fcgid with scl55' do
-    let(:pre_condition){ 'Exec{ path => "/bin" }
-                         include yum::prerequisites' }
-    let(:params){
-      {
-        :run_mode         => 'fcgid',
-        :run_uid          => 'foo',
-        :run_gid          => 'bar',
-        :php_installation => 'scl55',
-      }
-    }
-    # only test variables that are tuned
-    it { is_expected.to compile.with_all_deps }
-    it { is_expected.to contain_apache__vhost__webdir('example.com') }
-    it { is_expected.to contain_class('mod_fcgid') }
-    it { is_expected.to contain_class('php::mod_fcgid') }
-    it { is_expected.to contain_class('apache::include::mod_fcgid') }
-    it { is_expected.to_not contain_class('php::scl::php54') }
-    it { is_expected.to contain_class('php::scl::php55') }
-    it { is_expected.to contain_mod_fcgid__starter('example.com').with(
-      :tmp_dir          => '/var/www/vhosts/example.com/tmp/tmp',
-      :cgi_type         => 'php',
-      :cgi_type_options => {
-        "apc.mmap_file_mask" => "/var/www/vhosts/example.com/tmp/apc.XXXXXX",
-        "engine"             => "On",
-        "upload_tmp_dir"     => "/var/www/vhosts/example.com/tmp/uploads",
-        "session.save_path"  => "/var/www/vhosts/example.com/tmp/sessions",
-        "error_log"          => "/var/www/vhosts/example.com/logs/php_error_log",
-        "safe_mode"          => nil,
-        "safe_mode_gid"      => nil,
-        "safe_mode_exec_dir "=> nil,
-        "default_charset"    => nil,
-        "open_basedir"       => "/opt/rh/php55/root/usr/share/php/:/opt/rh/php55/root/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp",
-      },
-      :binary           => '/opt/rh/php55/root/usr/bin/php-cgi',
-      :additional_cmds  => 'source /opt/rh/php55/enable',
-      :rc               => '/opt/rh/php55/root/etc',
-      :owner            => 'foo',
-      :group            => 'bar',
-      :notify           => 'Service[apache]',
-    ) }
-
-    # only test variables that are tuned
-    it { is_expected.to contain_apache__vhost__phpdirs('example.com').with(
-      :path     => '/var/www/vhosts/example.com/tmp',
     )}
     # only test variables that are tuned
     it { is_expected.to contain_apache__vhost('example.com').with(
