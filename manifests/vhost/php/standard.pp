@@ -61,7 +61,7 @@ define apache::vhost::php::standard(
 
   if $manage_webdir {
     # create webdir
-    ::apache::vhost::webdir{$name:
+    apache::vhost::webdir{$name:
       ensure             => $ensure,
       path               => $path,
       owner              => $owner,
@@ -81,7 +81,7 @@ define apache::vhost::php::standard(
 
   if $path_is_webdir {
     $documentroot = $real_path
-    include ::apache::defaultphpdirs
+    include apache::defaultphpdirs
     $php_sysroot = "${apache::defaultphpdirs::dir}/${name}"
     if 'fpm_writable_dirs' in $configuration {
       $fpm_writable_dirs = $configuration['fpm_writable_dirs'] + [ $php_sysroot ]
@@ -241,9 +241,9 @@ define apache::vhost::php::standard(
   if $ensure != 'absent' {
     case $run_mode {
       'fcgid': {
-        include ::mod_fcgid
-        include ::php::mod_fcgid
-        include ::apache::include::mod_fcgid
+        include mod_fcgid
+        include php::mod_fcgid
+        include apache::include::mod_fcgid
 
         mod_fcgid::starter {$name:
           tmp_dir          => "${php_sysroot}/tmp",
@@ -262,7 +262,7 @@ define apache::vhost::php::standard(
           }
         }
       }
-      default: { include ::php }
+      default: { include php }
     }
   }
 
@@ -330,7 +330,7 @@ define apache::vhost::php::standard(
   }
 
   # create vhost configuration file
-  ::apache::vhost{$name:
+  apache::vhost{$name:
     ensure                          => $ensure,
     configuration                   => $configuration,
     path                            => $path,
