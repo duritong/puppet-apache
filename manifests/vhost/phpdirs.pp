@@ -16,30 +16,22 @@ define apache::vhost::phpdirs(
   if $ensure == 'present' {
     if !defined(File["${path}/tmp"]){
       file{"${path}/tmp":
-        ensure => directory,
-        owner  => $owner,
-        group  => $documentroot_group,
-        mode   => $documentroot_mode,
+        ensure  => directory,
+        owner   => $owner,
+        group   => $documentroot_group,
+        mode    => $documentroot_mode,
+        seltype => 'httpd_sys_rw_content_t',
       }
     }
     file{["${path}/sessions",
       "${path}/uploads"]: }
     File[$path, "${path}/sessions",
         "${path}/uploads"]{
-      ensure => directory,
-      owner  => $owner,
-      group  => $documentroot_group,
-      mode   => $documentroot_mode,
-    }
-    if str2bool($::selinux) {
-      $seltype_rw = $::operatingsystemmajrelease ? {
-        '5'     => 'httpd_sys_script_rw_t',
-        default => 'httpd_sys_rw_content_t'
-      }
-      File[$path, "${path}/tmp", "${path}/sessions",
-        "${path}/uploads"]{
-        seltype => $seltype_rw,
-      }
+      ensure  => directory,
+      owner   => $owner,
+      group   => $documentroot_group,
+      mode    => $documentroot_mode,
+      seltype => 'httpd_sys_rw_content_t',
     }
   } else {
     File[$path]{

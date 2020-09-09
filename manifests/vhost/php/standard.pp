@@ -135,7 +135,7 @@ define apache::vhost::php::standard(
     $std_php_settings_default_charset = undef
   }
 
-  ::apache::vhost::phpdirs{$name:
+  apache::vhost::phpdirs{$name:
     ensure             => $ensure,
     path               => $php_sysroot,
     documentroot_owner => $documentroot_owner,
