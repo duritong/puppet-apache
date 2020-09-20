@@ -123,8 +123,8 @@ define apache::vhost::file(
                     "puppet:///modules/site_apache/htpasswds/${apache::cluster_node}/${name}",
                     "puppet:///modules/site_apache/htpasswds/${name}" ],
         owner   => root,
-        group   => 0,
-        mode    => '0644',
+        group   => 'apache',
+        mode    => '0640',
       }
     }
   }

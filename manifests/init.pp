@@ -17,6 +17,7 @@ class apache(
   $cluster_node                       = '',
   $manage_shorewall                   = false,
   $manage_munin                       = false,
+  $status_pwd                         = 'munin-access-change-me',
   $no_default_site                    = false,
   $http_listen                        = undef,
   $ssl                                = false,
@@ -30,10 +31,10 @@ class apache(
   if $ssl_cipher_suite {
     $real_ssl_cipher_suite = $ssl_cipher_suite
   } else {
-    include ::certs::ssl_config
+    include certs::ssl_config
     $real_ssl_cipher_suite = $certs::ssl_config::ciphers_http
   }
-  case $::operatingsystem {
+  case $facts['operatingsystem'] {
     'CentOS': {
       $config_dir  = '/etc/httpd'
       $vhosts_dir  = "${apache::config_dir}/vhosts.d"
@@ -42,7 +43,7 @@ class apache(
       $modules_dir =  "${apache::config_dir}/modules.d"
       $webdir      = '/var/www/vhosts'
       $default_apache_index = '/var/www/html/index.html'
-      include ::apache::centos
+      include apache::centos
     }
     'Debian','Ubuntu': {
       $config_dir  = '/etc/apache2'
@@ -53,12 +54,16 @@ class apache(
       $webdir      = '/var/www'
       $default_apache_index = '/var/www/index.html'
 
-      include ::apache::debian
+      include apache::debian
     }
-    default: { fail("Operatingsystem ${::operatingsystem} is not supported by this module") }
+    default: { fail("Operatingsystem ${facts['operatingsystem']} is not supported by this module") }
   }
-  if $apache::manage_munin { include ::apache::status }
-  if $apache::manage_shorewall { include ::shorewall::rules::http }
-  if $ssl { include ::apache::ssl }
+  if $apache::manage_munin {
+    class{'apache::status':
+      pwd => $status_pwd,
+    }
+  }
+  if $apache::manage_shorewall { include shorewall::rules::http }
+  if $ssl { include apache::ssl }
 }
 
