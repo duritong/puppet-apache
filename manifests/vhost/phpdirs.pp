@@ -12,10 +12,16 @@ define apache::vhost::phpdirs(
     /^(fcgid|fpm)$/ => $run_uid,
     default         => $documentroot_owner,
   }
-  if !defined(File[$path]){
-    file{$path: }
-  }
   if $ensure == 'present' {
+    if !defined(File[$path]){
+      file{$path:
+        ensure  => directory,
+        owner   => $owner,
+        group   => $documentroot_group,
+        mode    => $documentroot_mode,
+        seltype => 'httpd_sys_rw_content_t',
+      }
+    }
     if !defined(File["${path}/tmp"]){
       file{"${path}/tmp":
         ensure  => directory,
@@ -25,19 +31,9 @@ define apache::vhost::phpdirs(
         seltype => 'httpd_sys_rw_content_t',
       }
     }
-    file{["${path}/sessions",
-      "${path}/uploads"]: }
-    if !defined(File[$path]){
-      File[$path]{
-        ensure  => directory,
-        owner   => $owner,
-        group   => $documentroot_group,
-        mode    => $documentroot_mode,
-        seltype => 'httpd_sys_rw_content_t',
-      }
-    }
-    File["${path}/sessions",
-        "${path}/uploads"]{
+    file{
+      ["${path}/sessions",
+        "${path}/uploads"]:
       ensure  => directory,
       owner   => $owner,
       group   => $documentroot_group,
@@ -46,7 +42,7 @@ define apache::vhost::phpdirs(
     }
   } else {
     if !defined(File[$path]){
-      File[$path]{
+      file{$path:
         ensure  => 'absent',
         force   => true,
         purge   => true,
