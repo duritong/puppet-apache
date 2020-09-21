@@ -1,23 +1,16 @@
-  <Proxy *>
-<%
-  if scope.call_function('guess_apache_version',[]) == '2.4'
-    deny_statement = 'Require all granted'
-  else
-    deny_statement = 'Order deny,allow
-    Allow from all'
-  end
--%>    <%= deny_statement %>
+  <Location />
+    Require all granted
 
 <% if @configuration['authenticated_location'] -%>
 <% if @configuration.key?('auth_mellon') -%><%= scope.call_function('template',['apache/vhosts/partials/auth_mellon_config.erb']) %><% end -%>
-  </Proxy>
+  </Location>
 
   <Location <%= @configuration['authenticated_location'] %>>
 <%= scope.call_function('template',['apache/vhosts/partials/authentication.erb']) %>
   </Location>
 <% else -%>
 <%= scope.call_function('template',['apache/vhosts/partials/authentication.erb']) %>
-  </Proxy>
+  </Location>
 <% end -%>
 
   ProxyRequests Off
