@@ -1,5 +1,5 @@
   <Directory "<%= @documentroot %>/">
-<%= scope.call_function('template',['apache/vhosts/partials/std_override_options.erb']) %>
+    AllowOverride <%= @allow_override %>
   </Directory>
 
   <Location />
