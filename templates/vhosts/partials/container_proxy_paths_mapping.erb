@@ -1,18 +1,20 @@
-<% if @configuration['containers'].is_a?(Hash) && @configuration['containers'].any?{|c,v| v['publish'].is_a?(Hash) }
+<% if @configuration['containers'].is_a?(Hash) && @configuration['containers'].any?{|c,v| v['route'].is_a?(Hash) }
   paths = @configuration['containers'].inject do |res,c,values|
-    Hash(values['publish']).each do |path,port|
+    Hash(values['route']).each do |path,port|
       p = path =~ /^\// ? path : "/#{p}"
       if res[p]
-        scope.call_function('fail', "Double defined path for #{name} and container #{c}")
+        scope.call_function('fail', "Double defined path for #{name} and container #{c} to route")
       end
       res[p] = port
     end
     res
   end
   paths.keys.sort_by{|a| a.length }.reverse.each do |k|
-port,path = paths[k].to_s.split('/',2)
+    port,path = paths[k].to_s.split('/',2)
+    path ||= ''
+    d =  @domain == 'absent' ? @name : @domain
 -%>
-  ProxyPass <%= k %> unix:<%= @real_path %>/tmp/run/<%= port %>|http://<%= @domain %><%= path || '' %>
-  ProxyPassReverse <%= k %> unix:<%= @real_path %>/tmp/run/<%= port %>|http://<%= @domain %><%= path || '' %>
+  ProxyPass <%= k %> unix:<%= @real_path %>/tmp/run/<%= port %>|http://<%= d %><%= path %>
+  ProxyPassReverse <%= k %> unix:<%= @real_path %>/tmp/run/<%= port %>|http://<%= d %><%= path %>
 <% end
 end -%>

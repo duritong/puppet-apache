@@ -45,7 +45,7 @@ if @ssl_mode == 'force' && vhost_part == :normal -%>
   RewriteRule (.*) https://%{SERVER_NAME}$1 [R=permanent,L]
 <% end -%>
 <%= scope.call_function('templatewlv',[@template_partial, {'vhost_part' => vhost_part } ]) %>
-<% if vhost_part != 'container' && @configuration['containers'].is_a?(Hash) && @configuration['containers'].any?{|c,v| v['publish'] } -%>
+<% if vhost_part != 'container' && @configuration['containers'].is_a?(Hash) && @configuration['containers'].any?{|c,v| v['route'] } -%>
 
   ProxyRequests Off
 <%= scope.call_function('template',['apache/vhosts/partials/container_proxy_paths_mapping.erb']) %>
