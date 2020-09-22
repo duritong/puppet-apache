@@ -1,6 +1,6 @@
 <% if @configuration['containers'].is_a?(Hash) && @configuration['containers'].any?{|c,v| v['route'].is_a?(Hash) }
-  paths = @configuration['containers'].inject do |res,c,values|
-    Hash(values['route']).each do |path,port|
+  paths = @configuration['containers'].keys.inject({}) do |res,c|
+    Hash(@configuration['containers'][c]['route']).each do |path,port|
       p = path =~ /^\// ? path : "/#{p}"
       if res[p]
         scope.call_function('fail', "Double defined path for #{name} and container #{c} to route")
