@@ -1,19 +1,15 @@
-  <Proxy *>
-<% if (@htpasswd_file && @htpasswd_file.to_s == 'absent') && !@configuration.key?('auth_mellon') -%>
-    Require all granted
-
-<% end -%>
+  <Location />
 <% if @configuration['authenticated_location'] -%>
 <% if @configuration.key?('auth_mellon') -%><%= scope.call_function('template',['apache/vhosts/partials/auth_mellon_config.erb']) %><% end -%>
-  </Proxy>
+  </Location>
 
   <Location <%= @configuration['authenticated_location'] %>>
 <%= scope.call_function('template',['apache/vhosts/partials/authentication.erb']) %>
-<%= @configuration['authenticated_location_extra_conf'] %>
+    <%= @configuration['authenticated_location_extra_conf'] %>
   </Location>
 <% else -%>
 <%= scope.call_function('template',['apache/vhosts/partials/authentication.erb']) %>
-  </Proxy>
+  </Location>
 <% end -%>
 
   <%= @configuration['early_extra_conf'] %>
@@ -21,5 +17,6 @@
 <% Array(@configuration['exclude_paths_from_proxy']).each do |path| -%>
   ProxyPass        /<%= path %> !
 <% end -%>
+<%= scope.call_function('template',['apache/vhosts/partials/container_proxy_paths_mapping.erb']) %>
   ProxyPass        /   <%= @options %>/
   ProxyPassReverse /   <%= @options %>/
