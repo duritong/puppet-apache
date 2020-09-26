@@ -72,7 +72,13 @@ define apache::vhost::template(
     default  => $path,
   }
 
-  if $path_is_webdir {
+  if 'documentroot' in $configuration {
+    if $configuration['documentroot'] =~ Stdlib::Unixpath {
+      $documentroot = $configuration['documentroot']
+    } else {
+      $documentroot = "${real_path}/${configuration['documentroot']}"
+    }
+  } elsif $path_is_webdir {
     $documentroot = $real_path
   } else {
     $documentroot = "${real_path}/www"
