@@ -186,7 +186,6 @@ manifests/vhost/template.pp for the full list.
 There are various pre-made vhost configurations that use good defaults that you can use:
 
 apache::vhost::gitweb - sets up a gitweb vhost
-apache::vhost::modperl - uses modperl, with optional fastcgi
 apache::vhost::passenger - setup passenger
 apache::vhost::proxy - setup a proxy vhost
 apache::vhost::redirect - vhost to redirect hosts
@@ -201,11 +200,9 @@ apache::vhost::php::global_exec_bin_dir
 apache::vhost::php::joomla
 apache::vhost::php::mediawiki
 apache::vhost::php::safe_mode_bin
-apache::vhost::php::silverstripe
 apache::vhost::php::simplemachine
 apache::vhost::php::spip
 apache::vhost::php::standard
-apache::vhost::php::typo3
 apache::vhost::php::webapp
 apache::vhost::php::wordpress
 
