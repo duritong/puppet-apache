@@ -1,2 +1,2 @@
 <% redirect_cmd = @configuration['drop_orig_path'] ?  'RedirectMatch permanent ^' : 'Redirect permanent /' -%>
-  <%= redirect_cmd %> <%= @configuration['target_scheme'] || 'https' %>://<%= @configuration['target_url'] %>/
+  <%= redirect_cmd %> <%= @configuration['target_scheme'] || 'https' %>://<%= @configuration['target_url'] %>
