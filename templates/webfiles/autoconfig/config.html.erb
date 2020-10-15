@@ -3,7 +3,7 @@
 <clientConfig version="1.1">
   <emailProvider id="<%= @provider %>">
     <domain>%EMAILDOMAIN%</domain>
-    <displayName><%= @display_name || @provider %> Mail (%EMAILDOMAIN%)</displayName>
+    <displayName><%= @display_name || @provider %> Mail (%EMAILADDRESS%)</displayName>
     <displayShortName><%= @shortname || @provider.split('.').first %></displayShortName>
     <incomingServer type="imap">
       <hostname><%= @imap_server || "imap.#{@provider}" %></hostname>
