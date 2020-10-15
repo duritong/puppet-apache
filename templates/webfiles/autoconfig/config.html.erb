@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<% if scope.call_function('guess_apache_version',[]) == '2.2' -%>
-<!--#if expr="$SERVER_NAME = /([^.]*\.[^.]*)$/" -->
-    <!--#set var="DOMAIN" value="$1" -->
-<% else -%>
-<!--#if expr="%{SERVER_NAME} =~ /([^.]*\.[^.]*)$/" -->
-    <!--#set var="DOMAIN" value="$0" -->
-<% end -%>
-<!--#endif -->
 
 <clientConfig version="1.1">
   <emailProvider id="<%= @provider %>">
-    <domain><!--#echo var="DOMAIN" --></domain>
-    <displayName><%= @display_name || @provider %> Mail (<!--#echo var="DOMAIN" -->)</displayName>
+    <domain>%EMAILDOMAIN%</domain>
+    <displayName><%= @display_name || @provider %> Mail (%EMAILDOMAIN%)</displayName>
     <displayShortName><%= @shortname || @provider.split('.').first %></displayShortName>
     <incomingServer type="imap">
       <hostname><%= @imap_server || "imap.#{@provider}" %></hostname>

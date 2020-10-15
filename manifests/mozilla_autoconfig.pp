@@ -27,8 +27,8 @@ class apache::mozilla_autoconfig(
       owner   => root,
       group   => apache,
       mode    => '0640';
-  '/var/www/autoconfig/config.shtml':
-      content => template('apache/webfiles/autoconfig/config.shtml.erb'),
+  '/var/www/autoconfig/config.html':
+      content => template('apache/webfiles/autoconfig/config.html.erb'),
       owner   => root,
       group   => apache,
       mode    => '0640',
