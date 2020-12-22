@@ -17,7 +17,7 @@
 #   - nologs: Send every logging to /dev/null
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
-define apache::vhost::php::wordpress(
+define apache::vhost::php::wordpress (
   $ensure                           = present,
   $configuration                    = {},
   $domain                           = 'absent',
@@ -33,7 +33,7 @@ define apache::vhost::php::wordpress(
   $run_mode                         = 'normal',
   $run_uid                          = 'absent',
   $run_gid                          = 'absent',
-  $allow_override                   = 'FileInfo Indexes Options=Indexes',
+  $allow_override                   = 'All',
   $php_settings                     = {},
   $php_options                      = {},
   $php_installation                 = 'system',
@@ -55,8 +55,7 @@ define apache::vhost::php::wordpress(
   $manage_config                    = true,
   $config_webwriteable              = false,
   $manage_directories               = true
-){
-
+) {
   $documentroot = $path ? {
     'absent' => "/var/www/vhosts/${name}/www",
     default  => "${path}/www",
@@ -67,11 +66,11 @@ define apache::vhost::php::wordpress(
                                                 $modsec_rules)
 
   if $ensure != 'absent' {
-    include ::apache::module::usertrack
+    include apache::module::usertrack
   }
 
   # create vhost configuration file
-  apache::vhost::php::webapp{$name:
+  apache::vhost::php::webapp { $name:
     ensure                          => $ensure,
     configuration                   => $configuration,
     domain                          => $domain,
@@ -107,10 +106,9 @@ define apache::vhost::php::wordpress(
     htpasswd_file                   => $htpasswd_file,
     htpasswd_path                   => $htpasswd_path,
     manage_directories              => $manage_directories,
-    managed_directories             => [ "${documentroot}/wp-content/uploads",],
+    managed_directories             => ["${documentroot}/wp-content/uploads",],
     manage_config                   => $manage_config,
     config_webwriteable             => $config_webwriteable,
     config_file                     => 'wp-config.php',
   }
 }
-
