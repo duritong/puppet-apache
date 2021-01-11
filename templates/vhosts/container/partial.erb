@@ -16,6 +16,7 @@
   </Location>
 <% end -%>
 
+  ProxyPreserveHost On
   <%= @configuration['early_extra_conf'] %>
   ProxyRequests Off
 <% Array(@configuration['exclude_paths_from_proxy']).each do |path| -%>
