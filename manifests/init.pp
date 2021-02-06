@@ -13,8 +13,8 @@
 #
 
 # manage a simple apache
-class apache(
-  $cluster_node                       = '',
+class apache (
+  $cluster_node                       = undef,
   $manage_shorewall                   = false,
   $manage_munin                       = false,
   $status_pwd                         = 'munin-access-change-me',
@@ -27,14 +27,13 @@ class apache(
   $default_ssl_certificate_chain_file = absent,
   $ssl_cipher_suite                   = undef,
 ) {
-
   if $ssl_cipher_suite {
     $real_ssl_cipher_suite = $ssl_cipher_suite
   } else {
     include certs::ssl_config
     $real_ssl_cipher_suite = $certs::ssl_config::ciphers_http
   }
-  case $facts['operatingsystem'] {
+  case $facts['os']['name'] {
     'CentOS': {
       $config_dir  = '/etc/httpd'
       $vhosts_dir  = "${apache::config_dir}/vhosts.d"
@@ -56,14 +55,13 @@ class apache(
 
       include apache::debian
     }
-    default: { fail("Operatingsystem ${facts['operatingsystem']} is not supported by this module") }
+    default: { fail("Operatingsystem ${facts['os']['name']} is not supported by this module") }
   }
   if $apache::manage_munin {
-    class{'apache::status':
+    class { 'apache::status':
       pwd => $status_pwd,
     }
   }
   if $apache::manage_shorewall { include shorewall::rules::http }
   if $ssl { include apache::ssl }
 }
-
