@@ -16,7 +16,7 @@
 #   - nologs: Send every logging to /dev/null
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
-define apache::vhost::php::webapp(
+define apache::vhost::php::webapp (
   $template_partial,
   $ensure                           = present,
   $configuration                    = {},
@@ -58,24 +58,24 @@ define apache::vhost::php::webapp(
   $config_webwriteable              = false,
   $manage_directories               = true,
   $managed_directories              = 'absent',
-){
+) {
   if ($ensure != 'absent') {
     if $manage_directories and ($managed_directories != 'absent') {
-      ::apache::vhost::managed_directory{ $managed_directories :
+      apache::vhost::managed_directory { $managed_directories :
         owner => $documentroot_owner,
         group => $documentroot_group,
       }
     }
 
     if $manage_config {
-      if $config_file == 'absent' { fail("No config file defined for ${name} on ${::fqdn}, if you'd like to manage the config, you have to add one!") }
+      if $config_file == 'absent' { fail("No config file defined for ${name} on ${facts['networking']['fqdn']}, if you'd like to manage the config, you have to add one!") }
 
       $real_path = $path ? {
         'absent' => "/var/www/vhosts/${name}",
         default  => $path,
       }
       $documentroot = "${real_path}/www"
-      ::apache::vhost::file::documentrootfile{"configurationfile_${name}":
+      apache::vhost::file::documentrootfile { "configurationfile_${name}":
         documentroot => $documentroot,
         filename     => $config_file,
         thedomain    => $name,
@@ -83,11 +83,11 @@ define apache::vhost::php::webapp(
         group        => $documentroot_group,
       }
       if $config_webwriteable {
-        Apache::Vhost::File::Documentrootfile["configurationfile_${name}"]{
+        Apache::Vhost::File::Documentrootfile["configurationfile_${name}"] {
           mode => '0660',
         }
       } else {
-        Apache::Vhost::File::Documentrootfile["configurationfile_${name}"]{
+        Apache::Vhost::File::Documentrootfile["configurationfile_${name}"] {
           mode => '0440',
         }
       }
@@ -95,7 +95,7 @@ define apache::vhost::php::webapp(
   }
 
   # create vhost configuration file
-  ::apache::vhost::php::standard{$name:
+  apache::vhost::php::standard { $name:
     ensure                          => $ensure,
     configuration                   => $configuration,
     domain                          => $domain,
@@ -134,4 +134,3 @@ define apache::vhost::php::webapp(
     htpasswd_path                   => $htpasswd_path,
   }
 }
-

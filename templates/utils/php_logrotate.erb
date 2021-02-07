@@ -21,7 +21,5 @@
   copytruncate
   notifempty
   create 640 <%= user %> <%= group %>
-<% if scope['::operatingsystemmajrelease'].to_i > 6 -%>
   su <%= user %> <%= group %>
-<% end -%>
 }

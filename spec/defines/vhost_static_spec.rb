@@ -4,11 +4,12 @@ describe 'apache::vhost::static', :type => 'define' do
   let(:title){ 'example.com' }
   let(:facts){
     {
-      :fqdn                       => 'apache.example.com',
-      :operatingsystem            => 'CentOS',
-      :operatingsystemmajrelease  => '7',
-      :selinux                    =>  true,
+      :networking => {
+        :fqdn => 'apache.example.com',
+      },
       :os => {
+        'selinux' => { 'enabled' => true },
+        'name' => 'CentOS',
         'release' => {
           'major' => '7',
         },

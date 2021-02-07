@@ -4,7 +4,7 @@
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 #
-define apache::vhost::gitweb(
+define apache::vhost::gitweb (
   $ensure             = present,
   $configuration      = {},
   $domain             = 'absent',
@@ -25,34 +25,32 @@ define apache::vhost::gitweb(
   $ssl_mode           = false,
   $htpasswd_file      = 'absent',
   $htpasswd_path      = 'absent'
-){
-
-  $logpath = $::operatingsystem ? {
-    centos => '/var/log/httpd',
+) {
+  $logpath = $facts['os']['name'] ? {
+    'centos' => '/var/log/httpd',
     default => '/var/log/apache2',
   }
   # create vhost configuration file
-  ::apache::vhost{$name:
-      ensure             => $ensure,
-      configuration      => $configuration,
-      path               => '/var/www/git',
-      path_is_webdir     => true,
-      logpath            => $logpath,
-      logmode            => $logmode,
-      template_partial   => $template_partial,
-      domain             => $domain,
-      domainalias        => $domainalias,
-      server_admin       => $server_admin,
-      allow_override     => $allow_override,
-      do_includes        => $do_includes,
-      options            => $options,
-      additional_options => $additional_options,
-      default_charset    => $default_charset,
-      run_mode           => 'normal',
-      ssl_mode           => $ssl_mode,
-      htpasswd_file      => $htpasswd_file,
-      htpasswd_path      => $htpasswd_path,
-      mod_security       => false,
+  apache::vhost { $name:
+    ensure             => $ensure,
+    configuration      => $configuration,
+    path               => '/var/www/git',
+    path_is_webdir     => true,
+    logpath            => $logpath,
+    logmode            => $logmode,
+    template_partial   => $template_partial,
+    domain             => $domain,
+    domainalias        => $domainalias,
+    server_admin       => $server_admin,
+    allow_override     => $allow_override,
+    do_includes        => $do_includes,
+    options            => $options,
+    additional_options => $additional_options,
+    default_charset    => $default_charset,
+    run_mode           => 'normal',
+    ssl_mode           => $ssl_mode,
+    htpasswd_file      => $htpasswd_file,
+    htpasswd_path      => $htpasswd_path,
+    mod_security       => false,
   }
 }
-

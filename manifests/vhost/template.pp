@@ -32,14 +32,14 @@
 #    - false: don't activate mod_security
 #    - true: (*default*) activate mod_security
 #
-define apache::vhost::template(
+define apache::vhost::template (
   $ensure                          = present,
   $configuration                   = {},
   $path                            = 'absent',
   $path_is_webdir                  = false,
   $logpath                         = 'absent',
   $logmode                         = 'default',
-  $logprefix                       = '',
+  $logprefix                       = undef,
   $domain                          = 'absent',
   $domainalias                     = 'absent',
   $server_admin                    = 'absent',
@@ -66,7 +66,7 @@ define apache::vhost::template(
   $htpasswd_path                   = 'absent',
   $passing_extension               = 'absent',
   $gempath                         = 'absent'
-){
+) {
   $real_path = $path ? {
     'absent' => "/var/www/vhosts/${name}",
     default  => $path,
@@ -103,11 +103,11 @@ define apache::vhost::template(
     $real_htpasswd_path = $htpasswd_path
   }
   if $run_mode == 'fcgid' {
-    if $run_uid == 'absent' { fail("you have to define run_uid for ${name} on ${::fqdn}") }
-    if $run_gid == 'absent' { fail("you have to define run_gid for ${name} on ${::fqdn}") }
+    if $run_uid == 'absent' { fail("you have to define run_uid for ${name} on ${facts['networking']['fqdn']}") }
+    if $run_gid == 'absent' { fail("you have to define run_gid for ${name} on ${facts['networking']['fqdn']}") }
   }
 
-  apache::vhost::file{$name:
+  apache::vhost::file { $name:
     ensure        => $ensure,
     configuration => $configuration,
     do_includes   => $do_includes,
@@ -120,9 +120,8 @@ define apache::vhost::template(
     use_mod_macro => $use_mod_macro,
   }
   if $ensure != 'absent' {
-    Apache::Vhost::File[$name]{
+    Apache::Vhost::File[$name] {
       content => template('apache/vhosts/default.erb'),
     }
   }
 }
-

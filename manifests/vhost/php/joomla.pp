@@ -17,7 +17,7 @@
 #   - nologs: Send every logging to /dev/null
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
-define apache::vhost::php::joomla(
+define apache::vhost::php::joomla (
   $ensure                           = present,
   $configuration                    = {},
   $domain                           = 'absent',
@@ -55,8 +55,8 @@ define apache::vhost::php::joomla(
   $manage_config                    = true,
   $config_webwriteable              = false,
   $manage_directories               = true
-){
-  include ::apache::include::joomla
+) {
+  include apache::include::joomla
 
   $documentroot = $path ? {
     'absent' => "/var/www/vhosts/${name}/www",
@@ -64,8 +64,8 @@ define apache::vhost::php::joomla(
   }
 
   if $mod_security_additional_options == 'absent' {
-    $id_str = $::operatingsystem ? {
-      'CentOS'  => $::operatingsystemmajrelease ? {
+    $id_str = $facts['os']['name'] ? {
+      'CentOS'  => $facts['os']['release']['major'] ? {
         '5'     => '',
         default => 'id:1199400,'
       },
@@ -96,7 +96,7 @@ define apache::vhost::php::joomla(
   }
 
   # create vhost configuration file
-  ::apache::vhost::php::webapp{
+  apache::vhost::php::webapp {
     $name:
       ensure                          => $ensure,
       configuration                   => $configuration,
@@ -115,7 +115,7 @@ define apache::vhost::php::joomla(
       run_gid                         => $run_gid,
       allow_override                  => $allow_override,
       php_settings                    => merge($std_joomla_php_settings,
-        $php_settings),
+      $php_settings),
       php_options                     => $php_options,
       php_installation                => $php_installation,
       do_includes                     => $do_includes,
@@ -134,26 +134,24 @@ define apache::vhost::php::joomla(
       htpasswd_file                   => $htpasswd_file,
       htpasswd_path                   => $htpasswd_path,
       manage_directories              => $manage_directories,
-      managed_directories             => [ "${documentroot}/administrator/backups",
-                                            "${documentroot}/administrator/components",
-                                            "${documentroot}/administrator/language",
-                                            "${documentroot}/administrator/modules",
-                                            "${documentroot}/administrator/templates",
-                                            "${documentroot}/components",
-                                            "${documentroot}/dmdocuments",
-                                            "${documentroot}/images",
-                                            "${documentroot}/language",
-                                            "${documentroot}/media",
-                                            "${documentroot}/modules",
-                                            "${documentroot}/plugins",
-                                            "${documentroot}/templates",
-                                            "${documentroot}/cache",
-                                            "${documentroot}/tmp",
-                                            "${documentroot}/administrator/cache" ],
+      managed_directories             => ["${documentroot}/administrator/backups",
+        "${documentroot}/administrator/components",
+        "${documentroot}/administrator/language",
+        "${documentroot}/administrator/modules",
+        "${documentroot}/administrator/templates",
+        "${documentroot}/components",
+        "${documentroot}/dmdocuments",
+        "${documentroot}/images",
+        "${documentroot}/language",
+        "${documentroot}/media",
+        "${documentroot}/modules",
+        "${documentroot}/plugins",
+        "${documentroot}/templates",
+        "${documentroot}/cache",
+        "${documentroot}/tmp",
+      "${documentroot}/administrator/cache"],
       manage_config                   => $manage_config,
       config_webwriteable             => $config_webwriteable,
       config_file                     => 'configuration.php',
   }
-
 }
-

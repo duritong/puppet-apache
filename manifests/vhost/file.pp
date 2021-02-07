@@ -31,23 +31,23 @@
 #    - false: (*default*) don't activate mod_security
 #    - true: activate mod_security
 #
-define apache::vhost::file(
-    $ensure             = present,
-    $configuration      = {},
-    $vhost_source       = 'absent',
-    $vhost_destination  = 'absent',
-    $content            = 'absent',
-    $do_includes        = false,
-    $run_mode           = 'normal',
-    $logmode            = 'default',
-    $ssl_mode           = false,
-    $mod_security       = false,
-    $htpasswd_file      = 'absent',
-    $htpasswd_path      = 'absent',
-    $use_mod_macro      = false
-){
+define apache::vhost::file (
+  $ensure             = present,
+  $configuration      = {},
+  $vhost_source       = 'absent',
+  $vhost_destination  = 'absent',
+  $content            = 'absent',
+  $do_includes        = false,
+  $run_mode           = 'normal',
+  $logmode            = 'default',
+  $ssl_mode           = false,
+  $mod_security       = false,
+  $htpasswd_file      = 'absent',
+  $htpasswd_path      = 'absent',
+  $use_mod_macro      = false
+) {
   include apache
-  $vhosts_dir = $facts['operatingsystem'] ? {
+  $vhosts_dir = $facts['os']['name'] ? {
     /^(Debian|Ubuntu)$/ => "${apache::config_dir}/sites-enabled",
     default             => "${apache::config_dir}/vhosts.d",
   }
@@ -55,11 +55,11 @@ define apache::vhost::file(
     'absent'  => "${vhosts_dir}/${name}.conf",
     default   => $vhost_destination,
   }
-  file{"${name}.conf":
+  file { "${name}.conf":
     ensure  => $ensure,
     path    => $real_vhost_destination,
     require => File['vhosts_dir'],
-    notify  => Service[apache],
+    notify  => Service['apache'],
     owner   => root,
     group   => 0,
     mode    => '0640';
@@ -81,29 +81,29 @@ define apache::vhost::file(
       'absent': {
         $real_vhost_source = $vhost_source ? {
           'absent'  => [
-            "puppet:///modules/site_apache/vhosts.d/${facts['fqdn']}/${name}.conf",
+            "puppet:///modules/site_apache/vhosts.d/${facts['networking']['fqdn']}/${name}.conf",
             "puppet:///modules/site_apache/vhosts.d/${apache::cluster_node}/${name}.conf",
-            "puppet:///modules/site_apache/vhosts.d/${facts['operatingsystem']}.${facts['operatingsystemmajrelease']}/${name}.conf",
-            "puppet:///modules/site_apache/vhosts.d/${facts['operatingsystem']}/${name}.conf",
+            "puppet:///modules/site_apache/vhosts.d/${facts['os']['name']}.${facts['os']['release']['major']}/${name}.conf",
+            "puppet:///modules/site_apache/vhosts.d/${facts['os']['name']}/${name}.conf",
             "puppet:///modules/site_apache/vhosts.d/${name}.conf",
-            "puppet:///modules/apache/vhosts.d/${facts['operatingsystem']}.${facts['operatingsystemmajrelease']}/${name}.conf",
-            "puppet:///modules/apache/vhosts.d/${facts['operatingsystem']}/${name}.conf",
+            "puppet:///modules/apache/vhosts.d/${facts['os']['name']}.${facts['os']['release']['major']}/${name}.conf",
+            "puppet:///modules/apache/vhosts.d/${facts['os']['name']}/${name}.conf",
             "puppet:///modules/apache/vhosts.d/${name}.conf",
           ],
           default => "puppet:///${vhost_source}",
         }
-        File["${name}.conf"]{
+        File["${name}.conf"] {
           source => $real_vhost_source,
         }
       }
       default: {
-        File["${name}.conf"]{
+        File["${name}.conf"] {
           content => $content,
         }
       }
     }
     if 'auth_mellon' in $configuration {
-      apache::module::auth_mellon::entity{
+      apache::module::auth_mellon::entity {
         $name:
           * => $configuration['auth_mellon'],
       }
@@ -114,14 +114,14 @@ define apache::vhost::file(
       'absent' => "/var/www/htpasswds/${name}",
       default  => $htpasswd_path,
     }
-    file{$real_htpasswd_path:
+    file { $real_htpasswd_path:
       ensure => $ensure,
     }
     if ($ensure != 'absent') {
-      File[$real_htpasswd_path]{
-        source  => [ "puppet:///modules/site_apache/htpasswds/${facts['fqdn']}/${name}",
-                    "puppet:///modules/site_apache/htpasswds/${apache::cluster_node}/${name}",
-                    "puppet:///modules/site_apache/htpasswds/${name}" ],
+      File[$real_htpasswd_path] {
+        source  => ["puppet:///modules/site_apache/htpasswds/${facts['networking']['fqdn']}/${name}",
+          "puppet:///modules/site_apache/htpasswds/${apache::cluster_node}/${name}",
+        "puppet:///modules/site_apache/htpasswds/${name}"],
         owner   => root,
         group   => 'apache',
         mode    => '0640',
@@ -129,4 +129,3 @@ define apache::vhost::file(
     }
   }
 }
-

@@ -4,16 +4,17 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
   let(:title){ 'example.com' }
   let(:default_facts){
     {
-      :fqdn                       => 'apache.example.com',
+      :networking => {
+        :fqdn => 'apache.example.com',
+      },
       :os => {
+        'selinux' => { 'enabled' => true },
+        'name' => 'CentOS',
         'family' => 'RedHat',
         'release' => {
           'major' => '7',
         },
       },
-      :operatingsystem            => 'CentOS',
-      :operatingsystemmajrelease  => '7',
-      :selinux                    => true,
     }
   }
   let(:facts){ default_facts }
@@ -44,7 +45,7 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
 
 
   <Directory \"/var/www/vhosts/example.com/www/\">
-    AllowOverride FileInfo Indexes Options=Indexes
+    AllowOverride All
 
     php_admin_value apc.mmap_file_mask /var/www/vhosts/example.com/tmp/apc.XXXXXX
     php_admin_flag engine on
@@ -65,16 +66,16 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
   # simple wp-login brute force protection
   # http://www.frameloss.org/2013/04/26/even-easier-brute-force-login-protection-for-wordpress/
   RewriteEngine On
-  RewriteCond %{HTTP_COOKIE} !40561c33fd7d6b5f858ca10c8bb39211284e7d42
+  RewriteCond %{HTTP_COOKIE} !ced5b5ca1c968581e654258341862fd499028c23
   RewriteCond %{QUERY_STRING} !(?:^|&)action=rp(?:$|&) [NC]
   RewriteCond %{QUERY_STRING} !(?:^|&)action=resetpass(?:$|&) [NC]
-  RewriteRule ^/wp-login.php /wordpress-login-de51a1ff42b11773ac438c2704ff390feb1ab64c.php [R,L]
-  <Location /wordpress-login-de51a1ff42b11773ac438c2704ff390feb1ab64c.php>
+  RewriteRule ^/wp-login.php /wordpress-login-f992dc17c270ae13600971ddba1f046e05797f2f.php [R,L]
+  <Location /wordpress-login-f992dc17c270ae13600971ddba1f046e05797f2f.php>
     CookieTracking on
     CookieExpires 30
-    CookieName 40561c33fd7d6b5f858ca10c8bb39211284e7d42
+    CookieName ced5b5ca1c968581e654258341862fd499028c23
   </Location>
-  RewriteRule ^/wordpress-login-de51a1ff42b11773ac438c2704ff390feb1ab64c.php /wp-login.php? [NE]
+  RewriteRule ^/wordpress-login-f992dc17c270ae13600971ddba1f046e05797f2f.php /wp-login.php? [NE]
 
 
   <IfModule mod_security2.c>
@@ -138,7 +139,7 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
   </IfModule>
 
   <Directory \"/var/www/vhosts/example.com/www/\">
-    AllowOverride FileInfo Indexes Options=Indexes
+    AllowOverride All
     Options  +ExecCGI
 
 
@@ -153,16 +154,16 @@ describe 'apache::vhost::php::wordpress', :type => 'define' do
   # simple wp-login brute force protection
   # http://www.frameloss.org/2013/04/26/even-easier-brute-force-login-protection-for-wordpress/
   RewriteEngine On
-  RewriteCond %{HTTP_COOKIE} !40561c33fd7d6b5f858ca10c8bb39211284e7d42
+  RewriteCond %{HTTP_COOKIE} !ced5b5ca1c968581e654258341862fd499028c23
   RewriteCond %{QUERY_STRING} !(?:^|&)action=rp(?:$|&) [NC]
   RewriteCond %{QUERY_STRING} !(?:^|&)action=resetpass(?:$|&) [NC]
-  RewriteRule ^/wp-login.php /wordpress-login-de51a1ff42b11773ac438c2704ff390feb1ab64c.php [R,L]
-  <Location /wordpress-login-de51a1ff42b11773ac438c2704ff390feb1ab64c.php>
+  RewriteRule ^/wp-login.php /wordpress-login-f992dc17c270ae13600971ddba1f046e05797f2f.php [R,L]
+  <Location /wordpress-login-f992dc17c270ae13600971ddba1f046e05797f2f.php>
     CookieTracking on
     CookieExpires 30
-    CookieName 40561c33fd7d6b5f858ca10c8bb39211284e7d42
+    CookieName ced5b5ca1c968581e654258341862fd499028c23
   </Location>
-  RewriteRule ^/wordpress-login-de51a1ff42b11773ac438c2704ff390feb1ab64c.php /wp-login.php? [NE]
+  RewriteRule ^/wordpress-login-f992dc17c270ae13600971ddba1f046e05797f2f.php /wp-login.php? [NE]
 
 
   <IfModule mod_security2.c>

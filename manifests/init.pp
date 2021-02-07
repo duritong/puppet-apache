@@ -14,18 +14,18 @@
 
 # manage a simple apache
 class apache (
-  $cluster_node                       = undef,
-  $manage_shorewall                   = false,
-  $manage_munin                       = false,
-  $status_pwd                         = 'munin-access-change-me',
-  $no_default_site                    = false,
-  $http_listen                        = undef,
-  $ssl                                = false,
-  $https_listen                       = undef,
-  $default_ssl_certificate_file       = absent,
-  $default_ssl_certificate_key_file   = absent,
-  $default_ssl_certificate_chain_file = absent,
-  $ssl_cipher_suite                   = undef,
+  Optional[String] $cluster_node = undef,
+  Boolean $use_firewall = false,
+  Boolean $manage_munin = false,
+  String $status_pwd = 'munin-access-change-me',
+  Boolean $no_default_site = false,
+  Optional[Variant[Array[Variant[String,Stdlib::Port]],Variant[String,Stdlib::Port]]] $http_listen = undef,
+  Boolean $ssl = false,
+  Optional[Variant[Array[Variant[String,Stdlib::Port]],Variant[String,Stdlib::Port]]] $https_listen = undef,
+  Variant[Enum['absent'],Stdlib::Unixpath] $default_ssl_certificate_file = absent,
+  Variant[Enum['absent'],Stdlib::Unixpath] $default_ssl_certificate_key_file   = absent,
+  Variant[Enum['absent'],Stdlib::Unixpath] $default_ssl_certificate_chain_file = absent,
+  Optional[String] $ssl_cipher_suite = undef,
 ) {
   if $ssl_cipher_suite {
     $real_ssl_cipher_suite = $ssl_cipher_suite
@@ -62,6 +62,6 @@ class apache (
       pwd => $status_pwd,
     }
   }
-  if $apache::manage_shorewall { include shorewall::rules::http }
+  if $apache::use_firewall { include firewall::rules::http }
   if $ssl { include apache::ssl }
 }

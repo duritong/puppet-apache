@@ -1,9 +1,9 @@
 # enable/disable status module
-class apache::module::status(
+class apache::module::status (
   $ensure = present,
-){
-  apache::module{
+) {
+  apache::module {
     'status':
-      ensure => $ensure
+      ensure => $ensure,
   }
 }

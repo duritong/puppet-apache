@@ -1,13 +1,12 @@
 # ToDo: This should be rewritten as native type
-define apache::htpasswd_user(
+define apache::htpasswd_user (
   $password,
-  $ensure             = present,
+  $ensure             = 'present',
   $site               = 'absent',
   $username           = 'absent',
   $password_iscrypted = false,
-  $ensure             = 'present',
   $path               = 'absent'
-){
+) {
   case $username {
     'absent': { $real_username = $name }
     default: { $real_username = $username }
@@ -26,7 +25,7 @@ define apache::htpasswd_user(
     'absent' => "/var/www/htpasswds/${real_site}",
     default  => $path
   }
-  file_line{"htpasswd_for_${real_site}":
+  file_line { "htpasswd_for_${real_site}":
     ensure => $ensure,
     path   => $real_path,
     line   => "${username}:${real_password}",

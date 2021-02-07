@@ -10,7 +10,7 @@
 #   - nologs: Send every logging to /dev/null
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
-define apache::vhost::container(
+define apache::vhost::container (
   $ensure                           = present,
   $configuration                    = {},
   $domain                           = 'absent',
@@ -18,7 +18,7 @@ define apache::vhost::container(
   $server_admin                     = 'absent',
   $logmode                          = 'default',
   $logpath                          = 'absent',
-  $logprefix                        = '',
+  $logprefix                        = undef,
   $path                             = 'absent',
   $manage_webdir                    = true,
   $path_is_webdir                   = false,
@@ -43,11 +43,10 @@ define apache::vhost::container(
   $vhost_destination                = 'absent',
   $htpasswd_file                    = 'absent',
   $htpasswd_path                    = 'absent',
-){
-
+) {
   if $manage_webdir {
     # create webdir
-    ::apache::vhost::webdir{$name:
+    apache::vhost::webdir { $name:
       ensure             => $ensure,
       path               => $path,
       owner              => $owner,
@@ -77,31 +76,30 @@ define apache::vhost::container(
   }
 
   # create vhost configuration file
-  ::apache::vhost{$name:
-    ensure                          => $ensure,
-    configuration                   => $configuration,
-    path                            => $path,
-    path_is_webdir                  => $path_is_webdir,
-    vhost_mode                      => $vhost_mode,
-    template_partial                => $template_partial,
-    vhost_source                    => $vhost_source,
-    vhost_destination               => $vhost_destination,
-    domain                          => $domain,
-    domainalias                     => $domainalias,
-    server_admin                    => $server_admin,
-    logmode                         => $logmode,
-    logpath                         => $logpath,
-    logprefix                       => $logprefix,
-    run_uid                         => $run_uid,
-    run_gid                         => $run_gid,
-    allow_override                  => $allow_override,
-    do_includes                     => $do_includes,
-    options                         => $options,
-    additional_options              => $additional_options,
-    default_charset                 => $default_charset,
-    ssl_mode                        => $ssl_mode,
-    htpasswd_file                   => $htpasswd_file,
-    htpasswd_path                   => $htpasswd_path,
+  apache::vhost { $name:
+    ensure             => $ensure,
+    configuration      => $configuration,
+    path               => $path,
+    path_is_webdir     => $path_is_webdir,
+    vhost_mode         => $vhost_mode,
+    template_partial   => $template_partial,
+    vhost_source       => $vhost_source,
+    vhost_destination  => $vhost_destination,
+    domain             => $domain,
+    domainalias        => $domainalias,
+    server_admin       => $server_admin,
+    logmode            => $logmode,
+    logpath            => $logpath,
+    logprefix          => $logprefix,
+    run_uid            => $run_uid,
+    run_gid            => $run_gid,
+    allow_override     => $allow_override,
+    do_includes        => $do_includes,
+    options            => $options,
+    additional_options => $additional_options,
+    default_charset    => $default_charset,
+    ssl_mode           => $ssl_mode,
+    htpasswd_file      => $htpasswd_file,
+    htpasswd_path      => $htpasswd_path,
   }
 }
-

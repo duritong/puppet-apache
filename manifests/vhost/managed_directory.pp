@@ -1,10 +1,10 @@
 # a managed directory of a vhost
-define apache::vhost::managed_directory(
+define apache::vhost::managed_directory (
   $owner,
   $group,
   $mode    = '0660',
 ) {
-  file{$name:
+  file { $name:
     ensure   => directory,
     backup   => false,
     checksum => undef,
@@ -12,12 +12,12 @@ define apache::vhost::managed_directory(
     group    => $group,
     mode     => $mode;
   }
-  if str2bool($::selinux) {
-    $seltype = $::operatingsystemmajrelease ? {
+  if str2bool($facts['os']['selinux']['enabled']) {
+    $seltype = $facts['os']['release']['major'] ? {
       '5'     => 'httpd_sys_script_rw_t',
       default => 'httpd_sys_rw_content_t'
     }
-    File[$name]{
+    File[$name] {
       seltype => $seltype,
     }
   }

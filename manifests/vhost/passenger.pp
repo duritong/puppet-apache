@@ -12,7 +12,7 @@
 #    - false: don't activate mod_security
 #    - true: (*defaul*) activate mod_security
 #
-define apache::vhost::passenger(
+define apache::vhost::passenger (
   $ensure                          = present,
   $configuration                   = {},
   $domain                          = 'absent',
@@ -45,15 +45,14 @@ define apache::vhost::passenger(
   $vhost_destination               = 'absent',
   $htpasswd_file                   = 'absent',
   $htpasswd_path                   = 'absent',
-){
-
-  if versioncmp($::operatingsystemmajrelease,'5') > 0 {
-    include ::passenger::apache
+) {
+  if versioncmp($facts['os']['release']['major'],'5') > 0 {
+    include passenger::apache
   }
 
   if $manage_webdir {
     # create webdir
-    ::apache::vhost::webdir{$name:
+    apache::vhost::webdir { $name:
       ensure             => $ensure,
       path               => $path,
       owner              => $owner,
@@ -72,7 +71,7 @@ define apache::vhost::passenger(
   }
 
   # create vhost configuration file
-  ::apache::vhost{$name:
+  apache::vhost { $name:
     ensure                          => $ensure,
     configuration                   => $configuration,
     path                            => "${real_path}/www/public",
@@ -105,7 +104,7 @@ define apache::vhost::passenger(
   }
 
   if $ensure != 'absent' {
-    file{
+    file {
       ["${real_path}/www/tmp", "${real_path}/www/log"]:
         ensure => directory,
         owner  => $documentroot_owner,
@@ -116,7 +115,7 @@ define apache::vhost::passenger(
         owner  => $documentroot_owner,
         group  => $run_gid,
         mode   => '0640';
-    } -> file{
+    } -> file {
       "${real_path}/www/config":
         ensure => directory,
         owner  => $documentroot_owner,
@@ -127,7 +126,7 @@ define apache::vhost::passenger(
         owner  => $run_uid,
         group  => $run_gid,
         mode   => '0640';
-    } -> file{
+    } -> file {
       "${real_path}/www/log/production.log":
         ensure => file,
         owner  => $run_uid,

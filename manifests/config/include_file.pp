@@ -1,12 +1,12 @@
 # deploy apache configuration file (includes for vhosts)
-define apache::config::include(
+define apache::config::include_file (
   $ensure      = present,
   $target      = false,
   $source      = 'absent',
   $content     = 'absent',
   $destination = 'absent'
-){
-  apache::config::file{$name:
+) {
+  apache::config::file { $name:
     ensure      => $ensure,
     target      => $target,
     type        => 'include',

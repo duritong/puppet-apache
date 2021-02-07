@@ -16,7 +16,7 @@
 #   - nologs: Send every logging to /dev/null
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
-define apache::vhost::php::simplemachine(
+define apache::vhost::php::simplemachine (
   $ensure                           = present,
   $configuration                    = {},
   $domain                           = 'absent',
@@ -53,14 +53,14 @@ define apache::vhost::php::simplemachine(
   $manage_config                    = true,
   $config_webwriteable              = false,
   $manage_directories               = true,
-){
+) {
   $documentroot = $path ? {
     'absent' => "/var/www/vhosts/${name}/www",
     default => "${path}/www",
   }
 
   # create vhost configuration file
-  ::apache::vhost::php::webapp{$name:
+  apache::vhost::php::webapp { $name:
     ensure                          => $ensure,
     configuration                   => $configuration,
     domain                          => $domain,
@@ -104,11 +104,10 @@ define apache::vhost::php::simplemachine(
       "${documentroot}/Packages/installed.list",
       "${documentroot}/Smileys",
       "${documentroot}/Themes",
-      "${documentroot}/Themes/default/languages/Install.english.php"
+      "${documentroot}/Themes/default/languages/Install.english.php",
     ],
     manage_config                   => $manage_config,
     config_webwriteable             => $config_webwriteable,
     config_file                     => 'Settings.php',
   }
 }
-

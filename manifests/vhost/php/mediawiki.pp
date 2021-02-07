@@ -16,7 +16,7 @@
 #   - nologs: Send every logging to /dev/null
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
-define apache::vhost::php::mediawiki(
+define apache::vhost::php::mediawiki (
   $ensure                          = present,
   $configuration                   = {},
   $domain                          = 'absent',
@@ -51,7 +51,7 @@ define apache::vhost::php::mediawiki(
   $vhost_destination               = 'absent',
   $htpasswd_file                   = 'absent',
   $htpasswd_path                   = 'absent'
-){
+) {
   $documentroot = $path ? {
     'absent' => "/var/www/vhosts/${name}/www",
     default  => "${path}/www",
@@ -75,7 +75,7 @@ define apache::vhost::php::mediawiki(
   }
 
   # create vhost configuration file
-  ::apache::vhost::php::webapp{$name:
+  apache::vhost::php::webapp { $name:
     ensure                          => $ensure,
     configuration                   => $configuration,
     domain                          => $domain,
@@ -114,4 +114,3 @@ define apache::vhost::php::mediawiki(
     manage_config                   => false,
   }
 }
-

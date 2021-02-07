@@ -63,7 +63,7 @@ define apache::vhost::php::wordpress (
   # 200003 : broken multipart upload boundaries
   $modsec_rules = ['960010', '950018', '200003']
   $real_mod_security_rules_to_disable = union($mod_security_rules_to_disable,
-                                                $modsec_rules)
+  $modsec_rules)
 
   if $ensure != 'absent' {
     include apache::module::usertrack

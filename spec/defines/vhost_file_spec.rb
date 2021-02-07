@@ -4,17 +4,17 @@ describe 'apache::vhost::file', :type => 'define' do
   let(:title){ 'example.com' }
   let(:facts){
     {
-      :operatingsystem => 'Debian',
-      :operatingsystemmajrelease => '7',
-      :lsbdistcodename => 'Lenny',
-      :fqdn            => 'apache.example.com',
+      :networking => {
+        :fqdn => 'apache.example.com',
+      },
       :os                         => {
+        'selinux' => { 'enabled' => true },
+        'name' => 'CentOS',
         'family' => 'RedHat',
         'release' => {
           'major' => '7',
         },
       },
-      :selinux                    => true,
     }
   }
   let(:pre_condition) {
@@ -25,13 +25,13 @@ describe 'apache::vhost::file', :type => 'define' do
       :ensure  => 'present',
       :source  => [ "puppet:///modules/site_apache/vhosts.d/apache.example.com/example.com.conf",
                   "puppet:///modules/site_apache/vhosts.d//example.com.conf",
-                  "puppet:///modules/site_apache/vhosts.d/Debian.7/example.com.conf",
-                  "puppet:///modules/site_apache/vhosts.d/Debian/example.com.conf",
+                  "puppet:///modules/site_apache/vhosts.d/CentOS.7/example.com.conf",
+                  "puppet:///modules/site_apache/vhosts.d/CentOS/example.com.conf",
                   "puppet:///modules/site_apache/vhosts.d/example.com.conf",
-                  "puppet:///modules/apache/vhosts.d/Debian.7/example.com.conf",
-                  "puppet:///modules/apache/vhosts.d/Debian/example.com.conf",
+                  "puppet:///modules/apache/vhosts.d/CentOS.7/example.com.conf",
+                  "puppet:///modules/apache/vhosts.d/CentOS/example.com.conf",
                   "puppet:///modules/apache/vhosts.d/example.com.conf" ],
-      :path    => '/etc/apache2/sites-enabled/example.com.conf',
+      :path    => '/etc/httpd/vhosts.d/example.com.conf',
       :require => 'File[vhosts_dir]',
       :notify  => 'Service[apache]',
       :owner   => 'root',
@@ -47,10 +47,12 @@ describe 'apache::vhost::file', :type => 'define' do
   context 'on centos' do
     let(:facts){
       {
-        :fqdn                       => 'apache.example.com',
-        :operatingsystem            => 'CentOS',
-        :operatingsystemmajrelease  => '7',
+        :networking => {
+          :fqdn                       => 'apache.example.com',
+        },
         :os                         => {
+          'selinux' => { 'enabled' => true },
+          'name' => 'CentOS',
           'family' => 'RedHat',
           'release' => {
             'major' => '7',
@@ -108,8 +110,8 @@ describe 'apache::vhost::file', :type => 'define' do
                       "puppet:///modules/site_apache/htpasswds//example.com",
                       "puppet:///modules/site_apache/htpasswds/example.com" ],
         :owner   => 'root',
-        :group   => 0,
-        :mode    => '0644',
+        :group   => 'apache',
+        :mode    => '0640',
       )}
       it { is_expected.to contain_class('apache::includes') }
       it { is_expected.to contain_class('apache::mod_macro') }

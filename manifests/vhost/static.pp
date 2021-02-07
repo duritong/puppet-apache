@@ -12,7 +12,7 @@
 #    - false: (*default*) don't activate mod_security
 #    - true: activate mod_security
 #
-define apache::vhost::static(
+define apache::vhost::static (
   $ensure                          = present,
   $configuration                   = {},
   $domain                          = 'absent',
@@ -42,9 +42,9 @@ define apache::vhost::static(
   $mod_security_relevantonly       = true,
   $mod_security_rules_to_disable   = [],
   $mod_security_additional_options = 'absent'
-){
+) {
   # create webdir
-  ::apache::vhost::webdir{$name:
+  apache::vhost::webdir { $name:
     ensure             => $ensure,
     path               => $path,
     owner              => $owner,
@@ -57,7 +57,7 @@ define apache::vhost::static(
   }
 
   # create vhost configuration file
-  ::apache::vhost{$name:
+  apache::vhost { $name:
     ensure                          => $ensure,
     configuration                   => $configuration,
     path                            => $path,
@@ -83,4 +83,3 @@ define apache::vhost::static(
     mod_security_additional_options => $mod_security_additional_options,
   }
 }
-

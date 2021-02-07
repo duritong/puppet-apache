@@ -4,16 +4,17 @@ describe 'apache::vhost::php::drupal', :type => 'define' do
   let(:title){ 'example.com' }
   let(:facts){
     {
-      :fqdn => 'apache.example.com',
-      :operatingsystem            => 'CentOS',
-      :operatingsystemmajrelease  => '7',
+      :networking => {
+        :fqdn => 'apache.example.com',
+      },
       :os                         => {
+        'selinux' => { 'enabled' => true },
+        'name' => 'CentOS',
         'family' => 'RedHat',
         'release' => {
           'major' => '7',
         },
       },
-      :selinux                    => true,
     }
   }
   describe 'with standard' do

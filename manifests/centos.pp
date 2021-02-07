@@ -1,30 +1,30 @@
 ### centos
 class apache::centos inherits apache::base {
-  Package['apache']{
+  Package['apache'] {
     name => 'httpd',
   }
-  Service['apache']{
+  Service['apache'] {
     name => 'httpd',
   }
 
-  if str2bool($::selinux) {
-    Selinux::Fcontext{
+  if $facts['os']['selinux']['enabled'] {
+    Selinux::Fcontext {
       before => File['web_dir'],
     }
-    $seltype_rw = $::operatingsystemmajrelease ? {
+    $seltype_rw = $facts['os']['release']['major'] ? {
       '5'     => 'httpd_sys_script_rw_t',
       default => 'httpd_sys_rw_content_t'
     }
-    selinux::fcontext{
-      [ '/var/www/vhosts/[^/]*/www(/.*)?',
+    selinux::fcontext {
+      ['/var/www/vhosts/[^/]*/www(/.*)?',
         '/var/www/vhosts/[^/]*/tmp(/.*)?',
         '/var/www/vhosts/[^/]*/data(/.*)?',
-        '/var/www/vhosts/[^/]*/upload(/.*)?' ]:
+      '/var/www/vhosts/[^/]*/upload(/.*)?']:
         before => Package['apache'],
         setype => $seltype_rw;
-      [ '/var/www/vhosts/[^/]*/logs(/.*)?',
+      ['/var/www/vhosts/[^/]*/logs(/.*)?',
         '/var/log/fpm-.*(/.*)?',
-        '/var/www/vhosts/[^/]*/www/log(/.*)?' ]:
+      '/var/www/vhosts/[^/]*/www/log(/.*)?']:
         before => Package['apache'],
         setype => 'httpd_log_t';
       '/var/www/vhosts/[^/]*/www/vendor/.*\.so[^/]*':
@@ -38,14 +38,14 @@ class apache::centos inherits apache::base {
         setype => 'httpd_var_run_t';
     }
   }
-  if versioncmp($::operatingsystemmajrelease,'6') > 0 {
+  if versioncmp($facts['os']['release']['major'],'6') > 0 {
     Exec['reload_apache'] {
       command => 'systemctl reload httpd',
     }
-    File['modules_dir']{
+    File['modules_dir'] {
       ensure => absent,
     }
-    file_line{
+    file_line {
       'mpm_prefork':
         path    => '/etc/httpd/conf.modules.d/00-mpm.conf',
         line    => 'LoadModule mpm_prefork_module modules/mod_mpm_prefork.so',
@@ -61,17 +61,17 @@ class apache::centos inherits apache::base {
     Exec['reload_apache'] {
       command => 'service httpd reload',
     }
-    File['modules_dir']{
+    File['modules_dir'] {
       path => "${apache::config_dir}/modules.d",
     }
-    Service['apache']{
+    Service['apache'] {
       restart => '/etc/init.d/httpd graceful',
     }
-    file{'apache_service_config':
+    file { 'apache_service_config':
       path    => '/etc/sysconfig/httpd',
-      source  => [  "puppet:///modules/site_apache/service/CentOS/${::fqdn}/httpd",
-                    'puppet:///modules/site_apache/service/CentOS/httpd',
-                    'puppet:///modules/apache/service/CentOS/httpd' ],
+      source  => ["puppet:///modules/site_apache/service/CentOS/${facts['networking']['fqdn']}/httpd",
+        'puppet:///modules/site_apache/service/CentOS/httpd',
+      'puppet:///modules/apache/service/CentOS/httpd'],
       require => Package['apache'],
       notify  => Service['apache'],
       owner   => root,
@@ -80,7 +80,7 @@ class apache::centos inherits apache::base {
     }
 
     # this is for later fixes
-    exec{'adjust_pidfile':
+    exec { 'adjust_pidfile':
       command => 'sed -i  "s/^#PidFile \(.*\)/PidFile \1/g" /etc/httpd/conf/httpd.conf',
       unless  => 'grep -qE \'^PidFile \' /etc/httpd/conf/httpd.conf',
       require => Package['apache'],
@@ -88,32 +88,31 @@ class apache::centos inherits apache::base {
     }
   }
 
-  exec{
+  exec {
     'adjust_listen':
       require => Package['apache'],
       notify  => Service['apache'];
-  } -> apache::config::global{'00-listen.conf': }
+  } -> apache::config::global { '00-listen.conf': }
   if $apache::http_listen {
-    Exec['adjust_listen']{
-        command => 'sed -i  "s/^Listen 80/#Listen 80/g" /etc/httpd/conf/httpd.conf',
-        onlyif  => 'grep -qE \'^Listen 80\' /etc/httpd/conf/httpd.conf',
+    Exec['adjust_listen'] {
+      command => 'sed -i  "s/^Listen 80/#Listen 80/g" /etc/httpd/conf/httpd.conf',
+      onlyif  => 'grep -qE \'^Listen 80\' /etc/httpd/conf/httpd.conf',
     }
-    Apache::Config::Global['00-listen.conf']{
+    Apache::Config::Global['00-listen.conf'] {
       content => template('apache/conf/listen.erb'),
     }
   } else {
-    Exec['adjust_listen']{
+    Exec['adjust_listen'] {
       command => 'sed -i  "s/^#Listen 80/Listen 80/g" /etc/httpd/conf/httpd.conf',
       unless  => 'grep -qE \'^Listen 80\' /etc/httpd/conf/httpd.conf',
     }
-    Apache::Config::Global['00-listen.conf']{
+    Apache::Config::Global['00-listen.conf'] {
       ensure => absent,
     }
   }
 
-  include ::apache::logrotate::centos
+  include apache::logrotate::centos
 
-  apache::config::global{ 'welcome.conf': }
-  apache::config::global{ 'vhosts.conf': }
+  apache::config::global { 'welcome.conf': }
+  apache::config::global { 'vhosts.conf': }
 }
-

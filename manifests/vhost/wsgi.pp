@@ -10,7 +10,7 @@
 #   - nologs: Send every logging to /dev/null
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
-define apache::vhost::wsgi(
+define apache::vhost::wsgi (
   $ensure                           = present,
   $configuration                    = {},
   $domain                           = 'absent',
@@ -18,7 +18,7 @@ define apache::vhost::wsgi(
   $server_admin                     = 'absent',
   $logmode                          = 'default',
   $logpath                          = 'absent',
-  $logprefix                        = '',
+  $logprefix                        = undef,
   $path                             = 'absent',
   $manage_webdir                    = true,
   $path_is_webdir                   = false,
@@ -50,13 +50,12 @@ define apache::vhost::wsgi(
   $vhost_destination                = 'absent',
   $htpasswd_file                    = 'absent',
   $htpasswd_path                    = 'absent',
-){
-
-  require ::python::scl36::wsgi
+) {
+  require python::scl36::wsgi
 
   if $manage_webdir {
     # create webdir
-    ::apache::vhost::webdir{$name:
+    apache::vhost::webdir { $name:
       ensure             => $ensure,
       path               => $path,
       owner              => $owner,
@@ -84,10 +83,10 @@ define apache::vhost::wsgi(
   }
 
   $new_config = merge($configuration,
-                      {wsgi => true})
+  { wsgi => true })
 
   # create vhost configuration file
-  ::apache::vhost{$name:
+  apache::vhost { $name:
     ensure                          => $ensure,
     configuration                   => $new_config,
     path                            => $path,
@@ -119,7 +118,7 @@ define apache::vhost::wsgi(
     use_mod_macro                   => $use_mod_macro,
   }
   if $ensure != 'absent' {
-    file{
+    file {
       ["${real_path}/virtualenv"]:
         ensure => directory,
         owner  => $documentroot_owner,

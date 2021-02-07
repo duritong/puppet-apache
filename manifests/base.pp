@@ -2,7 +2,7 @@
 class apache::base {
   package { 'apache':
     ensure => present,
-  } -> file{
+  } -> file {
     'vhosts_dir':
       ensure  => directory,
       path    => $apache::vhosts_dir,
@@ -61,20 +61,20 @@ class apache::base {
       owner   => root,
       group   => 0,
       mode    => '0644';
-  } -> anchor{'apache::basic_dirs::ready': }
+  } -> anchor { 'apache::basic_dirs::ready': }
 
-  apache::config::include{ 'defaults.inc': }
-  apache::config::global{ 'git.conf':
+  apache::config::include_file { 'defaults.inc': }
+  apache::config::global { 'git.conf':
     content => template('apache/conf.d/git.conf.erb'),
   }
   if !$apache::no_default_site {
     apache::vhost::file { '0-default': }
   }
 
-  service{'apache':
+  service { 'apache':
     ensure => running,
     enable => true,
-  } -> exec{'reload_apache':
+  } -> exec { 'reload_apache':
     refreshonly => true,
     command     => 'systemctl reload apache',
   }

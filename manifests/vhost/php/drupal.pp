@@ -23,7 +23,7 @@
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 #
-define apache::vhost::php::drupal(
+define apache::vhost::php::drupal (
   $ensure                           = present,
   $configuration                    = {},
   $domain                           = 'absent',
@@ -62,10 +62,10 @@ define apache::vhost::php::drupal(
   $config_webwriteable              = false,
   $manage_config                    = true,
   $manage_cron                      = true
-){
+) {
   $documentroot = $path ? {
-      'absent' => "/var/www/vhosts/${name}/www",
-      default  => "${path}/www",
+    'absent' => "/var/www/vhosts/${name}/www",
+    default  => "${path}/www",
   }
 
   if $manage_cron {
@@ -75,7 +75,7 @@ define apache::vhost::php::drupal(
       $real_domain = $domain
     }
 
-    file{"/etc/cron.d/drupal_cron_${name}":
+    file { "/etc/cron.d/drupal_cron_${name}":
       content => "0   *   *   *   *   apache wget -O - -q -t 1 http://${real_domain}/cron.php\n",
       owner   => root,
       group   => 0,
@@ -93,7 +93,7 @@ define apache::vhost::php::drupal(
   }
 
   # create vhost configuration file
-  ::apache::vhost::php::webapp{$name:
+  apache::vhost::php::webapp { $name:
     ensure                          => $ensure,
     configuration                   => $configuration,
     domain                          => $domain,
@@ -132,4 +132,3 @@ define apache::vhost::php::drupal(
     manage_config                   => false,
   }
 }
-

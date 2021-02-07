@@ -1,5 +1,5 @@
 # manage webdir
-define apache::vhost::webdir(
+define apache::vhost::webdir (
   $ensure               = present,
   $path                 = 'absent',
   $owner                = root,
@@ -12,7 +12,7 @@ define apache::vhost::webdir(
   $documentroot_group   = apache,
   $documentroot_mode    = '0640',
   $documentroot_recurse = false
-){
+) {
   $real_path = $path ? {
     'absent' => "/var/www/vhosts/${name}",
     default  => $path,
@@ -22,15 +22,15 @@ define apache::vhost::webdir(
   $logdir = "${real_path}/logs"
 
   if $owner == 'apache' {
-    $real_owner = $::operatingsystem ? {
+    $real_owner = $facts['os']['name'] ? {
       'Debian' => 'www-data',
       default  => $owner
     }
   } else {
-      $real_owner = $owner
+    $real_owner = $owner
   }
   if $group == 'apache' {
-    $real_group = $::operatingsystem ? {
+    $real_group = $facts['os']['name'] ? {
       'Debian' => 'www-data',
       default  => $group
     }
@@ -39,7 +39,7 @@ define apache::vhost::webdir(
   }
 
   if $documentroot_owner == 'apache' {
-    $real_documentroot_owner = $::operatingsystem ? {
+    $real_documentroot_owner = $facts['os']['name'] ? {
       'Debian' => 'www-data',
       default  => $documentroot_owner
     }
@@ -47,7 +47,7 @@ define apache::vhost::webdir(
     $real_documentroot_owner = $documentroot_owner
   }
   if $documentroot_group == 'apache' {
-    $real_documentroot_group = $::operatingsystem ? {
+    $real_documentroot_group = $facts['os']['name'] ? {
       'Debian' => 'www-data',
       default  => $documentroot_group
     }
@@ -55,18 +55,18 @@ define apache::vhost::webdir(
     $real_documentroot_group = $documentroot_group
   }
   case $ensure {
-    absent: {
-      exec{"cleanup_webdir_${real_path}":
+    'absent': {
+      exec { "cleanup_webdir_${real_path}":
         command => "rm -rf ${real_path}",
         onlyif  => "test -d  ${real_path}",
         require => Service['apache'],
-      } -> file{$real_path:
+      } -> file { $real_path:
         ensure => absent,
         force  => true,
       }
     }
     default: {
-      file{
+      file {
         $real_path:
           ensure  => directory,
           require => Anchor['apache::basic_dirs::ready'],
@@ -86,7 +86,7 @@ define apache::vhost::webdir(
           mode   => '0600';
       }
       if $manage_docroot {
-        file{$documentroot:
+        file { $documentroot:
           ensure  => directory,
           before  => Service['apache'],
           recurse => $documentroot_recurse,
@@ -96,33 +96,32 @@ define apache::vhost::webdir(
         }
       }
       if $datadir {
-        file{"${real_path}/data":
+        file { "${real_path}/data":
           ensure => directory,
           owner  => $real_documentroot_owner,
           group  => $real_documentroot_group,
           mode   => '0640';
         }
       }
-      if str2bool($::selinux) {
-        $seltype_rw = $::operatingsystemmajrelease ? {
+      if str2bool($facts['os']['selinux']['enabled']) {
+        $seltype_rw = $facts['os']['release']['major'] ? {
           '5'     => 'httpd_sys_script_rw_t',
           default => 'httpd_sys_rw_content_t'
         }
         if $datadir {
-          File["${real_path}/data"]{
+          File["${real_path}/data"] {
             seltype => $seltype_rw,
           }
         }
         if $manage_docroot {
-          File[$documentroot]{
+          File[$documentroot] {
             seltype => $seltype_rw,
           }
         }
       }
-      if $::operatingsystem == 'CentOS' {
-        include ::apache::logrotate::centos::vhosts
+      if $facts['os']['name'] == 'CentOS' {
+        include apache::logrotate::centos::vhosts
       }
     }
   }
 }
-

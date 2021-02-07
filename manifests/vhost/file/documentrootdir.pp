@@ -1,14 +1,14 @@
 # manage a documentrootdir
-define apache::vhost::file::documentrootdir(
+define apache::vhost::file::documentrootdir (
   $documentroot,
   $filename,
   $thedomain,
   $owner         = 'root',
   $group         = '0',
   $mode          = '0440',
-){
+) {
   $path = "${documentroot}/${filename}"
-  file{
+  file {
     $path:
       ensure  => directory,
       require => Apache::Vhost::Webdir[$thedomain],
@@ -17,4 +17,3 @@ define apache::vhost::file::documentrootdir(
       mode    => $mode;
   }
 }
-

@@ -9,8 +9,8 @@
 # is usually your main domain. Everything else should be
 # derived from that.
 # You can however still fine tune things from it.
-class apache::mozilla_autoconfig(
-  $provider          = $::domain,
+class apache::mozilla_autoconfig (
+  $provider          = $facts['networking']['domain'],
   $display_name      = undef,
   $shortname         = undef,
   $imap_server       = undef,
@@ -20,14 +20,14 @@ class apache::mozilla_autoconfig(
 ) {
   apache::config::global { 'mozilla_autoconfig.conf': }
 
-  file{
+  file {
     '/var/www/autoconfig':
       ensure  => directory,
       require => Package['apache'],
       owner   => root,
       group   => apache,
       mode    => '0640';
-  '/var/www/autoconfig/config.xml':
+    '/var/www/autoconfig/config.xml':
       content => template('apache/webfiles/autoconfig/config.xml.erb'),
       owner   => root,
       group   => apache,

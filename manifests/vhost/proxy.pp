@@ -19,7 +19,7 @@
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 #
-define apache::vhost::proxy(
+define apache::vhost::proxy (
   $backend,
   $ensure                          = present,
   $configuration                   = {},
@@ -35,9 +35,9 @@ define apache::vhost::proxy(
   $mod_security_rules_to_disable   = [],
   $mod_security_additional_options = 'absent',
   $additional_options              = 'absent'
-){
+) {
   $real_logpath = $logpath ? {
-    'absent' => $::operatingsystem ? {
+    'absent' => $facts['os']['name'] ? {
       'CentOS' => '/var/log/httpd',
       default  => '/var/log/apache2'
     },
@@ -45,7 +45,7 @@ define apache::vhost::proxy(
   }
   # create vhost configuration file
   # we use the options field as the target_url
-  ::apache::vhost::template{$name:
+  apache::vhost::template { $name:
     ensure                          => $ensure,
     configuration                   => $configuration,
     template_partial                => 'apache/vhosts/proxy/partial.erb',
@@ -63,9 +63,8 @@ define apache::vhost::proxy(
     mod_security_rules_to_disable   => $mod_security_rules_to_disable,
     mod_security_additional_options => $mod_security_additional_options,
     options                         => $backend, # we abuse the options param
-                                                  # to be used in the template
+    # to be used in the template
     ssl_mode                        => $ssl_mode,
     additional_options              => $additional_options,
   }
 }
-

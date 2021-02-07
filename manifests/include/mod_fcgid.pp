@@ -1,8 +1,8 @@
 # activate mod_fcgid options
 class apache::include::mod_fcgid {
-  apache::config::global{'mod_fcgid.conf':
+  apache::config::global { 'mod_fcgid.conf':
     content => "<IfModule mod_fcgid.c>
   FcgidFixPathinfo 1
-</IfModule>\n"
+</IfModule>\n",
   }
 }

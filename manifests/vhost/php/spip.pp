@@ -16,7 +16,7 @@
 #   - nologs: Send every logging to /dev/null
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
-define apache::vhost::php::spip(
+define apache::vhost::php::spip (
   $ensure                           = present,
   $configuration                    = {},
   $domain                           = 'absent',
@@ -50,14 +50,14 @@ define apache::vhost::php::spip(
   $vhost_destination                = 'absent',
   $htpasswd_file                    = 'absent',
   $htpasswd_path                    = 'absent'
-){
+) {
   $documentroot = $path ? {
     'absent' => "/var/www/vhosts/${name}/www",
     default => "${path}/www",
   }
 
   # create vhost configuration file
-  ::apache::vhost::php::webapp{$name:
+  apache::vhost::php::webapp { $name:
     ensure                          => $ensure,
     configuration                   => $configuration,
     domain                          => $domain,
@@ -95,9 +95,8 @@ define apache::vhost::php::spip(
       "${documentroot}/IMG",
       "${documentroot}/tmp",
       "${documentroot}/local",
-      "${documentroot}/config"
+      "${documentroot}/config",
     ],
     manage_config                   => false,
   }
 }
-

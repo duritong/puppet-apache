@@ -16,7 +16,7 @@
 #   - nologs: Send every logging to /dev/null
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
-define apache::vhost::php::standard(
+define apache::vhost::php::standard (
   $ensure                           = present,
   $configuration                    = {},
   $domain                           = 'absent',
@@ -24,7 +24,7 @@ define apache::vhost::php::standard(
   $server_admin                     = 'absent',
   $logmode                          = 'default',
   $logpath                          = 'absent',
-  $logprefix                        = '',
+  $logprefix                        = undef,
   $path                             = 'absent',
   $manage_webdir                    = true,
   $path_is_webdir                   = false,
@@ -57,11 +57,10 @@ define apache::vhost::php::standard(
   $vhost_destination                = 'absent',
   $htpasswd_file                    = 'absent',
   $htpasswd_path                    = 'absent',
-){
-
+) {
   if $manage_webdir {
     # create webdir
-    apache::vhost::webdir{$name:
+    apache::vhost::webdir { $name:
       ensure             => $ensure,
       path               => $path,
       owner              => $owner,
@@ -84,9 +83,9 @@ define apache::vhost::php::standard(
     include apache::defaultphpdirs
     $php_sysroot = "${apache::defaultphpdirs::dir}/${name}"
     if 'fpm_writable_dirs' in $configuration {
-      $fpm_writable_dirs = $configuration['fpm_writable_dirs'] + [ $php_sysroot ]
+      $fpm_writable_dirs = $configuration['fpm_writable_dirs'] + [$php_sysroot]
     } else {
-      $fpm_writable_dirs = [ $php_sysroot ]
+      $fpm_writable_dirs = [$php_sysroot]
     }
   } else {
     $documentroot = "${real_path}/www"
@@ -135,7 +134,7 @@ define apache::vhost::php::standard(
     $std_php_settings_default_charset = undef
   }
 
-  apache::vhost::phpdirs{$name:
+  apache::vhost::phpdirs { $name:
     ensure             => $ensure,
     path               => $php_sysroot,
     documentroot_owner => $documentroot_owner,
@@ -153,7 +152,7 @@ define apache::vhost::php::standard(
   }
 
   # safe mode is (finally) gone on most systems
-  if $php_installation == 'system' and $::operatingsystem == 'CentOS' and versioncmp($::operatingsystemmajrelease,'7') < 0 {
+  if $php_installation == 'system' and $facts['os']['name'] == 'CentOS' and versioncmp($facts['os']['release']['major'],'7') < 0 {
     if ('safe_mode_exec_dir' in $php_settings) {
       $php_safe_mode_exec_dir = $php_settings['safe_mode_exec_dir']
     } else {
@@ -162,7 +161,7 @@ define apache::vhost::php::standard(
         default   => "${path}/bin",
       }
     }
-    file{$php_safe_mode_exec_dir:
+    file { $php_safe_mode_exec_dir:
       recurse => true,
       force   => true,
       purge   => true,
@@ -173,21 +172,21 @@ define apache::vhost::php::standard(
         'present'  => directory,
         default    => 'absent',
       }
-      File[$php_safe_mode_exec_dir]{
+      File[$php_safe_mode_exec_dir] {
         ensure => $ensure_exec,
         owner  => $documentroot_owner,
         group  => $documentroot_group,
         mode   => '0750',
       }
       $php_safe_mode_exec_bins_subst = regsubst($php_options['safe_mode_exec_bins'],'(.+)',"${name}@\\1")
-      apache::vhost::php::safe_mode_bin{
+      apache::vhost::php::safe_mode_bin {
         $php_safe_mode_exec_bins_subst:
           ensure => $ensure,
           path   => $php_safe_mode_exec_dir;
       }
     } else {
       $std_php_settings_safe_mode_exec_dir = undef
-      File[$php_safe_mode_exec_dir]{
+      File[$php_safe_mode_exec_dir] {
         ensure => absent,
       }
     }
@@ -222,9 +221,9 @@ define apache::vhost::php::standard(
       'sp.configuration_file' => "${php_etcdir}/php.d/snuffleupagus-*.rules,${php_etcdir}/snuffleupagus.d/base.rules,${php_etcdir}/snuffleupagus.d/${name}.rules",
     }
     if $ensure != 'absent' {
-      $sp_global_secret_key = trocla("php_${name}_sp.global.secret_key",'plain',{'length' => 64,'charset' => 'alphanumeric' })
+      $sp_global_secret_key = trocla("php_${name}_sp.global.secret_key",'plain',{ 'length' => 64,'charset' => 'alphanumeric' })
       $def_rules = { '005-sp.global.secret_key' => "sp.global.secret_key(\"${sp_global_secret_key}\");" }
-      php::snuffleupagus{
+      php::snuffleupagus {
         $name:
           etcdir       => $php_etcdir,
           rules        => $def_rules + pick($php_options['snuffleupagus_rules'],{}),
@@ -245,7 +244,7 @@ define apache::vhost::php::standard(
         include php::mod_fcgid
         include apache::include::mod_fcgid
 
-        mod_fcgid::starter {$name:
+        mod_fcgid::starter { $name:
           tmp_dir          => "${php_sysroot}/tmp",
           cgi_type         => 'php',
           cgi_type_options => $real_php_settings,
@@ -255,7 +254,7 @@ define apache::vhost::php::standard(
           notify           => Service['apache'],
         }
         if $php_installation =~ /^scl/ {
-          Mod_fcgid::Starter[$name]{
+          Mod_fcgid::Starter[$name] {
             binary          => "${php_basedir}/root/usr/bin/php-cgi",
             additional_cmds => "source ${php_basedir}/enable",
             rc              => $php_etcdir,
@@ -269,7 +268,7 @@ define apache::vhost::php::standard(
   if $run_mode == 'fpm' {
     if $logdir == '/var/log/httpd' {
       $fpm_logdir = "/var/log/fpm-${name}"
-      file{
+      file {
         $fpm_logdir:
           owner   => $run_uid,
           group   => $run_gid,
@@ -278,11 +277,11 @@ define apache::vhost::php::standard(
           before  => Php::Fpm[$name],
       }
       if $ensure == 'present' {
-        File[$fpm_logdir]{
+        File[$fpm_logdir] {
           ensure => directory
         }
       } else {
-        File[$fpm_logdir]{
+        File[$fpm_logdir] {
           ensure => 'absent'
         }
       }
@@ -296,7 +295,7 @@ define apache::vhost::php::standard(
     } else {
       $fpm_settings = {}
     }
-    php::fpm{
+    php::fpm {
       $name:
         ensure          => $ensure,
         php_inst_class  => $php_inst_class,
@@ -312,9 +311,9 @@ define apache::vhost::php::standard(
     }
   }
 
-  file{"/etc/logrotate.d/php_${name}": }
+  file { "/etc/logrotate.d/php_${name}": }
   if $real_php_settings['error_log'] and ($ensure != 'absent') and !($logdir in ['/var/log/httpd','/var/log/apache2']) {
-    File["/etc/logrotate.d/php_${name}"]{
+    File["/etc/logrotate.d/php_${name}"] {
       content => template('apache/utils/php_logrotate.erb'),
       owner   => root,
       group   => 0,
@@ -324,13 +323,13 @@ define apache::vhost::php::standard(
       File[$logdir] -> File["/etc/logrotate.d/php_${name}"]
     }
   } else {
-    File["/etc/logrotate.d/php_${name}"]{
+    File["/etc/logrotate.d/php_${name}"] {
       ensure => absent,
     }
   }
 
   # create vhost configuration file
-  apache::vhost{$name:
+  apache::vhost { $name:
     ensure                          => $ensure,
     configuration                   => $configuration,
     path                            => $path,
@@ -366,4 +365,3 @@ define apache::vhost::php::standard(
     passing_extension               => 'php',
   }
 }
-

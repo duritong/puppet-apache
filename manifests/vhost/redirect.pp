@@ -19,7 +19,7 @@
 #   - anonym: Don't log ips for CustomLog, send ErrorLog to /dev/null
 #   - semianonym: Don't log ips for CustomLog, log normal ErrorLog
 #
-define apache::vhost::redirect(
+define apache::vhost::redirect (
   $target_url,
   $ensure        = present,
   $configuration = {},
@@ -28,17 +28,17 @@ define apache::vhost::redirect(
   $server_admin  = 'absent',
   $logmode       = 'default',
   $ssl_mode      = false
-){
+) {
   $new_config = merge($configuration,
-                      {target_url => $target_url})
+  { target_url => $target_url })
 
-  $logpath = $::operatingsystem ? {
+  $logpath = $facts['os']['name'] ? {
     'CentOS' => '/var/log/httpd',
     default  => '/var/log/apache2'
   }
   # create vhost configuration file
   # we use the options field as the target_url
-  ::apache::vhost::template{$name:
+  apache::vhost::template { $name:
     ensure           => $ensure,
     configuration    => $new_config,
     template_partial => 'apache/vhosts/redirect/partial.erb',
@@ -54,4 +54,3 @@ define apache::vhost::redirect(
     ssl_mode         => $ssl_mode,
   }
 }
-
