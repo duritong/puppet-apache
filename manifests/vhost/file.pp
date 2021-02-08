@@ -62,6 +62,7 @@ define apache::vhost::file (
     notify  => Service['apache'],
     owner   => root,
     group   => 0,
+    seltype => $apache::config_seltype,
     mode    => '0640';
   }
   if $ensure != 'absent' {
@@ -125,6 +126,7 @@ define apache::vhost::file (
         owner   => root,
         group   => 'apache',
         mode    => '0640',
+        seltype => 'httpd_sys_content_t',
       }
     }
   }

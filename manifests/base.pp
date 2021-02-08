@@ -3,6 +3,8 @@ class apache::base {
   package { 'apache':
     ensure => present,
   } -> file {
+    default:
+      seltype => $apache::config_seltype;
     'vhosts_dir':
       ensure  => directory,
       path    => $apache::vhosts_dir,
@@ -48,18 +50,21 @@ class apache::base {
       notify  => Service['apache'],
       owner   => root,
       group   => 'apache',
+      seltype => 'httpd_sys_content_t',
       mode    => '0640';
     'web_dir':
-      ensure => directory,
-      path   => $apache::webdir,
-      owner  => root,
-      group  => 0,
-      mode   => '0644';
+      ensure  => directory,
+      path    => $apache::webdir,
+      owner   => root,
+      group   => 0,
+      seltype => 'httpd_sys_content_t',
+      mode    => '0644';
     'default_apache_index':
       path    => $apache::default_apache_index,
       content => template('apache/default/default_index.erb'),
       owner   => root,
       group   => 0,
+      seltype => 'httpd_sys_content_t',
       mode    => '0644';
   } -> anchor { 'apache::basic_dirs::ready': }
 

@@ -25,6 +25,7 @@ define apache::config::file (
     notify  => Service['apache'],
     owner   => root,
     group   => 0,
+    seltype => $apache::config_seltype,
     mode    => '0640';
   }
 

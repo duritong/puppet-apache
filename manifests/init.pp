@@ -42,6 +42,7 @@ class apache (
       $modules_dir =  "${apache::config_dir}/modules.d"
       $webdir      = '/var/www/vhosts'
       $default_apache_index = '/var/www/html/index.html'
+      $config_seltype = 'httpd_config_t'
       include apache::centos
     }
     'Debian','Ubuntu': {
@@ -52,6 +53,7 @@ class apache (
       $include_dir = "${apache::config_dir}/include.d"
       $webdir      = '/var/www'
       $default_apache_index = '/var/www/index.html'
+      $config_seltype = undef
 
       include apache::debian
     }
