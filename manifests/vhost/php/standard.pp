@@ -40,7 +40,7 @@ define apache::vhost::php::standard (
   $allow_override                   = 'None',
   $php_settings                     = {},
   $php_options                      = {},
-  $php_installation                 = 'system',
+  $php_installation                 = 'scl74',
   $do_includes                      = false,
   $options                          = 'absent',
   $additional_options               = 'absent',

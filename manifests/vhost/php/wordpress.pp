@@ -36,7 +36,7 @@ define apache::vhost::php::wordpress (
   $allow_override                   = 'All',
   $php_settings                     = {},
   $php_options                      = {},
-  $php_installation                 = 'system',
+  $php_installation                 = 'scl74',
   $do_includes                      = false,
   $options                          = 'absent',
   $additional_options               = 'absent',
