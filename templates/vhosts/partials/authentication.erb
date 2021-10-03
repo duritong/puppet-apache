@@ -3,4 +3,4 @@
     AuthName "Access to <%= @servername %>"
     AuthUserFile <%= @real_htpasswd_path %>
     require valid-user
-<% elsif @configuration.key?('auth_mellon') -%><%= scope.call_function('template',['apache/vhosts/partials/auth_mellon.erb']) %><% end -%>
+<% elsif @configuration.key?('auth_mellon') && @configuration['authenticated_location'] != false -%><%= scope.call_function('template',['apache/vhosts/partials/auth_mellon.erb']) %><% end -%>
