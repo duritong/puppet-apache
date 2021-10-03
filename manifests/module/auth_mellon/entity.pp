@@ -6,6 +6,8 @@ define apache::module::auth_mellon::entity (
   String                 $sp_cert,
   String                 $idp_ca,
   String                 $entity_id = $title,
+  Boolean                $binding_post = true,
+  Boolean                $binding_redirect = false,
 ) {
   include apache::module::auth_mellon
   file {

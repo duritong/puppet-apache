@@ -18,7 +18,12 @@
 <% end -%>
     <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:emailAddress</NameIDFormat>
     <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</NameIDFormat>
+<% if @binding_post -%>
     <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="<%= @login_url %>/saml_post/"/>
+<% end
+if @binding_redirect -%>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="<%= @login_url %>/saml/"/>
+<% end -%>
     <saml:Attribute NameFormat="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress" Name="" FriendlyName="email"></saml:Attribute>
   </IDPSSODescriptor>
 </EntityDescriptor>
