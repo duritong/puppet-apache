@@ -104,6 +104,7 @@ define apache::vhost::php::standard (
   if $facts['os']['family'] == 'RedHat' {
     $lib_dirs = ['/usr/share/php/','/usr/share/pear/']
     if $php_installation == 'system' {
+      include php
       $sys_libs_tmp = $lib_dirs
       $php_inst_class = undef
     } else {
@@ -262,7 +263,6 @@ define apache::vhost::php::standard (
           }
         }
       }
-      default: { include php }
     }
   }
 
