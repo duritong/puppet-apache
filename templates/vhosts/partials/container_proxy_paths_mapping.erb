@@ -9,12 +9,12 @@
     end
     res
   end
-  paths.keys.sort_by{|a| a.length }.reverse.each do |k|
-    port,path = paths[k].to_s.split('/',2)
-    path ||= ''
+  paths.keys.sort_by{|a| a.length }.reverse.each do |path|
+    port,target_path = paths[path].to_s.split('/',2)
+    target_path ||= path
     d =  @domain == 'absent' ? @name : @domain
 -%>
-  ProxyPass <%= k %> unix:<%= @real_path %>/tmp/run/<%= port %>|http://<%= d %><%= path %>
-  ProxyPassReverse <%= k %> unix:<%= @real_path %>/tmp/run/<%= port %>|http://<%= d %><%= path %>
+  ProxyPass <%= path %> unix:<%= @real_path %>/tmp/run/<%= port %>|http://<%= d %><%= target_path %>
+  ProxyPassReverse <%= path %> unix:<%= @real_path %>/tmp/run/<%= port %>|http://<%= d %><%= target_path %>
 <% end
 end -%>
