@@ -229,6 +229,7 @@ define apache::vhost::php::standard (
           rules        => $def_rules + pick($php_options['snuffleupagus_rules'],{}),
           ignore_rules => pick($php_options['snuffleupagus_ignore_rules'],[]),
           group        => $run_gid,
+          version      => regsubst($php_installation,'^scl',''),
       }
     }
   } else {
