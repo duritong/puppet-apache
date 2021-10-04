@@ -10,14 +10,14 @@
     res
   end
   paths.keys.sort_by{|a| a.length }.reverse.each do |path|
-    if v = paths[path].is_a?(String)
-      port,target_path = v.to_s.split('/',2)
-      options = nil
-      target_path ||= path
-    else
+    if v = paths[path].is_a?(Hash)
       port = v['port']
       target_path = v['target_path'] || path
       options = v['options']
+    else
+      port,target_path = v.to_s.split('/',2)
+      options = nil
+      target_path ||= path
     end
 
     d =  @domain == 'absent' ? @name : @domain
