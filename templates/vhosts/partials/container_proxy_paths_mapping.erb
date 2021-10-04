@@ -10,7 +10,7 @@
     res
   end
   paths.keys.sort_by{|a| a.length }.reverse.each do |path|
-    if v = paths[path].is_a?(Hash)
+    if (v = paths[path]).is_a?(Hash)
       port = v['port']
       target_path = v['target_path'] || path
       options = v['options']
