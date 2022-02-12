@@ -120,6 +120,10 @@ define apache::vhost::template (
     use_mod_macro => $use_mod_macro,
   }
   if $ensure != 'absent' {
+    if 'containers' in $configuration {
+      Array($configuration['containers']).each |$c| {
+      }
+    }
     Apache::Vhost::File[$name] {
       content => template('apache/vhosts/default.erb'),
     }

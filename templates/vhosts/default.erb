@@ -47,6 +47,7 @@ if @ssl_mode == 'force' && vhost_part == :normal -%>
 <%= scope.call_function('templatewlv',[@template_partial, {'vhost_part' => vhost_part } ]) %>
 <% if @template_partial != 'apache/vhosts/container/partial.erb' && @configuration['containers'].is_a?(Hash) && @configuration['containers'].any?{|c,v| v['route'] } -%>
 
+  ProxyPreserveHost On
   ProxyRequests Off
 <%= scope.call_function('template',['apache/vhosts/partials/container_proxy_paths_mapping.erb']) %>
 
