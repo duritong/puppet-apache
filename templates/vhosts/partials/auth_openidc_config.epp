@@ -1,0 +1,34 @@
+<%| String $issuer,
+    String $name,
+    String $authorization_endpoint,
+    String $token_endpoint,
+    String $user_info_endpoint,
+    String $remote_user_claim,
+    String $redirect_uri,
+    Array[String,1] $scopes,
+    Optional[String] $jwks_uri = nil,
+|%>
+    # MellonVariable is used to select the name of the cookie which
+    OIDCProviderIssuer https://<%= $issuer %>
+    OIDCProviderAuthorizationEndpoint https://<%= $authorization_endpoint %>
+    OIDCProviderTokenEndpoint https://<%= $token_endpoint %>
+    OIDCProviderTokenEndpointAuth client_secret_post
+    OIDCProviderUserInfoEndpoint https://<%= $user_info_endpoint %>
+
+    OIDCClientID <%= $client_id %>
+    OIDCClientSecret <%= $client_secret %>
+<% if $jwks_uri { -%>
+    OIDCProviderJwksUri https://<%= $jwks_uri %>
+<% } -%>
+
+    OIDCScope "<%= $scopes.join(' ') %>"
+    OIDCRemoteUserClaim "<%= $remote_user_claim %>"
+    OIDCRedirectURI http://<%= $redirect_uri %>
+    OIDCCryptoPassphrase "<%= $crypt_passphrase %>"
+    OIDCCookiePath /
+
+    <Location />
+        AuthType openid-connect
+        Require valid-user
+        LogLevel debug
+    </Location>

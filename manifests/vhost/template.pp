@@ -120,6 +120,16 @@ define apache::vhost::template (
     use_mod_macro => $use_mod_macro,
   }
   if $ensure != 'absent' {
+    if 'auth_openidc' in $configuration {
+      include apache::module::auth_openidc
+      $_c = {
+        crypt_passphrase => '%%TROCLA_crypt_passphrase%%'
+      } + $configuration['auth_openidc']
+      $auth_openidc_config = $_c['auth_openidc'] + {
+        crypt_passphrase => trocla::gsub($_c['crypt_passphrase'], { 'prefix' => "apache_${name}_" })
+      }
+      $rendered_auth_openidc = Sensitive(epp('apache/vhosts/partials/auth_openidc_config.epp',$auth_openidc_config))
+    }
     Apache::Vhost::File[$name] {
       content => template('apache/vhosts/default.erb'),
     }
