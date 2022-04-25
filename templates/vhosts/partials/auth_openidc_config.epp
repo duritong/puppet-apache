@@ -27,9 +27,3 @@
     OIDCRedirectURI https://<%= $redirect_uri %>
     OIDCCryptoPassphrase "<%= $crypt_passphrase %>"
     OIDCCookiePath /
-
-    <Location />
-        AuthType openid-connect
-        Require valid-user
-        LogLevel debug
-    </Location>
