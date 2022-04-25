@@ -44,6 +44,7 @@ if @ssl_mode == 'force' && vhost_part == :normal -%>
   RewriteCond %{HTTP:X-Forwarded-Proto} !=https
   RewriteRule (.*) https://%{SERVER_NAME}$1 [R=permanent,L]
 <% end -%>
+<% if @configuration.key?('auth_openidc') -%><%= @rendered_auth_openidc %><% end -%>
 <%= scope.call_function('templatewlv',[@template_partial, {'vhost_part' => vhost_part } ]) %>
 <% if @template_partial != 'apache/vhosts/container/partial.erb' && @configuration['containers'].is_a?(Hash) && @configuration['containers'].any?{|c,v| v['route'] } -%>
 
