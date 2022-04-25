@@ -123,7 +123,8 @@ define apache::vhost::template (
     if 'auth_openidc' in $configuration {
       include apache::module::auth_openidc
       $_c = {
-        crypt_passphrase => '%%TROCLA_crypt_passphrase%%'
+        redirect_uri     => $name,
+        crypt_passphrase => '%%TROCLA_crypt_passphrase%%',
       } + $configuration['auth_openidc']
       $auth_openidc_config = $_c['auth_openidc'] + {
         crypt_passphrase => trocla::gsub($_c['crypt_passphrase'], { 'prefix' => "apache_${name}_" })
