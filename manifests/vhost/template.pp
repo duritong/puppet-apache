@@ -126,7 +126,7 @@ define apache::vhost::template (
         redirect_uri     => $name,
         crypt_passphrase => '%%TROCLA_crypt_passphrase%%',
       } + $configuration['auth_openidc']
-      $auth_openidc_config = $_c['auth_openidc'] + {
+      $auth_openidc_config = $_c + {
         crypt_passphrase => trocla::gsub($_c['crypt_passphrase'], { 'prefix' => "apache_${name}_" })
       }
       $rendered_auth_openidc = Sensitive(epp('apache/vhosts/partials/auth_openidc_config.epp',$auth_openidc_config))
