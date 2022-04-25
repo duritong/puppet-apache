@@ -2,5 +2,5 @@
     AuthType openid-connect
 
 <% unless @configuration['authenticated_location'] -%>
-<%= scope.call_function('template',['apache/vhosts/partials/auth_openidc_config.erb']) %>
+<%= @rendered_auth_openidc %>
 <% end -%>
