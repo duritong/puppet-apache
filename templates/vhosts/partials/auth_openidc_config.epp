@@ -4,6 +4,8 @@
     String $user_info_endpoint,
     String $remote_user_claim,
     String $redirect_uri,
+    String $client_id,
+    String $client_secret,
     String $crypt_passphrase,
     Array[String,1] $scopes,
     Optional[String] $jwks_uri = undef,

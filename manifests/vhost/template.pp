@@ -124,10 +124,11 @@ define apache::vhost::template (
       include apache::module::auth_openidc
       $_c = {
         redirect_uri     => $name,
-        crypt_passphrase => '%%TROCLA_crypt_passphrase%%',
+        client_secret    => '%%TROCLA_client_secret%%',
+        crypt_passphrase => trocla("apache_${name}_crypt_passphrase",'plain',{ charset => 'alphanumeric', length => 32 }),
       } + $configuration['auth_openidc']
       $auth_openidc_config = $_c + {
-        crypt_passphrase => trocla::gsub($_c['crypt_passphrase'], { 'prefix' => "apache_${name}_" })
+        client_secret => trocla::gsub($_c['client_secret'], { 'prefix' => "apache_${name}_" })
       }
       $rendered_auth_openidc = epp('apache/vhosts/partials/auth_openidc_config.epp',$auth_openidc_config)
     }
