@@ -129,7 +129,7 @@ define apache::vhost::template (
       $auth_openidc_config = $_c + {
         crypt_passphrase => trocla::gsub($_c['crypt_passphrase'], { 'prefix' => "apache_${name}_" })
       }
-      $rendered_auth_openidc = Sensitive(epp('apache/vhosts/partials/auth_openidc_config.epp',$auth_openidc_config))
+      $rendered_auth_openidc = epp('apache/vhosts/partials/auth_openidc_config.epp',$auth_openidc_config)
     }
     Apache::Vhost::File[$name] {
       content => template('apache/vhosts/default.erb'),
