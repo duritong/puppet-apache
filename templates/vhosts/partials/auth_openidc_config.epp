@@ -6,7 +6,7 @@
     String $redirect_uri,
     String $crypt_passphrase,
     Array[String,1] $scopes,
-    Optional[String] $jwks_uri = nil,
+    Optional[String] $jwks_uri = undef,
 |%>
     OIDCProviderIssuer https://<%= $issuer %>
     OIDCProviderAuthorizationEndpoint https://<%= $authorization_endpoint %>
