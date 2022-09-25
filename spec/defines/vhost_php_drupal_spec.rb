@@ -63,10 +63,11 @@ describe 'apache::vhost::php::drupal', :type => 'define' do
     php_admin_value mbstring.encoding_translation 0
     php_admin_value mbstring.http_input pass
     php_admin_value mbstring.http_output pass
-    php_admin_value open_basedir /usr/share/php/:/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp
+    php_admin_value open_basedir /opt/remi/php74/root/usr/share/php/:/opt/remi/php74/root/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp
     php_admin_value register_globals 0
     php_admin_value session.auto_start 0
     php_admin_value session.save_path /var/www/vhosts/example.com/tmp/sessions
+    php_admin_value sp.configuration_file /etc/opt/remi/php74/php.d/snuffleupagus-*.rules,/etc/opt/remi/php74/snuffleupagus.d/base.rules,/etc/opt/remi/php74/snuffleupagus.d/example.com.rules
     php_admin_value upload_tmp_dir /var/www/vhosts/example.com/tmp/uploads
 
     # Protect files and directories from prying eyes.

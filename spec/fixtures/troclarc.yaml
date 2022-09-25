@@ -1,0 +1,3 @@
+adapter: :YAML
+adapter_options:
+  :file: './spec/fixtures/data/trocla.yaml'

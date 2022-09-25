@@ -1,6 +1,9 @@
 .tmp_*~
 .librarian
 .tmp
-spec/fixtures/modules
-spec/fixtures/manifests
+/spec/fixtures/modules
+/spec/fixtures/manifests
+/spec/fixtures/data
 *.lock
+.bundle
+/vendor/bundle

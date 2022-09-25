@@ -24,7 +24,7 @@ mod 'certs', :git => 'https://code.immerda.ch/immerda/puppet-modules/certs'
 mod 'systemd', :git => 'https://code.immerda.ch/immerda/puppet-modules/systemd'
 mod 'concat', :git => 'https://code.immerda.ch/immerda/puppet-modules/concat'
 mod 'logrotate', :git => 'https://code.immerda.ch/immerda/puppet-modules/logrotate'
-#mod 'munin', :git => 'https://code.immerda.ch/immerda/puppet-modules/munin'
+mod 'trocla', :git => 'https://code.immerda.ch/immerda/puppet-modules/trocla'
 
 mod 'puppetlabs-augeas_core'
 

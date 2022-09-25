@@ -33,7 +33,7 @@ vhost_parts.each do |vhost_part| -%>
   </Proxy>
 
   # Redirect to the proxy
-  <FilesMatch \.php$>
+  <FilesMatch \.(php|phar)$>
     SetHandler proxy:fcgi://fpm-<%= @name %>-0
   </FilesMatch>
 

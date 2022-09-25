@@ -85,8 +85,9 @@ describe 'apache::vhost::php::joomla', :type => 'define' do
     php_admin_value apc.mmap_file_mask /var/www/vhosts/example.com/tmp/apc.XXXXXX
     php_admin_flag engine on
     php_admin_value error_log /var/www/vhosts/example.com/logs/php_error_log
-    php_admin_value open_basedir /usr/share/php/:/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp
+    php_admin_value open_basedir /opt/remi/php74/root/usr/share/php/:/opt/remi/php74/root/usr/share/pear/:/var/www/vhosts/example.com/www:/var/www/vhosts/example.com/data:/var/www/vhosts/example.com/tmp
     php_admin_value session.save_path /var/www/vhosts/example.com/tmp/sessions
+    php_admin_value sp.configuration_file /etc/opt/remi/php74/php.d/snuffleupagus-*.rules,/etc/opt/remi/php74/snuffleupagus.d/base.rules,/etc/opt/remi/php74/snuffleupagus.d/example.com.rules
     php_admin_value upload_tmp_dir /var/www/vhosts/example.com/tmp/uploads
  
 
