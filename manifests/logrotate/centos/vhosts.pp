@@ -5,8 +5,10 @@ class apache::logrotate::centos::vhosts inherits apache::logrotate::centos {
       'ins file before /files/etc/logrotate.d/httpd/rule/*[1]',
       'ins file before /files/etc/logrotate.d/httpd/rule/*[1]',
       'set /files/etc/logrotate.d/httpd/rule/file[1] /var/log/httpd/*log',
-    'set /files/etc/logrotate.d/httpd/rule/file[2] /var/www/vhosts/*/logs/{access,error,mod_security}*log'],
-    onlyif => 'get /files/etc/logrotate.d/httpd/rule/file[2] != "/var/www/vhosts/*/logs/{access,error,mod_security}*log"',
+    'set /files/etc/logrotate.d/httpd/rule/file[2] /var/www/vhosts/*/logs/access_log',
+    'set /files/etc/logrotate.d/httpd/rule/file[3] /var/www/vhosts/*/logs/error_log',
+    'set /files/etc/logrotate.d/httpd/rule/file[4] /var/www/vhosts/*/logs/mod_security*.log'],
+    onlyif => 'get /files/etc/logrotate.d/httpd/rule/file[2] != "/var/www/vhosts/*/logs/access_log"',
   }
   if versioncmp($facts['os']['release']['major'],'6') > 0 {
     augeas { 'logrotate_httpd_su':
