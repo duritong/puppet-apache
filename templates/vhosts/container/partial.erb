@@ -27,7 +27,7 @@
   RewriteEngine on
   RewriteCond %{HTTP:Upgrade} websocket [NC]
   RewriteCond %{HTTP:Connection} upgrade [NC]
-  RewriteRule ^/?(.*) "<%= @options.gsub("http","ws").gsub("https","wws") %>/$1" [P,L]
+  RewriteRule ^/?(.*) "<%= @options.gsub("http","ws").gsub("https","wws") %>/$1" [P,NE,L]
 <% end -%>
   ProxyPass        /   <%= @options %>/
   ProxyPassReverse /   <%= @options %>/
