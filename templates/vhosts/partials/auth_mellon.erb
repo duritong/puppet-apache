@@ -2,6 +2,8 @@
     AuthType "Mellon"
     MellonEnable "auth"
 
+    Header set Cache-Control "private"
+
 <% unless @configuration['authenticated_location'] -%>
 <%= scope.call_function('template',['apache/vhosts/partials/auth_mellon_config.erb']) %>
 <% end -%>
