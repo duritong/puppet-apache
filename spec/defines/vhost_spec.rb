@@ -128,6 +128,8 @@ describe 'apache::vhost', :type => 'define' do
     AuthUserFile /var/www/htpasswds/example.com
     require valid-user
 
+    Header set Cache-Control \"private\"
+
   </Directory>
 
   <IfModule mod_security2.c>
@@ -161,6 +163,8 @@ describe 'apache::vhost', :type => 'define' do
     AuthName \"Access to example.com\"
     AuthUserFile /var/www/htpasswds/example.com
     require valid-user
+
+    Header set Cache-Control \"private\"
 
   </Directory>
 

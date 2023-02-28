@@ -105,6 +105,8 @@ describe 'apache::vhost::template', :type => 'define' do
     AuthUserFile /var/www/htpasswds/example.com
     require valid-user
 
+    Header set Cache-Control \"private\"
+
   </Directory>
 
   <IfModule mod_security2.c>
@@ -138,6 +140,8 @@ describe 'apache::vhost::template', :type => 'define' do
     AuthName \"Access to example.com\"
     AuthUserFile /var/www/htpasswds/example.com
     require valid-user
+
+    Header set Cache-Control \"private\"
 
   </Directory>
 
@@ -200,6 +204,8 @@ describe 'apache::vhost::template', :type => 'define' do
     AuthUserFile /var/www/htpasswds/example.com
     require valid-user
 
+    Header set Cache-Control \"private\"
+
   </Directory>
 
   <IfModule mod_security2.c>
@@ -233,6 +239,8 @@ describe 'apache::vhost::template', :type => 'define' do
     AuthName \"Access to example.com\"
     AuthUserFile /var/www/htpasswds/example.com
     require valid-user
+
+    Header set Cache-Control \"private\"
 
   </Directory>
 
@@ -495,6 +503,8 @@ cert2
     AuthType \"Mellon\"
     MellonEnable \"auth\"
 
+    Header set Cache-Control \"private\"
+
     # MellonVariable is used to select the name of the cookie which
     # mod_auth_mellon should use to remember the session id. If you
     # want to have different sites running on the same host, then
@@ -664,6 +674,8 @@ cert2
     Require valid-user
     AuthType \"Mellon\"
     MellonEnable \"auth\"
+
+    Header set Cache-Control \"private\"
 
     # MellonVariable is used to select the name of the cookie which
     # mod_auth_mellon should use to remember the session id. If you
