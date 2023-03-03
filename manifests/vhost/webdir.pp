@@ -8,6 +8,7 @@ define apache::vhost::webdir (
   $run_mode             = 'normal',
   $manage_docroot       = true,
   $datadir              = true,
+  $etcdir               = true,
   $documentroot_owner   = root,
   $documentroot_group   = apache,
   $documentroot_mode    = '0640',
@@ -103,6 +104,14 @@ define apache::vhost::webdir (
           mode   => '0640';
         }
       }
+      if $etcdir {
+        file { "${real_path}/etc":
+          ensure => directory,
+          owner  => root,
+          group  => $real_documentroot_group,
+          mode   => '0640';
+        }
+      }
       if str2bool($facts['os']['selinux']['enabled']) {
         $seltype_rw = $facts['os']['release']['major'] ? {
           '5'     => 'httpd_sys_script_rw_t',
@@ -110,6 +119,11 @@ define apache::vhost::webdir (
         }
         if $datadir {
           File["${real_path}/data"] {
+            seltype => $seltype_rw,
+          }
+        }
+        if $etcdir {
+          File["${real_path}/etc"] {
             seltype => $seltype_rw,
           }
         }

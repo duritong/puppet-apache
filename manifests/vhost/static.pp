@@ -51,6 +51,7 @@ define apache::vhost::static (
     group              => $group,
     run_mode           => $run_mode,
     datadir            => ('containers' in $configuration),
+    etcdir             => ('containers' in $configuration),
     documentroot_owner => $documentroot_owner,
     documentroot_group => $documentroot_group,
     documentroot_mode  => $documentroot_mode,
