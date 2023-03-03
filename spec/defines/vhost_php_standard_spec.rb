@@ -48,13 +48,13 @@ describe 'apache::vhost::php::standard', :type => 'define' do
     )}
 
     it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with(
-      :content => /create 640 apache apache/,
+      :content => /create 0640 apache apache/,
       :owner   => 'root',
-      :group   => 0,
+      :group   => 'root',
       :mode    => '0644',
     )}
     it { is_expected.to contain_file('/var/www/vhosts/example.com/logs').with(
-      :before => ['Service[apache]','File[/etc/logrotate.d/php_example.com]', ],
+      :before => ['Service[apache]','Logrotate::Rule[php_example.com]', ],
     )}
     it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with_content(/\/var\/www\/vhosts\/example.com\/logs\/php_error_log/) }
     it { is_expected.to contain_file('/etc/logrotate.d/php_example.com').with_content(/su apache apache/) }

@@ -312,19 +312,39 @@ define apache::vhost::php::standard (
     }
   }
 
-  file { "/etc/logrotate.d/php_${name}": }
+  logrotate::rule { "php_${name}": }
   if $real_php_settings['error_log'] and ($ensure != 'absent') and !($logdir in ['/var/log/httpd','/var/log/apache2']) {
-    File["/etc/logrotate.d/php_${name}"] {
-      content => template('apache/utils/php_logrotate.erb'),
-      owner   => root,
-      group   => 0,
-      mode    => '0644',
+    if defined('$fpm_logdir') and $fpm_logdir =~ /^\/var\/log\/fpm-/ {
+      $logrotate_path = [ $real_php_settings['error_log'], "${fpm_logdir}/*log" ]
+    } else {
+      $logrotate_path = $real_php_settings['error_log']
+    }
+    if $run_mode == 'normal' {
+      $logrotate_user = 'apache'
+      $logrotate_group = 'apache'
+    } else {
+      $logrotate_user = $run_uid
+      $logrotate_group = $run_gid
+    }
+    Logrotate::Rule["php_${name}"]{
+      ensure       => $ensure,
+      path         => $logrotate_path,
+      compress     => true,
+      copytruncate => true,
+      dateext      => true,
+      create       => true,
+      create_mode  => '0640',
+      create_owner => $logrotate_user,
+      create_group => $logrotate_group,
+      su           => true,
+      su_user      => $logrotate_user,
+      su_group     => $logrotate_group,
     }
     if $manage_webdir {
-      File[$logdir] -> File["/etc/logrotate.d/php_${name}"]
+      File[$logdir] -> Logrotate::Rule["php_${name}"]
     }
   } else {
-    File["/etc/logrotate.d/php_${name}"] {
+    Logrotate::Rule["php_${name}"]{
       ensure => absent,
     }
   }
