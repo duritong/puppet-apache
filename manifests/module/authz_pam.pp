@@ -10,7 +10,7 @@ class apache::module::authz_pam {
     group => apache,
     mode  => '0640',
   } -> file { '/etc/pam.d/httpd':
-    content => epp('apache/authz-pam/httpd-pam.epp',{}),
+    content => epp('apache/authz-pam/httpd-service.epp',{}),
     owner   => root,
     group   => apache,
     mode    => '0640',
