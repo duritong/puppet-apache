@@ -26,7 +26,7 @@ class apache::module::authz_pam {
   }
 
   concat::fragment { 'httpd_pam_allow_header':
-    target  => '/etc/httpd/conf.d/pam-httpd-allow-users',
+    target  => '/etc/httpd/conf.modules.d/pam-httpd-allow-users',
     content => "# Following users are allowed for PAM authentication through httpd\n",
     order   => '01';
   }
