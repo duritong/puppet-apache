@@ -4,8 +4,7 @@ class apache::module::authz_pam {
   package { 'mod_authnz_pam':
     ensure  => present,
     require => Package['apache'],
-    notify  => Service['apache'],
-  } -> concat {'/etc/httpd/conf.d/pam-httpd-allow-users':
+  } -> concat {'/etc/httpd/conf.modules.d/pam-httpd-allow-users':
     owner => root,
     group => apache,
     mode  => '0640',
@@ -18,6 +17,12 @@ class apache::module::authz_pam {
     value      => on,
     persistent => true,
     before     => Service['apache'];
+  } -> file { '/etc/httpd/conf.modules.d/55-authnz_pam.conf':
+    content => "\nLoadModule authnz_pam_module modules/mod_authnz_pam.so\n\n",
+    owner   => root,
+    group   => 0,
+    mode    => '0644',
+    notify  => Service['apache'],
   }
 
   concat::fragment { 'httpd_pam_allow_header':
