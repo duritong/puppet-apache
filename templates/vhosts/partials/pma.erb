@@ -1,0 +1,44 @@
+  Alias /.webhosting/mysql /usr/share/phpMyAdmin
+  <Location /.webhosting>
+    AuthType Basic
+    AuthName "private area"
+    Require user <%= @name %>
+    AuthUserFile /var/www/htpasswd/<%= @name %>-pma
+
+    Header set Cache-Control "private"
+  </Location>
+  <Proxy "unix:/run/fpm-<%= @name %>-pma-socket/0.socket|fcgi://fpm-<%= @name %>-pma-0">
+    ProxySet timeout=300
+  </Proxy>
+  <Directory "/usr/share/phpMyAdmin">
+    Require all granted
+    AddDefaultCharset UTF-8
+
+    # Redirect to the proxy
+    <FilesMatch \.(php|phar)$>
+      SetHandler proxy:fcgi://fpm-<%= @name %>-pma-0
+    </FilesMatch>
+  </Directory>
+
+  <Directory /usr/share/phpMyAdmin/setup/>
+    Require all denied
+  </Directory>
+
+  # These directories do not require access over HTTP - taken from the original
+  # phpMyAdmin upstream tarball
+  #
+  <Directory /usr/share/phpMyAdmin/libraries/>
+    Require all denied
+  </Directory>
+
+  <Directory /usr/share/phpMyAdmin/templates/>
+    Require all denied
+  </Directory>
+
+  <Directory /usr/share/phpMyAdmin/setup/lib/>
+    Require all denied
+  </Directory>
+
+  <Directory /usr/share/phpMyAdmin/setup/frames/>
+    Require all denied
+  </Directory>
