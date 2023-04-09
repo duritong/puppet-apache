@@ -3,7 +3,7 @@
     AuthType Basic
     AuthName "private area"
     Require user <%= @name %>
-    AuthUserFile /var/www/htpasswd/<%= @name %>-pma
+    AuthUserFile /var/www/htpasswds/<%= @name %>-pma
 
     Header set Cache-Control "private"
   </Location>
