@@ -12,7 +12,7 @@ vhost_parts.each do |vhost_part| -%>
                                  'configuration' => @configuration,}]) %>
 
 <%= scope.call_function('template',['apache/vhosts/partials/logs.erb']) %>
-<% if @configuration.key?('mysql_dbs') -%><%= scope.call_function('template',['apache/vhosts/partials/pma.erb']) %><% end -%>
+<% if @configuration.key?('mysql_dbs') && @configuration['activate_pma'] == true -%><%= scope.call_function('template',['apache/vhosts/partials/pma.erb']) %><% end -%>
 
 <% if @run_mode.to_s == 'fcgid' -%>
   <IfModule mod_fcgid.c>
