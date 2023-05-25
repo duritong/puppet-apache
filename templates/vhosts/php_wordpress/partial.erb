@@ -20,7 +20,7 @@
   RewriteRule ^/wp-login.php /wordpress-login-<%= tmpuri = scope.call_function('sha1',[scope.call_function('fqdn_rand',[9999999999999,@name]).to_s + "wp-login"]) %>.php [NE,R,L]
   <Location /wordpress-login-<%= tmpuri %>.php>
     CookieTracking on
-    CookieExpires 30
+    CookieExpires 300
     CookieName <%= cookie %>
 
     Redirect permanent /wordpress-login-<%= tmpuri %>.php /wp-login.php
