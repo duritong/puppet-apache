@@ -75,7 +75,7 @@ define apache::vhost::webdir (
           owner   => $real_owner,
           group   => $real_group,
           mode    => $mode;
-        "${real_path}/private":
+        [ "${real_path}/private", "${real_path}/private/bin"]:
           owner  => $real_documentroot_owner,
           group  => $real_documentroot_group,
           mode   => '0600';

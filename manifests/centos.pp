@@ -26,6 +26,8 @@ class apache::centos inherits apache::base {
         setype => 'httpd_sys_script_exec_t';
       '/var/www/vhosts/[^/]+/tmp/run(/.*)?':
         setype => 'httpd_var_run_t';
+      '/var/www/vhosts/[^/]+/private/bin(/.*)?':
+        setype => 'bin_t';
     }
   }
   Exec['reload_apache'] {
