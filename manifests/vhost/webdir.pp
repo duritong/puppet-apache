@@ -68,23 +68,22 @@ define apache::vhost::webdir (
     }
     default: {
       file {
+        default:
+          ensure  => directory;
         $real_path:
-          ensure  => directory,
           require => Anchor['apache::basic_dirs::ready'],
           owner   => $real_owner,
           group   => $real_group,
           mode    => $mode;
+        "${real_path}/private":
+          owner  => $real_documentroot_owner,
+          group  => $real_documentroot_group,
+          mode   => '0600';
         $logdir:
-          ensure => directory,
           before => Service['apache'],
           owner  => $real_documentroot_owner,
           group  => $real_documentroot_group,
           mode   => '0660';
-        "${real_path}/private":
-          ensure => directory,
-          owner  => $real_documentroot_owner,
-          group  => $real_documentroot_group,
-          mode   => '0600';
       }
       if $manage_docroot {
         file { $documentroot:
@@ -113,23 +112,19 @@ define apache::vhost::webdir (
         }
       }
       if str2bool($facts['os']['selinux']['enabled']) {
-        $seltype_rw = $facts['os']['release']['major'] ? {
-          '5'     => 'httpd_sys_script_rw_t',
-          default => 'httpd_sys_rw_content_t'
-        }
         if $datadir {
           File["${real_path}/data"] {
-            seltype => $seltype_rw,
+            seltype => 'httpd_sys_rw_content_t',
           }
         }
         if $etcdir {
           File["${real_path}/etc"] {
-            seltype => $seltype_rw,
+            seltype => 'httpd_sys_rw_content_t',
           }
         }
         if $manage_docroot {
           File[$documentroot] {
-            seltype => $seltype_rw,
+            seltype => 'httpd_sys_rw_content_t',
           }
         }
       }

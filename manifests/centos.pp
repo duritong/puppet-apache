@@ -8,84 +8,43 @@ class apache::centos inherits apache::base {
   }
 
   if $facts['os']['selinux']['enabled'] {
-    Selinux::Fcontext {
-      before => File['web_dir'],
-    }
-    $seltype_rw = $facts['os']['release']['major'] ? {
-      '5'     => 'httpd_sys_script_rw_t',
-      default => 'httpd_sys_rw_content_t'
-    }
     selinux::fcontext {
+      default:
+        before => [Package['apache'],File['web_dir']];
       ['/var/www/vhosts/[^/]*/www(/.*)?',
         '/var/www/vhosts/[^/]*/tmp(/.*)?',
         '/var/www/vhosts/[^/]*/data(/.*)?',
       '/var/www/vhosts/[^/]*/upload(/.*)?']:
-        before => Package['apache'],
-        setype => $seltype_rw;
+        setype => 'httpd_sys_rw_content_t';
       ['/var/www/vhosts/[^/]*/logs(/.*)?',
         '/var/log/fpm-.*(/.*)?',
       '/var/www/vhosts/[^/]*/www/log(/.*)?']:
-        before => Package['apache'],
         setype => 'httpd_log_t';
       '/var/www/vhosts/[^/]*/www/vendor/.*\.so[^/]*':
-        before => Package['apache'],
         setype => 'httpd_sys_script_exec_t';
       '/var/www/vhosts/[^/]*/virtualenv/.*\.so[^/]*':
-        before => Package['apache'],
         setype => 'httpd_sys_script_exec_t';
       '/var/www/vhosts/[^/]+/tmp/run(/.*)?':
-        before => Package['apache'],
         setype => 'httpd_var_run_t';
     }
   }
-  if versioncmp($facts['os']['release']['major'],'6') > 0 {
-    Exec['reload_apache'] {
-      command => 'systemctl reload httpd',
-    }
-    File['modules_dir'] {
-      ensure => absent,
-    }
-    file_line {
-      'mpm_prefork':
-        path    => '/etc/httpd/conf.modules.d/00-mpm.conf',
-        line    => 'LoadModule mpm_prefork_module modules/mod_mpm_prefork.so',
-        match   => 'mpm_prefork_module',
-        require => Package['apache'];
-      'mpm_event':
-        path    => '/etc/httpd/conf.modules.d/00-mpm.conf',
-        line    => '#LoadModule mpm_event_module modules/mod_mpm_event.so',
-        match   => 'mpm_event_module',
-        require => Package['apache'];
-    }
-  } else {
-    Exec['reload_apache'] {
-      command => 'service httpd reload',
-    }
-    File['modules_dir'] {
-      path => "${apache::config_dir}/modules.d",
-    }
-    Service['apache'] {
-      restart => '/etc/init.d/httpd graceful',
-    }
-    file { 'apache_service_config':
-      path    => '/etc/sysconfig/httpd',
-      source  => ["puppet:///modules/site_apache/service/CentOS/${facts['networking']['fqdn']}/httpd",
-        'puppet:///modules/site_apache/service/CentOS/httpd',
-      'puppet:///modules/apache/service/CentOS/httpd'],
-      require => Package['apache'],
-      notify  => Service['apache'],
-      owner   => root,
-      group   => 0,
-      mode    => '0644';
-    }
-
-    # this is for later fixes
-    exec { 'adjust_pidfile':
-      command => 'sed -i  "s/^#PidFile \(.*\)/PidFile \1/g" /etc/httpd/conf/httpd.conf',
-      unless  => 'grep -qE \'^PidFile \' /etc/httpd/conf/httpd.conf',
-      require => Package['apache'],
-      notify  => Service['apache'];
-    }
+  Exec['reload_apache'] {
+    command => 'systemctl reload httpd',
+  }
+  File['modules_dir'] {
+    ensure => absent,
+  }
+  file_line {
+    'mpm_prefork':
+      path    => '/etc/httpd/conf.modules.d/00-mpm.conf',
+      line    => 'LoadModule mpm_prefork_module modules/mod_mpm_prefork.so',
+      match   => 'mpm_prefork_module',
+      require => Package['apache'];
+    'mpm_event':
+      path    => '/etc/httpd/conf.modules.d/00-mpm.conf',
+      line    => '#LoadModule mpm_event_module modules/mod_mpm_event.so',
+      match   => 'mpm_event_module',
+      require => Package['apache'];
   }
 
   exec {
