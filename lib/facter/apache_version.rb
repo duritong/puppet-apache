@@ -2,7 +2,7 @@
 Facter.add('apache_version') do
   confine :osfamily => ['Debian','RedHat']
   def apache_exec
-    @apache_exec ||= ['/usr/sbin/httpd','/usr/sbin/apache2'].find{|e| File.exists?(e) }
+    @apache_exec ||= ['/usr/sbin/httpd','/usr/sbin/apache2'].find{|e| File.exist?(e) }
   end
   confine do
     apache_exec
