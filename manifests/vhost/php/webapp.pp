@@ -60,7 +60,7 @@ define apache::vhost::php::webapp (
   $managed_directories              = 'absent',
 ) {
   if ($ensure != 'absent') {
-    if $manage_directories and ($managed_directories != 'absent') {
+    if $manage_directories and ($managed_directories != 'absent') and ($configuration['active_on_host'] != false) {
       apache::vhost::managed_directory { $managed_directories :
         owner => $documentroot_owner,
         group => $documentroot_group,
