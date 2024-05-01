@@ -22,7 +22,7 @@
 
     d =  @domain == 'absent' ? @name : @domain
 -%>
-  ProxyPass <%= path %> unix:<%= @real_path %>/tmp/run/<%= port %>|http://<%= d.split('.',2).join("-#{port}.") %><%= target_path %><% if options %> <%= options %><% end %> disablereuse=On
+  ProxyPass <%= path %> unix:<%= @real_path %>/tmp/run/<%= port %>|http://<%= d.split('.',2).join("-#{port}.") %><%= target_path %><% if options %> <%= options %><% end %>
   ProxyPassReverse <%= path %> unix:<%= @real_path %>/tmp/run/<%= port %>|http://<%= d.split('.',2).join("-#{port}.") %><%= target_path %>
 <% end
 end -%>
