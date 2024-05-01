@@ -29,5 +29,5 @@
   RewriteCond %{HTTP:Connection} upgrade [NC]
   RewriteRule ^/?(.*) "<%= @options.gsub("http","ws").gsub("https","wws") %>/$1" [P,NE,L]
 <% end -%>
-  ProxyPass        /   <%= @options %>/<% if @configuration['proxy_pass_options'] -%> <%= @configuration['proxy_pass_options'] %><% end -%>
+  ProxyPass        /   <%= @options %>/<% if @configuration['proxy_pass_options'] -%> <%= @configuration['proxy_pass_options'] %><% end %>
   ProxyPassReverse /   <%= @options %>/
